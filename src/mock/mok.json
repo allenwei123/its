@@ -1,0 +1,136 @@
+{"data": [
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": null,
+              "createAt": 1519979089142,
+              "creatorId": "5a82a6129ce93e30677c3fa4",
+              "dataStatus": 1,
+              "icon": "icon",
+              "id": "5a990a513d6af1cbc8da299e",
+              "menuPlace": 1,
+              "menuType": 1,
+              "name": "社区档案",
+              "no": "GZS",
+              "pId": "5a9909c83d6af1cbc8da298f",
+              "rank": 1,
+              "spread": "true",
+              "title": "������",
+              "updateAt": null,
+              "url": "/home/nav/side/other"
+            }
+          ],
+          "createAt": 1519978952195,
+          "creatorId": "5a82a6129ce93e30677c3fa4",
+          "dataStatus": 1,
+          "icon": "icon",
+          "id": "12123123fdfa",
+          "menuPlace": 1,
+          "menuType": 1,
+          "name": "基础管理",
+          "no": "GZ",
+          "pId": "5a99090a3d6af1cbc8da2988",
+          "rank": 1,
+          "spread": "true",
+          "title": "�㶫ʡ",
+          "updateAt": null,
+          "url": "www.baidu.com.cn"
+        },
+        {
+          "children": [
+            {
+              "children": null,
+              "createAt": 1519979089142,
+              "creatorId": "121212312dfwer",
+              "dataStatus": 1,
+              "icon": "icon",
+              "id": "1123df2312312312132",
+              "menuPlace": 1,
+              "menuType": 1,
+              "name": "部门管理",
+              "no": "GZS",
+              "pId": "5a9909c83d6af1cbc8da298f",
+              "rank": 1,
+              "spread": "true",
+              "title": "������",
+              "updateAt": null,
+              "url": "/home/nav/side/content"
+            }
+          ],
+          "createAt": 1519978952195,
+          "creatorId": "5a82a6129ce93e30677c3fa4",
+          "dataStatus": 1,
+          "icon": "icon",
+          "id": "5a9909c83d6af1cbc8da298f",
+          "menuPlace": 1,
+          "menuType": 1,
+          "name": "员工档案管理",
+          "no": "GZ",
+          "pId": "5a99090a3d6af1cbc8da2988",
+          "rank": 1,
+          "spread": "true",
+          "title": "�㶫ʡ",
+          "updateAt": null,
+          "url": "www.baidu.com.cn"
+        }
+      ],
+      "createAt": 1519978762584,
+      "creatorId": "5a82a6129ce93e30677c3fa4",
+      "dataStatus": 1,
+      "icon": "icon",
+      "id": "5a99090a3d6af1cbc8da2988",
+      "menuPlace": 1,
+      "menuType": 1,
+      "name": "�й�",
+      "no": "CN",
+      "pId": null,
+      "rank": 1,
+      "spread": "true",
+      "title": "�й�",
+      "updateAt": null,
+      "url": "www.baidu.com.cn"
+    },
+    {
+      "children": [
+        {
+          "children": null,
+          "createAt": 1519979043510,
+          "creatorId": "5a82a6129ce93e30677c3fa4",
+          "dataStatus": 1,
+          "icon": "icon",
+          "id": "5a990a233d6af1cbc8da2998",
+          "menuPlace": 1,
+          "menuType": 1,
+          "name": "ŦԼ��",
+          "no": "NY",
+          "pId": "5a9909643d6af1cbc8da298c",
+          "rank": 1,
+          "spread": "true",
+          "title": "ŦԼ��",
+          "updateAt": null,
+          "url": "www.baidu.com.cn"
+        }
+      ],
+      "createAt": 1519978852430,
+      "creatorId": "5a82a6129ce93e30677c3fa4",
+      "dataStatus": 1,
+      "icon": "icon",
+      "id": "5a9909643d6af1cbc8da298c",
+      "menuPlace": 1,
+      "menuType": 1,
+      "name": "�й�",
+      "no": "MG",
+      "pId": null,
+      "rank": 1,
+      "spread": "true",
+      "title": "����",
+      "updateAt": null,
+      "url": "www.baidu.com.cn"
+    }
+  ],
+  "errorCode": 0,
+  "errorMsg": "success",
+  "success": true
+}

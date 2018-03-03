@@ -1,0 +1,19 @@
+$headerBg:#23262b;
+.c-header {
+  .el-menu--horizontal>.el-menu-item {
+    height:40px;
+    line-height: 40px;
+    background-color: $headerBg;
+  }
+  .el-menu--horizontal>.el-menu-item:not(.is-disabled):hover {
+    background-color:$headerBg;
+    color:#fff;
+  }
+  .el-menu-item {
+    padding:0 11px;
+  }
+}
+.el-menu--horizontal>.el-menu-item.is-active {
+  color:#fff;
+}
+

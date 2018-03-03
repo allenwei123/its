@@ -1,0 +1,111 @@
+body, div, span, header, footer, nav, section, aside, article, ul, dl, dt, dd, li, a, p, h1, h2, h3, h4,h5, i, b, textarea, button, input, select  {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    font-style: normal;
+    text-decoration: none;
+    border: none;
+    color: #313131;
+    box-sizing: border-box;
+    font-weight: lighter;
+    font-family: 'Microsoft YaHei';
+    -webkit-tap-highlight-color:transparent;
+    &:focus {
+        outline: none;
+    }
+}
+
+
+html{
+    height: 100%;
+    width: 100%;
+}
+
+.clear:after{
+    content: '';
+    display: block;
+    clear: both;
+}
+
+.clear{
+    zoom:1;
+}
+
+.back_img{
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+.margin{
+    margin: 0 auto;
+}
+
+.left{
+    float: left;
+}
+
+.right{
+    float:right;
+}
+
+.hide{
+    display: none;
+}
+
+.show{
+    display: block;
+}
+.test:hover{
+  background-color: red;
+}
+
+//ali淘宝图标库
+@font-face {font-family: "iconfont";
+  src: url('./assets/fonts/iconfont.eot?t=1520053662023'); /* IE9*/
+  src: url('./assets/fonts/iconfont.eot?t=1520053662023#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('./assets/fonts/iconfont.woff?t=1520053662023') format('woff'),
+  url('./assets/fonts/iconfont.ttf?t=1520053662023') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('./assets/fonts/iconfont.svg?t=1520053662023#iconfont') format('svg'); /* iOS 4.1- */
+}
+.iconfont {
+  font-family:"iconfont" !important;
+  font-size:16px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.icon-settings:before { content: "\e837"; }
+
+.icon-bangzhu:before { content: "\e63b"; }
+
+.icon-wuyefeiyongchuzhang:before { content: "\e693"; }
+
+.icon-wuyeguanli:before { content: "\e6ad"; }
+
+.icon-wuyebaoxiu:before { content: "\e6af"; }
+
+.icon-wuyehetong:before { content: "\e6b0"; }
+
+.icon-wuyehetongmingxi:before { content: "\e6b1"; }
+
+.icon-wuyehetongmoban:before { content: "\e6b2"; }
+
+.icon-suo:before { content: "\e61a"; }
+
+.icon-house:before { content: "\e637"; }
+
+.icon-shuju:before { content: "\e61c"; }
+
+.icon-sousuo:before { content: "\e653"; }
+
+.icon-Grouping:before { content: "\e616"; }
+
+.icon-qiyeyuanquwuye-xianxing:before { content: "\e894"; }
+
+.icon-guanlikehu:before { content: "\e678"; }
+
+.icon-bangzhu1:before { content: "\e63c"; }
+
+.icon-cheliangjiankong:before { content: "\e617"; }
+
+.icon-xingxing1-copy:before { content: "\e6cd"; }
