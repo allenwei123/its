@@ -12,8 +12,11 @@ export default {
     changeToken({commit},userInfo) {
       if(userInfo) {
         localStorage.setItem('userInfo',JSON.stringify(userInfo));
-        commit('CHANGE_Token',userInfo)
       }
+      else {
+        localStorage.removeItem('userInfo');
+      }
+      commit('CHANGE_Token',userInfo)
     }
   }
 }

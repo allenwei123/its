@@ -19,6 +19,7 @@
 </template>
 
 <script>
+  import { Loading } from 'element-ui';
   export default {
     name: 'login',
     data() {
@@ -36,14 +37,21 @@
           });
           return;
         }
+
+        let loadingInstance = Loading.service();
+
         this.$xttp.post('user/signIn', {
           phone: this.phone,
           pwd: this.pwd
         }).then((res) => {
+          loadingInstance.close();
           this.$store.dispatch('changeToken', res.data);
           if (res.errorCode === 0) {
             this.$router.push('/home');
           }
+        }).catch((err) => {
+          console.log(err);
+          loadingInstance.close();
         });
       }
     }
@@ -55,7 +63,7 @@
     width: 450px;
   }
   .bg {
-    position: absolute;
+    position: fixed;
     left: 0;
     top: 0;
     width: 100%;
@@ -69,7 +77,7 @@
   .login-area {
     width: 420px;
     background-color: #fff;
-    position: absolute;
+    position: fixed;
     top: 50%;
     left: 50%;
     margin-top: -126px;
@@ -109,7 +117,4 @@
     font-size: 18px;
     cursor: pointer;
   }
-
-  /*垂直居中*/
-
 </style>

@@ -5,7 +5,7 @@
       <ul class="c-navgator">
         <li><span class="c-account"> <i class="iconfont icon-guanlikehu c-sidebar-conl">&nbsp;</i>当前账号：{{ user }}</span></li>
         <li> <el-button type="success" size="mini">修改密码</el-button></li>
-        <li><el-button type="primary" size="mini">退出</el-button></li>
+        <li><el-button type="primary" size="mini" @click="logout">退出</el-button></li>
       </ul>
       <!--nav 导航模块-->
       <div class="c-top_bar_area">
@@ -52,6 +52,9 @@
       },
       handleSelect(index) {
           console.log(index)
+      },
+      logout() {
+        this.$router.push('/auth/logout');
       }
     }
   }

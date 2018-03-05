@@ -13,10 +13,8 @@ export default new Router({
       redirect:'/home',
       component: App
     },
-    {
-      path: '/auth/login',
-      component: () => import('@/page/auth/login.vue')
-    },
+    { path: '/auth/login', component: () => import('@/page/auth/login') },
+    { path: '/auth/logout', component: () => import('@/page/auth/logout') },
     {
       path: '/home',
       redirect: '/home/nav',
