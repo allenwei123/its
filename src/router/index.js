@@ -24,30 +24,26 @@ export default new Router({
       children: [{
         path: 'nav',
         redirect: '/home/nav/side',
-        component: r => require.ensure([], () => r(require('../page/home')), 'home'),
+        component: r => require.ensure([], () => r(require('../page/home/_res')), 'home'),
         children:[
           {
             path: 'side',
             redirect: '/home/nav/side/other',
-            component: r => require.ensure([], () => r(require('../page/home/nav')), 'nav'),
+            component: r => require.ensure([], () => r(require('../page/home/nav/_res')), 'nav'),
             children:[
               {
                 path: 'content',
-                component: r => require.ensure([], () => r(require('../page/home/nav/content')), 'side')
+                component: r => require.ensure([], () => r(require('../page/home/nav/content/_res')), 'side')
               },
               {
                 path: 'other',
-                component: r => require.ensure([], () => r(require('../page/home/nav/content/other')), 'side')
+                component: r => require.ensure([], () => r(require('../page/home/nav/content/charge/other')), 'side')
               }]
           }]
       }, {
         path: 'about',
         component: r => require.ensure([], () => r(require('../page/item')), 'item')
       }]
-    },
-    {
-      path: '/index',
-      component: r => require.ensure([], () => r(require('../page/index')), 'index')
     }
   ]
 })

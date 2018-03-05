@@ -10,9 +10,9 @@
 
 <script>
   import { mapState } from 'vuex'
-  import Header from '../../components/header/Header'
-  import Content from './nav/index.vue'
-  import arr from '../../mock/menuList'
+  import Header from '../../../components/header/Header'
+  import Content from './../nav/_res/index.vue'
+  import arr from '../../../mock/menuList'
 
   export default {
     data() {
@@ -28,8 +28,6 @@
       Content
     },
     created() {
-        console.log(JSON.stringify(arr));
-
         if (!this.$store.getters.token) {
           this.$router.push('/auth/login');
         }

@@ -23,9 +23,7 @@
 </template>
 
 <script>
-//  import Con1 from '../../../components/Con1.vue'
-import arr from '../../../mock/menuList'
-import obj1 from '../../../mock/mok.json'
+import obj1 from '../../../../mock/mok.json'
   export default {
     name: 'side',
     data() {
@@ -37,10 +35,9 @@ import obj1 from '../../../mock/mok.json'
       }
     },
     components:{
-//      Con1,
     },
     created() {
-        console.log(obj1.data[0].children[0].id)
+
     },
     mounted:() => {
     },

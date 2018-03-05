@@ -1,16 +1,19 @@
 
 export default {
   state: {
-    token: localStorage["userInfo"] ? JSON.parse(localStorage["userInfo"]).token : null
+    userInfo: localStorage["userInfo"] ? JSON.parse(localStorage["userInfo"]) : null
   },
   mutations: {
     CHANGE_Token: (state, newToken) => {
-      state.token = newToken
+      state.userInfo = newToken
     }
   },
   actions: {
-    changeToken({commit},token) {
-      commit('CHANGE_Token',token)
+    changeToken({commit},userInfo) {
+      if(userInfo) {
+        localStorage.setItem('userInfo',JSON.stringify(userInfo));
+        commit('CHANGE_Token',userInfo)
+      }
     }
   }
 }

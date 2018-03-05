@@ -67,7 +67,7 @@
     background: $headerBg;
     .c-logo {
       float: left;
-      width:150px;
+      width:148px;
       margin-top: 10px;
       margin-left: 20px;
       color:$fontColor;

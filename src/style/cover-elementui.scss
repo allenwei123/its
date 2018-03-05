@@ -16,4 +16,9 @@ $headerBg:#23262b;
 .el-menu--horizontal>.el-menu-item.is-active {
   color:#fff;
 }
+.c-table{
+  &.el-table th {
+    //background-color: red;
+  }
+}
 
