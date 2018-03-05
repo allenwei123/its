@@ -38,6 +38,10 @@ export default new Router({
                 component: () => import('@/page/home/nav/property_service/rpass/list')
               },
               {
+                path: 'property-service/alarm/list',
+                component: () => import('@/page/home/nav/property_service/alarm/list')
+              },
+              {
                 path: 'other',
                 component: r => require.ensure([], () => r(require('../page/home/nav/content/charge/other')), 'side')
               }]
