@@ -28,7 +28,11 @@
       Content
     },
     created() {
-        console.log(JSON.stringify(arr))
+        console.log(JSON.stringify(arr));
+
+        if (!this.$store.getters.token) {
+          this.$router.push('/auth/login');
+        }
     }
   }
 </script>

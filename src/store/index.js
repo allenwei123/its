@@ -180,7 +180,7 @@ const state = {
   showContent:true
 }
 const getters = {
-  token: () => localStorage["userInfo"] ? JSON.parse(localStorage["userInfo"]).token : null,
+  token: (state) => state.permission.token,
   uid: () => localStorage["userInfo"] ? JSON.parse(localStorage["userInfo"]).id : null,
   userInfo: () => localStorage["userInfo"] ? JSON.parse(localStorage["userInfo"]) : null
 }

@@ -3,7 +3,6 @@ import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import Home from '@/components/Home'
 import App from '../App'
-import Login from '@/page/auth/login.vue'
 
 Vue.use(Router)
 
@@ -16,7 +15,7 @@ export default new Router({
     },
     {
       path: '/auth/login',
-      component: Login
+      component: () => import('@/page/auth/login.vue')
     },
     {
       path: '/home',

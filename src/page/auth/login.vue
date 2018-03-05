@@ -40,7 +40,7 @@
           phone: this.phone,
           pwd: this.pwd
         }).then((res) => {
-          this.$store.commit('setUserInfo', res.data);
+          this.$store.dispatch('changeToken', res.data);
           if (res.errorCode === 0) {
             this.$router.push('/home');
           }
