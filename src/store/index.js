@@ -180,7 +180,9 @@ const state = {
   showContent:true
 }
 const getters = {
-  token:state => state.permission.token
+  token: () => localStorage["userInfo"] ? JSON.parse(localStorage["userInfo"]).token : null,
+  uid: () => localStorage["userInfo"] ? JSON.parse(localStorage["userInfo"]).id : null,
+  userInfo: () => localStorage["userInfo"] ? JSON.parse(localStorage["userInfo"]) : null
 }
 export default new Vuex.Store({
   modules: {
@@ -188,6 +190,10 @@ export default new Vuex.Store({
   },
 	// state,
 	// actions,
-	// mutations,
+	mutations: {
+    setUserInfo(state, userInfo) {
+      localStorage["userInfo"] = JSON.stringify(userInfo)
+    }
+  },
   getters
 })
