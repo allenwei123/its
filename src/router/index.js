@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import Home from '@/components/Home'
 import App from '../App'
+import { request } from 'https';
 
 Vue.use(Router)
 
@@ -36,7 +37,12 @@ export default new Router({
               {
                 path: 'other',
                 component: r => require.ensure([], () => r(require('../page/home/nav/content/charge/other')), 'side')
-              }]
+              },
+              { 
+                path: 'role', 
+                component: r => require.ensure([], () => r(require('../page/home/nav/content/role/index.vue')), 'side') 
+              }
+            ]
           }]
       }, {
         path: 'about',
