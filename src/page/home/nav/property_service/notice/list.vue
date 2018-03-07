@@ -39,7 +39,7 @@
             </el-table-column>
             <el-table-column prop="" label="操作" width="180" fixed="right">
               <template slot-scope="scope">
-                <el-button type="text">预览</el-button>
+                <el-button type="text" @click="preview(scope.row)">预览</el-button>
                 <el-button type="text" v-if="scope.row.publishStatus !== 1">修改</el-button>
                 <el-button type="text" v-if="scope.row.publishStatus !== 1" @click="publish(scope.row)">发布</el-button>
                 <el-button type="text" v-if="scope.row.publishStatus !== 1">删除</el-button>
@@ -57,6 +57,7 @@
       </div>
 
       <NoticeForm :visible.sync="formVisible"></NoticeForm>
+      <NoticePreview :visible.sync="previewVisible" :noticeInfo="previewNoticeInfo"></NoticePreview>
     </el-main>
   </el-container>
 </template>
@@ -65,10 +66,12 @@
   import communityList from '@/mock/communityList';
   import time from '@/utils/time.js';
   import NoticeForm from './form';
+  import NoticePreview from './preview';
   export default {
     name: 'notice',
     components: {
-      NoticeForm
+      NoticeForm,
+      NoticePreview
     },
     data () {
       return {
@@ -77,7 +80,9 @@
         pageSize: 10,
         total: 0,
         currentPage: 1,
-        formVisible: false
+        formVisible: false,
+        previewVisible: false,
+        previewNoticeInfo: null
       }
     },
     methods: {
@@ -121,6 +126,10 @@
       },
       addNotice() {
         this.formVisible = true;
+      },
+      preview(item) {
+        this.previewNoticeInfo = item;
+        this.previewVisible = true;
       },
       getTableList() {
         this.loading = true;
