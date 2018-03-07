@@ -59,8 +59,8 @@
           width="220">
           <template slot-scope="scope">
             <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button>
-            <el-button @click="editHandle(scope.row)" type="warning" size="small">编辑</el-button>
-            <el-button type="danger" size="small">删除</el-button>
+            <el-button @click="editHandle(scope.row)" type="primary" size="small">编辑</el-button>
+            <el-button type="primary" size="small">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -87,9 +87,10 @@ import axios from "axios";
 import AddPage from "./add";
 import SeePage from "./see";
 import { mapGetters } from "vuex";
+import { communityId } from '@/biz/community';
 
 export default {
-  name: "other",
+  name: "floorFileList",
   data() {
     return {
       isSou: false,
@@ -157,7 +158,7 @@ export default {
         delete obj.name ;
       }
       this.loading = true;
-      this.$xttp.get("/community/page",{params:obj})
+      this.$xttp.get("/community/building/page",{params:obj})
       .then(res => {
         if (!res.errorCode) {
           this.tableData = res.data.records;
@@ -181,7 +182,11 @@ export default {
     }
   },
   created() {
-    this.sendAjax();
+
+    // this.sendAjax();
+    communityId().then(res => {
+      
+    })
   },
   mounted() {}
 };

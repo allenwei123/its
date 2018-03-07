@@ -31,8 +31,8 @@ export default new Router({
             component: r => require.ensure([], () => r(require('../page/home/nav/_res')), 'nav'),
             children:[
               {
-                path: 'content',
-                component: r => require.ensure([], () => r(require('../page/home/nav/content/_res')), 'side')
+                path: 'floorFile',
+                component: () => import('@/page/home/nav/content/floorFile/list')
               },
               {
                 path: 'property-service/rpass',

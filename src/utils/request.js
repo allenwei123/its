@@ -1,5 +1,6 @@
 import axios from 'axios';
 import store from '@/store';
+import { Message } from 'element-ui'
 let service = axios.create({
   baseURL: '/api', // api的base_url
   timeout: 5000 // request timeout
@@ -33,8 +34,15 @@ service.interceptors.request.use(config => {
 
 service.interceptors.response.use(
   res => {
+    if(res.data.errorCode == 9050001) {
+      store.dispatch('changeToken',null);
+      Message({message:'登录已过期,请您重新登录',type:'error'})
+    }else if(res.data.errorCode !== 0) {
+      Message({message:res.data.errorMsg,type:'error'})
+    }
     return res.data;
   }, error => {
+    Message({message:'链接错误,请检查你的网络',type:'error'})
     return Promise.reject(error)
   }
 )

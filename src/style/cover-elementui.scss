@@ -53,3 +53,7 @@ $headerBg:#23262b;
     color:#fff;
   }
 }
+// 修改表格上下内边距
+.el-table td, .el-table th {
+  padding: 5px 0;
+}
