@@ -56,7 +56,7 @@
               "spread": "true",
               "title": "角色管理",
               "updateAt": null,
-              "url": "/home/nav/side/role"
+              "url": "/home/nav/side/empl/role"
             },
             {
               "children": null,
@@ -74,7 +74,7 @@
               "spread": "true",
               "title": "员工管理",
               "updateAt": null,
-              "url": "/home/nav/side/other"
+              "url": "/home/nav/side/empl/empl"
             }
           ],
           "createAt": 1519978952195,
@@ -90,6 +90,61 @@
           "rank": 1,
           "spread": "true",
           "title": "员工管理",
+          "updateAt": null,
+          "url": "www.baidu.com.cn"
+        },
+        {
+          "children": [
+            {
+              "children": null,
+              "createAt": 1519979089142,
+              "creatorId": "5a82a6129ce93e30677c3fa4",
+              "dataStatus": 1,
+              "icon": "icon",
+              "id": "112-2",
+              "menuPlace": 1,
+              "menuType": 1,
+              "name": "排班管理",
+              "no": "GZS",
+              "pId": "12",
+              "rank": 1,
+              "spread": "true",
+              "title": "排班管理",
+              "updateAt": null,
+              "url": "/home/nav/side/work/schedul"
+            },
+            {
+              "children": null,
+              "createAt": 1519979089142,
+              "creatorId": "112-1",
+              "dataStatus": 1,
+              "icon": "icon",
+              "id": "5a990a513d6af1cbc8da299e",
+              "menuPlace": 1,
+              "menuType": 1,
+              "name": "考勤记录",
+              "no": "GZS",
+              "pId": "11",
+              "rank": 1,
+              "spread": "true",
+              "title": "考勤记录",
+              "updateAt": null,
+              "url": "/home/nav/side/work/attendance"
+            }
+          ],
+          "createAt": 1519978952195,
+          "creatorId": "5a82a6129ce93e30677c3fa4",
+          "dataStatus": 1,
+          "icon": "icon",
+          "id": "12",
+          "menuPlace": 1,
+          "menuType": 1,
+          "name": "作业管理",
+          "no": "GZ",
+          "pId": "5a99090a3d6af1cbc8da2988",
+          "rank": 1,
+          "spread": "true",
+          "title": "作业管理",
           "updateAt": null,
           "url": "www.baidu.com.cn"
         },

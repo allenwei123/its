@@ -35,12 +35,32 @@ export default new Router({
                 component: r => require.ensure([], () => r(require('../page/home/nav/content/_res')), 'side')
               },
               {
+                path: 'property-service/rpass/list',
+                component: () => import('@/page/home/nav/property_service/rpass/list')
+              },
+              {
+                path: 'property-service/alarm/list',
+                component: () => import('@/page/home/nav/property_service/alarm/list')
+              },
+              {
                 path: 'other',
                 component: r => require.ensure([], () => r(require('../page/home/nav/content/charge/other')), 'side')
               },
               { 
-                path: 'role', 
-                component: r => require.ensure([], () => r(require('../page/home/nav/content/role/index.vue')), 'side') 
+                path: 'empl/role', 
+                component: r => require.ensure([], () => r(require('@/page/home/nav/empl/role')), 'side') 
+              },
+              {
+                path: 'empl/empl',
+                component: r => require.ensure([], () => r(require('@/page/home/nav/empl/empl')), 'side')
+              },
+              { 
+                path: 'work/schedul', 
+                component: r => require.ensure([], () => r(require('@/page/home/nav/work/schedul')), 'side')
+              },
+              {
+                path: 'work/attendance', 
+                component: r => require.ensure([], () => r(require('@/page/home/nav/work/attendance')), 'side') 
               }
             ]
           }]

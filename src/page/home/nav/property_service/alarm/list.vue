@@ -1,0 +1,84 @@
+<template>
+  <el-container>
+    <el-main>
+      <div class="c-alarm-container">
+        <div class="c-searchbar">
+
+        </div>
+        <div class="c-list">
+          <el-table :data="tableData" style="width: 100%">
+            <el-table-column prop="id" label="编号" width="180"></el-table-column>
+            <el-table-column prop="callerName" label="申报人" width="180"></el-table-column>
+            <el-table-column prop="roomName" label="住房"></el-table-column>
+            <el-table-column prop="callerPhoneNum" label="联系方式" width="180"></el-table-column>
+            <el-table-column prop="name" label="报警时间" width="180">
+              <template slot-scope="scope">{{getTime(scope.row.createAt, 'yyyy-MM-dd hh:mm')}}</template>
+            </el-table-column>
+            <el-table-column prop="date" label="警报状态" width="180">
+              <template slot-scope="scope">{{scope.row.releaseStatus === 1 ? '有效' : '失效'}}</template>
+            </el-table-column>
+            <el-table-column prop="" label="受理时间" width="180">
+              <template slot-scope="scope">{{getTime(scope.row.receiveTime, 'yyyy-MM-dd hh:mm')}}</template>
+            </el-table-column>
+            <el-table-column prop="receiverName" label="受理人员" width="180"></el-table-column>
+            <el-table-column prop="troubleShootingTime" label="排查时间" width="180"></el-table-column>
+            <el-table-column prop="troubleShootingReport" label="排查结果" width="180"></el-table-column>
+          </el-table>
+        </div>
+        <div class="c-pagination">
+          <el-pagination
+            layout="prev, pager, next" @current-change="getTableList"
+            :total="total" :page-size="pageSize" :current-page.sync="currentPage">
+          </el-pagination>
+        </div>
+      </div>
+    </el-main>
+  </el-container>
+</template>
+
+<script>
+  import time from '@/utils/time.js';
+  export default {
+    name: 'alarm',
+    data () {
+      return {
+        loading: false,
+        tableData: [],
+        pageSize: 10,
+        total: 0,
+        currentPage: 1
+      }
+    },
+    methods: {
+      getTableList() {
+        this.loading = true;
+        let url = `property/alarm/getAlarm`;
+        this.$xttp.post(url, {
+          page: this.currentPage,
+          size: this.pageSize
+        }).then(res => {
+          console.log(res);
+          if (res.errorCode === 0) {
+            this.tableData = res.data.records;
+            this.total = res.data.total;
+          }
+        }).catch(err => {
+          this.$message({
+            meesage: err.response.statusText,
+            type: 'error'
+          });
+        })
+      },
+      getTime(timestamp, format) {
+        return time.timestampToFormat(timestamp, format);
+      }
+    },
+    created() {
+      this.getTableList()
+    }
+  }
+</script>
+
+<style scoped lang="scss">
+
+</style>
