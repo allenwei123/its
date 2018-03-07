@@ -77,7 +77,11 @@ export default new Router({
                 children: [
                   { path: 'elevator', component: () => import('@/page/home/nav/communityIoT/elevator/list') },
                   { path: 'elevatorFault', component: () => import('@/page/home/nav/communityIoT/elevator/fault') },
-                  { path: 'elevatorMaintenance', component: () => import('@/page/home/nav/communityIoT/elevator/maintenance') }
+                  { path: 'elevatorRecord', component: () => import('@/page/home/nav/communityIoT/elevator/record') },
+                  { path: 'door', component: () => import('@/page/home/nav/communityIoT/door/list') },
+                  { path: 'doorRecord', component: () => import('@/page/home/nav/communityIoT/door/record') },
+                  { path: 'parkinglotDevice', component: () => import('@/page/home/nav/communityIoT/parkinglot/device/list') },
+                  { path: 'parkinglotRecord', component: () => import('@/page/home/nav/communityIoT/parkinglot/record/list') }
                 ]
               }
             ]

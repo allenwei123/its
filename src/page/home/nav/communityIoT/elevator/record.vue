@@ -1,0 +1,92 @@
+<template>
+  <el-container>
+    <el-main>
+      <div class="c-rpass-container">
+        <div class="c-searchbar">
+          <el-form :inline="true" class="demo-form-inline">
+            <el-form-item label="">
+              <el-date-picker
+                v-model="input"
+                type="date"
+                placeholder="选择日期">
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="query">查询</el-button>
+            </el-form-item>
+          </el-form>
+        </div>
+        <div class="c-list">
+          <el-table :data="tableData" style="width: 100%" v-loading="loading">
+            <el-table-column label="序号" width="80">
+              <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
+            </el-table-column>
+            <el-table-column label="使用时间">
+              <template slot-scope="scope">???</template>
+            </el-table-column>
+            <el-table-column label="用户姓名">
+              <template slot-scope="scope">???</template>
+            </el-table-column>
+            <el-table-column label="身份">
+              <template slot-scope="scope">???</template>
+            </el-table-column>
+            <el-table-column label="使用方式">
+              <template slot-scope="scope">???</template>
+            </el-table-column>
+          </el-table>
+        </div>
+        <div class="c-pagination">
+          <el-pagination
+            layout="total, prev, pager, next, jumper" @current-change="getTableList"
+            :total="total" :page-size="pageSize" :current-page.sync="currentPage">
+          </el-pagination>
+        </div>
+      </div>
+    </el-main>
+  </el-container>
+</template>
+<script>
+  import time from '@/utils/time.js';
+
+  export default {
+    data() {
+      return {
+        loading: false,
+        tableData: [{},{},{}],
+        pageSize: 10,
+        total: 0,
+        currentPage: 1,
+        input: '',
+        q_input: null
+      }
+    }, methods: {
+      query() {
+        this.currentPage = 1;
+        this.q_input = this.input;
+        this.getTableList();
+      }, getTableList() {
+        // this.loading = true;
+        // let url = `property/rpass/page?page=${this.currentPage}&size=${this.pageSize}`;
+        // let params = {};
+        // params.communityId = this.communityId;
+        // if (this.q_input) {
+        //   params.userName = this.q_input;
+        // }
+        // this.$xttp.post(url, params).then(res => {
+        //   this.loading = false;
+        //   if (res.errorCode === 0) {
+        //     this.tableData = res.data.records;
+        //     this.total = res.data.total;
+        //   }
+        // }).catch(() => {
+        //   this.loading = false;
+        // })
+      }, getTime(timestamp, format) {
+        return time.timestampToFormat(timestamp, format);
+      }
+    }, created() {
+
+    }
+  }
+</script>
+<style scoped lang="scss"></style>
