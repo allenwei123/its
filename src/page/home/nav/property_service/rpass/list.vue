@@ -7,27 +7,27 @@
         </div>
         <div class="c-list">
           <el-table :data="tableData" style="width: 100%">
-            <el-table-column prop="id" label="编号" width="180"></el-table-column>
-            <el-table-column prop="userName" label="申报人" width="180"></el-table-column>
-            <el-table-column prop="" label="住房">
+            <el-table-column prop="id" label="编号" width="220"></el-table-column>
+            <el-table-column prop="userName" label="申报人" width="120"></el-table-column>
+            <el-table-column prop="" label="住房" width="150">
               <template slot-scope="scope">{{scope.row.building}}{{scope.row.room}}</template>
             </el-table-column>
-            <el-table-column prop="phone" label="联系方式" width="180"></el-table-column>
-            <el-table-column prop="name" label="有效时间" width="180">
+            <el-table-column prop="phone" label="联系方式" width="150"></el-table-column>
+            <el-table-column prop="name" label="有效时间" width="280">
               <template slot-scope="scope">{{getTime(scope.row.beginAt, 'yyyy-MM-dd hh:mm')}}~{{getTime(scope.row.endAt, 'yyyy-MM-dd hh:mm')}}</template>
             </el-table-column>
-            <el-table-column prop="remark" label="备注"></el-table-column>
-            <el-table-column prop="date" label="状态" width="180">
+            <el-table-column prop="remark" label="备注" width="150"></el-table-column>
+            <el-table-column prop="date" label="状态" width="80">
               <template slot-scope="scope">{{scope.row.releaseStatus === 1 ? '有效' : '失效'}}</template>
             </el-table-column>
-            <el-table-column prop="name" label="使用时间" width="180">
+            <el-table-column prop="name" label="使用时间" width="160">
               <template slot-scope="scope">{{getTime(scope.row.updateAt, 'yyyy-MM-dd hh:mm')}}</template>
             </el-table-column>
           </el-table>
         </div>
         <div class="c-pagination">
           <el-pagination
-            layout="prev, pager, next" @current-change="getTableList"
+            layout="total, prev, pager, next, jumper" @current-change="getTableList"
             :total="total" :page-size="pageSize" :current-page.sync="currentPage">
           </el-pagination>
         </div>
@@ -60,6 +60,12 @@
           if (res.errorCode === 0) {
             this.tableData = res.data.records;
             this.total = res.data.total;
+          }
+          else {
+            this.$message({
+              message: res.errorMsg,
+              type: 'error'
+            });
           }
         }).catch(err => {
           this.$message({

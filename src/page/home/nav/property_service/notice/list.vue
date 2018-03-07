@@ -17,40 +17,40 @@
         </div>
         <div class="c-list">
           <el-table :data="tableData" style="width: 100%">
-            <el-table-column prop="" label="#" width="180">
+            <el-table-column prop="" label="#" width="80">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
             <el-table-column prop="title" label="标题" width="180"></el-table-column>
-            <el-table-column prop="" label="类型">
+            <el-table-column prop="" label="类型" width="60">
               <template slot-scope="scope">{{getNoticeTypeName(scope.row.noticeType)}}</template>
             </el-table-column>
             <el-table-column prop="communityId" label="所属社区" width="180"></el-table-column>
-            <el-table-column prop="" label="发布对象" width="180">
+            <el-table-column prop="" label="发布对象" width="100">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column prop="date" label="状态" width="180">
+            <el-table-column prop="date" label="状态" width="100">
               <template slot-scope="scope">{{getPublishStatusName(scope.row.publishStatus)}}</template>
             </el-table-column>
-            <el-table-column prop="" label="最后操作人员" width="180">
+            <el-table-column prop="" label="最后操作人员" width="150">
               <template slot-scope="scope">{{scope.row.editorName}}</template>
             </el-table-column>
-            <el-table-column prop="" label="最后操作时间" width="180">
+            <el-table-column prop="" label="最后操作时间" width="160">
               <template slot-scope="scope">{{getTime(scope.row.updateAt, 'yyyy-MM-dd hh:mm')}}</template>
             </el-table-column>
             <el-table-column prop="" label="操作" width="180" fixed="right">
               <template slot-scope="scope">
-                <el-button type="text" @click="preview(scope.row)">预览</el-button>
-                <el-button type="text" v-if="scope.row.publishStatus !== 1">修改</el-button>
-                <el-button type="text" v-if="scope.row.publishStatus !== 1" @click="publish(scope.row)">发布</el-button>
-                <el-button type="text" v-if="scope.row.publishStatus !== 1">删除</el-button>
-                <el-button type="text" v-if="scope.row.publishStatus === 1" @click="">撤销</el-button>
+                <el-button type="primary" size="small" @click="preview(scope.row)">预览</el-button>
+                <el-button type="primary" size="small" v-if="scope.row.publishStatus !== 1">修改</el-button>
+                <el-button type="primary" size="small" v-if="scope.row.publishStatus !== 1" @click="publish(scope.row)">发布</el-button>
+                <el-button type="primary" size="small" v-if="scope.row.publishStatus !== 1">删除</el-button>
+                <el-button type="primary" size="small" v-if="scope.row.publishStatus === 1" @click="">撤销</el-button>
               </template>
             </el-table-column>
           </el-table>
         </div>
         <div class="c-pagination">
           <el-pagination
-            layout="prev, pager, next" @current-change="getTableList"
+            layout="total, prev, pager, next, jumper" @current-change="getTableList"
             :total="total" :page-size="pageSize" :current-page.sync="currentPage">
           </el-pagination>
         </div>
@@ -117,6 +117,12 @@
           if (res.errorCode === 0) {
             item.publishStatus = 1;
           }
+          else {
+            this.$message({
+              message: res.errorMsg,
+              type: 'error'
+            });
+          }
         }).catch(err => {
           this.$message({
             meesage: err.response.statusText,
@@ -140,6 +146,12 @@
           if (res.errorCode === 0) {
             this.tableData = res.data.records;
             this.total = res.data.total;
+          }
+          else {
+            this.$message({
+              message: res.errorMsg,
+              type: 'error'
+            });
           }
         }).catch(err => {
           this.$message({
