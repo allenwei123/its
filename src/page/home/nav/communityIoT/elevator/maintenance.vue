@@ -5,7 +5,7 @@
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
             <el-form-item label="">
-              <el-input placeholder="电梯名/设备ID" v-model.trim="input"></el-input>
+              <el-input placeholder="请输入故障序号" v-model.trim="input"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="query">查询</el-button>
@@ -17,25 +17,25 @@
             <el-table-column label="序号" width="80">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column label="电梯名" width="100">
+            <el-table-column label="故障码" width="100">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="设备ID" width="120">
+            <el-table-column label="电梯名" width="120">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="所在社区" width="120">
-              <template slot-scope="scope">???</template>
-            </el-table-column>
-            <el-table-column label="所属楼栋" width="120">
-              <template slot-scope="scope">???</template>
-            </el-table-column>
-            <el-table-column label="产商" width="120">
+            <el-table-column label="厂商" width="120">
               <template slot-scope="scope">???</template>
             </el-table-column>
             <el-table-column label="型号" width="120">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="运行状态" width="80">
+            <el-table-column label="故障时间" width="160">
+              <template slot-scope="scope">???</template>
+            </el-table-column>
+            <el-table-column label="电梯状态" width="80">
+              <template slot-scope="scope">???</template>
+            </el-table-column>
+            <el-table-column label="故障描述" width="200">
               <template slot-scope="scope">???</template>
             </el-table-column>
             <el-table-column label="操作" width="200" fixed="right">
@@ -60,7 +60,7 @@
   import time from '@/utils/time.js';
 
   export default {
-    name: 'message', data() {
+    data() {
       return {
         loading: false,
         tableData: [{},{},{}],
