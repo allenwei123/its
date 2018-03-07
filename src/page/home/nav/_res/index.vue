@@ -43,16 +43,20 @@ import obj1 from '../../../../mock/mok.json'
     },
     methods:{
       alink(item) {
-        this.$router.push(item.url)
+        this.$router.push({path:item.url,query:{page:1}})
       },
       cn() {
           this.isCollapse = !this.isCollapse;
+          this.$store.dispatch('change_aside',!this.isCollapse);
       }
     }
   }
 </script>
 
 <style scoped lang="scss">
+  .content {
+    margin-top:40px;
+  }
   .c-container {
     height:calc(100vh - 40px);
   }

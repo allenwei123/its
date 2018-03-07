@@ -44,22 +44,13 @@
           phone: this.phone,
           pwd: this.pwd
         }).then((res) => {
+          loadingInstance.close();
           this.$store.dispatch('changeToken', res.data);
           if (res.errorCode === 0) {
             this.$router.push('/home');
           }
-          else {
-            this.$message({
-              message: res.errorMsg,
-              type: 'error'
-            });
-          }
-          loadingInstance.close();
         }).catch((err) => {
-          this.$message({
-            message: err.response.statusText,
-            type: 'error'
-          });
+          console.log(err);
           loadingInstance.close();
         });
       }

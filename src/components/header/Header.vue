@@ -65,6 +65,9 @@
   $fontColor:#fff;
   $headerH: 40px;
   .c-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
     height: $headerH;
     border-bottom: 1px solid hsla(0, 0%, 100%, .15);
     background: $headerBg;
