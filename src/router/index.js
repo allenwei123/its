@@ -74,6 +74,10 @@ export default new Router({
               {
                 path: 'fault',
                 component: () => import('@/page/home/nav/property_service/fault/list')
+              },
+              {
+                path: 'message',
+                component: () => import('@/page/home/nav/property_service/message/list')
               }
             ]
           }]
