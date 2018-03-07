@@ -22,3 +22,34 @@ $headerBg:#23262b;
   }
 }
 
+.c-ip2 {
+  width:47%;
+}
+
+.c-must {//表单是否必填
+  .el-form-item__label {
+    &:before{
+      content: '*';
+      color:red;
+    }
+  }
+}
+.c-eascader {
+  .el-cascader {
+    width:100%;
+  }
+}
+
+.el-dialog__header {
+  background-color: $headerBg;
+  .el-dialog__title {
+    color:#ffffff;
+  }
+}
+
+.el-table th {
+  background-color: $headerBg;
+  .cell {
+    color:#fff;
+  }
+}

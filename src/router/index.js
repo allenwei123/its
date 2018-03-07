@@ -35,15 +35,20 @@ export default new Router({
                 component: r => require.ensure([], () => r(require('../page/home/nav/content/_res')), 'side')
               },
               {
-                path: 'property-service/rpass/list',
+                path: 'property-service/rpass',
                 component: () => import('@/page/home/nav/property_service/rpass/list')
               },
               {
-                path: 'property-service/alarm/list',
+                path: 'property-service/alarm',
                 component: () => import('@/page/home/nav/property_service/alarm/list')
               },
               {
+                path: 'property-service/notice',
+                component: () => import('@/page/home/nav/property_service/notice/list')
+              },
+              {
                 path: 'other',
+                name:'dangan',
                 component: r => require.ensure([], () => r(require('../page/home/nav/content/charge/other')), 'side')
               },
               { 

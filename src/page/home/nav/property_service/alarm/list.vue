@@ -11,18 +11,24 @@
             <el-table-column prop="callerName" label="申报人" width="180"></el-table-column>
             <el-table-column prop="roomName" label="住房"></el-table-column>
             <el-table-column prop="callerPhoneNum" label="联系方式" width="180"></el-table-column>
-            <el-table-column prop="name" label="报警时间" width="180">
-              <template slot-scope="scope">{{getTime(scope.row.createAt, 'yyyy-MM-dd hh:mm')}}</template>
+            <el-table-column prop="" label="报警时间" width="180">
+              <template slot-scope="scope">{{getTime(scope.row.callTime, 'yyyy-MM-dd hh:mm')}}</template>
             </el-table-column>
             <el-table-column prop="date" label="警报状态" width="180">
-              <template slot-scope="scope">{{scope.row.releaseStatus === 1 ? '有效' : '失效'}}</template>
+              <template slot-scope="scope">{{scope.row.receiveStatus === 1 ? '待处理' : scope.row.receiveStatus === 2 ? '已接警' : '已排查' }}</template>
             </el-table-column>
             <el-table-column prop="" label="受理时间" width="180">
               <template slot-scope="scope">{{getTime(scope.row.receiveTime, 'yyyy-MM-dd hh:mm')}}</template>
             </el-table-column>
-            <el-table-column prop="receiverName" label="受理人员" width="180"></el-table-column>
-            <el-table-column prop="troubleShootingTime" label="排查时间" width="180"></el-table-column>
-            <el-table-column prop="troubleShootingReport" label="排查结果" width="180"></el-table-column>
+            <el-table-column prop="" label="受理人员" width="180">
+              <template slot-scope="scope">{{scope.row.receiverName ? scope.row.receiverName : '/'}}</template>
+            </el-table-column>
+            <el-table-column prop="" label="排查时间" width="180">
+              <template slot-scope="scope">{{getTime(scope.row.troubleShootingTime, 'yyyy-MM-dd hh:mm')}}</template>
+            </el-table-column>
+            <el-table-column prop="" label="排查结果" width="180">
+              <template slot-scope="scope">{{scope.row.troubleShootingReport ? scope.row.troubleShootingReport : '/'}}</template>
+            </el-table-column>
           </el-table>
         </div>
         <div class="c-pagination">
@@ -70,6 +76,7 @@
         })
       },
       getTime(timestamp, format) {
+        if (timestamp == null) return '/';
         return time.timestampToFormat(timestamp, format);
       }
     },
