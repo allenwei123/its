@@ -10,9 +10,7 @@
             <el-form-item label="所在部门">
               <el-select v-model="formInline.dep" placeholder="所在部门">
                 <el-option v-for="item in depOptions" :key="item.key" :label="item.display_name" :value="item.key">
-              </el-option>
-                <!-- <el-option label="物业部" value="shanghai"></el-option>
-                <el-option label="交通部" value="beijing"></el-option> -->
+                </el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="">
@@ -65,7 +63,7 @@
           </el-form-item>
           <el-form-item label="配置角色">
             <el-radio-group v-model="temp.role">
-              <el-radio :label="item.value" v-for="item in roleOptions"></el-radio>
+              <el-radio :label="item.value" :key="index" v-for="(item,index) in roleOptions"></el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="姓名" prop="name">

@@ -79,7 +79,7 @@
           </el-form-item>
           <el-form-item label="配置角色">
             <el-radio-group v-model="temp.role">
-              <el-radio :label="item.value" v-for="item in roleOptions"></el-radio>
+              <el-radio :label="item.value" :key="index" v-for="(item,index) in roleOptions"></el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="姓名" prop="name">
