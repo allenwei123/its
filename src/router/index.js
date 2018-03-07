@@ -58,7 +58,7 @@ export default new Router({
               // 物业服务
               {
                 path: 'propertyService',
-                component: () => import('@/page/home/nav/property_service/rpass/list'),
+                component: App,
                 redirect: 'propertyService/rpass',
                 children: [
                   { path: 'rpass', component: () => import('@/page/home/nav/property_service/rpass/list') },
@@ -72,10 +72,12 @@ export default new Router({
               // 社区物联
               {
                 path: 'communityIoT',
-                component: () => import('@/page/home/nav/communityIoT/elevator/list'),
+                component: App,
                 redirect: 'communityIoT/elevator',
                 children: [
-                  { path: 'elevator', component: () => import('@/page/home/nav/communityIoT/elevator/list') }
+                  { path: 'elevator', component: () => import('@/page/home/nav/communityIoT/elevator/list') },
+                  { path: 'elevatorFault', component: () => import('@/page/home/nav/communityIoT/elevator/fault') },
+                  { path: 'elevatorMaintenance', component: () => import('@/page/home/nav/communityIoT/elevator/maintenance') }
                 ]
               }
             ]
