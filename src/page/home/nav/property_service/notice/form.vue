@@ -13,6 +13,11 @@
           <el-option label="其他" value="99"></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="所属社区" required>
+        <el-select v-model="form.communityId" placeholder="请选择社区">
+          <el-option v-for="item in communityList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="发布对象" required>
         <el-select v-model="form.obj" placeholder="发布对象">
           <el-option label="全部" value=""></el-option>
@@ -45,11 +50,14 @@
 </template>
 
 <script>
+  import {communityId as getCommunityList} from '@/biz/community';
   export default {
     data() {
       return {
         formVisible: this.visible,
+        communityList: [],
         form: {
+          communityId: '',
           title: '',
           type: '1',
           obj: '',
@@ -80,7 +88,12 @@
         });
       }
     },
-    props: ['visible']
+    props: ['visible'],
+    created() {
+      getCommunityList().then(res => {
+        this.communityList = res;
+      });
+    }
   }
 </script>
 

@@ -4,11 +4,16 @@
       <div class="c-notice-container">
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
+            <el-form-item>
+              <el-select v-model="communityId" placeholder="社区">
+                <el-option v-for="item in communityList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item label="">
-              <el-input  placeholder="标题"></el-input>
+              <el-input  placeholder="标题" v-model.trim="input"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="onSubmit">查询</el-button>
+              <el-button type="primary" @click="query">查询</el-button>
             </el-form-item>
             <el-form-item style="float: right">
               <el-button type="primary" @click="addNotice">新增公告</el-button>
@@ -63,10 +68,10 @@
 </template>
 
 <script>
-  import communityList from '@/mock/communityList';
   import time from '@/utils/time.js';
   import NoticeForm from './form';
   import NoticePreview from './preview';
+  import {communityId as getCommunityList} from '@/biz/community';
   export default {
     name: 'notice',
     components: {
@@ -76,18 +81,24 @@
     data () {
       return {
         loading: false,
+        communityList: [],
+        communityId: '',
         tableData: [],
         pageSize: 10,
         total: 0,
         currentPage: 1,
         formVisible: false,
         previewVisible: false,
-        previewNoticeInfo: null
+        previewNoticeInfo: null,
+        input: '',
+        q_input: null
       }
     },
     methods: {
-      onSubmit() {
-        alert(1)
+      query() {
+        this.currentPage = 1;
+        this.q_input = this.input;
+        this.getTableList();
       },
       // 获取通知类型名称
       getNoticeTypeName(type) {
@@ -131,10 +142,9 @@
       },
       getTableList() {
         this.loading = true;
-        let communityId = communityList[0].id;
         let url = `property/notice/page?page=${this.currentPage}&size=${this.pageSize}`;
         this.$xttp.post(url, {
-          communityId: communityId
+          communityId: this.communityId
         }).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {
@@ -151,7 +161,13 @@
       }
     },
     created() {
-      this.getTableList()
+      getCommunityList().then(res => {
+        this.communityList = res;
+        if (this.communityList.length) {
+          this.communityId = this.communityList[0].id;
+          this.getTableList();
+        }
+      });
     }
   }
 </script>

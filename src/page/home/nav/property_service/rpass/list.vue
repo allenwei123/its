@@ -5,10 +5,8 @@
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
             <el-form-item>
-              <el-select v-model="value" placeholder="请选择">
-                <el-option key="1" label="1" value="1"></el-option>
-                <el-option key="2" label="2" value="2"></el-option>
-                <el-option key="3" label="3" value="3"></el-option>
+              <el-select v-model="communityId" placeholder="社区">
+                <el-option v-for="item in communityList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="">
@@ -51,14 +49,15 @@
 </template>
 
 <script>
-  import communityList from '@/mock/communityList';
   import time from '@/utils/time.js';
-  import {communityId} from '@/biz/community'
+  import {communityId as getCommunityList} from '@/biz/community';
   export default {
     name: 'rpass',
     data () {
       return {
         loading: false,
+        communityList: [],
+        communityId: '',
         tableData: [],
         pageSize: 10,
         total: 0,
@@ -75,10 +74,9 @@
       },
       getTableList() {
         this.loading = true;
-        let communityId = communityList[0].id;
         let url = `property/rpass/page?page=${this.currentPage}&size=${this.pageSize}`;
         let params = {};
-        params.communityId = communityId;
+        params.communityId = this.communityId;
         if (this.q_input) {
           params.userName = this.q_input;
         }
@@ -92,17 +90,18 @@
           this.loading = false;
         })
       },
-      getCommunityList() {
-        this.$xttp.get('community/list').then(res => {
-
-        });
-      },
       getTime(timestamp, format) {
         return time.timestampToFormat(timestamp, format);
       }
     },
     created() {
-      this.getTableList();
+      getCommunityList().then(res => {
+        this.communityList = res;
+        if (this.communityList.length) {
+          this.communityId = this.communityList[0].id;
+          this.getTableList();
+        }
+      });
     }
   }
 </script>
