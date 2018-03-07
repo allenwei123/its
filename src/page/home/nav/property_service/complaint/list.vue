@@ -10,9 +10,6 @@
             <el-form-item>
               <el-button type="primary" @click="onSubmit">查询</el-button>
             </el-form-item>
-            <el-form-item style="float: right">
-              <el-button type="primary" @click="addNotice">新增公告</el-button>
-            </el-form-item>
           </el-form>
         </div>
         <div class="c-list">
@@ -20,22 +17,20 @@
             <el-table-column prop="" label="#" width="80">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column prop="title" label="标题" width="180"></el-table-column>
-            <el-table-column prop="" label="类型" width="60">
-              <template slot-scope="scope">{{getNoticeTypeName(scope.row.noticeType)}}</template>
+            <el-table-column prop="title" label="投诉人" width="180">
+              <template slot-scope="scope">？？？</template>
             </el-table-column>
-            <el-table-column prop="communityId" label="所属社区" width="180"></el-table-column>
-            <el-table-column prop="" label="发布对象" width="100">
-              <template slot-scope="scope">???</template>
+            <el-table-column prop="" label="社区" width="180">
+              <template slot-scope="scope">？？？</template>
             </el-table-column>
-            <el-table-column prop="date" label="状态" width="100">
-              <template slot-scope="scope">{{getPublishStatusName(scope.row.publishStatus)}}</template>
+            <el-table-column prop="date" label="联系方式" width="100">
+              <template slot-scope="scope">？？？</template>
             </el-table-column>
-            <el-table-column prop="" label="最后操作人员" width="150">
-              <template slot-scope="scope">{{scope.row.editorName}}</template>
+            <el-table-column prop="" label="投诉时间" width="160">
+              <template slot-scope="scope">？？？</template>
             </el-table-column>
-            <el-table-column prop="" label="最后操作时间" width="160">
-              <template slot-scope="scope">{{getTime(scope.row.updateAt, 'yyyy-MM-dd hh:mm')}}</template>
+            <el-table-column prop="" label="投诉内容" width="160">
+              <template slot-scope="scope">？？？</template>
             </el-table-column>
             <el-table-column prop="" label="操作" width="180" fixed="right">
               <template slot-scope="scope">
@@ -55,9 +50,6 @@
           </el-pagination>
         </div>
       </div>
-
-      <NoticeForm :visible.sync="formVisible"></NoticeForm>
-      <NoticePreview :visible.sync="previewVisible" :noticeInfo="previewNoticeInfo"></NoticePreview>
     </el-main>
   </el-container>
 </template>
@@ -65,69 +57,20 @@
 <script>
   import communityList from '@/mock/communityList';
   import time from '@/utils/time.js';
-  import NoticeForm from './form';
-  import NoticePreview from './preview';
   export default {
-    name: 'notice',
-    components: {
-      NoticeForm,
-      NoticePreview
-    },
+    name: 'complaint',
     data () {
       return {
         loading: false,
         tableData: [],
         pageSize: 10,
         total: 0,
-        currentPage: 1,
-        formVisible: false,
-        previewVisible: false,
-        previewNoticeInfo: null
+        currentPage: 1
       }
     },
     methods: {
       onSubmit() {
         alert(1)
-      },
-      // 获取通知类型名称
-      getNoticeTypeName(type) {
-        let names = {
-          '1': '公告',
-          '2': '新闻',
-          '3': '活动',
-          '4': '提醒',
-          '99': '其他'
-        };
-        return names[type];
-      },
-      getPublishStatusName(status) {
-        let names = {
-          '-1': '已撤销',
-          '0': '未发布',
-          '1': '已发布'
-        };
-        return names[status];
-      },
-      // 发布公告
-      publish(item) {
-        this.loading = true;
-        let noticeId = item.id;
-        let url = `property/notice/${noticeId}/publish`;
-        this.$xttp.get(url).then((res) => {
-          this.loading = false;
-          if (res.errorCode === 0) {
-            item.publishStatus = 1;
-          }
-        }).catch(() => {
-          this.loading = false;
-        });
-      },
-      addNotice() {
-        this.formVisible = true;
-      },
-      preview(item) {
-        this.previewNoticeInfo = item;
-        this.previewVisible = true;
       },
       getTableList() {
         this.loading = true;

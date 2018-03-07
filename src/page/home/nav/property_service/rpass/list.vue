@@ -3,7 +3,21 @@
     <el-main>
       <div class="c-rpass-container">
         <div class="c-searchbar">
-
+          <el-form :inline="true" class="demo-form-inline">
+            <el-form-item>
+              <el-select v-model="value" placeholder="请选择">
+                <el-option key="1" label="1" value="1"></el-option>
+                <el-option key="2" label="2" value="2"></el-option>
+                <el-option key="3" label="3" value="3"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="">
+              <el-input placeholder="申请人" v-model.trim="input"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="query">查询</el-button>
+            </el-form-item>
+          </el-form>
         </div>
         <div class="c-list">
           <el-table :data="tableData" style="width: 100%" v-loading="loading">
@@ -39,6 +53,7 @@
 <script>
   import communityList from '@/mock/communityList';
   import time from '@/utils/time.js';
+  import {communityId} from '@/biz/community'
   export default {
     name: 'rpass',
     data () {
@@ -47,42 +62,47 @@
         tableData: [],
         pageSize: 10,
         total: 0,
-        currentPage: 1
+        currentPage: 1,
+        input: '',
+        q_input: null
       }
     },
     methods: {
+      query() {
+        this.currentPage = 1;
+        this.q_input = this.input;
+        this.getTableList();
+      },
       getTableList() {
         this.loading = true;
         let communityId = communityList[0].id;
         let url = `property/rpass/page?page=${this.currentPage}&size=${this.pageSize}`;
-        this.$xttp.post(url, {
-          communityId: communityId,
-        }).then(res => {
+        let params = {};
+        params.communityId = communityId;
+        if (this.q_input) {
+          params.userName = this.q_input;
+        }
+        this.$xttp.post(url, params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {
             this.tableData = res.data.records;
             this.total = res.data.total;
           }
-          else {
-            this.$message({
-              message: res.errorMsg,
-              type: 'error'
-            });
-          }
-        }).catch(err => {
+        }).catch(() => {
           this.loading = false;
-          this.$message({
-            message: err.response.statusText,
-            type: 'error'
-          });
         })
+      },
+      getCommunityList() {
+        this.$xttp.get('community/list').then(res => {
+
+        });
       },
       getTime(timestamp, format) {
         return time.timestampToFormat(timestamp, format);
       }
     },
     created() {
-      this.getTableList()
+      this.getTableList();
     }
   }
 </script>

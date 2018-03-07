@@ -3,7 +3,14 @@
     <el-main>
       <div class="c-alarm-container">
         <div class="c-searchbar">
-
+          <el-form :inline="true" class="demo-form-inline">
+            <el-form-item label="">
+              <el-input placeholder="申请人" v-model.trim="input"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="query">查询</el-button>
+            </el-form-item>
+          </el-form>
         </div>
         <div class="c-list">
           <el-table :data="tableData" style="width: 100%" v-loading="loading">
@@ -52,10 +59,17 @@
         tableData: [],
         pageSize: 10,
         total: 0,
-        currentPage: 1
+        currentPage: 1,
+        input: '',
+        q_input: null
       }
     },
     methods: {
+      query() {
+        this.currentPage = 1;
+        this.q_input = this.input;
+        this.getTableList();
+      },
       getTableList() {
         this.loading = true;
         let url = `property/alarm/getAlarm`;
@@ -68,17 +82,8 @@
             this.tableData = res.data.records;
             this.total = res.data.total;
           }
-          else {
-            this.$message({
-              message: res.errorMsg,
-              type: 'error'
-            });
-          }
-        }).catch(err => {
-          this.$message({
-            message: err.response.statusText,
-            type: 'error'
-          });
+        }).catch(() => {
+          this.loading = false;
         })
       },
       getTime(timestamp, format) {
