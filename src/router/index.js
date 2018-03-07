@@ -35,37 +35,41 @@ export default new Router({
                 component: () => import('@/page/home/nav/content/floorFile/list')
               },
               {
-                path: 'property-service/rpass',
+                path: 'rpass',
                 component: () => import('@/page/home/nav/property_service/rpass/list')
               },
               {
-                path: 'property-service/alarm',
+                path: 'alarm',
                 component: () => import('@/page/home/nav/property_service/alarm/list')
               },
               {
-                path: 'property-service/notice',
+                path: 'notice',
                 component: () => import('@/page/home/nav/property_service/notice/list')
+              },
+              {
+                path: 'complaint',
+                component: () => import('@/page/home/nav/property_service/complaint/list')
               },
               {
                 path: 'other',
                 name:'dangan',
                 component: r => require.ensure([], () => r(require('../page/home/nav/content/charge/other')), 'side')
               },
-              { 
-                path: 'empl/role', 
-                component: r => require.ensure([], () => r(require('@/page/home/nav/content/empl/role')), 'side') 
+              {
+                path: 'empl/role',
+                component: r => require.ensure([], () => r(require('@/page/home/nav/content/empl/role')), 'side')
               },
               {
                 path: 'empl/empl',
                 component: r => require.ensure([], () => r(require('@/page/home/nav/content/empl/empl')), 'side')
               },
-              { 
-                path: 'work/schedul', 
+              {
+                path: 'work/schedul',
                 component: r => require.ensure([], () => r(require('@/page/home/nav/content/work/schedul')), 'side')
               },
               {
-                path: 'work/attendance', 
-                component: r => require.ensure([], () => r(require('@/page/home/nav/content/work/attendance')), 'side') 
+                path: 'work/attendance',
+                component: r => require.ensure([], () => r(require('@/page/home/nav/content/work/attendance')), 'side')
               }
             ]
           }]
