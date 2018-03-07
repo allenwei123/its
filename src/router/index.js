@@ -70,6 +70,10 @@ export default new Router({
               {
                 path: 'work/attendance',
                 component: r => require.ensure([], () => r(require('@/page/home/nav/content/work/attendance')), 'side')
+              },
+              {
+                path: 'fault',
+                component: () => import('@/page/home/nav/property_service/fault/list')
               }
             ]
           }]
