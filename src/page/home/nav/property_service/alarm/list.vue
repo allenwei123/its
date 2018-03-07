@@ -6,7 +6,7 @@
 
         </div>
         <div class="c-list">
-          <el-table :data="tableData" style="width: 100%">
+          <el-table :data="tableData" style="width: 100%" v-loading="loading">
             <el-table-column prop="id" label="编号" width="220"></el-table-column>
             <el-table-column prop="callerName" label="申报人" width="120"></el-table-column>
             <el-table-column prop="roomName" label="住房" width="120"></el-table-column>
@@ -63,7 +63,7 @@
           page: this.currentPage,
           size: this.pageSize
         }).then(res => {
-          console.log(res);
+          this.loading = false;
           if (res.errorCode === 0) {
             this.tableData = res.data.records;
             this.total = res.data.total;
@@ -76,7 +76,7 @@
           }
         }).catch(err => {
           this.$message({
-            meesage: err.response.statusText,
+            message: err.response.statusText,
             type: 'error'
           });
         })

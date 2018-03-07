@@ -11,12 +11,12 @@
               <el-button type="primary" @click="onSubmit">查询</el-button>
             </el-form-item>
             <el-form-item style="float: right">
-              <el-button @click="addNotice">新增公告</el-button>
+              <el-button type="primary" @click="addNotice">新增公告</el-button>
             </el-form-item>
           </el-form>
         </div>
         <div class="c-list">
-          <el-table :data="tableData" style="width: 100%">
+          <el-table :data="tableData" style="width: 100%" v-loading="loading">
             <el-table-column prop="" label="#" width="80">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
@@ -114,6 +114,7 @@
         let noticeId = item.id;
         let url = `property/notice/${noticeId}/publish`;
         this.$xttp.get(url).then((res) => {
+          this.loading = false;
           if (res.errorCode === 0) {
             item.publishStatus = 1;
           }
@@ -124,8 +125,9 @@
             });
           }
         }).catch(err => {
+          this.loading = false;
           this.$message({
-            meesage: err.response.statusText,
+            message: err.response.statusText,
             type: 'error'
           });
         });
@@ -140,9 +142,11 @@
       getTableList() {
         this.loading = true;
         let communityId = communityList[0].id;
-        let url = `property/notice/${communityId}/page?page=${this.currentPage}&size=${this.pageSize}`;
-        this.$xttp.get(url).then(res => {
-          console.log(res);
+        let url = `property/notice/page?page=${this.currentPage}&size=${this.pageSize}`;
+        this.$xttp.post(url, {
+          communityId: communityId
+        }).then(res => {
+          this.loading = false;
           if (res.errorCode === 0) {
             this.tableData = res.data.records;
             this.total = res.data.total;
@@ -154,8 +158,9 @@
             });
           }
         }).catch(err => {
+          this.loading = false;
           this.$message({
-            meesage: err.response.statusText,
+            message: err.response.statusText,
             type: 'error'
           });
         })
