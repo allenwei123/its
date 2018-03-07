@@ -41,7 +41,7 @@
         <el-table-column
           prop="address"
           label="地址"
-          width="120">
+          width="200">
         </el-table-column>
         <el-table-column
           prop="time1"
