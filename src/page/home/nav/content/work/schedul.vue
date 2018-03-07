@@ -18,14 +18,13 @@
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="onSubmit"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
+              <el-button type="default" @click="setSchedule"><i class="iconfont">&nbsp;</i>早中晚设置</el-button>
             </el-form-item>
           </el-form>
-          <el-button type="primary" icon="el-icon-edit" class="c-addBtn" @click="handleCreate">早中晚班设置</el-button>
-          <!-- <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">{{$t('table.add')}}</el-button> -->
-          <!-- <el-button type="primary" icon="el-icon-edit">新增角色</el-button> -->
+          <el-button type="primary" icon="el-icon-edit" class="c-addBtn" @click="handleCreate">新增员工排班</el-button>
         </div>
       </div>
-      <el-table class="c-table" :data="tableData" border element-loading-text="给我一点时间" 
+      <el-table class="c-table" :data="tableData" border element-loading-text="努力加载..." 
                 border fit highlight-current-row ref="multipleTable" style="width: 100%">
         <el-table-column label="序号" type="index" align="center"  width="60"></el-table-column>
         <el-table-column prop="id" v-if="show"></el-table-column>
@@ -37,12 +36,6 @@
         <el-table-column prop="userName" label="员工" align="center" width="120"></el-table-column>
         <el-table-column prop="className" label="班次" align="center" width="120"></el-table-column>
         <el-table-column prop="postCode" label="角色" align="center" width="120" :formatter="postCodeFilter"></el-table-column>
-        <!-- <el-table-column prop="role" label="角色" align="center" width="200" :formatter="roleFilter"> </el-table-column>
-        <el-table-column prop="dep" label="部门" align="center" width="120"></el-table-column> -->
-        
-        <!-- <el-table-column prop="male" label="性别" align="center" width="70" :formatter="maleFilter"></el-table-column>
-        <el-table-column prop="phone" label="手机号" align="center" width="120"> </el-table-column> -->
-        <!-- <el-table-column prop="updateAt" label="修改时间" align="center" width="120"></el-table-column> -->
         <el-table-column prop="" label="当前日期" width="150" align="center">
           <template slot-scope="scope">{{getTime(scope.row.updateAt, 'yyyy-MM-dd hh:mm')}}</template>
         </el-table-column>
@@ -58,45 +51,78 @@
       </el-table>
       <div class="pagination-container">
         <el-pagination
-          @current-change="getData"
+          @current-change="handleCurrentChange"
           :current-page.sync="currentPage"
-          :page-size="pageSize"
+          :page-size="10"
           layout="total, prev, pager, next, jumper"
           :total="total">
         </el-pagination>
       </div>
-      <!-- <div class="pagination-container">
-      <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="listQuery.page" :page-sizes="[10,20,30, 50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
-      </el-pagination>
-    </div> -->
+
       <el-dialog :visible.sync="dialogFormVisible">
         <el-form :model="temp" ref="temp" label-position="left" label-width="70px" style='width: 400px; margin-left:50px;'>
-          <el-form-item label="所属部门" prop="dep">
-            <el-select class="filter-item" v-model="temp.dep" placeholder="请选择">
-              <el-option v-for="item in depOptions" :key="item.key" :label="item.display_name" :value="item.key">
-              </el-option>
-            </el-select>
+          <el-form-item label="早班" prop="name" style="width:540px;">
+            <el-time-select
+              placeholder="起始时间"
+              v-model="mStartTime"
+              :picker-options="{
+                start: '08:30',
+                step: '00:15',
+                end: '18:30'
+              }">
+            </el-time-select> - 
+            <el-time-select
+              placeholder="结束时间"
+              v-model="mEndTime"
+              :picker-options="{
+                start: '08:30',
+                step: '00:15',
+                end: '18:30',
+                minTime: startTime
+              }">
+            </el-time-select>
           </el-form-item>
-          <el-form-item label="配置角色">
-            <el-radio-group v-model="temp.role">
-              <el-radio :label="item.value" :key="index" v-for="(item,index) in roleOptions"></el-radio>
-            </el-radio-group>
+          <el-form-item label="中班" prop="name" style="width:540px;">
+            <el-time-select
+              placeholder="起始时间"
+              v-model="startTime"
+              :picker-options="{
+                start: '08:30',
+                step: '00:15',
+                end: '18:30'
+              }">
+            </el-time-select> - 
+            <el-time-select
+              placeholder="结束时间"
+              v-model="endTime"
+              :picker-options="{
+                start: '08:30',
+                step: '00:15',
+                end: '18:30',
+                minTime: startTime
+              }">
+            </el-time-select>
           </el-form-item>
-          <el-form-item label="姓名" prop="name">
-            <el-input v-model="temp.name" placeholder="请输入姓名"></el-input>
-          </el-form-item>
-          <el-form-item label="性别" prop="male">
-            <el-select v-model="temp.male" placeholder="请选择">
-              <el-option v-for="item in maleOptions" :key="item.key" :label="item.value" :value="item.key">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="手机号码" prop="phone">
-            <el-input v-model="temp.phone" type="text" placeholder="请输入手机号码">
-            </el-input>
-          </el-form-item>
-          <el-form-item label="设置密码" prop="pwd">
-            <el-input v-model="temp.pwd" type="password"></el-input>
+          <el-form-item label="晚班" prop="name" style="width:540px;">
+            <el-time-select
+              placeholder="起始时间"
+              v-model="startTime"
+              :picker-options="{
+                start: '08:30',
+                step: '00:15',
+                end: '18:30'
+              }">
+            </el-time-select> - 
+            <el-time-select
+              placeholder="结束时间"
+              v-model="endTime"
+              :picker-options="{
+                start: '08:30',
+                step: '00:15',
+                end: '18:30',
+                minTime: startTime
+              }">
+            </el-time-select>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -144,31 +170,6 @@
     name: 'role',
     data() {
         return {
-          tableData1: [{
-            date: '2018-03-03',
-            name: '陈金辉',
-            schedul: '0',
-            role: '0',
-            dep: '住建部'
-          }, {
-            date: '2018-03-03',
-            name: '陈金辉',
-            schedul: '0',
-            role: '0',
-            dep: '住建部'
-          }, {
-            date: '2018-03-03',
-            name: '陈金辉',
-            schedul: '0',
-            role: '0',
-            dep: '住建部'
-          }, {
-            date: '2018-03-03',
-            name: '陈金辉',
-            schedul: '0',
-            role: '0',
-            dep: '住建部'
-          }], 
           show: false,
           dialogFormVisible: false,
           dialogStatus: '',
@@ -179,9 +180,12 @@
           },
           currentPage:1,
           loading:false,
+          isShow: false,  //控制添加页面弹出
           tableData: [],
           pageSize: 10,
-          total: 0,
+          total: 0,  // 列表总数
+          see:false, //控制查看组件弹出
+          seeData: null, //查看数据
           temp: {
             time: new Date(),
             role: '',
@@ -194,6 +198,9 @@
             phone: '',
             male: '0'
           },
+          //  value4: [new Date(2016, 9, 10, 8, 40), new Date(2016, 9, 10, 9, 40)],
+          startTime: '',
+          endTime: '',
           depOptions: depOptions,
           maleOptions: maleOptions,
           roleOptions: roleOptions,
@@ -202,7 +209,10 @@
     },
     methods: {
       onSubmit() {
-        this.loading = false;
+        this.notice = null;
+      },
+      setSchedule(){
+
       },
       getData(){
         this.loading = true;

@@ -53,19 +53,19 @@ export default new Router({
               },
               { 
                 path: 'empl/role', 
-                component: r => require.ensure([], () => r(require('@/page/home/nav/empl/role')), 'side') 
+                component: r => require.ensure([], () => r(require('@/page/home/nav/content/empl/role')), 'side') 
               },
               {
                 path: 'empl/empl',
-                component: r => require.ensure([], () => r(require('@/page/home/nav/empl/empl')), 'side')
+                component: r => require.ensure([], () => r(require('@/page/home/nav/content/empl/empl')), 'side')
               },
               { 
                 path: 'work/schedul', 
-                component: r => require.ensure([], () => r(require('@/page/home/nav/work/schedul')), 'side')
+                component: r => require.ensure([], () => r(require('@/page/home/nav/content/work/schedul')), 'side')
               },
               {
                 path: 'work/attendance', 
-                component: r => require.ensure([], () => r(require('@/page/home/nav/work/attendance')), 'side') 
+                component: r => require.ensure([], () => r(require('@/page/home/nav/content/work/attendance')), 'side') 
               }
             ]
           }]
