@@ -38,10 +38,9 @@
             <el-table-column label="故障描述" width="200">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="操作" width="200" fixed="right">
+            <el-table-column label="操作" width="120" fixed="right">
               <template slot-scope="scope">
-                <el-button type="primary" size="mini">故障记录</el-button>
-                <el-button type="primary" size="mini">使用记录</el-button>
+                <el-button type="primary" size="mini">推送维修</el-button>
               </template>
             </el-table-column>
           </el-table>

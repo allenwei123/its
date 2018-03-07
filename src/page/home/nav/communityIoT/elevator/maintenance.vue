@@ -5,7 +5,11 @@
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
             <el-form-item label="">
-              <el-input placeholder="请输入故障序号" v-model.trim="input"></el-input>
+              <el-date-picker
+                v-model="input"
+                type="date"
+                placeholder="选择日期">
+              </el-date-picker>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="query">查询</el-button>
@@ -17,32 +21,17 @@
             <el-table-column label="序号" width="80">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column label="故障码" width="100">
+            <el-table-column label="使用时间">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="电梯名" width="120">
+            <el-table-column label="用户姓名">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="厂商" width="120">
+            <el-table-column label="身份">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="型号" width="120">
+            <el-table-column label="使用方式">
               <template slot-scope="scope">???</template>
-            </el-table-column>
-            <el-table-column label="故障时间" width="160">
-              <template slot-scope="scope">???</template>
-            </el-table-column>
-            <el-table-column label="电梯状态" width="80">
-              <template slot-scope="scope">???</template>
-            </el-table-column>
-            <el-table-column label="故障描述" width="200">
-              <template slot-scope="scope">???</template>
-            </el-table-column>
-            <el-table-column label="操作" width="200" fixed="right">
-              <template slot-scope="scope">
-                <el-button type="primary" size="mini">故障记录</el-button>
-                <el-button type="primary" size="mini">使用记录</el-button>
-              </template>
             </el-table-column>
           </el-table>
         </div>
