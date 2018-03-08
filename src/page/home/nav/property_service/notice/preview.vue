@@ -4,7 +4,7 @@
       <h1>{{noticeInfo.title}}</h1>
       <p>
         <span>{{publishTime}}</span>
-        <span style="margin-left: 20px">{{noticeInfo.communityId}}</span>
+        <span style="margin-left: 20px">{{noticeInfo.communityName}}</span>
       </p>
       <div>
         <pre>{{noticeInfo.body}}</pre>
