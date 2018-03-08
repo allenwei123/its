@@ -92,7 +92,7 @@
       }
     },
     created() {
-      this.getTableList()
+      this.query();
     }
   }
 </script>

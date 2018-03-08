@@ -147,9 +147,9 @@
       getTableList() {
         this.loading = true;
         let url = `property/notice/page?page=${this.currentPage}&size=${this.pageSize}`;
-        this.$xttp.post(url, {
-          communityId: this.q_communityId
-        }).then(res => {
+        let params = {};
+        params['communityId'] = this.q_communityId;
+        this.$xttp.post(url, params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {
             let communityName = this.communityList.find(item => item.id === this.q_communityId).name;
@@ -157,7 +157,6 @@
               if (!item.communityName) {
                 item.communityName = communityName;
               }
-              console.log(item);
               return item;
             });
             this.total = res.data.total;
