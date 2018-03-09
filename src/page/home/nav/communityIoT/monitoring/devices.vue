@@ -145,7 +145,21 @@ export default {
       }
     },
     sendAjax(page,name) {
-      
+      let nPage = page || this.$route.query.page || 1;
+      let obj = {page:nPage};
+      this.loading = true;
+      this.$xttp.post("/communityIoT/camera/auth/page",obj)
+      .then(res => {
+        if (!res.errorCode) {
+          this.tableData = res.data.records;
+          this.currentPage = res.data.currentPage;
+          this.total = res.data.total;
+          this.$router.push({path:this.$route.path,query:{page: nPage }})
+        }
+        this.loading = false;
+      }).catch(err => {
+        this.loading = false;
+      })
     }
   },
   created() {

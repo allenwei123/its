@@ -2,7 +2,7 @@ import axios from 'axios';
 import store from '@/store';
 import { Message } from 'element-ui'
 let service = axios.create({
-  baseURL: '/api', // api的base_url
+  baseURL: '/v1', // api的base_url
   timeout: 5000 // request timeout
 });
 

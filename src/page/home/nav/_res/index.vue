@@ -8,7 +8,7 @@
         <div class="c-settingMenu" @click="cn()">三</div>
 
         <el-menu :collapse="isCollapse" background-color="#4a5064" text-color="#fff" active-text-color="#409EFF" default-active="5a990a513d6af1cbc8da299e">
-          <el-submenu  v-for="(itemNemu,index) in arrData" :index="itemNemu.id" v-bind:key="index">
+          <el-submenu  v-for="(itemNemu,index) in asideData" :index="itemNemu.id" v-bind:key="index">
             <template slot="title"><i class="iconfont icon-wuyeguanli">&nbsp;</i><span slot="title" class="c-aside-title">{{ itemNemu.name }}</span></template>
             <el-menu-item class="test" v-for="(itemGroup,index) in itemNemu.children" v-bind:key="index" :index="itemGroup.id" @click="alink(itemGroup)">{{ itemGroup.name  }}</el-menu-item>
 
@@ -24,6 +24,8 @@
 
 <script>
 import obj1 from '../../../../mock/mok.json'
+import { mapGetters } from "vuex"
+
   export default {
     name: 'side',
     data() {
@@ -34,6 +36,7 @@ import obj1 from '../../../../mock/mok.json'
         isCollapse:false
       }
     },
+    computed: mapGetters(["asideData"]),
     components:{
     },
     created() {

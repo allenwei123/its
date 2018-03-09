@@ -10,13 +10,13 @@
       <!--nav 导航模块-->
       <div class="c-top_bar_area">
         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-          <el-menu-item index="1">首页</el-menu-item>
-          <el-menu-item index="2"><router-link to="/home/nav/side">物业管理</router-link></el-menu-item>
-          <el-menu-item index="3">物业服务</el-menu-item>
-          <el-menu-item index="4" ><router-link to="/home/nav/communityIoT">社区物联</router-link></el-menu-item>
-          <el-menu-item index="5" >商圈管理</el-menu-item>
-          <el-menu-item index="6" >系统管理</el-menu-item>
-          <el-menu-item index="7" >统计分析</el-menu-item>
+          <el-menu-item index="6">首页</el-menu-item>
+          <el-menu-item index="0"><router-link to="/home/nav/side">物业管理</router-link></el-menu-item>
+          <el-menu-item index="1">物业服务</el-menu-item>
+          <el-menu-item index="2" ><router-link to="/home/nav/communityIoT">社区物联</router-link></el-menu-item>
+          <el-menu-item index="3" >商圈管理</el-menu-item>
+          <el-menu-item index="4" >系统管理</el-menu-item>
+          <el-menu-item index="5" >统计分析</el-menu-item>
         </el-menu>
       </div>
     </div>
@@ -35,14 +35,18 @@
           {n: '文档', src: '/docs'},
           {n: '技能', src: 'http://aliyun.com'},
         ],
-        activeIndex: '1',
-        activeIndex2: '1',
+        activeIndex: '0',
         user:'admin'
       }
     },
     computed:mapState([
       'showContent'
     ]),
+    mounted() {
+      let arr = ['side','property_service','communityIoT'];
+      let currentIndex = arr.indexOf(this.$route.path.split('/')[3]);
+      this.$store.dispatch('changeAsideData',currentIndex);
+    },
     methods: {
       ...mapActions([
         'ChangeShowContent'
@@ -51,6 +55,9 @@
         this.ChangeShowContent(!this.showContent);
       },
       handleSelect(index) {
+        if(index !== '6'){
+          this.$store.dispatch('changeAsideData',index);
+        }
       },
       logout() {
         this.$router.push('/auth/logout');
