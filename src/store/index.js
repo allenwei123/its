@@ -12,7 +12,7 @@ const getters = {
   token: (state) => state.permission.userInfo ? state.permission.userInfo.token : null,
   uid: (state) => state.permission.userInfo ? state.permission.userInfo.id : null,
   userInfo: (state) => state.permission.userInfo.id,
-  showAside : state => state.tool.isShow //判断侧边栏
+  showAside: state => state.tool.isShow //判断侧边栏
 }
 export default new Vuex.Store({
   modules: {

@@ -1,10 +1,11 @@
 <template>
     <el-dialog title="社区档案详情" :visible.sync="msg" :before-close="handleClose">
         <ul>
-            <li class="c-list"><span class="c-label">社区名称:</span> <span class="c-content"> {{ data.name }} </span></li>
-            <li class="c-list"><span class="c-label">社区编号:</span> <span class="c-content"> {{ data.code }} </span></li>
-            <li class="c-list"><span class="c-label">地区:</span> <span class="c-content"> {{ data.province + data.city + data.district }} </span></li>
-            <li class="c-list"><span class="c-label">详细地址:</span> <span class="c-content"> {{ data.address }} </span></li>
+            <li class="c-list"><span class="c-label">房间名称:</span> <span class="c-content"> {{ data.name }} </span></li>
+            <li class="c-list"><span class="c-label">房间编号:</span> <span class="c-content"> {{ data.code }} </span></li>
+            <li class="c-list"><span class="c-label">房间楼层:</span> <span class="c-content"> {{ data.floorNo }} </span></li>
+            <li class="c-list"><span class="c-label">楼层号:</span> <span class="c-content"> {{ data.floorCode }} </span></li>
+            <li class="c-list"><span class="c-label">创建时间:</span> <span class="c-content"> {{ data.createAt | time }} </span></li>
         </ul>  
     </el-dialog>
 </template>
@@ -18,9 +19,7 @@ export default {
     }
   },
   props: ["msg","data"],
-  created(){
-      console.log(this.data)
-  },
+  created(){},
   methods:{
       handleClose() {
         this.$emit("upsee", false );

@@ -55,5 +55,20 @@ $headerBg:#23262b;
 }
 // 修改表格上下内边距
 .el-table td, .el-table th {
-  padding: 5px 0;
+  padding: 1px 0;
+}
+.c-search {
+  .el-form-item {
+    margin-bottom: 5px;
+  }
+  .el-input {
+    width:150px;
+  }
+}
+//设置dialog大小
+.c-bigDialog {
+  .el-dialog {
+    margin-top: 5vh !important;
+    width:90%;
+  }
 }

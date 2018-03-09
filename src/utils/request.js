@@ -27,7 +27,6 @@ service.interceptors.request.use(config => {
 
   return config
 }, error => {
-  console.log(error) // for debug
   Promise.reject(error)
 })
 
@@ -41,7 +40,7 @@ service.interceptors.response.use(
     }
     return res.data;
   }, error => {
-    Message({message:'链接错误,请检查你的网络',type:'error'})
+    Message({message:'链接错误,请检查管理员',type:'error'})
     return Promise.reject(error)
   }
 )

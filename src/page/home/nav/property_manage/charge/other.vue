@@ -60,7 +60,7 @@
           <template slot-scope="scope">
             <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button>
             <el-button @click="editHandle(scope.row)" type="warning" size="small">编辑</el-button>
-            <el-button type="danger" size="small">删除</el-button>
+            <el-button @click="delHandle(scope.row)" type="danger" size="small">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -79,6 +79,14 @@
       <transition name="fade">
         <SeePage v-if="see" :msg="see" @upsee="seeChange"  :data="seeData"></SeePage>
       </transition>
+
+      <el-dialog title="温馨提示" :visible.sync="visible2">
+          <p>请问您是否确定删除这条数据吗？</p>
+          <div style="text-align: right; margin: 0">
+            <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
+            <el-button type="primary" size="mini" @click="confirmDel">确定</el-button>
+          </div>
+      </el-dialog>
     </el-main>
 </template>
 
@@ -87,7 +95,7 @@ import axios from "axios";
 import AddPage from "./add";
 import SeePage from "./see";
 import { mapGetters } from "vuex";
-
+import { send } from '@/utils/oss';
 export default {
   name: "other",
   data() {
@@ -109,6 +117,8 @@ export default {
       notice:null,//编辑传送的值
       see:false,//控制查看组件弹出
       seeData:null,//查看数据
+      visible2:false,//控制删除框
+      delData:null
     };
   },
   computed: mapGetters(["showAside"]),
@@ -146,7 +156,24 @@ export default {
       this.see = false;
     },
     find(){
-      this.sendAjax(1,this.formInline.name);
+      this.sendAjax(null,this.formInline.name);
+    },
+    delHandle(row) {
+      this.visible2 = true;
+      this.delData = row; 
+    },
+    confirmDel(){
+      if(this.delData.id){
+        this.$xttp.get(`/community/${this.delData.id}/delete`)
+        .then(res=> {
+          if(!res.errorCode){
+            this.visible2 = false;
+            this.delData = null;
+            this.$message({message:res.data,type:'success'});
+            this.find();
+          }
+        })
+      }
     },
     sendAjax(page,name) {
       let nPage = page || this.$route.query.page || 1;
@@ -164,7 +191,8 @@ export default {
           this.currentPage = res.data.currentPage;
           this.total = res.data.total;
           this.tableData.forEach(item => {
-            item.as = item.province + item.city + item.district;
+            let isdistrict = item.district || '';
+            item.as = item.province + item.city + isdistrict;
             if (item.createAt) {
               item.time1 = new Date(item.createAt)
                 .toISOString()
@@ -181,9 +209,11 @@ export default {
     }
   },
   created() {
+    send();
     this.sendAjax();
   },
-  mounted() {}
+  mounted() {
+  }
 };
 </script>
 

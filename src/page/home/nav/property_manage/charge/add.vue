@@ -1,15 +1,15 @@
 <template>
       <el-dialog :title="titleFont" :visible.sync="msg" :before-close="handleClose">
-        <el-form :model="form" class="demo-form-inline">
-            <el-form-item label="社区名称" :label-width="formLabelWidth" class="c-must">
-            <el-input v-model="form.name"></el-input>
+        <el-form :model="form" :rules="rules" ref="ruleForm" class="demo-form-inline">
+            <el-form-item label="社区名称" :label-width="formLabelWidth" prop="name" class="c-must">
+              <el-input v-model="form.name"></el-input>
             </el-form-item>
 
-            <el-form-item label="社区编号" :label-width="formLabelWidth" class="c-must">
+            <el-form-item label="社区编号" prop="code" :label-width="formLabelWidth" class="c-must">
             <el-input v-model="form.code"></el-input>
             </el-form-item>
 
-            <el-form-item label="地区" :label-width="formLabelWidth" class="c-must c-eascader">
+            <el-form-item label="地区" prop="cityArr" :label-width="formLabelWidth" class="c-must c-eascader">
               <el-cascader
                 :options="cityOptions"
                 v-model="cityArr"
@@ -18,7 +18,7 @@
               </el-cascader>
             </el-form-item>
 
-            <el-form-item label="详细地址" :label-width="formLabelWidth" class="c-must">
+            <el-form-item label="详细地址" prop="address" :label-width="formLabelWidth" class="c-must">
             <el-input v-model="form.address"></el-input>
             </el-form-item>
             
@@ -27,12 +27,11 @@
               <el-input class="c-ip2" v-model="y"></el-input>
               <el-button @click="geolocation">获取坐标</el-button>
             </el-form-item> -->
-
+            <el-form-item :label-width="formLabelWidth">
+              <el-button @click="handleClose">取 消</el-button>
+              <el-button type="primary" @click="save('ruleForm')">保存</el-button>
+            </el-form-item>
         </el-form>
-        <div slot="footer" class="dialog-footer">
-            <el-button @click="handleClose">取 消</el-button>
-            <el-button type="primary" @click="save">保存</el-button>
-        </div>
     </el-dialog>
 </template>
 
@@ -40,18 +39,22 @@
 import cityOptions from "../../../../../utils/citys";
 
 export default {
-  name: "floorFileForm",
+  name: "ChargeAdd",
   data() {
     return {
       formLabelWidth: "120px",
       titleFont:'添加社区档案',
       form: {
-        city: "",
         code: "",
-        district: "",
         name: "",
-        province: "",
-        address: ""
+        cityArr: [],
+        address:''
+      },
+      rules: {
+        name: [{required: true, message: '请输入社区名称', trigger: 'blur'}],
+        code: [{ required: true, message: '请输入社区编号', trigger: 'blur' }],
+        cityArr: [{type: 'array', required: true, message: '请输入地区', trigger: 'blur' }],
+        address:[{required: true, message: '请输入详细地址', trigger: 'blur'} ]
       },
       x: "", //经度
       y: "", //纬度
@@ -73,17 +76,23 @@ export default {
     handleClose() {
       this.$emit("upup", this.current );
     },
-    save() {
-      this.postData();
+    save(formName) {
+      this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.postData();
+          } else {
+            return false;
+          }
+        });
     },
     changeProvince(value) {
-      // console.log(value);
+      this.form.cityArr = this.cityArr;
     },
     postData() {
       if (this.cityArr[0]) {
-        this.form.province = this.cityArr[0];
-        this.form.city = this.cityArr[1];
-        this.form.district = this.cityArr[2];
+        this.form.province = this.form.cityArr[0];
+        this.form.city = this.form.cityArr[1];
+        this.form.district = this.form.cityArr[2];
       }
       let msg = this.add ? '编辑' : '添加';
       let uri = this.add ? '/community/edit' : '/community/add';

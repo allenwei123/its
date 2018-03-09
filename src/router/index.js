@@ -31,29 +31,53 @@ export default new Router({
             component: r => require.ensure([], () => r(require('../page/home/nav/_res')), 'nav'),
             children:[
               {
+                path: 'test',
+                component: () => import('@/page/home/nav/property_manage/_res')
+              },
+              {
                 path: 'floorFile',
-                component: () => import('@/page/home/nav/content/floorFile/list')
+                component: () => import('@/page/home/nav/property_manage/floorFile/list')
+              },
+              {
+                path: 'roomFile',
+                component: () => import('@/page/home/nav/property_manage/roomFile/list')
+              },
+              {
+                path: 'property-service/rpass',
+                component: () => import('@/page/home/nav/property_service/rpass/list')
+              },
+              {
+                path: 'property-service/alarm',
+                component: () => import('@/page/home/nav/property_service/alarm/list')
+              },
+              {
+                path: 'property-service/notice',
+                component: () => import('@/page/home/nav/property_service/notice/list')
               },
               {
                 path: 'other',
                 name:'dangan',
-                component: r => require.ensure([], () => r(require('../page/home/nav/content/charge/other')), 'side')
+                component: r => require.ensure([], () => r(require('../page/home/nav/property_manage/charge/other')), 'side')
+              },
+              {
+                path: 'userFile',
+                component: r => require.ensure([], () => r(require('../page/home/nav/property_manage/userFile/list')), 'side')
               },
               {
                 path: 'empl/role',
-                component: r => require.ensure([], () => r(require('@/page/home/nav/content/empl/role')), 'side')
+                component: r => require.ensure([], () => r(require('@/page/home/nav/property_manage/empl/role')), 'side')
               },
               {
                 path: 'empl/empl',
-                component: r => require.ensure([], () => r(require('@/page/home/nav/content/empl/empl')), 'side')
+                component: r => require.ensure([], () => r(require('@/page/home/nav/property_manage/empl/empl')), 'side')
               },
               {
                 path: 'work/schedul',
-                component: r => require.ensure([], () => r(require('@/page/home/nav/content/work/schedul')), 'side')
+                component: r => require.ensure([], () => r(require('@/page/home/nav/property_manage/work/schedul')), 'side')
               },
               {
                 path: 'work/attendance',
-                component: r => require.ensure([], () => r(require('@/page/home/nav/content/work/attendance')), 'side')
+                component: r => require.ensure([], () => r(require('@/page/home/nav/property_manage/work/attendance')), 'side')
               },
               // 物业服务
               {
