@@ -72,11 +72,12 @@
       },
       getTableList() {
         this.loading = true;
-        let url = `property/alarm/getAlarm`;
-        this.$xttp.post(url, {
-          page: this.currentPage,
-          size: this.pageSize
-        }).then(res => {
+        let url = `property/alarm/getAlarm?page=${this.currentPage}&size=${this.pageSize}`;
+        let params = {};
+        if (this.q_input && this.q_input.length) {
+          params['callerName'] = this.q_input;
+        }
+        this.$xttp.post(url, params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {
             this.tableData = res.data.records;
@@ -92,7 +93,7 @@
       }
     },
     created() {
-      this.getTableList()
+      this.query();
     }
   }
 </script>

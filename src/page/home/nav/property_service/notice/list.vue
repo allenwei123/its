@@ -29,7 +29,9 @@
             <el-table-column prop="" label="类型" width="60">
               <template slot-scope="scope">{{getNoticeTypeName(scope.row.noticeType)}}</template>
             </el-table-column>
-            <el-table-column prop="communityId" label="所属社区" width="180"></el-table-column>
+            <el-table-column label="所属社区" width="150">
+              <template slot-scope="scope">{{scope.row.communityName}}</template>
+            </el-table-column>
             <el-table-column prop="" label="发布对象" width="100">
               <template slot-scope="scope">???</template>
             </el-table-column>
@@ -91,13 +93,15 @@
         previewVisible: false,
         previewNoticeInfo: null,
         input: '',
-        q_input: null
+        q_input: null,
+        q_communityId: ''
       }
     },
     methods: {
       query() {
         this.currentPage = 1;
         this.q_input = this.input;
+        this.q_communityId = this.communityId;
         this.getTableList();
       },
       // 获取通知类型名称
@@ -143,12 +147,18 @@
       getTableList() {
         this.loading = true;
         let url = `property/notice/page?page=${this.currentPage}&size=${this.pageSize}`;
-        this.$xttp.post(url, {
-          communityId: this.communityId
-        }).then(res => {
+        let params = {};
+        params['communityId'] = this.q_communityId;
+        this.$xttp.post(url, params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {
-            this.tableData = res.data.records;
+            let communityName = this.communityList.find(item => item.id === this.q_communityId).name;
+            this.tableData = res.data.records.map(item => {
+              if (!item.communityName) {
+                item.communityName = communityName;
+              }
+              return item;
+            });
             this.total = res.data.total;
           }
         }).catch(() => {
@@ -165,7 +175,7 @@
         this.communityList = res;
         if (this.communityList.length) {
           this.communityId = this.communityList[0].id;
-          this.getTableList();
+          this.query();
         }
       });
     }

@@ -63,22 +63,24 @@
         total: 0,
         currentPage: 1,
         input: '',
-        q_input: null
+        q_input: null,
+        q_communityId: ''
       }
     },
     methods: {
       query() {
         this.currentPage = 1;
         this.q_input = this.input;
+        this.q_communityId = this.communityId;
         this.getTableList();
       },
       getTableList() {
         this.loading = true;
         let url = `property/rpass/page?page=${this.currentPage}&size=${this.pageSize}`;
         let params = {};
-        params.communityId = this.communityId;
+        params['communityId'] = this.q_communityId;
         if (this.q_input) {
-          params.userName = this.q_input;
+          params['userName'] = this.q_input;
         }
         this.$xttp.post(url, params).then(res => {
           this.loading = false;
@@ -99,7 +101,7 @@
         this.communityList = res;
         if (this.communityList.length) {
           this.communityId = this.communityList[0].id;
-          this.getTableList();
+          this.query();
         }
       });
     }
