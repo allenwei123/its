@@ -7,6 +7,8 @@
 </template>
 
 <script>
+import { send } from '@/utils/oss';
+
 export default {
   name: "Content",
   data() {
@@ -30,7 +32,7 @@ export default {
       this.fileData = dom.files[0];
     },
     submit() {
-      console.log(this.fileData)
+      let formdata = send(this.fileData);
     }
   }
 };

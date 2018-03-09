@@ -201,7 +201,7 @@ export default {
     },
     confirmDel(){
       if(this.delData.id){
-        this.$xttp.get(`/community/building/${this.delData.id}/delete`)
+        this.$xttp.get(`/community/room/${this.delData.id}/delete`)
         .then(res=> {
           if(!res.errorCode){
             this.visible2 = false;

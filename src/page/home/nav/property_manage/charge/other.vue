@@ -91,11 +91,10 @@
 </template>
 
 <script>
-import axios from "axios";
 import AddPage from "./add";
 import SeePage from "./see";
 import { mapGetters } from "vuex";
-import { send } from '@/utils/oss';
+
 export default {
   name: "other",
   data() {
@@ -209,7 +208,6 @@ export default {
     }
   },
   created() {
-    send();
     this.sendAjax();
   },
   mounted() {

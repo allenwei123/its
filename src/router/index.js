@@ -11,7 +11,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect:'/home',
+      redirect: '/home',
       component: App
     },
     { path: '/auth/login', component: () => import('@/page/auth/login') },
@@ -24,12 +24,12 @@ export default new Router({
         path: 'nav',
         redirect: '/home/nav/side',
         component: r => require.ensure([], () => r(require('../page/home/_res')), 'home'),
-        children:[
+        children: [
           {
             path: 'side',
             redirect: '/home/nav/side/other',
             component: r => require.ensure([], () => r(require('../page/home/nav/_res')), 'nav'),
-            children:[
+            children: [
               {
                 path: 'test',
                 component: () => import('@/page/home/nav/property_manage/_res')
@@ -56,7 +56,7 @@ export default new Router({
               },
               {
                 path: 'other',
-                name:'dangan',
+                name: 'dangan',
                 component: r => require.ensure([], () => r(require('../page/home/nav/property_manage/charge/other')), 'side')
               },
               {
@@ -92,28 +92,28 @@ export default new Router({
                   { path: 'fault', component: () => import('@/page/home/nav/property_service/fault/list') },
                   { path: 'message', component: () => import('@/page/home/nav/property_service/message/list') }
                 ]
-              },
-              // 社区物联
-              {
-                path: 'communityIoT',
-                component: App,
-                redirect: 'communityIoT/elevator',
-                children: [
-                  { path: 'elevator', component: () => import('@/page/home/nav/communityIoT/elevator/list') },
-                  { path: 'elevatorFault', component: () => import('@/page/home/nav/communityIoT/elevator/fault') },
-                  { path: 'elevatorRecord', component: () => import('@/page/home/nav/communityIoT/elevator/record') },
-                  { path: 'door', component: () => import('@/page/home/nav/communityIoT/door/list') },
-                  { path: 'doorRecord', component: () => import('@/page/home/nav/communityIoT/door/record') },
-                  { path: 'parkinglotDevice', component: () => import('@/page/home/nav/communityIoT/parkinglot/device/list') },
-                  { path: 'parkinglotRecord', component: () => import('@/page/home/nav/communityIoT/parkinglot/record/list') }
-                ]
               }
             ]
+          },
+          // 社区物联
+          {
+            path: 'communityIoT',
+            component: App,
+            redirect: 'communityIoT/elevator',
+            component: () => import('@/page/home/nav/_res'),
+            children: [
+              { path: 'elevator', component: () => import('@/page/home/nav/communityIoT/elevator/list') },
+              { path: 'elevatorFault', component: () => import('@/page/home/nav/communityIoT/elevator/fault') },
+              { path: 'elevatorRecord', component: () => import('@/page/home/nav/communityIoT/elevator/record') },
+              { path: 'door', component: () => import('@/page/home/nav/communityIoT/door/list') },
+              { path: 'doorRecord', component: () => import('@/page/home/nav/communityIoT/door/record') },
+              { path: 'parkinglotDevice', component: () => import('@/page/home/nav/communityIoT/parkinglot/device/list') },
+              { path: 'parkinglotRecord', component: () => import('@/page/home/nav/communityIoT/parkinglot/record/list') },
+              { path: 'monitoringD', component: () => import('@/page/home/nav/communityIoT/monitoring/devices') },
+              { path: 'monitoringC', component: () => import('@/page/home/nav/communityIoT/monitoring/currentT') }
+            ]
           }]
-      }, {
-        path: 'about',
-        component: r => require.ensure([], () => r(require('../page/item')), 'item')
-      }]
+      },]
     }
   ]
 })

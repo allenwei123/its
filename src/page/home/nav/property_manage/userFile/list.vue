@@ -174,7 +174,7 @@ export default {
         status = num == 1 ? 1 : -1;
         msg = num == 1 ? '审核' : '驳回';
         this.$xttp
-        .post(`/user/property/audit`, { id: row.id, auditStatus: 1 })
+        .post(`/user/property/audit`, { id: row.id, auditStatus: status })
         .then(res => {
           if (!res.errorCode) {
             this.$message({
@@ -186,7 +186,7 @@ export default {
       }else if (num == 3) {
         //注销 
         this.$xttp
-        .get(`/user/room/${row.id}/relieve`)
+        .get(`/user/property/${row.id}/relieve`)
         .then(res => {
           if (!res.errorCode) {
             this.$message({
@@ -228,7 +228,7 @@ export default {
     },
     sendAjax(page, communityId, name) {
       let nPage = page || this.$route.query.page || 1;
-      let obj = { page: nPage };
+      let obj = { page: nPage ,relationship:1 };
       if (communityId) {
         obj.communityId = this.formInline.select;
       } else {

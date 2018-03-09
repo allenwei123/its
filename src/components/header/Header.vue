@@ -11,12 +11,12 @@
       <div class="c-top_bar_area">
         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
           <el-menu-item index="1">首页</el-menu-item>
-          <el-menu-item index="2">物业管理</el-menu-item>
+          <el-menu-item index="2"><router-link to="/home/nav/side">物业管理</router-link></el-menu-item>
           <el-menu-item index="3">物业服务</el-menu-item>
-          <el-menu-item index="4" >社区物联</el-menu-item>
-          <el-menu-item index="4" >商圈管理</el-menu-item>
-          <el-menu-item index="5" >系统管理</el-menu-item>
-          <el-menu-item index="6" >统计分析</el-menu-item>
+          <el-menu-item index="4" ><router-link to="/home/nav/communityIoT">社区物联</router-link></el-menu-item>
+          <el-menu-item index="5" >商圈管理</el-menu-item>
+          <el-menu-item index="6" >系统管理</el-menu-item>
+          <el-menu-item index="7" >统计分析</el-menu-item>
         </el-menu>
       </div>
     </div>
@@ -51,7 +51,6 @@
         this.ChangeShowContent(!this.showContent);
       },
       handleSelect(index) {
-          console.log(index)
       },
       logout() {
         this.$router.push('/auth/logout');

@@ -37,10 +37,14 @@ import obj1 from '../../../../mock/mok.json'
     components:{
     },
     created() {
-
+      
     },
     mounted:() => {
     },
+    watch: {
+    // 如果路由有变化，会再次执行该方法
+    '$route': 'test1'
+  },
     methods:{
       alink(item) {
         this.$router.push({path:item.url,query:{page:1}})
@@ -48,6 +52,11 @@ import obj1 from '../../../../mock/mok.json'
       cn() {
           this.isCollapse = !this.isCollapse;
           this.$store.dispatch('change_aside',!this.isCollapse);
+      },
+      test1() {
+        let arr = ['side','property_service','communityIoT'];
+        let currentIndex = arr.indexOf(this.$route.path.split('/')[3]);
+        this.arrData = obj1.data[currentIndex].children;
       }
     }
   }
