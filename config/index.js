@@ -12,7 +12,8 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api':{
-        target:'http://39.106.249.8:9000/v1',
+        // target:'http://39.106.249.8:9000/v1',
+        target:'http://apismcm.test.bitiot.com.cn/v1',
         changeOrigin:true,
         pathRewrite:{
           "^/api": ""
