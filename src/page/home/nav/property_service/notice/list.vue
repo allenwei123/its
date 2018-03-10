@@ -49,7 +49,7 @@
                 <!--已发布-->
                 <template v-if="scope.row.publishStatus === 1">
                   <!--推送公告逻辑：此公告已经发布并且还未推送的才能给物业推送，一个公告只能推送一次-->
-                  <el-button type="primary" size="mini" v-if="scope.row.pushStatus === 0">推送</el-button>
+                  <el-button type="primary" size="mini" v-if="scope.row.pushStatus === 0" @click="push(scope.row)">推送</el-button>
                   <el-button type="primary" size="mini" @click="revoke(scope.row)">撤销</el-button>
                 </template>
 
@@ -155,7 +155,7 @@
           type: 'warning'
         }).then(() => {
           this.loading = true;
-          this.$xttp(`property/notice/${item.id}/delete`).then(res => {
+          this.$xttp.get(`property/notice/${item.id}/delete`).then(res => {
             this.loading = false;
             if (res.errorCode === 0) {
               this.getTableList();
@@ -181,6 +181,24 @@
       },
       deepCopy(obj) {
         return JSON.parse(JSON.stringify(obj));
+      },
+      // 推送
+      push(item) {
+        this.$confirm('确认推送此公告吗？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.loading = true;
+          this.$xttp.get(`property/notice/${item.id}/push`).then(res => {
+            this.loading = false;
+            if (res.errorCode === 0) {
+              this.getTableList();
+            }
+          }).catch(() => {
+            this.loading = false;
+          })
+        });
       },
       // 撤销
       revoke(item) {

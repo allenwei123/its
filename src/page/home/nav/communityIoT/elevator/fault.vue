@@ -18,19 +18,19 @@
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
             <el-table-column label="故障码" width="100">
-              <template slot-scope="scope">???</template>
+              <template slot-scope="scope">{{scope.row.faultCode}}</template>
             </el-table-column>
             <el-table-column label="电梯名" width="120">
-              <template slot-scope="scope">???</template>
+              <template slot-scope="scope">{{scope.row.elevatorName}}</template>
             </el-table-column>
             <el-table-column label="厂商" width="120">
               <template slot-scope="scope">{{scope.row.brandName}}</template>
             </el-table-column>
             <el-table-column label="型号" width="120">
-              <template slot-scope="scope">???</template>
+              <template slot-scope="scope">{{scope.row.levatorTypeName}}</template>
             </el-table-column>
             <el-table-column label="故障时间" width="160">
-              <template slot-scope="scope">???</template>
+              <template slot-scope="scope">{{scope.row.faultDate}}</template>
             </el-table-column>
             <el-table-column label="电梯状态" width="80">
               <template slot-scope="scope">???</template>
