@@ -78,27 +78,26 @@ export default new Router({
               {
                 path: 'work/attendance',
                 component: r => require.ensure([], () => r(require('@/page/home/nav/property_manage/work/attendance')), 'side')
-              },
-              // 物业服务
-              {
-                path: 'propertyService',
-                component: App,
-                redirect: 'propertyService/rpass',
-                children: [
-                  { path: 'rpass', component: () => import('@/page/home/nav/property_service/rpass/list') },
-                  { path: 'alarm', component: () => import('@/page/home/nav/property_service/alarm/list') },
-                  { path: 'notice', component: () => import('@/page/home/nav/property_service/notice/list') },
-                  { path: 'complaint', component: () => import('@/page/home/nav/property_service/complaint/list') },
-                  { path: 'fault', component: () => import('@/page/home/nav/property_service/fault/list') },
-                  { path: 'message', component: () => import('@/page/home/nav/property_service/message/list') }
-                ]
               }
+            ]
+          },
+          // 物业服务
+          {
+            path: 'propertyService',
+            redirect: 'propertyService/rpass',
+            component: () => import('@/page/home/nav/_res'),
+            children: [
+              { path: 'rpass', component: () => import('@/page/home/nav/property_service/rpass/list') },
+              { path: 'alarm', component: () => import('@/page/home/nav/property_service/alarm/list') },
+              { path: 'notice', component: () => import('@/page/home/nav/property_service/notice/list') },
+              { path: 'complaint', component: () => import('@/page/home/nav/property_service/complaint/list') },
+              { path: 'fault', component: () => import('@/page/home/nav/property_service/fault/list') },
+              { path: 'message', component: () => import('@/page/home/nav/property_service/message/list') }
             ]
           },
           // 社区物联
           {
             path: 'communityIoT',
-            component: App,
             redirect: 'communityIoT/elevator',
             component: () => import('@/page/home/nav/_res'),
             children: [
