@@ -4,6 +4,11 @@
       <div class="c-rpass-container">
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
+            <el-form-item>
+              <el-select v-model="communityId" placeholder="社区">
+                <el-option v-for="item in communityList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item label="">
               <el-input placeholder="门禁名称" v-model.trim="input"></el-input>
             </el-form-item>
@@ -17,30 +22,30 @@
             <el-table-column label="序号" width="80">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column label="门禁" width="100">
-              <template slot-scope="scope">???</template>
+            <el-table-column label="门禁" width="200">
+              <template slot-scope="scope">{{scope.row.name}}</template>
             </el-table-column>
             <el-table-column label="ID" width="120">
+              <template slot-scope="scope">{{scope.row.deviceId}}</template>
+            </el-table-column>
+            <el-table-column label="小区名称" width="150">
+              <template slot-scope="scope">{{scope.row.communityName}}</template>
+            </el-table-column>
+            <el-table-column label="楼栋名称">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="小区名称" width="120">
-              <template slot-scope="scope">???</template>
-            </el-table-column>
-            <el-table-column label="楼栋名称" width="120">
-              <template slot-scope="scope">???</template>
-            </el-table-column>
-            <el-table-column label="门禁产商" width="120">
-              <template slot-scope="scope">???</template>
-            </el-table-column>
-            <el-table-column label="型号" width="120">
-              <template slot-scope="scope">???</template>
-            </el-table-column>
-            <el-table-column label="运行状态" width="80">
-              <template slot-scope="scope">???</template>
-            </el-table-column>
+            <!--<el-table-column label="门禁产商" width="120">-->
+              <!--<template slot-scope="scope">???</template>-->
+            <!--</el-table-column>-->
+            <!--<el-table-column label="型号" width="120">-->
+              <!--<template slot-scope="scope">???</template>-->
+            <!--</el-table-column>-->
+            <!--<el-table-column label="运行状态" width="80">-->
+              <!--<template slot-scope="scope">???</template>-->
+            <!--</el-table-column>-->
             <el-table-column label="操作" width="120" fixed="right">
               <template slot-scope="scope">
-                <el-button type="primary" size="mini">使用记录</el-button>
+                <el-button type="primary" size="mini" @click="view(scope.row)">使用记录</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -56,46 +61,68 @@
   </el-container>
 </template>
 <script>
-  import time from '@/utils/time.js';
-
+  import {communityId as getCommunityList} from '@/biz/community';
   export default {
     data() {
       return {
         loading: false,
-        tableData: [{},{},{}],
+        communityList: [],
+        communityId: '',
+        tableData: [],
         pageSize: 10,
         total: 0,
         currentPage: 1,
         input: '',
-        q_input: null
+        q_input: null,
+        q_communityId: ''
       }
     }, methods: {
       query() {
         this.currentPage = 1;
         this.q_input = this.input;
+        this.q_communityId = this.communityId;
         this.getTableList();
       }, getTableList() {
-        // this.loading = true;
-        // let url = `property/rpass/page?page=${this.currentPage}&size=${this.pageSize}`;
-        // let params = {};
-        // params.communityId = this.communityId;
-        // if (this.q_input) {
-        //   params.userName = this.q_input;
-        // }
-        // this.$xttp.post(url, params).then(res => {
-        //   this.loading = false;
-        //   if (res.errorCode === 0) {
-        //     this.tableData = res.data.records;
-        //     this.total = res.data.total;
-        //   }
-        // }).catch(() => {
-        //   this.loading = false;
-        // })
-      }, getTime(timestamp, format) {
-        return time.timestampToFormat(timestamp, format);
+        this.loading = true;
+        let url = `communityIoT/door/page?page=${this.currentPage}&size=${this.pageSize}`;
+        let params = {};
+        params.communityId = this.communityId;
+        if (this.q_input) {
+          params.userName = this.q_input;
+        }
+        this.$xttp.post(url, params).then(res => {
+          this.loading = false;
+          if (res.errorCode === 0) {
+            let communityName = this.communityList.find(item => item.id === this.q_communityId).name;
+            this.tableData = res.data.records.map(item => {
+              if (!item.communityName) {
+                item.communityName = communityName;
+              }
+              return item;
+            });
+            this.total = res.data.total;
+          }
+        }).catch(() => {
+          this.loading = false;
+        })
+      },
+      view(item) {
+        this.$router.push({
+          path: '/home/nav/communityIoT/doorRecord',
+          query: {
+            communityId: item.communityId,
+            deviceId: item.deviceId
+          }
+        });
       }
     }, created() {
-
+      getCommunityList().then(res => {
+        this.communityList = res;
+        if (this.communityList.length) {
+          this.communityId = this.communityList[0].id;
+          this.query();
+        }
+      });
     }
   }
 </script>

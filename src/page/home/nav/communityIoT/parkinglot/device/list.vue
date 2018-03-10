@@ -56,13 +56,11 @@
   </el-container>
 </template>
 <script>
-  import time from '@/utils/time.js';
-
   export default {
     data() {
       return {
         loading: false,
-        tableData: [{},{},{}],
+        tableData: [],
         pageSize: 10,
         total: 0,
         currentPage: 1,
@@ -74,28 +72,26 @@
         this.currentPage = 1;
         this.q_input = this.input;
         this.getTableList();
-      }, getTableList() {
-        // this.loading = true;
-        // let url = `property/rpass/page?page=${this.currentPage}&size=${this.pageSize}`;
-        // let params = {};
-        // params.communityId = this.communityId;
-        // if (this.q_input) {
-        //   params.userName = this.q_input;
-        // }
-        // this.$xttp.post(url, params).then(res => {
-        //   this.loading = false;
-        //   if (res.errorCode === 0) {
-        //     this.tableData = res.data.records;
-        //     this.total = res.data.total;
-        //   }
-        // }).catch(() => {
-        //   this.loading = false;
-        // })
-      }, getTime(timestamp, format) {
-        return time.timestampToFormat(timestamp, format);
+      },
+      getTableList() {
+        this.loading = true;
+        let url = `vehicle/car-gate/list`;
+        let params = {};
+        if (this.q_input) {
+          params['name'] = this.q_input;
+        }
+        this.$xttp.get(url, params).then(res => {
+          this.loading = false;
+          if (res.errorCode === 0) {
+            this.tableData = res.data.records;
+            this.total = res.data.total;
+          }
+        }).catch(() => {
+          this.loading = false;
+        })
       }
     }, created() {
-
+      this.query();
     }
   }
 </script>
