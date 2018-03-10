@@ -25,32 +25,40 @@
             <el-table-column prop="" label="#" width="80">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column prop="title" label="标题" width="180"></el-table-column>
-            <el-table-column prop="" label="类型" width="60">
+            <el-table-column label="标题" width="180">
+              <template slot-scope="scope">{{scope.row.title}}</template>
+            </el-table-column>
+            <el-table-column label="类型" width="60">
               <template slot-scope="scope">{{getNoticeTypeName(scope.row.noticeType)}}</template>
             </el-table-column>
-            <el-table-column label="所属社区" width="150">
-              <template slot-scope="scope">{{scope.row.communityName}}</template>
-            </el-table-column>
-            <el-table-column prop="" label="发布对象" width="100">
-              <template slot-scope="scope">???</template>
-            </el-table-column>
-            <el-table-column prop="date" label="状态" width="100">
+            <!--<el-table-column label="发布对象" width="100">-->
+              <!--<template slot-scope="scope">???</template>-->
+            <!--</el-table-column>-->
+            <el-table-column label="状态" width="100">
               <template slot-scope="scope">{{getPublishStatusName(scope.row.publishStatus)}}</template>
             </el-table-column>
-            <el-table-column prop="" label="最后操作人员" width="150">
+            <el-table-column label="最后操作人员" width="150">
               <template slot-scope="scope">{{scope.row.editorName}}</template>
             </el-table-column>
-            <el-table-column prop="" label="最后操作时间" width="160">
+            <el-table-column label="最后操作时间" width="160">
               <template slot-scope="scope">{{getTime(scope.row.updateAt, 'yyyy-MM-dd hh:mm')}}</template>
             </el-table-column>
-            <el-table-column prop="" label="操作" width="180" fixed="right">
+            <el-table-column label="操作">
               <template slot-scope="scope">
-                <el-button type="primary" size="small" @click="preview(scope.row)">预览</el-button>
-                <el-button type="primary" size="small" v-if="scope.row.publishStatus !== 1">修改</el-button>
-                <el-button type="primary" size="small" v-if="scope.row.publishStatus !== 1" @click="publish(scope.row)">发布</el-button>
-                <el-button type="primary" size="small" v-if="scope.row.publishStatus !== 1">删除</el-button>
-                <el-button type="primary" size="small" v-if="scope.row.publishStatus === 1" @click="">撤销</el-button>
+                <el-button type="primary" size="mini" @click="preview(scope.row)">预览</el-button>
+                <!--已发布-->
+                <template v-if="scope.row.publishStatus === 1">
+                  <!--推送公告逻辑：此公告已经发布并且还未推送的才能给物业推送，一个公告只能推送一次-->
+                  <el-button type="primary" size="mini" v-if="scope.row.pushStatus === 0">推送</el-button>
+                  <el-button type="primary" size="mini" @click="revoke(scope.row)">撤销</el-button>
+                </template>
+
+                <!--未发布-->
+                <template v-if="scope.row.publishStatus !== 1">
+                  <el-button type="primary" size="mini" @click="publish(scope.row)">发布</el-button>
+                  <el-button type="primary" size="mini" @click="modify(scope.row)">修改</el-button>
+                  <el-button type="danger" size="mini" @click="del(scope.row)">删除</el-button>
+                </template>
               </template>
             </el-table-column>
           </el-table>
@@ -63,8 +71,8 @@
         </div>
       </div>
 
-      <NoticeForm :visible.sync="formVisible"></NoticeForm>
-      <NoticePreview :visible.sync="previewVisible" :noticeInfo="previewNoticeInfo"></NoticePreview>
+      <NoticeForm :detail="formDetail" :isModify="formIsModify" :visible.sync="formVisible" v-if="formVisible" @saveSuccess="getTableList"></NoticeForm>
+      <NoticePreview :visible.sync="previewVisible" v-if="previewVisible" :noticeInfo="previewNoticeInfo"></NoticePreview>
     </el-main>
   </el-container>
 </template>
@@ -90,6 +98,8 @@
         total: 0,
         currentPage: 1,
         formVisible: false,
+        formIsModify: false,
+        formDetail: {},
         previewVisible: false,
         previewNoticeInfo: null,
         input: '',
@@ -137,12 +147,64 @@
           this.loading = false;
         });
       },
+      // 删除
+      del(item) {
+        this.$confirm('确认删除公告？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.loading = true;
+          this.$xttp(`property/notice/${item.id}/delete`).then(res => {
+            this.loading = false;
+            if (res.errorCode === 0) {
+              this.getTableList();
+            }
+          }).catch(() => {
+            this.loading = false;
+          })
+        });
+      },
+      // 修改
+      modify(item) {
+        this.formIsModify = true;
+        this.formDetail = item;
+        this.formVisible = true;
+      },
       addNotice() {
+        this.formIsModify = false;
         this.formVisible = true;
       },
       preview(item) {
         this.previewNoticeInfo = item;
         this.previewVisible = true;
+      },
+      deepCopy(obj) {
+        return JSON.parse(JSON.stringify(obj));
+      },
+      // 撤销
+      revoke(item) {
+        // let newItem = this.deepCopy(item);
+        // newItem.publishStatus = -1;
+        this.loading = true;
+        let params = {
+          id: item.id,
+          publishStatus: -1,
+          body: item.body
+        };
+        this.$xttp.post('property/notice/edit', params).then(res => {
+          this.loading = false;
+          if (res.errorCode === 0) {
+            this.tableData = this.tableData.map(it => {
+              if (it === item) {
+                it = res.data;
+              }
+              return it;
+            });
+          }
+        }).catch(() => {
+          this.loading = false;
+        });
       },
       getTableList() {
         this.loading = true;
@@ -152,13 +214,7 @@
         this.$xttp.post(url, params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {
-            let communityName = this.communityList.find(item => item.id === this.q_communityId).name;
-            this.tableData = res.data.records.map(item => {
-              if (!item.communityName) {
-                item.communityName = communityName;
-              }
-              return item;
-            });
+            this.tableData = res.data.records;
             this.total = res.data.total;
           }
         }).catch(() => {
