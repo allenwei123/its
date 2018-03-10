@@ -48,18 +48,8 @@
           if (res.errorCode === 0) {
             this.$router.push('/home');
           }
-          else {
-            this.$message({
-              message: res.errorMsg,
-              type: 'error'
-            });
-          }
           loadingInstance.close();
-        }).catch((err) => {
-          this.$message({
-            message: err.response.statusText,
-            type: 'error'
-          });
+        }).catch(() => {
           loadingInstance.close();
         });
       }

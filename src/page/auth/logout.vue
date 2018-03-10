@@ -21,6 +21,8 @@
         this.$store.dispatch('changeToken', null);
         loadingInstance.close();
         this.$router.push('/auth/login');
+      }).catch(() => {
+        loadingInstance.close();
       });
     }
   }
