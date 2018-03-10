@@ -2,7 +2,7 @@
   <el-dialog title="新增公告" :visible.sync="formVisible">
     <el-form :model="form" label-width="120px">
       <el-form-item label="公告标题" label-width="120px" required>
-        <el-input v-model="form.title" auto-complete="off"></el-input>
+        <el-input v-model.trim="form.title"></el-input>
       </el-form-item>
       <el-form-item label="公告类型" required>
         <el-select v-model="form.type" placeholder="请选择公告类型">
@@ -18,13 +18,13 @@
           <el-option v-for="item in communityList" :key="item.id" :label="item.name" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="发布对象" required>
-        <el-select v-model="form.obj" placeholder="发布对象">
-          <el-option label="全部" value=""></el-option>
-          <el-option label="住户" value="1"></el-option>
-          <el-option label="员工" value="2"></el-option>
-        </el-select>
-      </el-form-item>
+      <!--<el-form-item label="发布对象" required>-->
+        <!--<el-select v-model="form.obj" placeholder="发布对象">-->
+          <!--<el-option label="全部" value=""></el-option>-->
+          <!--<el-option label="住户" value="1"></el-option>-->
+          <!--<el-option label="员工" value="2"></el-option>-->
+        <!--</el-select>-->
+      <!--</el-form-item>-->
       <el-form-item label="配图" required>
         <template>
           <el-upload
@@ -38,13 +38,15 @@
         </template>
       </el-form-item>
       <el-form-item label="公告内容" required>
-        <el-input type="textarea" v-model="form.body" :rows="5"></el-input>
+        <el-input type="textarea" v-model.trim="form.body" :rows="5"></el-input>
       </el-form-item>
 
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="closeForm">取 消</el-button>
-      <el-button type="primary" @click="submitForm">确 定</el-button>
+      <el-button @click="closeForm">取消</el-button>
+      <el-button type="primary" @click="preview">预览</el-button>
+      <el-button type="primary" @click="save">保存</el-button>
+      <!--<el-button type="primary" @click="publish">发布</el-button>-->
     </div>
   </el-dialog>
 </template>
@@ -74,25 +76,67 @@
       }
     },
     methods: {
+      showInfo(text) {
+        this.$message({
+          message: text,
+          type: 'warning'
+        });
+      },
       closeForm() {
         this.formVisible = false;
       },
-      submitForm() {
-        this.$refs['form'].validate((valid) => {
-          if (valid) {
-            alert('submit!');
-          } else {
-            console.log('error submit!!');
-            return false;
+      preview() {
+
+      },
+      save() {
+        if (!this.form.title.length) {
+          this.showInfo('公告标题不能为空');
+          return;
+        }
+        if (!this.form.body.length) {
+          this.showInfo('公告内容不能为空');
+          return;
+        }
+        this.loading = true;
+        let params = {};
+        params['noticeType'] = this.form.type;
+        params['communityId'] = this.form.communityId;
+        params['title'] = this.form.title;
+        params['body'] = this.form.body;
+        // params['thumbnailUrl'] = 'xxx';
+        var url = 'property/notice/add';
+        if (this.isModify) {
+          url = 'property/notice/edit';
+          params['id'] = this.detail.id;
+        }
+        this.$xttp.post(url, params).then(res => {
+          this.loading = false;
+          if (res.errorCode === 0) {
+            this.formVisible = false;
+            this.$emit('saveSuccess');
           }
+        }).catch(() => {
+          this.loading = false;
         });
       }
     },
-    props: ['visible'],
+    props: ['visible', 'detail', 'isModify'],
     created() {
       getCommunityList().then(res => {
         this.communityList = res;
       });
+      if(this.isModify) {
+        // communityId: '',
+        // title: '',
+        //   type: '1',
+        //   obj: '',
+        //   body: ''
+        this.form.communityId = this.detail.communityId;
+        this.form.title = this.detail.title;
+        this.form.type = this.detail.noticeType.toString();
+        // this.form.obj =
+        this.form.body = this.detail.body;
+      }
     }
   }
 </script>

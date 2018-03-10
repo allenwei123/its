@@ -40,7 +40,7 @@ import { mapGetters } from "vuex"
     components:{
     },
     created() {
-      
+
     },
     mounted:() => {
     },
@@ -57,7 +57,7 @@ import { mapGetters } from "vuex"
           this.$store.dispatch('change_aside',!this.isCollapse);
       },
       test1() {
-        let arr = ['side','property_service','communityIoT'];
+        let arr = ['side','propertyService','communityIoT'];
         let currentIndex = arr.indexOf(this.$route.path.split('/')[3]);
         this.arrData = obj1.data[currentIndex].children;
       }

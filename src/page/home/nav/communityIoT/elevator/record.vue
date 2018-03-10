@@ -22,13 +22,10 @@
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
             <el-table-column label="使用时间">
-              <template slot-scope="scope">???</template>
+              <template slot-scope="scope">{{getTime(scope.row.time, 'yyyy-MM-dd hh:mm')}}</template>
             </el-table-column>
             <el-table-column label="用户姓名">
-              <template slot-scope="scope">???</template>
-            </el-table-column>
-            <el-table-column label="身份">
-              <template slot-scope="scope">???</template>
+              <template slot-scope="scope">{{scope.row.userName}}</template>
             </el-table-column>
             <el-table-column label="使用方式">
               <template slot-scope="scope">???</template>
@@ -52,7 +49,7 @@
     data() {
       return {
         loading: false,
-        tableData: [{},{},{}],
+        tableData: [],
         pageSize: 10,
         total: 0,
         currentPage: 1,
@@ -65,27 +62,28 @@
         this.q_input = this.input;
         this.getTableList();
       }, getTableList() {
-        // this.loading = true;
-        // let url = `property/rpass/page?page=${this.currentPage}&size=${this.pageSize}`;
-        // let params = {};
-        // params.communityId = this.communityId;
-        // if (this.q_input) {
-        //   params.userName = this.q_input;
-        // }
-        // this.$xttp.post(url, params).then(res => {
-        //   this.loading = false;
-        //   if (res.errorCode === 0) {
-        //     this.tableData = res.data.records;
-        //     this.total = res.data.total;
-        //   }
-        // }).catch(() => {
-        //   this.loading = false;
-        // })
+        this.loading = true;
+        let url = `sys/elevator-record/page?page=${this.currentPage}&size=${this.pageSize}`;
+        let params = {};
+        params['communityId'] = this.$route.query.communityId;
+        params['deviceId'] = this.$route.query.id;
+        if (this.q_input) {
+          // params['name'] = this.q_input;
+        }
+        this.$xttp.post(url, params).then(res => {
+          this.loading = false;
+          if (res.errorCode === 0) {
+            this.tableData = res.data.records;
+            this.total = res.data.total;
+          }
+        }).catch(() => {
+          this.loading = false;
+        })
       }, getTime(timestamp, format) {
         return time.timestampToFormat(timestamp, format);
       }
     }, created() {
-
+      this.query();
     }
   }
 </script>
