@@ -43,7 +43,7 @@
       'showContent'
     ]),
     mounted() {
-      let arr = ['side','property_service','communityIoT'];
+      let arr = ['side','propertyService','communityIoT'];
       let currentIndex = arr.indexOf(this.$route.path.split('/')[3]);
       this.$store.dispatch('changeAsideData',currentIndex);
     },
