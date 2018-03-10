@@ -110,7 +110,7 @@
               "spread": "true",
               "title": "角色管理",
               "updateAt": null,
-              "url": "/home/nav/side/empl/role"
+              "url": "/home/nav/side/role"
             },
             {
               "children": null,
@@ -128,7 +128,7 @@
               "spread": "true",
               "title": "员工管理",
               "updateAt": null,
-              "url": "/home/nav/side/empl/empl"
+              "url": "/home/nav/side/empl"
             }
           ],
           "createAt": 1519978952195,
@@ -155,6 +155,24 @@
               "creatorId": "5a82a6129ce9330677c3fa4",
               "dataStatus": 1,
               "icon": "icon",
+              "id": "112-3",
+              "menuPlace": 1,
+              "menuType": 1,
+              "name": "班次管理",
+              "no": "GZS",
+              "pId": "12",
+              "rank": 1,
+              "spread": "true",
+              "title": "班次管理",
+              "updateAt": null,
+              "url": "/home/nav/side/class"
+            },
+            {
+              "children": null,
+              "createAt": 1519979089142,
+              "creatorId": "5a82a6129ce9330677c3fa4",
+              "dataStatus": 1,
+              "icon": "icon",
               "id": "112-2",
               "menuPlace": 1,
               "menuType": 1,
@@ -165,7 +183,7 @@
               "spread": "true",
               "title": "排班管理",
               "updateAt": null,
-              "url": "/home/nav/side/work/schedul"
+              "url": "/home/nav/side/schedul"
             },
             {
               "children": null,
@@ -183,7 +201,7 @@
               "spread": "true",
               "title": "考勤记录",
               "updateAt": null,
-              "url": "/home/nav/side/work/attendance"
+              "url": "/home/nav/side/attendance"
             }
           ],
           "createAt": 1519978952195,

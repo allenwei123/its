@@ -64,21 +64,25 @@ export default new Router({
                 component: r => require.ensure([], () => r(require('../page/home/nav/property_manage/userFile/list')), 'side')
               },
               {
-                path: 'empl/role',
-                component: r => require.ensure([], () => r(require('@/page/home/nav/property_manage/empl/role')), 'side')
+                path: 'role',
+                component: r => require.ensure([], () => r(require('@/page/home/nav/property_manage/role/role')), 'side')
               },
               {
-                path: 'empl/empl',
+                path: 'empl',
                 component: r => require.ensure([], () => r(require('@/page/home/nav/property_manage/empl/empl')), 'side')
               },
               {
-                path: 'work/schedul',
-                component: r => require.ensure([], () => r(require('@/page/home/nav/property_manage/work/schedul')), 'side')
+                path: 'schedul',
+                component: r => require.ensure([], () => r(require('@/page/home/nav/property_manage/schedul/schedul')), 'side')
               },
               {
-                path: 'work/attendance',
-                component: r => require.ensure([], () => r(require('@/page/home/nav/property_manage/work/attendance')), 'side')
-              }
+                path: 'class',
+                component: r => require.ensure([], () => r(require('@/page/home/nav/property_manage/class/class')), 'side')
+              },
+              // {
+              //   path: 'work/attendance',
+              //   component: r => require.ensure([], () => r(require('@/page/home/nav/property_manage/work/attendance')), 'side')
+              // }
             ]
           },
           // 物业服务

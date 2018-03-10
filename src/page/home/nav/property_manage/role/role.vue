@@ -6,31 +6,30 @@
         </ul>
         <div class="c-search">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
-            <el-form-item label="姓名">
-              <el-input v-model="formInline.name" placeholder="关键字搜索"></el-input>
+            <el-form-item label="角色">
+              <el-input v-model="formInline.role" placeholder="关键字搜索"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
             </el-form-item>
           </el-form>
-          <el-button type="primary" class="c-addBtn" @click="onSubmit">新增员工</el-button>
+          <el-button type="primary" class="c-addBtn" @click="onSubmit">新增角色</el-button>
         </div>
       </div>
       
       <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." border highlight-current-row ref="multipleTable" style="width: 100%">
-        <el-table-column label="序号" type="index" align="center" width="50"></el-table-column>
-        <el-table-column prop="emp_id" align="center" label="员工ID"></el-table-column>
-        <el-table-column prop="name" align="center" label="姓名"></el-table-column>
-        <el-table-column align="center" prop="role" label="当前角色" width="150" :formatter="roleFilter"></el-table-column>
-        <el-table-column align="center" prop="male" label="性别" :formatter="maleFilter"></el-table-column>
-        <el-table-column align="center" prop="phone" label="手机号" width="150"></el-table-column>
-        <el-table-column align="center" prop="time" label="创建时间" width="200"></el-table-column>
-        <el-table-column align="center" prop="usestate" label="使用状态" :formatter="usestateFilter"></el-table-column>
-        <el-table-column align="center" fixed="right" label="操作" width="220">
+        <el-table-column label="序号" type="index" align="center" width="60"> </el-table-column>
+        <el-table-column prop="role" label="角色" align="center"  width="150" :formatter="roleFilter"> </el-table-column>
+        <el-table-column prop="duty" label="功能职责" align="center"  width="120"> </el-table-column>
+        <el-table-column prop="time" label="创建时间" align="center"  width="200"> </el-table-column>
+        <el-table-column prop="num" label="人员数量" align="center"  width="120"> </el-table-column>
+        <el-table-column prop="state" label="状态" align="center"  width="120" :formatter="stateFilter"> </el-table-column>
+        <el-table-column prop="usestate" label="使用状态" align="center"  width="120" :formatter="usestateFilter"> </el-table-column>
+        <el-table-column fixed="right" align="center" label="操作" width="200">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button>
-            <el-button v-if="scope.row.usestate==='0'" @click="handleDiabled(scope.row,'1')" type="warning" size="small">启用</el-button>
-            <el-button v-if="scope.row.usestate==='1'" @click="handleAbled(scope.row,'0')" type="danger" size="small">禁止</el-button>
+            <el-button type="primary" size="mini" @click="handleClick(scope.row)">查看</el-button>
+            <el-button size="mini" type="danger" v-if="scope.row.usestate==='1'" @click="handleDiabled(scope.row,'0')">禁用</el-button>
+            <el-button v-if="scope.row.usestate==='0'" @click="handleAbled(scope.row,'1')" size="mini" type="success">启用</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -72,32 +71,57 @@ const maleOptions = [
   { key: '0', value: '女' },
   { key: '1', value: '男' }
 ];
-import AddPage from "./empl_add";
-import SeePage from "./empl_see";
+import AddPage from "./role_add";
+import SeePage from "./role_see";
 import { mapGetters } from "vuex";
 
 export default {
-  name: "empl",
+  name: "role",
   data() {
     return {
       isSou: false,
-      tableData: [{
-        role: '0',
-        dep: '住建部',
-        name: '陈以桐',
-        male: '0',
-        phone: '13211112222',
-        time: '2016-05-03 12:10:59',
-        emp_id: '000',
-        usestate: '0'
-      }],
+      tableData: [
+        {
+          role: '0',
+          dep: '住建部',
+          duty: '管理房地产',
+          time: '2016-05-03 12:10:59',
+          num: 200,
+          state: '0',
+          usestate: '0'
+        }, {
+          role: '1',
+          dep: '住建部',
+          duty: '管理房地产',
+          time: '2016-05-03 12:10:59',
+          num: 200,
+          state: '0',
+          usestate: '1'
+        }, {
+          role: '2',
+          dep: '住建部',
+          duty: '管理房地产',
+          time: '2016-05-03 12:10:59',
+          num: 200,
+          state: '1',
+          usestate: '0'
+        }, {
+          role: '3',
+          dep: '住建部',
+          duty: '管理房地产',
+          time: '2016-05-03 12:10:59',
+          num: 200,
+          state: '0',
+          usestate: '1'
+        }
+      ], 
       navDetailData: [
         { id: 0, name: "首页" },
         { id: 1, name: "员工管理" },
-        { id: 2, name: "员工管理" }
+        { id: 2, name: "角色管理" }
       ],
       formInline: {
-        name: ""
+        role: ""
       },
       currentPage: 1,
       loading: false,
@@ -153,14 +177,14 @@ export default {
     },
     handleDiabled(row, usestate){
       this.$message({
-        message: '启用成功',
+        message: '禁用成功',
         type: 'success'
       })
       row.usestate = usestate
     },
     handleAbled(row, usestate){
       this.$message({
-        message: '禁用成功',
+        message: '启用成功',
         type: 'success'
       })
       row.usestate = usestate
@@ -192,6 +216,15 @@ export default {
       }
       if(usestate == 1){
         return '正常'
+      }
+    },
+    stateFilter(row, column) {
+      let state = row[column.property]
+      if(state == 0){
+        return '正常'
+      }
+      if(state == 1){
+        return '异常'
       }
     },
     confirmDel(){

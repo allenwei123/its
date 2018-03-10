@@ -13,7 +13,8 @@ const scheduleList = [
     phone: "15918729264",
     roles: ["roleA", "roleB"],
     sex: 1,
-    token: "eed5a965b8aa473795b5e1e5b0cf69a4",
+    token: "ca32066274f140aaa5f97832852aaf1d",
+    // communityId: '5a82adf3b06c97e0cd6c0f3d'
     communityId: '5a82adf3b06c97e0cd6c0f3d'
   }
 ];

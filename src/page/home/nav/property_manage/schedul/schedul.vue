@@ -6,39 +6,64 @@
         </ul>
         <div class="c-search">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
-            <el-form-item label="姓名">
+            <el-form-item label="角色">
+              <el-select v-model="formInline.role" placeholder="角色">
+                <el-option v-for="item in roleOptions" :key="item.key" :label="item.value" :value="item.key">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="班次">
+              <el-select v-model="formInline.schedul" placeholder="班次">
+                <el-option v-for="item in schedulOptions" :key="item.key" :label="item.value" :value="item.key">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="">
               <el-input v-model="formInline.name" placeholder="关键字搜索"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
+              <el-button type="primary" @click="onSubmit"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
             </el-form-item>
           </el-form>
-          <el-button type="primary" class="c-addBtn" @click="onSubmit">新增员工</el-button>
+          <el-button type="primary" icon="el-icon-edit" class="c-addBtn" @click="handleCreate">新增排班</el-button>
         </div>
       </div>
       
       <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." border highlight-current-row ref="multipleTable" style="width: 100%">
-        <el-table-column label="序号" type="index" align="center" width="50"></el-table-column>
-        <el-table-column prop="emp_id" align="center" label="员工ID"></el-table-column>
-        <el-table-column prop="name" align="center" label="姓名"></el-table-column>
-        <el-table-column align="center" prop="role" label="当前角色" width="150" :formatter="roleFilter"></el-table-column>
-        <el-table-column align="center" prop="male" label="性别" :formatter="maleFilter"></el-table-column>
-        <el-table-column align="center" prop="phone" label="手机号" width="150"></el-table-column>
-        <el-table-column align="center" prop="time" label="创建时间" width="200"></el-table-column>
-        <el-table-column align="center" prop="usestate" label="使用状态" :formatter="usestateFilter"></el-table-column>
-        <el-table-column align="center" fixed="right" label="操作" width="220">
+        <el-table-column label="序号" type="index" align="center"  width="60"></el-table-column>
+        <el-table-column prop="id" v-if="show"></el-table-column>
+        <el-table-column prop="userId" v-if="show"></el-table-column>
+        <el-table-column prop="" label="当前日期" width="180" align="center">
+          <template slot-scope="scope">{{getTime(scope.row.createAt, 'yyyy-MM-dd hh:mm')}}</template>
+        </el-table-column>
+        <el-table-column prop="userName" label="员工" align="center" width="120"></el-table-column>
+        <el-table-column prop="className" label="班次" align="center" width="120"></el-table-column>
+        <el-table-column prop="postCode" label="角色" align="center" width="120" :formatter="postCodeFilter"></el-table-column>
+        <el-table-column prop="" label="当前日期" width="150" align="center">
+          <template slot-scope="scope">{{getTime(scope.row.updateAt, 'yyyy-MM-dd hh:mm')}}</template>
+        </el-table-column>
+        <el-table-column prop="employeeId" label="员工ID" align="center" width="120"></el-table-column>
+        <el-table-column prop="dataStatus" label="使用状态" align="center" width="120" :formatter="dataStatusFilter"></el-table-column>
+        <el-table-column fixed="right" label="操作" align="center" width="150">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button>
-            <el-button v-if="scope.row.usestate==='0'" @click="handleDiabled(scope.row,'1')" type="warning" size="small">启用</el-button>
-            <el-button v-if="scope.row.usestate==='1'" @click="handleAbled(scope.row,'0')" type="danger" size="small">禁止</el-button>
+            <el-button type="primary" size="mini" @click="handleClick(scope.row)">查看</el-button>
           </template>
         </el-table-column>
       </el-table>
+      <!-- <div class="c-block">
+        <el-pagination
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-size="30"
+          layout="total, prev, pager, next, jumper"
+          :total="total">
+        </el-pagination>
+      </div> -->
       <div class="c-block">
         <el-pagination
           @current-change="handleCurrentChange"
           :current-page="currentPage"
-          :page-size="10"
+          :page-size="pageSize"
           layout="total, prev, pager, next, jumper"
           :total="total">
         </el-pagination>
@@ -61,6 +86,7 @@
 </template>
 
 <script>
+
 const roleOptions = [
     { key: '0', value: '物业'},
     { key: '1', value: '保安'},
@@ -68,18 +94,27 @@ const roleOptions = [
     { key: '3', value: '水电'}
 ];
 
-const maleOptions = [
-  { key: '0', value: '女' },
-  { key: '1', value: '男' }
-];
-import AddPage from "./empl_add";
-import SeePage from "./empl_see";
+const schedulOptions = [
+  { key: '', value: '休班' },
+  { key: '0', value: '早班' },
+  { key: '1', value: '中班' },
+  { key: '2', value: '晚班' },
+  { key: '3', value: '早中晚班'}
+]
+
+import AddPage from "./sched_add";
+import SeePage from "./sched_see";
 import { mapGetters } from "vuex";
+import scheduleList from '@/mock/scheduleList'
+import time from '@/utils/time.js';
 
 export default {
-  name: "empl",
+  name: "schedul",
   data() {
     return {
+      show: false,
+      schedulOptions: schedulOptions,
+      roleOptions: roleOptions,
       isSou: false,
       tableData: [{
         role: '0',
@@ -92,13 +127,16 @@ export default {
         usestate: '0'
       }],
       navDetailData: [
-        { id: 0, name: "首页" },
-        { id: 1, name: "员工管理" },
-        { id: 2, name: "员工管理" }
+        { id: 0, name: "物业管理" },
+        { id: 1, name: "作业管理" },
+        { id: 2, name: "排班管理" }
       ],
       formInline: {
+        role: '0',
+        schedul: '',
         name: ""
       },
+      pageSize:10,
       currentPage: 1,
       loading: false,
       isShow: false, //控制添加页面弹出
@@ -120,8 +158,14 @@ export default {
       this.notice = null;
       this.isShow = !this.isShow;
     },
+    getTime(timestamp, format) {
+      return time.timestampToFormat(timestamp, format);
+    },
     handleCurrentChange(val) {
-      // this.sendAjax(val);
+      this.sendAjax(val);
+    },
+    handleCreate(){
+
     },
     handleClick(row) {
       //查看
@@ -185,6 +229,28 @@ export default {
         return '物业管理员'
       }
     },
+    postCodeFilter(row, column){
+      let postCode = row[column.property];
+      console.log(postCode);
+      if(postCode == 'SECURITY'){
+        return '保安'
+      }
+      if(postCode == 'CLEANING'){
+        return '保洁'
+      }
+      if(postCode == 'ADMINISTRATION'){
+        return '行政'
+      }
+    },
+    dataStatusFilter(row, column) {
+      let datastatus = row[column.property];
+      if(datastatus == 0){
+        return '无效'
+      }
+      if(datastatus == 1){
+        return '有效'
+      }
+    },
     usestateFilter(row, column) {
       let usestate = row[column.property];
       if(usestate == 0){
@@ -209,29 +275,24 @@ export default {
     },
     sendAjax(page,name) {
       let nPage = page || this.$route.query.page || 1;
-      let obj = {page:nPage}
+      let communityId = scheduleList[0].communityId
+      console.log(communityId)
+      let obj = {page:nPage,size:this.pageSize,communityId:communityId}
+      
       if(name){
         obj.name = this.formInline.name;
       }else {
         delete obj.name ;
       }
       this.loading = true;
-      this.$xttp.get("/community/page",{params:obj})
+      console.log(obj);
+      this.$xttp.post("task/schedule/page",obj)
       .then(res => {
+        console.log(res)
         if (!res.errorCode) {
           this.tableData = res.data.records;
           this.currentPage = res.data.currentPage;
           this.total = res.data.total;
-          this.tableData.forEach(item => {
-            let isdistrict = item.district || '';
-            item.as = item.province + item.city + isdistrict;
-            if (item.createAt) {
-              item.time1 = new Date(item.createAt)
-                .toISOString()
-                .split(".")[0]
-                .replace("T", " ");
-            }
-          });
           this.$router.push({path:this.$route.path,query:{page: nPage }})
         }
         this.loading = false;
@@ -241,7 +302,7 @@ export default {
     }
   },
   created() {
-    // this.sendAjax();
+    this.sendAjax();
   },
   mounted() {
   }
