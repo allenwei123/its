@@ -14,6 +14,7 @@ module.exports = {
       '/v1':{
         // target:'http://39.106.249.8:9000/v1',
         target:'http://apismcm.test.bitiot.com.cn',
+        // target:'http://192.168.10.145:9020',
         changeOrigin:true
         // pathRewrite:{
         //   "^/api": ""

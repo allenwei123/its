@@ -36,14 +36,14 @@
 </template>
 
 <script>
-import cityOptions from "../../../../../utils/citys";
+import { communityId } from '@/biz/community';
 
 export default {
   name: "ChargeAdd",
   data() {
     return {
       formLabelWidth: "120px",
-      titleFont:'添加社区档案',
+      titleFont:'添加楼栋档案',
       form: {
         code: "",
         name: "",
@@ -56,19 +56,22 @@ export default {
         cityArr: [{type: 'array', required: true, message: '请输入地区', trigger: 'blur' }],
         address:[{required: true, message: '请输入详细地址', trigger: 'blur'} ]
       },
-      x: "", //经度
-      y: "", //纬度
-      cityOptions: cityOptions,
+      options:[],
       cityArr: [],
       current: 1 ,//1 初始 2：添加后 3：编辑后
     };
   },
   props: ["msg","add"],
   created() {
+    communityId().then(res => {
+      if(res.length){
+        this.options = res;
+      }
+    })
     if(this.add){//判断此时组件为 编辑
       this.cityArr = [this.add.province,this.add.city,this.add.district || '' ];
       this.form = this.add;
-      this.titleFont = '编辑社区档案';
+      this.titleFont = '编辑楼栋档案';
     }
   },
   mounted() {},
@@ -95,7 +98,7 @@ export default {
         this.form.district = this.form.cityArr[2];
       }
       let msg = this.add ? '编辑' : '添加';
-      let uri = this.add ? '/community/edit' : '/community/add';
+      let uri = this.add ? '/community/building/edit' : '/community/building/add';
       this.$xttp
         .post( uri, this.form)
         .then(res => {
@@ -113,26 +116,6 @@ export default {
         .catch(err => {
           console.log(err);
         });
-    },
-    geolocation() {
-      let that = this;
-      let map, geolocation;
-      map = new AMap.Map("container", {
-        resizeEnable: true
-      });
-      map.plugin("AMap.Geolocation", function() {
-        geolocation = new AMap.Geolocation({
-          enableHighAccuracy: true,
-          timeout: 10000
-        });
-        geolocation.getCurrentPosition();
-        AMap.event.addListener(geolocation, "complete", data => {
-          that.$nextTick(() => {
-            that.x = data.position.getLng();
-            that.y = data.position.getLat();
-          });
-        });
-      });
     }
   }
 };

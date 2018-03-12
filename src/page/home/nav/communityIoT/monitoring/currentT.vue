@@ -5,7 +5,8 @@
             <param name='volume' value='50' /> 
             <param name='autoplay' value='false' /> 
             <param name='loop' value='false' /> 
-            <param name='fullscreen' value='true' /> 
+            <param name='fullscreen' value='true' />
+            <param name='controls' value='true' /> 
         </object> 
     </div>
 </template>
@@ -27,25 +28,24 @@ export default {
   components: {},
   methods: {
     play: function() {
-      this.reciveVideoUrl = this.videoUrl; //  获取视频url
-      var vdo = document.getElementById("vdo");
-      console.log(vdo)
-      vdo.play();
-      this.isLoadingShow = true;
-      this.isPlayBtnShow = false;
+      // this.reciveVideoUrl = this.videoUrl; //  获取视频url
+      // var vdo = document.getElementById("vdo");
+      // vdo.play();
+      // this.isLoadingShow = true;
+      // this.isPlayBtnShow = false;
     }
   },
   created() {},
   mounted() {
-    // var screenW = window.screen.width;
-    // document.getElementById("vedioComponent").style.height = screenW + "px";
-    // //  添加可播放事件
-    // var vdo = document.getElementById("vdo");
-    // vdo.addEventListener("canplay", function() {
-    //   this.isVdoShow = true;
-    //   this.isLoadingShow = false;
-    //   this.isPosterShow = false;
-    // });
+    let  vlc = document.getElementById('vlc');
+    // vlc.video.fullscreen = true true:为设置全屏
+    // vlc.video.count = 数目
+    
+    if(vlc.versionInfo()) {
+      vlc.addEventListener('MediaPlayerTimeChanged',() => {
+        alert(234)
+      })
+    }
   }
 };
 </script>

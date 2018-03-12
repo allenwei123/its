@@ -35,8 +35,16 @@ export default new Router({
                 component: () => import('@/page/home/nav/property_manage/_res')
               },
               {
+                path: 'test',
+                component: () => import('@/page/home/nav/property_manage/_res')
+              },
+              {
                 path: 'floorFile',
                 component: () => import('@/page/home/nav/property_manage/floorFile/list')
+              },
+              {
+                path: 'roomFile',
+                component: () => import('@/page/home/nav/property_manage/roomFile/list')
               },
               {
                 path: 'roomFile',

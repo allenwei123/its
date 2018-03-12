@@ -56,24 +56,6 @@
               "title": "楼栋档案",
               "updateAt": null,
               "url": "/home/nav/side/roomFile"
-            },
-            {
-              "children": null,
-              "createAt": 1519979089143,
-              "creatorId": "5a82a22265432c3fa4",
-              "dataStatus": 1,
-              "icon": "icon",
-              "id": "24423422343541231231",
-              "menuPlace": 1,
-              "menuType": 1,
-              "name": "人员档案",
-              "no": "GZS",
-              "pId": "24423422f238g231231",
-              "rank": 1,
-              "spread": "true",
-              "title": "人员档案",
-              "updateAt": null,
-              "url": "/home/nav/side/userFile"
             }
           ],
           "createAt": 1519978952195,

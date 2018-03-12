@@ -6,6 +6,16 @@
         </ul>
         <div class="c-search">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
+            <el-form-item label="社区名称">
+              <el-select v-model="formInline.select" clearable placeholder="请选择">
+                <el-option
+                  v-for="item in options"
+                  :key="item.id"
+                  :value="item.id"
+                  :label="item.name">
+                </el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item label="查找">
               <el-input v-model="formInline.name" placeholder="请输入门禁名称"></el-input>
             </el-form-item>
@@ -90,7 +100,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { communityId } from '@/biz/community';
 
 export default {
   name: "other",
@@ -103,6 +113,7 @@ export default {
         { id: 1, name: "社区物联" },
         { id: 2, name: "监控设备" }
       ],
+      options:[],//社区列表
       formInline: {
         name: ""
       },
@@ -113,7 +124,6 @@ export default {
       delData:null
     };
   },
-  computed: mapGetters(["showAside"]),
   components: {},
   methods: {
     handleCurrentChange(val) {
@@ -147,6 +157,11 @@ export default {
     sendAjax(page,name) {
       let nPage = page || this.$route.query.page || 1;
       let obj = {page:nPage};
+      if(communityId){
+        obj.communityId = this.formInline.select;
+      }else {
+        delete obj.communityId ;
+      }
       this.loading = true;
       this.$xttp.post("/communityIoT/camera/auth/page",obj)
       .then(res => {
@@ -163,7 +178,13 @@ export default {
     }
   },
   created() {
-    this.sendAjax();
+    communityId().then(res => {
+      if(res.length){
+        this.options = res;
+        this.formInline.select = this.options[0].id;
+        this.sendAjax(1, this.options[0].id);
+      }
+    })
   },
   mounted() {
   }

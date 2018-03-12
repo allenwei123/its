@@ -32,7 +32,10 @@ export default {
       this.fileData = dom.files[0];
     },
     submit() {
-      let formdata = send(this.fileData);
+      let fuc = function(){
+        console.log(123)
+      }
+      let formdata = send(this.fileData,fuc);
     }
   }
 };
