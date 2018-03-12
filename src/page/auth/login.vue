@@ -48,6 +48,7 @@
           if (res.errorCode === 0) {
             this.$router.push('/home');
           }
+          this.pwd = '';
           loadingInstance.close();
         }).catch(() => {
           loadingInstance.close();
