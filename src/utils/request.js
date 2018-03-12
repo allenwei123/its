@@ -38,7 +38,7 @@ service.interceptors.response.use(
     }else if(res.data.errorCode !== 0) {
       Message({message:res.data.errorMsg,type:'error'})
     }
-    return res.data;
+    return res.data || res;
   }, error => {
     Message({message:'链接错误,请检查管理员',type:'error'})
     return Promise.reject(error)
