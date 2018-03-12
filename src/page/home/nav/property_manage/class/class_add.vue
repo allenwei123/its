@@ -1,35 +1,37 @@
 <template>
       <el-dialog :title="titleFont" :visible.sync="msg" :before-close="handleClose">
         <el-form :model="form" :rules="rules" ref="ruleForm" class="demo-form-inline">
-            <el-form-item label="岗位">
-              <el-select v-model="formInline.select" clearable placeholder="请选择">
-                <el-option
-                  v-for="item in options"
-                  :key="item.id"
-                  :value="item.id"
-                  :label="item.name">
-                </el-option>
+            <el-form-item label="岗位：" :label-width="formLabelWidth" prop="role" class="c-must">
+              <el-select v-model="form.role" placeholder="roleOptions">
+                <el-option v-for="item in roleOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
 
-            <el-form-item label="手机号码" :label-width="formLabelWidth" prop="phone" class="c-must">
-              <el-input v-model="form.phone"></el-input>
+            <el-form-item label="班次：" :label-width="formLabelWidth" prop="class" class="c-must">
+              <el-input v-model="form.class"></el-input>
             </el-form-item>
 
-            <el-form-item label="角色" :label-width="formLabelWidth" prop="role" class="c-must">
-              <el-radio-group v-model="form.role">
-                <el-radio :label="item.value" :key="index" v-for="(item,index) in roleOptions"></el-radio>
-              </el-radio-group>
+            <el-form-item label="值班时间：" :label-width="formLabelWidth" class="c-must">
+              <el-time-select placeholder="起始时间" v-model="form.attendTime"
+                :picker-options="{
+                  start: '08:30',
+                  step: '00:15',
+                  end: '18:30'
+                }">
+              </el-time-select>
+              ---
+              <el-time-select placeholder="结束时间" v-model="form.offTime"
+                :picker-options="{
+                  start: '08:30',
+                  step: '00:15',
+                  end: '18:30',
+                  minTime: form.attendTime
+                }">
+              </el-time-select>
             </el-form-item>
 
-            <el-form-item label="性别" :label-width="formLabelWidth" prop="male" class="c-must">
-              <el-select v-model="form.male" placeholder="请选择">
-                <el-option v-for="item in maleOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
-              </el-select>
-            </el-form-item>
-
-            <el-form-item label="设置密码" :label-width="formLabelWidth" prop="pwd" class="c-must">
-              <el-input v-model="form.pwd" type="password"></el-input>
+            <el-form-item label="备注：" :label-width="formLabelWidth" prop="note" class="c-must">
+              <el-input v-model="form.note"></el-input>
             </el-form-item>
 
             <el-form-item :label-width="formLabelWidth">
@@ -53,18 +55,17 @@ const maleOptions = [
   { key: '1', value: '男' }
 ];
 export default {
-  name: "EmplAdd",
+  name: "ClassAdd",
   data() {
     return {
       formLabelWidth: "120px",
-      titleFont:'新增班次',
-      options:[],//下拉框数据
+      titleFont:'添加班次',
       form: {
-        name: "",
-        phone: "",
         role: 0,
-        male:'男',
-        pwd: ''
+        class: '',
+        attendTime: '',
+        offTime: '',
+        note: ''
       },
       rules: {
         name: [{required: true, message: '请输入名称', trigger: 'blur'}],
@@ -72,29 +73,20 @@ export default {
         pwd:[{required: true, message: '请输入密码', trigger: 'blur'} ]
       },
       roleOptions: roleOptions,
-      maleOptions: maleOptions,
       current: 1 //1 初始 2：添加后 3：编辑后
     };
   },
   props: ["msg","add"],
   created() {
-    communityId().then(res => {
-      if(res.length){
-        this.options = res;
-        this.formInline.select = this.options[0].id;
-        this.sendAjax(1, this.options[0].id);
-      }
-    })
-    // if(this.add){//判断此时组件为 编辑
-    //   this.form = this.add;
-    //   this.titleFont = '编辑员工';
-    // }
+    if(this.add){//判断此时组件为 编辑
+      this.form = this.add;
+      this.titleFont = '编辑员工';
+    }
   },
   mounted() {},
   methods: {
     handleClose() {
-      alert("ssss")
-      this.$emit("upaddclass", this.current );
+      this.$emit("upup", this.current );
     },
     save(formName) {
       this.$refs[formName].validate((valid) => {
@@ -113,7 +105,7 @@ export default {
         .then(res => {
           if (res.errorCode === 0) {
             this.$message({
-              message: msg + "社区成功",
+              message: msg + "班次成功",
               type: "success"
             });
             this.current =  2;
@@ -133,6 +125,5 @@ export default {
 <style lang="scss" scoped>
 
 </style>
-
 
 

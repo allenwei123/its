@@ -30,7 +30,10 @@
       </div>
       
       <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." border highlight-current-row ref="multipleTable" style="width: 100%">
-        <el-table-column label="序号" type="index" align="center"  width="60"></el-table-column>
+        <!-- <el-table-column label="序号" type="index" align="center"  width="60">{{(currentPage-1) * pageSize + scope.$index + 1}}</el-table-column> -->
+        <el-table-column label="序号" width="80">
+          <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
+        </el-table-column>
         <el-table-column prop="id" v-if="show"></el-table-column>
         <el-table-column prop="userId" v-if="show"></el-table-column>
         <el-table-column prop="" label="当前日期" width="180" align="center">

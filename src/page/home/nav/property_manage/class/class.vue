@@ -28,7 +28,7 @@
         <el-table-column prop="num" label="备注信息" align="center"  width="200"> </el-table-column>
         <el-table-column fixed="right" align="center" label="操作" width="200">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="handleClick(scope.row)">修改</el-button>
+            <el-button type="primary" size="mini" @click="editHandle(scope.row)">修改</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -42,11 +42,9 @@
           :total="total">
         </el-pagination>
       </div>
-      <!-- <transition name="fade1">
-        <AddPage v-if="isShow" :msg="isShow" @upup="change" :add.sync="notice"></AddPage>
-      </transition> -->
       <transition name="fade">
-        <AddPage v-if="add" :msg="add" @upsee="addChange"  :data="addData"></AddPage>
+        <!-- <AddPage v-if="add" :msg="add" @upsee="addChange"  :data="addData"></AddPage> -->
+        <AddPage v-if="isShow" :msg="isShow" @upup="change" :add.sync="notice"></AddPage>
       </transition>
 
       <el-dialog title="温馨提示" :visible.sync="visible2">
@@ -76,7 +74,7 @@ const schedulOptions = [
   { key: '3', value: '早中晚班'}
 ]
 
-import AddPage from "./addClass";
+import AddPage from "./class_add";
 // import SeePage from "./sched_see";
 import { mapGetters } from "vuex";
 import scheduleList from '@/mock/scheduleList'
@@ -88,7 +86,7 @@ export default {
     return {
       show: false,
       schedulOptions: schedulOptions,
-      roleOptions: roleOptions,
+      roleOptions: [],
       isSou: false,
       tableData: [{
         role: '0',
@@ -106,9 +104,7 @@ export default {
         { id: 2, name: "班次管理" }
       ],
       formInline: {
-        role: '0',
-        schedul: '',
-        name: ""
+        role: '0'
       },
       pageSize:10,
       currentPage: 1,
@@ -135,7 +131,7 @@ export default {
     getTime(timestamp, format) {
       return time.timestampToFormat(timestamp, format);
     },
-    addClassAction(){
+    handleEdit(row){
 
     },
     handleCurrentChange(val) {
@@ -144,10 +140,10 @@ export default {
     handleCreate(){
 
     },
-    addClass(row) {
-      //查看
-      this.add = true;
-      this.addData = row;
+    addClass() {
+      //新增
+      this.notice = null;
+      this.isShow = !this.isShow;
     },
     editHandle(row) {
       //编辑
@@ -258,10 +254,29 @@ export default {
       }).catch(err => {
         this.loading = false;
       })
+    },
+    initRole(){
+      let communityId = scheduleList[0].communityId
+      console.log(communityId)
+      this.$xttp.get(`/user/property/${communityId}/post-list`).then(res => {
+        console.log(res)
+        if(!res.errorCode) {
+          console.log(res.data);
+          for(var s in res.data){
+            // alert(s+":"+res.data[s]);
+          }
+          // this.roleOptions = JSON.stringify(res.data);
+          // console.log(this.roleOptions)
+          // for(var key in this.roleOptions){
+          //   console.log(key + ":" + this.roleOptions[key])
+          // }
+        }
+      })
     }
   },
   created() {
     // this.sendAjax();
+    // this.initRole();
   },
   mounted() {
   }
