@@ -93,42 +93,17 @@ const arr = [
       },
       {
         id:'1-4',
-        name:'作业管理',
-        show: 1,
-        menuItem:[
-          {
-            id:'1-4-1',
-            title:'班次管理',
-            link:'/home/nav/side/class',
-            show: 1
-          },
-          {
-            id:'1-4-2',
-            title:'排班管理',
-            link:'/home/nav/side/schedul',
-            show: 1
-          },
-          {
-            id:'1-4-3',
-            title:'考勤记录',
-            link:'/home/nav/side/attendance',
-            show: 1
-          }
-        ]
-      },
-      {
-        id:'1-5',
         name:'收费管理',
         show: 1,
         menuItem:[
           {
-            id:'1-5-1',
+            id:'1-4-1',
             title:'账单管理',
             link:'/home/nav/side/bill',
             show: 1
           },
           {
-            id:'1-5-2',
+            id:'1-4-2',
             title:'收费项目',
             link:'/home/nav/side/chargeProject',
             show: 1
