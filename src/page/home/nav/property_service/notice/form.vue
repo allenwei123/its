@@ -33,6 +33,7 @@
             :auto-upload="false"
             :limit="1"
             accept="image/*"
+            :on-exceed="onExceed"
             list-type="picture-card">
             <i class="el-icon-plus"></i>
           </el-upload>
@@ -97,6 +98,9 @@
       },
       up() {
 
+      },
+      onExceed() {
+        this.$message('只能上传一张图片')
       },
       save() {
         if (!this.form.title.length) {
