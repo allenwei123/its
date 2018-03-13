@@ -55,14 +55,6 @@ export default new Router({
                 component: () => import('@/page/home/nav/property_service/rpass/list')
               },
               {
-                path: 'property-service/alarm',
-                component: () => import('@/page/home/nav/property_service/alarm/list')
-              },
-              {
-                path: 'property-service/notice',
-                component: () => import('@/page/home/nav/property_service/notice/list')
-              },
-              {
                 path: 'other',
                 name: 'dangan',
                 component: r => require.ensure([], () => r(require('../page/home/nav/property_manage/charge/other')), 'side')
@@ -91,6 +83,10 @@ export default new Router({
               //   path: 'work/attendance',
               //   component: r => require.ensure([], () => r(require('@/page/home/nav/property_manage/work/attendance')), 'side')
               // }
+              {
+                path: 'bill',
+                component: () => import('@/page/home/nav/property_manage/bill/list')
+              },
             ]
           },
           // 物业服务
