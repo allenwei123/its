@@ -1,37 +1,57 @@
 <template>
       <el-dialog :title="titleFont" :visible.sync="msg" :before-close="handleClose">
         <el-form :model="form" :rules="rules" ref="ruleForm" class="demo-form-inline">
-            <el-form-item label="岗位：" :label-width="formLabelWidth" prop="role" class="c-must">
-              <el-select v-model="form.role" placeholder="roleOptions">
-                <el-option v-for="item in roleOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            <el-form-item v-if="show" label="社区ID:" :label-width="formLabelWidth" prop="communityId" class="c-must">
+              <el-input v-model="form.communityId"></el-input>
+            </el-form-item>
+            <el-form-item v-if="show" label="物业ID:" :label-width="formLabelWidth" prop="propertyId" class="c-must">
+              <el-input v-model="form.propertyId"></el-input>
+            </el-form-item>
+            <el-form-item label="岗位：" :label-width="formLabelWidth" prop="postCode" class="c-must">
+              <el-select v-model="form.postCode" placeholder="roleOptions">
+                <!-- <el-option v-for="item in roleOptions" :key="item.key" :label="item.name" :value="item.value"></el-option> -->
+                <el-option v-for="item in roleOptions" :key="item.key" :label="item.name" :value="item.key"></el-option>
               </el-select>
             </el-form-item>
 
-            <el-form-item label="班次：" :label-width="formLabelWidth" prop="class" class="c-must">
-              <el-input v-model="form.class"></el-input>
+            <el-form-item label="班次：" :label-width="formLabelWidth" prop="name" class="c-must">
+              <el-input v-model="form.name"></el-input>
+            </el-form-item>
+
+            <el-form-item label="班次类型:" :label-width="formLabelWidth" prop="type" class="c-must">
+              <el-select v-model="form.type" placeholder="请选择">
+                <!-- <el-option v-for="item in roleOptions" :key="item.key" :label="item.name" :value="item.value"></el-option> -->
+                <el-option v-for="item in typeOptions" :key="item.key" :label="item.value" :value="item.key"></el-option>
+              </el-select>
             </el-form-item>
 
             <el-form-item label="值班时间：" :label-width="formLabelWidth" class="c-must">
               <el-time-select placeholder="起始时间" v-model="form.attendTime"
                 :picker-options="{
-                  start: '08:30',
-                  step: '00:15',
-                  end: '18:30'
+                  start: '00:00',
+                  step: '00:05',
+                  end: '24:00'
                 }">
               </el-time-select>
               ---
-              <el-time-select placeholder="结束时间" v-model="form.offTime"
+              <!-- <el-time-select placeholder="结束时间" v-model="form.offTime"
                 :picker-options="{
-                  start: '08:30',
-                  step: '00:15',
-                  end: '18:30',
+                  start: '00:00',
+                  step: '00:05',
+                  end: '24:00',
                   minTime: form.attendTime
+                }"> -->
+                <el-time-select placeholder="结束时间" v-model="form.offTime"
+                :picker-options="{
+                  start: '00:00',
+                  step: '00:05',
+                  end: '24:00'
                 }">
               </el-time-select>
             </el-form-item>
 
-            <el-form-item label="备注：" :label-width="formLabelWidth" prop="note" class="c-must">
-              <el-input v-model="form.note"></el-input>
+            <el-form-item label="备注：" :label-width="formLabelWidth" prop="remark" class="c-must">
+              <el-input v-model="form.remark"></el-input>
             </el-form-item>
 
             <el-form-item :label-width="formLabelWidth">
@@ -43,16 +63,11 @@
 </template>
 
 <script>
-const roleOptions = [
-    { key: '0', value: '物业'},
-    { key: '1', value: '保安'},
-    { key: '2', value: '保洁'},
-    { key: '3', value: '水电'}
-];
+import scheduleList from '@/mock/scheduleList'
 
-const maleOptions = [
-  { key: '0', value: '女' },
-  { key: '1', value: '男' }
+const typeOptions = [
+  { key: '1', value: '轮班' },
+  { key: '2', value: '长班' }
 ];
 export default {
   name: "ClassAdd",
@@ -60,28 +75,35 @@ export default {
     return {
       formLabelWidth: "120px",
       titleFont:'添加班次',
+      show: false,
       form: {
-        role: 0,
-        class: '',
+        postCode: 'SECURITY',
+        name: '',
+        type: '1',
         attendTime: '',
         offTime: '',
-        note: ''
+        remark: '',
+        communityId: '5a82adf3b06c97e0cd6c0f3d',
+        propertyId : '5a82adee9ce976452b7001ee'
       },
       rules: {
-        name: [{required: true, message: '请输入名称', trigger: 'blur'}],
-        phone: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
-        pwd:[{required: true, message: '请输入密码', trigger: 'blur'} ]
+        name: [{required: true, message: '请输入班次', trigger: 'blur'}],
+        attendTime: [{ required: true, message: '请选择起始时间', trigger: 'blur' }],
+        offTime: [{ required: true, message: '请选择结束时间', trigger: 'blur' }],
+        remark: [{ required: true, message: '请填写备注', trigger: 'blur' }]
       },
-      roleOptions: roleOptions,
-      current: 1 //1 初始 2：添加后 3：编辑后
+      roleOptions: [],
+      current: 1, //1 初始 2：添加后 3：编辑后
+      typeOptions: typeOptions
     };
   },
   props: ["msg","add"],
   created() {
-    if(this.add){//判断此时组件为 编辑
-      this.form = this.add;
-      this.titleFont = '编辑员工';
-    }
+    // if(this.add){//判断此时组件为 编辑
+    //   this.form = this.add;
+    //   this.titleFont = '编辑员工';
+    // }
+    this.initRole()
   },
   mounted() {},
   methods: {
@@ -97,9 +119,30 @@ export default {
           }
         });
     },
+    find(){
+      var postCode = this.formInline.role;
+      let communityId = scheduleList[0].communityId
+      console.log(postCode)
+      console.log(communityId)
+      this.$xttp.get('/task/class/list',{params:{communityId:communityId,postCode:postCode,propertyId:'5a82adee9ce976452b7001ee'}})
+                .then(res => {
+                  if(!res.errorCode) {
+                    this.tableData = res.data
+                  }
+                  this.loading = false;
+                }).catch(err =>{
+                  this.loading = false;
+                })
+      
+    },
     postData() {
       let msg = this.add ? '编辑' : '添加';
-      let uri = this.add ? '/community/edit' : '/community/add';
+      let uri = this.add ? '/community/edit' : '/task/class/add';
+      alert(uri)
+      console.log(this.form.communityId)
+      console.log(this.form.propertyId)
+      console.log(this.form.note)
+      console.log(this.form)
       this.$xttp
         .post( uri, this.form)
         .then(res => {
@@ -117,6 +160,16 @@ export default {
         .catch(err => {
           console.log(err);
         });
+    },
+    initRole(){
+      let communityId = scheduleList[0].communityId
+      console.log(communityId)
+      this.$xttp.get(`/user/property/${communityId}/post-list`).then(res => {
+        console.log(res)
+        if(!res.errorCode) {
+          this.roleOptions = res.data;
+        }
+      })
     }
   }
 };
