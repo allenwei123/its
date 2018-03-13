@@ -25,24 +25,15 @@
             <el-table-column label="门禁" width="200">
               <template slot-scope="scope">{{scope.row.name}}</template>
             </el-table-column>
-            <el-table-column label="ID" width="120">
-              <template slot-scope="scope">{{scope.row.deviceId}}</template>
+            <el-table-column label="ID">
+              <template slot-scope="scope">{{scope.row.id}}</template>
             </el-table-column>
-            <el-table-column label="小区名称" width="150">
+            <el-table-column label="小区名称">
               <template slot-scope="scope">{{scope.row.communityName}}</template>
             </el-table-column>
             <el-table-column label="楼栋名称">
-              <template slot-scope="scope">???</template>
+              <template slot-scope="scope">{{scope.row.buildingName}}</template>
             </el-table-column>
-            <!--<el-table-column label="门禁产商" width="120">-->
-              <!--<template slot-scope="scope">???</template>-->
-            <!--</el-table-column>-->
-            <!--<el-table-column label="型号" width="120">-->
-              <!--<template slot-scope="scope">???</template>-->
-            <!--</el-table-column>-->
-            <!--<el-table-column label="运行状态" width="80">-->
-              <!--<template slot-scope="scope">???</template>-->
-            <!--</el-table-column>-->
             <el-table-column label="操作" width="120" fixed="right">
               <template slot-scope="scope">
                 <el-button type="primary" size="mini" @click="view(scope.row)">使用记录</el-button>
@@ -84,11 +75,11 @@
         this.getTableList();
       }, getTableList() {
         this.loading = true;
-        let url = `communityIoT/door/page?page=${this.currentPage}&size=${this.pageSize}`;
+        let url = `communityIoT/record/door/list?page=${this.currentPage}&size=${this.pageSize}`;
         let params = {};
-        params.communityId = this.communityId;
+        params['communityId'] = this.communityId;
         if (this.q_input) {
-          params.userName = this.q_input;
+          params['deviceName'] = this.q_input;
         }
         this.$xttp.post(url, params).then(res => {
           this.loading = false;
