@@ -12,12 +12,10 @@
   import { mapState } from 'vuex'
   import Header from '../../../components/header/Header'
   import Content from './../nav/_res/index.vue'
-  import arr from '../../../mock/menuList'
 
   export default {
     data() {
       return {
-        data:arr
       }
     },
     name: 'home',
