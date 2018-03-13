@@ -77,6 +77,14 @@ const router = new Router({
                 path: 'class',
                 component: (resolve) => require(["@/page/home/nav/property_manage/class/class"], resolve),
               },
+              // {
+              //   path: 'work/attendance',
+              //   component: r => require.ensure([], () => r(require('@/page/home/nav/property_manage/work/attendance')), 'side')
+              // }
+              {
+                path: 'bill',
+                component: () => import('@/page/home/nav/property_manage/bill/list')
+              },
             ]
           },
           // 物业服务

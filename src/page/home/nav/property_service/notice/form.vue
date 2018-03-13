@@ -28,7 +28,11 @@
       <el-form-item label="配图" required>
         <template>
           <el-upload
-            action="https://jsonplaceholder.typicode.com/posts/"
+            ref="upload"
+            action=""
+            :auto-upload="false"
+            :limit="1"
+            accept="image/*"
             list-type="picture-card">
             <i class="el-icon-plus"></i>
           </el-upload>
@@ -53,17 +57,20 @@
 
 <script>
   import {communityId as getCommunityList} from '@/biz/community';
+  import {send as ossUpload} from '@/utils/oss';
   export default {
     data() {
       return {
         formVisible: this.visible,
         communityList: [],
+        file: null,
         form: {
           communityId: '',
           title: '',
           type: '1',
           obj: '',
-          body: ''
+          body: '',
+          thumbnailUrl: null
         }
       }
     },
@@ -88,6 +95,9 @@
       preview() {
 
       },
+      up() {
+
+      },
       save() {
         if (!this.form.title.length) {
           this.showInfo('公告标题不能为空');
@@ -97,14 +107,29 @@
           this.showInfo('公告内容不能为空');
           return;
         }
+
+        let files = this.$refs.upload.uploadFiles;
+        if (files.length) {
+          ossUpload(files[0], (key) => {
+            this.form.thumbnailUrl = key;
+            this.submitForm();
+          });
+        }
+        else {
+          this.submitForm();
+        }
+      },
+      submitForm() {
         this.loading = true;
         let params = {};
         params['noticeType'] = this.form.type;
         params['communityId'] = this.form.communityId;
         params['title'] = this.form.title;
         params['body'] = this.form.body;
-        // params['thumbnailUrl'] = 'xxx';
-        var url = 'property/notice/add';
+        if (this.form.thumbnailUrl) {
+          params['thumbnailUrl'] = this.form.thumbnailUrl;
+        }
+        let url = 'property/notice/add';
         if (this.isModify) {
           url = 'property/notice/edit';
           params['id'] = this.detail.id;
@@ -134,7 +159,7 @@
         this.form.communityId = this.detail.communityId;
         this.form.title = this.detail.title;
         this.form.type = this.detail.noticeType.toString();
-        // this.form.obj =
+        this.form.thumbnailUrl = this.detail.thumbnailUrl;
         this.form.body = this.detail.body;
       }
     }
