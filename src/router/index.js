@@ -79,10 +79,10 @@ export default new Router({
                 path: 'class',
                 component: r => require.ensure([], () => r(require('@/page/home/nav/property_manage/class/class')), 'side')
               },
-              // {
-              //   path: 'work/attendance',
-              //   component: r => require.ensure([], () => r(require('@/page/home/nav/property_manage/work/attendance')), 'side')
-              // }
+              {
+                path: 'checkIn',
+                component: r => require.ensure([], () => r(require('@/page/home/nav/property_manage/checkIn/checkIn')), 'side')
+              },
               {
                 path: 'bill',
                 component: () => import('@/page/home/nav/property_manage/bill/list')

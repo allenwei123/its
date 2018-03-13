@@ -178,12 +178,12 @@
               "menuType": 1,
               "name": "考勤记录",
               "no": "GZS",
-              "pId": "11",
+              "pId": "12",
               "rank": 1,
               "spread": "true",
               "title": "考勤记录",
               "updateAt": null,
-              "url": "/home/nav/side/attendance"
+              "url": "/home/nav/side/checkIn"
             }
           ],
           "createAt": 1519978952195,
@@ -199,43 +199,6 @@
           "rank": 1,
           "spread": "true",
           "title": "作业管理",
-          "updateAt": null,
-          "url": "www.baidu.com.cn"
-        },
-        {
-          "children": [
-            {
-              "children": null,
-              "createAt": 1519979089142,
-              "creatorId": "121212312dfwer",
-              "dataStatus": 1,
-              "icon": "icon",
-              "id": "1123df2312317788",
-              "menuPlace": 1,
-              "menuType": 1,
-              "name": "部门管理",
-              "no": "GZS",
-              "pId": "5a9909c83d6a888c8da298f",
-              "rank": 1,
-              "spread": "true",
-              "title": "������",
-              "updateAt": null,
-              "url": "/home/nav/side/content"
-            }
-          ],
-          "createAt": 1519978952195,
-          "creatorId": "5a82a612444e30677c3fa4",
-          "dataStatus": 1,
-          "icon": "icon",
-          "id": "5a9909c83d6af845da298f",
-          "menuPlace": 1,
-          "menuType": 1,
-          "name": "员工档案管理",
-          "no": "GZ",
-          "pId": "5a99090a3d555cbc8da2988",
-          "rank": 1,
-          "spread": "true",
-          "title": "�㶫ʡ",
           "updateAt": null,
           "url": "www.baidu.com.cn"
         },
