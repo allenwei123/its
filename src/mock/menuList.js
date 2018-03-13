@@ -93,7 +93,7 @@ const arr = [
       },
       {
         id:'1-4',
-        name:'收费管理',
+        name:'作业管理',
         show: 1,
         menuItem:[
           {
@@ -124,7 +124,7 @@ const arr = [
           {
             id:'1-5-1',
             title:'账单管理',
-            link:'/home/nav/side/billManage',
+            link:'/home/nav/side/bill',
             show: 1
           },
           {
