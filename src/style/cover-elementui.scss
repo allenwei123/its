@@ -48,7 +48,7 @@ $headerBg:#23262b;
 }
 
 .el-table th {
-  background-color: $headerBg;
+  background-color: $headerBg !important;
   .cell {
     color:#fff;
   }

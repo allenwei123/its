@@ -41,7 +41,7 @@ export default {
     // vlc.video.fullscreen = true true:为设置全屏
     // vlc.video.count = 数目
     
-    if(vlc.versionInfo()) {
+    if(vlc.versionInfo) {
       vlc.addEventListener('MediaPlayerTimeChanged',() => {
         alert(234)
       })

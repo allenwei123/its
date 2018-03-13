@@ -37,6 +37,7 @@
 
 <script>
 import { communityId } from '@/biz/community';
+import cityOptions from '@/utils/citys';
 
 export default {
   name: "ChargeAdd",
@@ -59,6 +60,7 @@ export default {
       options:[],
       cityArr: [],
       current: 1 ,//1 初始 2：添加后 3：编辑后
+      cityOptions:cityOptions
     };
   },
   props: ["msg","add"],
