@@ -15,7 +15,7 @@ function createData(info,file) {
     request.append('file', file);//需要上传的文件 file
     request.append('Filename',  fileKey );
     return {
-      fileKey: fileKey,
+      key: fileKey,
       req: request
     }
 }
@@ -41,7 +41,7 @@ export function send(file, success) {
         return http.post(info.host, data.req).then(res => {
             if (res.status === 200) {
               if (success) {
-                success(data.fileKey);
+                success(data.key);
               }
             }
         })
