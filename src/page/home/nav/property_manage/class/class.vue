@@ -8,12 +8,12 @@
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
             <el-form-item label="角色">
               <el-select v-model="formInline.role" placeholder="角色">
-                <el-option v-for="item in roleOptions" :key="item.key" :label="item.value" :value="item.key">
+                <el-option v-for="item in roleOptions" :key="item.key" :label="item.name" :value="item.key">
                 </el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click=""><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
+              <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
             </el-form-item>
           </el-form>
           <el-button type="primary" class="c-addBtn" @click="addClass">新增班次</el-button>
@@ -22,18 +22,21 @@
       
       <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." border highlight-current-row ref="multipleTable" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60"> </el-table-column>
-        <el-table-column prop="role" label="岗位" align="center"  width="200"> </el-table-column>
-        <el-table-column prop="duty" label="班次" align="center"  width="150"> </el-table-column>
-        <el-table-column prop="time" label="值班时间" align="center"  width="200"> </el-table-column>
-        <el-table-column prop="num" label="备注信息" align="center"  width="200"> </el-table-column>
+        <el-table-column label="ID" type="id" align="center" prop="id" v-if="show"></el-table-column>
+        <el-table-column prop="postCode" label="岗位" align="center"  width="200"  :formatter="postCodeFilter"> </el-table-column>
+        <el-table-column prop="name" label="班次" align="center"  width="150"> </el-table-column>
+        <el-table-column prop="attendTime" label="值班时间" align="center"  width="200"></el-table-column>
+        <el-table-column prop="offTime" label="结束时间" align="center"  width="200"> </el-table-column>
+        <el-table-column prop="remark" label="备注信息" align="center"  width="200"> </el-table-column>
         <el-table-column fixed="right" align="center" label="操作" width="200">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="handleClick(scope.row)">修改</el-button>
+            <el-button type="primary" size="mini" @click="editHandle(scope.row)">修改</el-button>
+            <el-button @click="delHandle(scope.row)" type="danger" size="small">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
 
-      <div class="c-block">
+      <!-- <div class="c-block">
         <el-pagination
           @current-change="handleCurrentChange"
           :current-page="currentPage"
@@ -41,12 +44,10 @@
           layout="total, prev, pager, next, jumper"
           :total="total">
         </el-pagination>
-      </div>
-      <!-- <transition name="fade1">
-        <AddPage v-if="isShow" :msg="isShow" @upup="change" :add.sync="notice"></AddPage>
-      </transition> -->
+      </div> -->
       <transition name="fade">
-        <AddPage v-if="add" :msg="add" @upsee="addChange"  :data="addData"></AddPage>
+        <!-- <AddPage v-if="add" :msg="add" @upsee="addChange"  :data="addData"></AddPage> -->
+        <AddPage v-if="isShow" :msg="isShow" @upup="change" :add.sync="notice"></AddPage>
       </transition>
 
       <el-dialog title="温馨提示" :visible.sync="visible2">
@@ -60,23 +61,7 @@
 </template>
 
 <script>
-
-const roleOptions = [
-    { key: '0', value: '物业'},
-    { key: '1', value: '保安'},
-    { key: '2', value: '保洁'},
-    { key: '3', value: '水电'}
-];
-
-const schedulOptions = [
-  { key: '', value: '休班' },
-  { key: '0', value: '早班' },
-  { key: '1', value: '中班' },
-  { key: '2', value: '晚班' },
-  { key: '3', value: '早中晚班'}
-]
-
-import AddPage from "./addClass";
+import AddPage from "./class_add";
 // import SeePage from "./sched_see";
 import { mapGetters } from "vuex";
 import scheduleList from '@/mock/scheduleList'
@@ -87,34 +72,22 @@ export default {
   data() {
     return {
       show: false,
-      schedulOptions: schedulOptions,
-      roleOptions: roleOptions,
+      roleOptions: [],
       isSou: false,
-      tableData: [{
-        role: '0',
-        dep: '住建部',
-        name: '陈以桐',
-        male: '0',
-        phone: '13211112222',
-        time: '2016-05-03 12:10:59',
-        emp_id: '000',
-        usestate: '0'
-      }],
+      tableData: [],
       navDetailData: [
         { id: 0, name: "物业管理" },
         { id: 1, name: "作业管理" },
         { id: 2, name: "班次管理" }
       ],
       formInline: {
-        role: '0',
-        schedul: '',
-        name: ""
+        role: 'SECURITY'
       },
       pageSize:10,
       currentPage: 1,
       loading: false,
       isShow: false, //控制添加页面弹出
-      total: 0,//列表总数
+
       notice:null,//编辑传送的值
       add:false,//控制查看组件弹出
       addData:null,//查看数据
@@ -132,27 +105,19 @@ export default {
       this.notice = null;
       this.isShow = !this.isShow;
     },
-    getTime(timestamp, format) {
-      return time.timestampToFormat(timestamp, format);
-    },
-    addClassAction(){
-
-    },
-    handleCurrentChange(val) {
-      this.sendAjax(val);
-    },
-    handleCreate(){
-
-    },
-    addClass(row) {
-      //查看
-      this.add = true;
-      this.addData = row;
+    addClass() {
+      //新增
+      this.notice = null;
+      this.isShow = !this.isShow;
     },
     editHandle(row) {
       //编辑
       this.isShow = true;
       this.notice = row;
+    },
+    delHandle(row) {
+      this.visible2 = true;
+      this.delData = row; 
     },
     change(msg) {//与添加弹窗交互
       if(msg == 1) {
@@ -165,63 +130,30 @@ export default {
     seeChange(msg) {//与查看弹窗交互
       this.see = false;
     },
-    find(){
-      this.sendAjax(null,this.formInline.name);
-    },
-    maleFilter(row, column) {
-      let male = row[column.property];
-      if(male == '0'){
-        return '女'
-      }else if(male == '1'){
-        return '男'
-      }
-    },
-    roleFilter(row, column) {
-      let role = row[column.property];
-      if(role == 0){
-        return '超级管理员'
-      }
-      if(role == 1){
-        return '社区管理员'
-      }
-      if(role == 2){
-        return '物业管理员'
-      }
-    },
+    // find(){
+    //   this.sendAjax(null,this.formInline.name);
+    // },
     postCodeFilter(row, column){
-      let postCode = row[column.property];
-      console.log(postCode);
-      if(postCode == 'SECURITY'){
-        return '保安'
+      let postCode = row[column.property]
+      if (postCode === 'MANAGER'){
+          return '物业管理员'
       }
-      if(postCode == 'CLEANING'){
-        return '保洁'
+      if (postCode === 'SECURITY'){
+          return '保安'
       }
-      if(postCode == 'ADMINISTRATION'){
-        return '行政'
+      if (postCode === 'CLEANER'){
+          return '保洁'
       }
-    },
-    dataStatusFilter(row, column) {
-      let datastatus = row[column.property];
-      if(datastatus == 0){
-        return '无效'
+      if (postCode === 'SERVICEMAN'){
+          return '维修工'
       }
-      if(datastatus == 1){
-        return '有效'
-      }
-    },
-    usestateFilter(row, column) {
-      let usestate = row[column.property];
-      if(usestate == 0){
-        return '禁用'
-      }
-      if(usestate == 1){
-        return '正常'
+      if (postCode === 'SUPPORTSTAFF'){
+          return '客服人员'
       }
     },
     confirmDel(){
       if(this.delData.id){
-        this.$xttp.get(`/community/${this.delData.id}/delete`)
+        this.$xttp.get(`/task/class/${this.delData.id}/delete`)
         .then(res=> {
           if(!res.errorCode){
             this.visible2 = false;
@@ -232,36 +164,49 @@ export default {
         })
       }
     },
-    sendAjax(page,name) {
-      let nPage = page || this.$route.query.page || 1;
+    initRole(){
       let communityId = scheduleList[0].communityId
       console.log(communityId)
-      let obj = {page:nPage,size:this.pageSize,communityId:communityId}
-      
-      if(name){
-        obj.name = this.formInline.name;
-      }else {
-        delete obj.name ;
-      }
-      this.loading = true;
-      console.log(obj);
-      this.$xttp.post("task/schedule/page",obj)
-      .then(res => {
-        console.log(res)
-        if (!res.errorCode) {
-          this.tableData = res.data.records;
-          this.currentPage = res.data.currentPage;
-          this.total = res.data.total;
-          this.$router.push({path:this.$route.path,query:{page: nPage }})
+      this.$xttp.get(`/user/property/${communityId}/post-list`).then(res => {
+        if(!res.errorCode) {
+          this.roleOptions = res.data;
         }
-        this.loading = false;
-      }).catch(err => {
-        this.loading = false;
       })
+    },
+    getTableList() {
+      let communityId = scheduleList[0].communityId
+      this.$xttp.get('/task/class/list',{params:{communityId:communityId,postCode:'SECURITY',propertyId:'5a82adee9ce976452b7001ee'}})
+                .then(res => {
+                  if(!res.errorCode) {
+                    console.log(res.data)
+                    this.tableData = res.data;
+                  }
+                  this.loading = false;
+                }).catch(err =>{
+                  this.loading = false;
+                })
+    },
+    find(){
+      var postCode = this.formInline.role;
+      let communityId = scheduleList[0].communityId
+      console.log(postCode)
+      console.log(communityId)
+      this.$xttp.get('/task/class/list',{params:{communityId:communityId,postCode:postCode,propertyId:'5a82adee9ce976452b7001ee'}})
+                .then(res => {
+                  if(!res.errorCode) {
+                    this.tableData = res.data
+                  }
+                  this.loading = false;
+                }).catch(err =>{
+                  this.loading = false;
+                })
+      
     }
   },
   created() {
     // this.sendAjax();
+    this.initRole();
+    this.getTableList();
   },
   mounted() {
   }

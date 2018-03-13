@@ -144,6 +144,9 @@ export default {
     seeChange(msg) {//与查看弹窗交互
       this.see = false;
     },
+    list(){
+      
+    },
     find(){
       this.sendAjax(null,this.formInline.name);
     },
