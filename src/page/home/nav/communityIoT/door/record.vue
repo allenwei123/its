@@ -68,7 +68,7 @@
         this.loading = true;
         let url = `sys/door-record/page?page=${this.currentPage}&size=${this.pageSize}`;
         let params = {};
-        params['communityId'] = this.$route.query.communityId;
+        params['communityId'] = this.$store.getters.communityId;
         // params['deviceId'] = this.$route.query.deviceId;
         if (this.q_input) {
           // params['userName'] = this.q_input;

@@ -4,11 +4,6 @@
       <div class="c-notice-container">
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
-            <el-form-item>
-              <el-select v-model="communityId" placeholder="社区">
-                <el-option v-for="item in communityList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-              </el-select>
-            </el-form-item>
             <el-form-item label="">
               <el-input  placeholder="标题" v-model.trim="input"></el-input>
             </el-form-item>
@@ -81,7 +76,6 @@
   import time from '@/utils/time.js';
   import NoticeForm from './form';
   import NoticePreview from './preview';
-  import {communityId as getCommunityList} from '@/biz/community';
   export default {
     name: 'notice',
     components: {
@@ -91,8 +85,6 @@
     data () {
       return {
         loading: false,
-        communityList: [],
-        communityId: '',
         tableData: [],
         pageSize: 10,
         total: 0,
@@ -103,15 +95,13 @@
         previewVisible: false,
         previewNoticeInfo: null,
         input: '',
-        q_input: null,
-        q_communityId: ''
+        q_input: null
       }
     },
     methods: {
       query() {
         this.currentPage = 1;
         this.q_input = this.input;
-        this.q_communityId = this.communityId;
         this.getTableList();
       },
       // 获取通知类型名称
@@ -228,7 +218,7 @@
         this.loading = true;
         let url = `property/notice/page?page=${this.currentPage}&size=${this.pageSize}`;
         let params = {};
-        params['communityId'] = this.q_communityId;
+        params['communityId'] = this.$store.getters.communityId;
         this.$xttp.post(url, params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {
@@ -245,13 +235,7 @@
       }
     },
     created() {
-      getCommunityList().then(res => {
-        this.communityList = res;
-        if (this.communityList.length) {
-          this.communityId = this.communityList[0].id;
-          this.query();
-        }
-      });
+      this.query();
     }
   }
 </script>

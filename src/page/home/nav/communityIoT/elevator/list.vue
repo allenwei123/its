@@ -5,11 +5,6 @@
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
             <el-form-item>
-              <el-select v-model="communityId" placeholder="社区">
-                <el-option v-for="item in communityList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item>
               <el-input placeholder="电梯名/设备ID" v-model.trim="input"></el-input>
             </el-form-item>
             <el-form-item>
@@ -62,33 +57,27 @@
   </el-container>
 </template>
 <script>
-  import {communityId as getCommunityList} from '@/biz/community';
-
   export default {
     name: 'message', data() {
       return {
         loading: false,
-        communityList: [],
-        communityId: '',
         tableData: [],
         pageSize: 10,
         total: 0,
         currentPage: 1,
         input: '',
-        q_input: null,
-        q_communityId: ''
+        q_input: null
       }
     }, methods: {
       query() {
         this.currentPage = 1;
         this.q_input = this.input;
-        this.q_communityId = this.communityId;
         this.getTableList();
       }, getTableList() {
         this.loading = true;
         let url = `/communityIoT/elevator/list?page=${this.currentPage}&size=${this.pageSize}`;
         let params = {};
-        params['communityId'] = this.q_communityId;
+        params['communityId'] = this.$store.getters.communityId;
         if (this.q_input) {
           params['name'] = this.q_input;
         }
@@ -125,19 +114,12 @@
         this.$router.push({
           path: 'elevatorRecord',
           query: {
-            id: item.id,
-            communityId: this.q_communityId
+            id: item.id
           }
         })
       }
     }, created() {
-      getCommunityList().then(res => {
-        this.communityList = res;
-        if (this.communityList.length) {
-          this.communityId = this.communityList[0].id;
-          this.query();
-        }
-      });
+      this.query();
     }
   }
 </script>

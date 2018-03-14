@@ -4,11 +4,6 @@
       <div class="c-rpass-container">
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
-            <el-form-item>
-              <el-select v-model="communityId" placeholder="社区">
-                <el-option v-for="item in communityList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-              </el-select>
-            </el-form-item>
             <el-form-item label="">
               <el-input placeholder="申请人" v-model.trim="input"></el-input>
             </el-form-item>
@@ -64,14 +59,11 @@
 
 <script>
   import time from '@/utils/time.js';
-  import {communityId as getCommunityList} from '@/biz/community';
   export default {
     name: 'message',
     data () {
       return {
         loading: false,
-        communityList: [],
-        communityId: '',
         tableData: [],
         pageSize: 10,
         total: 0,
@@ -90,9 +82,9 @@
         this.loading = true;
         let url = `property/rpass/page?page=${this.currentPage}&size=${this.pageSize}`;
         let params = {};
-        params.communityId = this.communityId;
+        params['communityId'] = this.$store.getters.communityId;
         if (this.q_input) {
-          params.userName = this.q_input;
+          params['userName'] = this.q_input;
         }
         this.$xttp.post(url, params).then(res => {
           this.loading = false;

@@ -65,7 +65,7 @@
         this.loading = true;
         let url = `sys/elevator-record/page?page=${this.currentPage}&size=${this.pageSize}`;
         let params = {};
-        params['communityId'] = this.$route.query.communityId;
+        params['communityId'] = this.$store.getters.communityId;
         params['deviceId'] = this.$route.query.id;
         if (this.q_input) {
           // params['name'] = this.q_input;

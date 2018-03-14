@@ -13,11 +13,6 @@
           <el-option label="其他" value="99"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="所属社区" required>
-        <el-select v-model="form.communityId" placeholder="请选择社区">
-          <el-option v-for="item in communityList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-        </el-select>
-      </el-form-item>
       <!--<el-form-item label="发布对象" required>-->
         <!--<el-select v-model="form.obj" placeholder="发布对象">-->
           <!--<el-option label="全部" value=""></el-option>-->
@@ -57,7 +52,6 @@
 </template>
 
 <script>
-  import {communityId as getCommunityList} from '@/biz/community';
   import {send as ossUpload} from '@/utils/oss';
   export default {
     data() {
@@ -66,7 +60,6 @@
         communityList: [],
         file: null,
         form: {
-          communityId: '',
           title: '',
           type: '1',
           obj: '',
@@ -127,7 +120,7 @@
         this.loading = true;
         let params = {};
         params['noticeType'] = this.form.type;
-        params['communityId'] = this.form.communityId;
+        params['communityId'] = this.$store.getters.communityId;
         params['title'] = this.form.title;
         params['body'] = this.form.body;
         if (this.form.thumbnailUrl) {
@@ -151,16 +144,7 @@
     },
     props: ['visible', 'detail', 'isModify'],
     created() {
-      getCommunityList().then(res => {
-        this.communityList = res;
-      });
       if(this.isModify) {
-        // communityId: '',
-        // title: '',
-        //   type: '1',
-        //   obj: '',
-        //   body: ''
-        this.form.communityId = this.detail.communityId;
         this.form.title = this.detail.title;
         this.form.type = this.detail.noticeType.toString();
         this.form.thumbnailUrl = this.detail.thumbnailUrl;

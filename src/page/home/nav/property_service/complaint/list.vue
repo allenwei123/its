@@ -51,7 +51,6 @@
 </template>
 
 <script>
-  import communityList from '@/mock/communityList';
   import time from '@/utils/time.js';
   export default {
     name: 'complaint',
@@ -73,10 +72,9 @@
       },
       getTableList() {
         this.loading = true;
-        let communityId = communityList[0].id;
         let url = `property/complain/page?page=${this.currentPage}&size=${this.pageSize}`;
         let params = {};
-        params['communityId'] = communityId;
+        params['communityId'] = this.$store.getters.communityId;
         if (this.q_input) {
           params['userName'] = this.q_input;
         }
