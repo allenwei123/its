@@ -4,13 +4,13 @@
       <div class="c-notice-container">
         <div class="c-searchbar">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
-            <el-form-item>
-              <el-select v-model="formInline.class" placeholder="请选择班次">
-                <el-option ></el-option>
+            <el-form-item label="岗位">
+              <el-select v-model="formInline.class" placeholder="请选择岗位">
+                <el-option v-for="item in roleOptions" :key="item.key" :label="item.name" :value="item.key"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="姓名">
-              <el-input placeholder="请输入名称" type="input" v-model.trim="formInline.name"></el-input>
+            <el-form-item label="员工">
+              <el-input placeholder="请输入员工" type="input" v-model.trim="formInline.name"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="query">查询</el-button>
@@ -55,15 +55,17 @@
 </template>
 <script>
 import time from '@/utils/time.js'
+import scheduleList from '@/mock/scheduleList'
 import { communityId as getCommunityList } from '@/biz/community'
 export default {
   data () {
     return {
       formInline:{
-        class: '',
+        class: 'SECURITY',
         name: ''
       },
       loading: false,
+      roleOptions: [],
       tableData: [],
       pageSize: 10,
       total: 0,
@@ -72,8 +74,39 @@ export default {
   },
   methods: {
     query() {
-      
+
+    },
+    initRole(){
+      let communityId = scheduleList[0].communityId
+
+      this.$xttp.get(`/user/property/${communityId}/post-list`).then(res => {
+        if(!res.errorCode) {
+          this.roleOptions = res.data;
+        }
+      })
+    },
+    getTableList() {
+      let communityId = scheduleList[0].communityId
+      let page = this.page
+      let size = this.pageSize
+      this.loading = true;
+      this.$xttp
+          .get('/task/record/page',{params: { page: page, size:size, communityId:communityId }})
+          .then(res => {
+            if(!res.errorCode) {
+              console.log(res.data.records)
+              this.tableData = res.data.records
+              this.currentPage = res.data.currentPage;
+              this.total = res.data.total;
+            }
+            this.loading = false;
+          })
+
     }
+  },
+  created () {
+    this.initRole();
+    this.getTableList();
   }
 }
 </script>
