@@ -7,24 +7,14 @@
         <div class="c-search">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
              
-            <el-form-item label="社区名称">
-              <el-select v-model="formInline.select" clearable placeholder="请选择">
-                <el-option
-                  v-for="item in options"
-                  :key="item.id"
-                  :value="item.id"
-                  :label="item.name">
-                </el-option>
-              </el-select>
-            </el-form-item>
             <el-form-item>
-              <el-input v-model="formInline.name" placeholder="楼栋搜索"></el-input>
+              <el-input v-model="formInline.keyType" placeholder="卡片类型"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
             </el-form-item>
           </el-form>
-          <el-button type="primary" class="c-addBtn" @click="onSubmit">新增楼栋</el-button>
+          <el-button type="primary" class="c-addBtn" @click="onSubmit">新增卡片</el-button>
         </div>
       </div>
       
@@ -111,8 +101,7 @@ export default {
         { id: 2, name: "一卡通档案" }
       ],
       formInline: {
-        name: "",
-        select:''
+        keyType: ""
       },
       currentPage: 1,
       loading: false,
@@ -121,7 +110,6 @@ export default {
       notice:null,//编辑传送的值
       see:false,//控制查看组件弹出
       seeData:null,//查看数据
-      options:[],//下拉框数据
       visible2:false,
       delData:null
     };
@@ -178,21 +166,16 @@ export default {
     find(){
       this.sendAjax(null,this.formInline.select,this.formInline.name);
     },
-    sendAjax(page,communityId,name) {
+    sendAjax(page,name) {
       let nPage = page || this.$route.query.page || 1;
-      let obj = {page:nPage}
-      if(communityId){
-        obj.communityId = this.formInline.select;
-      }else {
-        delete obj.communityId ;
-      }
+      let obj = {page:nPage,communityId:this.$store.getters.communityId}
       if(name){
         obj.name = this.formInline.name;
       }else {
         delete obj.name ;
       }
       this.loading = true;
-      this.$xttp.get("/community/building/page",{params:obj})
+      this.$xttp.post("/user/card/get/list",obj)
       .then(res => {
         if (!res.errorCode) {
           this.tableData = res.data.records;
@@ -216,13 +199,7 @@ export default {
   },
   created() {
     // this.sendAjax();
-    communityId().then(res => {
-      if(res.length){
-        this.options = res;
-        this.formInline.select = this.options[0].id;
-        this.sendAjax(1, this.options[0].id);
-      }
-    })
+    this.sendAjax(1);
   },
   mounted() {}
 };

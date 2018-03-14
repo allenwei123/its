@@ -9,8 +9,7 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      redirect: '/home',
-      component: App
+      redirect: '/home'
     },
     { path: '/auth/login', name: 'login', component: (resolve) => require(["@/page/auth/login"], resolve) },
     { path: '/auth/logout', component: (resolve) => require(["@/page/auth/logout"], resolve) },

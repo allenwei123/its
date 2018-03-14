@@ -15,6 +15,24 @@
         <button type="button" @click="login">登 录</button>
       </div>
     </div>
+    <el-dialog
+      title="请选择社区"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose">
+      <el-select v-model="value" placeholder="请选择">
+        <el-option
+          v-for="item in options"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id">
+        </el-option>
+      </el-select>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="comfirm">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -25,7 +43,10 @@
     data() {
       return {
         phone: '15918729264',
-        pwd: '123456'
+        pwd: '123456',
+        dialogVisible: false,
+        options:[] ,//社区列表
+        value: null ,//当前 社区
       }
     },
     methods: {
@@ -46,13 +67,40 @@
         }).then((res) => {
           this.$store.dispatch('changeToken', res.data);
           if (res.errorCode === 0) {
-            this.$router.push('/home');
+            const userId = res.data.id;
+            //获取用户对应的社区id列表
+            this.$xttp.get(`community/${userId}/queryByUserId`)
+              .then(res => {
+                if(!res.errorCode) {
+                  res.data.forEach(item => {
+                    let obj = {
+                      name: item.name,
+                      id: item.id
+                    };
+                    this.options.push(obj);
+                  });
+                  this.dialogVisible = true;
+                  this.$store.dispatch('cgCommunityList', this.options);
+                }
+              })
           }
           this.pwd = '';
           loadingInstance.close();
         }).catch(() => {
           loadingInstance.close();
         });
+      },
+      handleClose() {
+        this.dialogVisible = false;
+      },
+      comfirm() {
+        if(this.value) {
+          this.$store.dispatch('addCommunityId',this.value);
+          this.dialogVisible = false;
+          this.$router.push('/home');
+        }else {
+          this.$message('请选择社区');
+        }
       }
     }
   }

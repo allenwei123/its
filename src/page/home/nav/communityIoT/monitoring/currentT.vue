@@ -1,9 +1,9 @@
 <template>
     <div id="vedioComponent" style="width:100%">
         <object type='application/x-vlc-plugin' id='vlc' events='True' width="33%" height="250" pluginspage="http://www.videolan.org" codebase="http://downloads.videolan.org/pub/videolan/vlc-webplugins/2.0.6/npapi-vlc-2.0.6.tar.xz"> 
-            <param name='mrl' value='rtsp://admin:bit@123456@bitddns.ticp.net:25138/unicast/c1/s0/live' /> 
+            <param name='mrl' value='rtsp://admin:bit@123456@bitddns.ticp.net:25194/unicast/c1/s0/live' /> 
             <param name='volume' value='50' /> 
-            <param name='autoplay' value='false' /> 
+            <param name='autoplay' value='true' /> 
             <param name='loop' value='false' /> 
             <param name='fullscreen' value='true' />
             <param name='controls' value='true' /> 
@@ -22,7 +22,7 @@ export default {
       isPosterShow: true,
       isLoadingShow: false,
       isPlayBtnShow: true,
-      reciveVideoUrl: "rtsp://admin:bit@123456@bitddns.ticp.net:25138/unicast/c1/s0/live"
+      reciveVideoUrl: "rtsp://admin:bit@123456@bitddns.ticp.net:25194/unicast/c1/s0/live"
     };
   },
   components: {},
@@ -43,7 +43,7 @@ export default {
     
     if(vlc.versionInfo) {
       vlc.addEventListener('MediaPlayerTimeChanged',() => {
-        alert(234)
+        
       })
     }
   }

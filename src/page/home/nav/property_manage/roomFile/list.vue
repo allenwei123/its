@@ -6,17 +6,7 @@
         </ul>
         <div class="c-search">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
-             
-            <el-form-item label="社区名称">
-              <el-select v-model="formInline.select" clearable placeholder="请选择" @change="selectCommunity">
-                <el-option
-                  v-for="item in options"
-                  :key="item.id"
-                  :value="item.id"
-                  :label="item.name">
-                </el-option>
-              </el-select>
-            </el-form-item>
+            
             <el-form-item>
               <el-select v-model="formInline.floorSer" clearable placeholder="选择楼栋搜索">
                 <el-option
@@ -118,8 +108,6 @@
 import axios from "axios";
 import AddPage from "./add";
 import SeePage from "./see";
-import { mapGetters } from "vuex";
-import { communityId } from '@/biz/community';
 
 export default {
   name: "floorFileList",
@@ -143,13 +131,11 @@ export default {
       notice:null,//编辑传送的值
       see:false,//控制查看组件弹出
       seeData:null,//查看数据
-      options:[],//社区下拉框数据
       floorOptions:[],//楼栋下拉框数据
       visible2:false,
       delData:null,//记录删除数据
     };
   },
-  computed: mapGetters(["showAside"]),
   components: {
     AddPage,
     SeePage
@@ -176,15 +162,15 @@ export default {
       
     },
     selectCommunity(num){
-      let obj = { communityId:this.formInline.select };
+      let obj = { communityId:this.$store.getters.communityId };
       this.$xttp.get(`/community/building/list`,{params:obj})
         .then(res => {
           if(!res.errorCode){
             this.floorOptions = res.data;
             this.formInline.floorSer = this.floorOptions[0].id;
-            if(num){
-              this.sendAjax(1, this.formInline.floorSer,this.formInline.name);
-            }
+          }
+          if(num) {
+            this.sendAjax(1,this.formInline.floorSer)
           }
         })
     },
@@ -255,14 +241,7 @@ export default {
     }
   },
   created() {
-    // this.sendAjax();
-    communityId().then(res => {
-      if(res.length){
-        this.options = res;
-        this.formInline.select = this.options[0].id;
-        this.selectCommunity(1);
-      }
-    })
+    this.selectCommunity(1);
   },
   mounted() {}
 };

@@ -72,3 +72,13 @@ $headerBg:#23262b;
     width:90%;
   }
 }
+//设置侧边栏方向
+.el-submenu__icon-arrow {
+  right: 5px !important;
+}
+
+.c-header {
+  .el-select {
+    width:110px;
+  }
+}

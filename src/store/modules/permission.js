@@ -1,7 +1,7 @@
 
 export default {
   state: {
-    userInfo: localStorage["userInfo"] ? JSON.parse(localStorage["userInfo"]) : null
+    userInfo: localStorage["userInfo"] ? JSON.parse(localStorage["userInfo"]) : null,
   },
   mutations: {
     CHANGE_Token: (state, newToken) => {
