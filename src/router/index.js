@@ -41,6 +41,10 @@ const router = new Router({
                 component: (resolve) => require(["@/page/home/nav/property_manage/roomFile/list"], resolve),
               },
               {
+                path: 'carFile',
+                component: (resolve) => require(["@/page/home/nav/property_manage/carFile/list"], resolve),
+              },
+              {
                 path: 'property-service/rpass',
                 component: (resolve) => require(["@/page/home/nav/property_service/rpass/list"], resolve),
               },
@@ -79,7 +83,7 @@ const router = new Router({
               },
               {
                 path: 'checkIn',
-                component: r => require.ensure([], () => r(require('@/page/home/nav/property_manage/checkIn/checkIn')), 'side')
+                component: (resolve) => require(["@/page/home/nav/property_manage/checkIn/checkIn"], resolve)
               },
               {
                 path: 'bill',

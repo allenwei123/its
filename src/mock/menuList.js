@@ -86,7 +86,7 @@ const arr = [
           {
             id:'1-3-3',
             title:'考勤记录',
-            link:'/home/nav/side/attendance',
+            link:'/home/nav/side/checkIn',
             show: 1
           }
         ]

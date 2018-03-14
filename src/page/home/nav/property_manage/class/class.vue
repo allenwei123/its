@@ -6,8 +6,8 @@
         </ul>
         <div class="c-search">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
-            <el-form-item label="角色">
-              <el-select v-model="formInline.role" placeholder="角色">
+            <el-form-item label="岗位">
+              <el-select v-model="formInline.role" placeholder="岗位">
                 <el-option v-for="item in roleOptions" :key="item.key" :label="item.name" :value="item.key">
                 </el-option>
               </el-select>
