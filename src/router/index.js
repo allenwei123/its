@@ -44,18 +44,6 @@ const router = new Router({
                 component: (resolve) => require(["@/page/home/nav/property_manage/carFile/list"], resolve),
               },
               {
-                path: 'property-service/rpass',
-                component: (resolve) => require(["@/page/home/nav/property_service/rpass/list"], resolve),
-              },
-              {
-                path: 'property-service/alarm',
-                component: (resolve) => require(["@/page/home/nav/property_service/alarm/list"], resolve),
-              },
-              {
-                path: 'property-service/notice',
-                component: (resolve) => require(["@/page/home/nav/property_service/notice/list"], resolve),
-              },
-              {
                 path: 'communityFile',
                 name: 'communityFile',
                 component: (resolve) => require(["@/page/home/nav/property_manage/charge/other"], resolve),
