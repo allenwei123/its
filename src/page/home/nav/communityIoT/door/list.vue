@@ -19,19 +19,19 @@
         </div>
         <div class="c-list">
           <el-table :data="tableData" style="width: 100%" v-loading="loading">
-            <el-table-column label="序号" width="80">
+            <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column label="门禁" width="200">
+            <el-table-column label="门禁" width="200" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.name}}</template>
             </el-table-column>
-            <el-table-column label="ID">
+            <el-table-column label="ID" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.id}}</template>
             </el-table-column>
-            <el-table-column label="小区名称">
+            <el-table-column label="小区名称" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.communityName}}</template>
             </el-table-column>
-            <el-table-column label="楼栋名称">
+            <el-table-column label="楼栋名称" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.buildingName}}</template>
             </el-table-column>
             <el-table-column label="操作" width="120" fixed="right">

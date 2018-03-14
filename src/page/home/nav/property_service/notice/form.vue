@@ -114,7 +114,7 @@
 
         let files = this.$refs.upload.uploadFiles;
         if (files.length) {
-          ossUpload(files[0], (key) => {
+          ossUpload(files[0].raw, (key) => {
             this.form.thumbnailUrl = key;
             this.submitForm();
           });

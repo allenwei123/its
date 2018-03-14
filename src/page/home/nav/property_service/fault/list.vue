@@ -17,31 +17,31 @@
         </div>
         <div class="c-list">
           <el-table :data="tableData" style="width: 100%" v-loading="loading">
-            <el-table-column prop="" label="#" width="80">
+            <el-table-column label="#" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column prop="" label="故障类型" width="80">
+            <el-table-column label="故障类型" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column prop="" label="申报人" width="120">
+            <el-table-column label="申报人" width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column prop="" label="身份" width="80">
+            <el-table-column label="身份" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column prop="" label="联系方式" width="120">
+            <el-table-column label="联系方式" width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column prop="" label="申报时间" width="160">
+            <el-table-column label="申报时间" width="160" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column prop="" label="故障描述" width="120">
+            <el-table-column label="故障描述" width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column prop="" label="故障状态" width="80">
+            <el-table-column label="故障状态" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column prop="" label="操作" width="180" fixed="right">
+            <el-table-column label="操作" width="180" fixed="right">
               <template slot-scope="scope">
                 <el-button type="primary" size="small">查看详情</el-button>
                 <el-button type="primary" size="small">受理故障</el-button>

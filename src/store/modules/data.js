@@ -26,16 +26,41 @@ function a() {
 export default {
     state: {
       asideData: aside[0].group,
-      currentAsideId: aside[0].group[0].menuItem[0].id
+      communityId: localStorage["communityId"] ? JSON.parse(localStorage["communityId"]) : null,
+      communityList: localStorage["communityList"] ? JSON.parse(localStorage["communityList"]) : null
     },
     mutations: {
       CHANGE_ASIDEDATA: (state, newToken) => {
         state.asideData = newToken
+      },
+      ADDCOMMUNITYID: (state, newValue) => {
+        state.communityId = newValue;
+      },
+      CGCOMMUNITYLIST: (state, newValue) => {
+        state.communityList = newValue;
       }
     },
     actions: {
       changeAsideData({commit,state}, value) {
         commit('CHANGE_ASIDEDATA',aside[value].group)
+      },
+      addCommunityId({ commit }, value) {
+        if(value) {
+          localStorage.setItem('communityId',JSON.stringify(value));
+        }
+        else {
+          localStorage.removeItem('communityId');
+        }
+        commit('ADDCOMMUNITYID',value)
+      },
+      cgCommunityList({ commit }, value) {
+        if(value) {
+          localStorage.setItem('communityList',JSON.stringify(value));
+        }
+        else {
+          localStorage.removeItem('communityList');
+        }
+        commit('CGCOMMUNITYLIST',value )
       }
     }
   }

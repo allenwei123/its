@@ -18,22 +18,22 @@
         </div>
         <div class="c-list">
           <el-table :data="tableData" style="width: 100%" v-loading="loading">
-            <el-table-column label="序号" width="80">
+            <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column label="车闸名称">
+            <el-table-column label="车闸名称" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="车牌号码">
+            <el-table-column label="车牌号码" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="使用时间">
+            <el-table-column label="使用时间" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="出入闸类型">
+            <el-table-column label="出入闸类型" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="车辆类型">
+            <el-table-column label="车辆类型" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
           </el-table>

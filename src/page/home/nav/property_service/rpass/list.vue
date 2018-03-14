@@ -19,20 +19,20 @@
         </div>
         <div class="c-list">
           <el-table :data="tableData" style="width: 100%" v-loading="loading">
-            <el-table-column prop="id" label="编号" width="220"></el-table-column>
-            <el-table-column prop="userName" label="申报人" width="120"></el-table-column>
-            <el-table-column prop="" label="住房" width="150">
+            <el-table-column prop="id" label="编号" width="220" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column prop="userName" label="申报人" width="120" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column label="住房" width="150" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.building}}{{scope.row.room}}</template>
             </el-table-column>
-            <el-table-column prop="phone" label="联系方式" width="150"></el-table-column>
-            <el-table-column prop="name" label="有效时间" width="280">
+            <el-table-column prop="phone" label="联系方式" width="150" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column prop="name" label="有效时间" width="280" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{getTime(scope.row.beginAt, 'yyyy-MM-dd hh:mm')}}~{{getTime(scope.row.endAt, 'yyyy-MM-dd hh:mm')}}</template>
             </el-table-column>
-            <el-table-column prop="remark" label="备注" width="150"></el-table-column>
-            <el-table-column prop="date" label="状态" width="80">
+            <el-table-column prop="remark" label="备注" width="150" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column prop="date" label="状态" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.releaseStatus === 1 ? '有效' : '失效'}}</template>
             </el-table-column>
-            <el-table-column prop="name" label="使用时间" width="160">
+            <el-table-column prop="name" label="使用时间" width="160" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{getTime(scope.row.updateAt, 'yyyy-MM-dd hh:mm')}}</template>
             </el-table-column>
           </el-table>
