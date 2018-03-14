@@ -5,11 +5,6 @@
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
             <el-form-item>
-              <el-select v-model="communityId" placeholder="社区">
-                <el-option v-for="item in communityList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item>
               <el-select v-model="status">
                 <el-option label="全部账单" value=""></el-option>
                 <el-option label="未缴费" value="0"></el-option>
@@ -82,14 +77,10 @@
 </template>
 
 <script>
-  import time from '@/utils/time.js';
-  import { communityId as getCommunityList } from '@/biz/community'
   export default {
     data () {
       return {
         loading: false,
-        communityList: [],
-        communityId: '',
         status: '',
         tableData: [],
         pageSize: 10,
@@ -97,7 +88,6 @@
         currentPage: 1,
         input: '',
         q_input: null,
-        q_communityId: '',
         q_status: '',
       }
     },
@@ -105,7 +95,6 @@
       query() {
         this.currentPage = 1;
         this.q_input = this.input;
-        this.q_communityId = this.communityId;
         this.q_status = this.status;
         this.getTableList();
       },
@@ -124,7 +113,7 @@
         this.loading = true;
         let url = `fees/getPropBillForPropertyByCommunityId`;
         let params = {};
-        params['communityId'] = this.q_communityId;
+        params['communityId'] = this.$store.getters.communityId;
         params['page'] = this.currentPage;
         params['size'] = this.pageSize;
         if (this.q_status) {
@@ -144,20 +133,10 @@
         }).catch(() => {
           this.loading = false;
         })
-      },
-      getTime(timestamp, format) {
-        if (timestamp == null) return '/';
-        return time.timestampToFormat(timestamp, format);
       }
     },
     created() {
-      getCommunityList().then(res => {
-        this.communityList = res;
-        if (this.communityList.length) {
-          this.communityId = this.communityList[0].id;
-          this.query();
-        }
-      });
+      this.query();
     }
   }
 </script>

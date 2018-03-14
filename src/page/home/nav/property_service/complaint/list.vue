@@ -14,7 +14,7 @@
         </div>
         <div class="c-list">
           <el-table :data="tableData" style="width: 100%" v-loading="loading">
-            <el-table-column label="#" width="80" :show-overflow-tooltip="true">
+            <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
             <el-table-column label="投诉人" width="180" :show-overflow-tooltip="true">
@@ -27,7 +27,7 @@
               <template slot-scope="scope">{{scope.row.phone}}</template>
             </el-table-column>
             <el-table-column label="投诉时间" width="160" :show-overflow-tooltip="true">
-              <template slot-scope="scope">{{getTime(scope.row.createAt, 'yyyy-MM-dd hh:mm')}}</template>
+              <template slot-scope="scope">{{getTime(scope.row.createAt, 'yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
             <el-table-column label="投诉内容" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.content}}</template>
@@ -51,7 +51,6 @@
 </template>
 
 <script>
-  import communityList from '@/mock/communityList';
   import time from '@/utils/time.js';
   export default {
     name: 'complaint',
@@ -73,10 +72,9 @@
       },
       getTableList() {
         this.loading = true;
-        let communityId = communityList[0].id;
         let url = `property/complain/page?page=${this.currentPage}&size=${this.pageSize}`;
         let params = {};
-        params['communityId'] = communityId;
+        params['communityId'] = this.$store.getters.communityId;
         if (this.q_input) {
           params['userName'] = this.q_input;
         }

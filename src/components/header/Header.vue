@@ -3,10 +3,10 @@
     <div>
       <a href="" class="c-logo">智慧社区管理平台</a>
       <ul class="c-navgator">
-        <li><span class="c-account"> <i class="iconfont icon-guanlikehu c-sidebar-conl">&nbsp;</i>当前账号： 
-          <el-dropdown @command="handleCommand">
+        <li><span class="c-account"> <i class="iconfont icon-guanlikehu c-sidebar-conl">&nbsp;</i>当前社区：
+          <el-dropdown @command="handleCommand" style="color: #fff; cursor: pointer">
             <span class="el-dropdown-link">
-              {{ currentUser }}<i class="el-icon-arrow-down el-icon--right"></i>
+              {{ currentUser }}<i style="color: #fff" class="el-icon-arrow-down el-icon--right"></i>
             </span>
              <el-dropdown-menu slot="dropdown">
                <el-dropdown-item v-for="item in communityList" :key="item.id" :command="item.id">{{item.name}}</el-dropdown-item>
@@ -69,6 +69,7 @@ import { mapGetters } from "vuex";
       handleCommand(command) {
         this.$store.dispatch('addCommunityId',command);
         this.changeIdToName(command);
+        window.location.reload();
       },
       changeIdToName(id) {
         this.communityList.forEach(item => {

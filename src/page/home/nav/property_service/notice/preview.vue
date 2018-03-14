@@ -3,8 +3,8 @@
     <div class="c-preview-container" v-if="noticeInfo">
       <h1>{{noticeInfo.title}}</h1>
       <p>
-        <span>{{publishTime}}</span>
-        <span style="margin-left: 20px">{{noticeInfo.communityName}}</span>
+        <span>{{time | time('yyyy-MM-dd HH:mm')}}</span>
+        <span style="margin-left: 20px">{{communityName}}</span>
       </p>
       <div>
         <pre>{{noticeInfo.body}}</pre>
@@ -14,12 +14,11 @@
 </template>
 
 <script>
-  import time from '@/utils/time.js';
-
   export default {
     data() {
       return {
-        previewVisible: this.visible
+        previewVisible: this.visible,
+        communityName: this.$store.getters.communityName
       }
     },
     watch: {
@@ -32,13 +31,12 @@
     },
     props: ['visible', 'noticeInfo'],
     computed: {
-      publishTime() {
-        let ts = this.noticeInfo.publishAt;
+      time() {
+        let ts = this.noticeInfo.updateAt;
         if (!ts) {
           ts = new Date().getTime();
         }
-
-        return time.timestampToFormat(ts, 'yyyy-MM-dd hh:mm');
+        return ts;
       }
     }
   }
