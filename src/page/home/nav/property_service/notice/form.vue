@@ -171,7 +171,7 @@
 </script>
 
 <style scoped>
-  >>> .el-upload {
+  .el-upload {
     width: 100px;
     height: 100px;
     line-height: 100px;
