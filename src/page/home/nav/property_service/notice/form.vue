@@ -49,7 +49,7 @@
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="closeForm">取消</el-button>
-      <el-button type="primary" @click="preview">预览</el-button>
+      <!--<el-button type="primary" @click="preview">预览</el-button>-->
       <el-button type="primary" @click="save">保存</el-button>
       <!--<el-button type="primary" @click="publish">发布</el-button>-->
     </div>

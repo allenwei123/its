@@ -33,7 +33,12 @@
     props: ['visible', 'noticeInfo'],
     computed: {
       publishTime() {
-        return time.timestampToFormat(this.noticeInfo.publishAt, 'yyyy-MM-dd hh:mm');
+        let ts = this.noticeInfo.publishAt;
+        if (!ts) {
+          ts = new Date().getTime();
+        }
+
+        return time.timestampToFormat(ts, 'yyyy-MM-dd hh:mm');
       }
     }
   }
