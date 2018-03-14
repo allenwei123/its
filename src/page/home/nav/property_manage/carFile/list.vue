@@ -13,33 +13,34 @@
               <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
             </el-form-item>
           </el-form>
-          <el-button type="primary" class="c-addBtn" @click="onSubmit">新增车辆</el-button>
+          <el-button type="primary" class="c-addBtn" @click="addCar">新增车辆</el-button>
         </div>
       </div>
       
       <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." border highlight-current-row ref="multipleTable" style="width: 100%">
-        <!-- <el-table-column label="序号" type="index" align="center" width="50"></el-table-column>
-         -->
         <el-table-column label="序号" width="80" align="center">
-              <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
+          <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
         </el-table-column>
-        <el-table-column prop="carNo" align="center" label="车牌号" width="120"></el-table-column>
-        <el-table-column prop="carType" align="center" label="车辆型号" width="120"></el-table-column>
+        <el-table-column v-if="show" align="center" prop="id" label=""></el-table-column>
+        <el-table-column v-if="show" align="center" prop="userId" label=""></el-table-column>
+        <el-table-column align="center" prop="carNo" label="车牌号" width="120"></el-table-column>
+        <el-table-column align="center" prop="carType" label="车辆型号" width="120"></el-table-column>
         <el-table-column align="center" prop="carColor" label="车身颜色" width="100"></el-table-column>
         <el-table-column align="center" prop="parkingName" label="车位信息" width="150"></el-table-column>
-        <el-table-column align="center" prop="userId" label="所属住户" width="120"></el-table-column>
+        <el-table-column align="center" prop="userName" label="所属住户" width="120"></el-table-column>
         <el-table-column align="center" prop="drivingPermit" label="行驶证号" width="150"></el-table-column>
         <el-table-column align="center" prop="drivingPermitPicUrl" label="行驶证照" width="200"></el-table-column>
-        <el-table-column align="center" prop="status" label="审核状态" width="120" :formatter="statusFilter"></el-table-column>
-        <el-table-column align="center" fixed="right" label="操作" width="220">
+        <el-table-column align="center" prop="auditStatus" label="审核状态" :formatter="auditStatusFilter" width="120"></el-table-column>
+        <el-table-column align="center" fixed="right" label="操作" width="240">
           <template slot-scope="scope">
             <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button>
-            <!-- <el-button v-if="scope.row.status === '0'" @click="" type="warning" size="small">通过</el-button>
-            <el-button v-if="scope.row.status === '0' " @click="handleDiabled(scope.row,'1')" type="warning" size="small">拒绝</el-button>
-            <el-button v-if="scope.row.status === '1' " @click="handleAbled(scope.row,'0')" type="danger" size="small">解绑</el-button> -->
+            <el-button v-if="scope.row.auditStatus == 1" @click="handleUnbundl(scope.row)" type="danger" size="small">解绑</el-button>
+            <el-button v-if="scope.row.auditStatus == 0" @click="handleDone(scope.row, '1')" type="success" size="small">通过</el-button>
+            <el-button v-if="scope.row.auditStatus == 0" @click="handleDone(scope.row,'-1')" type="warning" size="small">驳回</el-button>
           </template>
         </el-table-column>
       </el-table>
+
       <div class="c-block">
         <el-pagination
           @current-change="handleCurrentChange"
@@ -49,11 +50,9 @@
           :total="total">
         </el-pagination>
       </div>
-      <transition name="fade1">
-        <AddPage v-if="isShow" :msg="isShow" @upup="change" :add.sync="notice"></AddPage>
-      </transition>
       <transition name="fade">
-        <SeePage v-if="see" :msg="see" @upsee="seeChange"  :data="seeData"></SeePage>
+        <!-- <AddPage v-if="add" :msg="add" @upsee="addChange"  :data="addData"></AddPage> -->
+        <AddPage v-if="isShow" :msg="isShow" @upup="change" :add.sync="notice"></AddPage>
       </transition>
 
       <el-dialog title="温馨提示" :visible.sync="visible2">
@@ -67,130 +66,100 @@
 </template>
 
 <script>
-// import AddPage from "./add";
-// import SeePage from "./see";
+import AddPage from "./add";
+// import SeePage from "./sched_see";
 import { mapGetters } from "vuex";
+import scheduleList from '@/mock/scheduleList'
+import time from '@/utils/time.js';
 
 export default {
-  name: "other",
+  name: "schedul",
   data() {
     return {
+      show: false,
+      roleOptions: [],
       isSou: false,
-      tableData: [
-        {
-          'carNo': '粤Aj80231',
-          'carType': 'GLK320',
-          'carColor': '乳白色',
-          'parkingName': 'A去1#车库',
-          'userId': '201710100087',
-          'drivingPermit': 'Gy20100012',
-          'drivingPermitPicUrl': './a.jpg',
-          'status': 0
-        },
-        {
-          'carNo': '粤Aj80231',
-          'carType': 'GLK320',
-          'carColor': '乳白色',
-          'parkingName': 'A去1#车库',
-          'userId': '201710100087',
-          'drivingPermit': 'Gy20100012',
-          'drivingPermitPicUrl': './a.jpg',
-          'status': 1
-        },
-        {
-          'carNo': '粤Aj80231',
-          'carType': 'GLK320',
-          'carColor': '乳白色',
-          'parkingName': 'A去1#车库',
-          'userId': '201710100087',
-          'drivingPermit': 'Gy20100012',
-          'drivingPermitPicUrl': './a.jpg',
-          'status': 0
-        },
-        {
-          'carNo': '粤Aj80231',
-          'carType': 'GLK320',
-          'carColor': '乳白色',
-          'parkingName': 'A去1#车库',
-          'userId': '201710100087',
-          'drivingPermit': 'Gy20100012',
-          'drivingPermitPicUrl': './a.jpg',
-          'status': 1
-        }
-      ],
+      tableData: [],
       navDetailData: [
-        { id: 0, name: "首页" },
+        { id: 0, name: "物业管理" },
         { id: 1, name: "基础管理" },
         { id: 2, name: "车辆档案" }
       ],
       formInline: {
-        carNo: ""
+        carNo: ''
       },
-      pageSize: 10,
+      pageSize:10,
+      total: 0,
       currentPage: 1,
       loading: false,
       isShow: false, //控制添加页面弹出
-      total: 0,//列表总数
+
       notice:null,//编辑传送的值
-      see:false,//控制查看组件弹出
-      seeData:null,//查看数据
+      add:false,//控制查看组件弹出
+      addData:null,//查看数据
       visible2:false,//控制删除框
       delData:null
     };
   },
   computed: mapGetters(["showAside"]),
   components: {
-    // AddPage,
-    // SeePage
+      AddPage
+  //   SeePage
   },
   methods: {
     onSubmit() {//添加按钮
       this.notice = null;
       this.isShow = !this.isShow;
     },
-    handleCurrentChange(val) {
-      this.sendAjax(val);
-    },
-    handleClick(row) {
-      //查看
-      this.see = true;
-      this.seeData = row;
+    addCar() {
+      //新增
+      this.notice = null;
+      this.isShow = !this.isShow;
     },
     editHandle(row) {
       //编辑
       this.isShow = true;
       this.notice = row;
     },
+    delHandle(row) {
+      this.visible2 = true;
+      this.delData = row; 
+    },
     change(msg) {//与添加弹窗交互
       if(msg == 1) {
         this.isShow = false;
       }else if(msg == 2 || msg == 3) {
-        this.sendAjax();
+        // this.sendAjax();
         this.isShow = false;
       }
     },
     seeChange(msg) {//与查看弹窗交互
       this.see = false;
     },
-    find(){
-      this.sendAjax(null,this.formInline.name);
-    },
-    delHandle(row) {
-      this.visible2 = true;
-      this.delData = row; 
-    },
-    statusFilter(row, column) {
-      let status = row[column.property]
-      if(status == 0){
-        return '待审核'
+    auditStatusFilter(row, column){
+      let auditStatus = row[column.property]
+      if (auditStatus === 0){
+          return '未审核'
       }
-      if (status == 1) {
+      if (auditStatus === 1) {
         return '已审核'
       }
+      if (auditStatus === -1) {
+        return '未通过'
+      }
+      if (auditStatus === 3) {
+        return '已解绑'
+      }
+    },
+    handleDone(row,status){
+      var id = row.id;
+      var status = status;
+      console.log(id);
+      console.log(status)
     },
     confirmDel(){
       if(this.delData.id){
-        this.$xttp.get(`/community/${this.delData.id}/delete`)
+        this.$xttp.get(`/task/class/${this.delData.id}/delete`)
         .then(res=> {
           if(!res.errorCode){
             this.visible2 = false;
@@ -201,44 +170,56 @@ export default {
         })
       }
     },
-    sendAjax(page,name) {
-      let nPage = page || this.$route.query.page || 1;
-      let obj = {page:nPage}
-      if(name){
-        obj.name = this.formInline.name;
-      }else {
-        delete obj.name ;
-      }
-      this.loading = true;
-      this.$xttp.get("/community/page",{params:obj})
-      .then(res => {
-        if (!res.errorCode) {
-          this.tableData = res.data.records;
-          this.currentPage = res.data.currentPage;
-          this.total = res.data.total;
-          this.tableData.forEach(item => {
-            let isdistrict = item.district || '';
-            item.as = item.province + item.city + isdistrict;
-            if (item.createAt) {
-              item.time1 = new Date(item.createAt)
-                .toISOString()
-                .split(".")[0]
-                .replace("T", " ");
-            }
-          });
-          this.$router.push({path:this.$route.path,query:{page: nPage }})
+    handleCurrentChange () {
+
+    },
+    initRole(){
+      let communityId = scheduleList[0].communityId
+      this.$xttp.get(`/user/property/${communityId}/post-list`).then(res => {
+        if(!res.errorCode) {
+          this.roleOptions = res.data;
         }
-        this.loading = false;
-      }).catch(err => {
-        this.loading = false;
       })
+    },
+    getTableList() {
+      let communityId = scheduleList[0].communityId
+
+      this.$xttp.get(`/vehicle/${communityId}/page`)
+                .then(res => {
+                  if(!res.errorCode) {
+                    console.log(res)
+                    this.tableData = res.data.records;
+                    localStorage.setItem("communityId",res.data.records[0].communityId);
+                    this.currentPage = res.data.currentPage;
+                    this.total = res.data.total;
+                    this.totalPage = res.data.totalPage;
+                  }
+                  this.loading = false;
+                }).catch(err =>{
+                  this.loading = false;
+                })
+    },
+    find(){
+      var postCode = this.formInline.role;
+      let communityId = scheduleList[0].communityId
+      this.$xttp.get('/task/class/list',{params:{communityId:communityId,postCode:postCode,propertyId:'5a82adee9ce976452b7001ee'}})
+                .then(res => {
+                  if(!res.errorCode) {
+                    this.tableData = res.data
+                  }
+                  this.loading = false;
+                }).catch(err =>{
+                  this.loading = false;
+                })
+      
     }
   },
   created() {
     // this.sendAjax();
+    // this.initRole();
+    this.getTableList();
   },
   mounted() {
-    
   }
 };
 </script>
@@ -287,4 +268,3 @@ export default {
   transform: translateX(-500px);
 }
 </style>
-
