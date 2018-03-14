@@ -14,10 +14,18 @@
         </div>
         <div class="c-list">
           <el-table :data="tableData" style="width: 100%" v-loading="loading">
-            <el-table-column prop="id" label="编号" width="220" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column prop="callerName" label="申报人" width="120" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column prop="roomName" label="住房" width="120" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column prop="callerPhoneNum" label="联系方式" width="150" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
+              <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
+            </el-table-column>
+            <el-table-column label="申报人" width="120" :show-overflow-tooltip="true">
+              <template slot-scope="scope">{{scope.row.callerName}}</template>
+            </el-table-column>
+            <el-table-column label="住房" width="120" :show-overflow-tooltip="true">
+              <template slot-scope="scope">{{scope.row.roomName}}</template>
+            </el-table-column>
+            <el-table-column label="联系方式" width="150" :show-overflow-tooltip="true">
+              <template slot-scope="scope">{{scope.row.callerPhoneNum}}</template>
+            </el-table-column>
             <el-table-column label="报警时间" width="160" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.callTime | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>

@@ -14,16 +14,24 @@
         </div>
         <div class="c-list">
           <el-table :data="tableData" style="width: 100%" v-loading="loading">
-            <el-table-column prop="id" label="编号" width="220" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column prop="userName" label="申报人" width="120" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
+              <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
+            </el-table-column>
+            <el-table-column label="申报人" width="120" :show-overflow-tooltip="true">
+              <template slot-scope="scope">{{scope.row.userName}}</template>
+            </el-table-column>
             <el-table-column label="住房" width="150" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.building}}{{scope.row.room}}</template>
             </el-table-column>
-            <el-table-column prop="phone" label="联系方式" width="150" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column label="联系方式" width="150" :show-overflow-tooltip="true">
+              <template slot-scope="scope">{{scope.row.phone}}</template>
+            </el-table-column>
             <el-table-column prop="name" label="有效时间" width="280" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.beginAt | time('yyyy-MM-dd HH:mm')}}~{{scope.row.endAt | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
-            <el-table-column prop="remark" label="备注" width="150" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column label="备注" width="150" :show-overflow-tooltip="true">
+              <template slot-scope="scope">{{scope.row.remark}}</template>
+            </el-table-column>
             <el-table-column prop="date" label="状态" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.releaseStatus === 1 ? '有效' : '失效'}}</template>
             </el-table-column>

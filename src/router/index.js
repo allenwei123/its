@@ -74,7 +74,7 @@ const router = new Router({
               },
               {
                 path: 'bill',
-                component: () => import('@/page/home/nav/property_manage/bill/list')
+                component: (resolve) => require(["@/page/home/nav/property_manage/bill/list"], resolve)
               },
             ]
           },

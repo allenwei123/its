@@ -17,7 +17,7 @@
         </div>
         <div class="c-list">
           <el-table :data="tableData" style="width: 100%" v-loading="loading">
-            <el-table-column label="#" width="80" :show-overflow-tooltip="true">
+            <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
             <el-table-column label="故障类型" width="80" :show-overflow-tooltip="true">
