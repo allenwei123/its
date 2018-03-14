@@ -1,12 +1,12 @@
-import Vue from 'vue'
+import Vue from 'vue';
+import time from './time';
 
-Vue.filter('time', function (value) {
-    if (!value) return ''
-    let newValue = new Date(value)
-      .toISOString()
-      .split(".")[0]
-      .replace("T", " ");
-    return newValue;
+Vue.filter('time', function (value, format) {
+    if (!value) return '';
+    let _format = format || 'yyyy-MM-dd HH:mm:ss';
+    let date = new Date();
+    date.setTime(value);
+    return time.dateFormat(date, _format);
   })
 
   Vue.filter('sex', function (value) {
