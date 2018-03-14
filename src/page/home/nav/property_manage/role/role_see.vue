@@ -25,7 +25,6 @@ export default {
   },
   props: ["msg","data"],
   created(){
-      console.log(this.data)
   },
   methods:{
       handleClose() {

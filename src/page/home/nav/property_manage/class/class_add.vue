@@ -122,8 +122,6 @@ export default {
     find(){
       var postCode = this.formInline.role;
       let communityId = scheduleList[0].communityId
-      console.log(postCode)
-      console.log(communityId)
       this.$xttp.get('/task/class/list',{params:{communityId:communityId,postCode:postCode,propertyId:'5a82adee9ce976452b7001ee'}})
                 .then(res => {
                   if(!res.errorCode) {
@@ -138,11 +136,6 @@ export default {
     postData() {
       let msg = this.add ? '编辑' : '添加';
       let uri = this.add ? '/community/edit' : '/task/class/add';
-      alert(uri)
-      console.log(this.form.communityId)
-      console.log(this.form.propertyId)
-      console.log(this.form.note)
-      console.log(this.form)
       this.$xttp
         .post( uri, this.form)
         .then(res => {
@@ -163,9 +156,7 @@ export default {
     },
     initRole(){
       let communityId = scheduleList[0].communityId
-      console.log(communityId)
       this.$xttp.get(`/user/property/${communityId}/post-list`).then(res => {
-        console.log(res)
         if(!res.errorCode) {
           this.roleOptions = res.data;
         }

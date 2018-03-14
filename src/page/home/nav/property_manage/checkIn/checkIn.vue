@@ -74,7 +74,6 @@ export default {
   },
   methods: {
     query() {
-
     },
     initRole(){
       let communityId = scheduleList[0].communityId
@@ -94,7 +93,6 @@ export default {
           .get('/task/record/page',{params: { page: page, size:size, communityId:communityId }})
           .then(res => {
             if(!res.errorCode) {
-              console.log(res.data.records)
               this.tableData = res.data.records
               this.currentPage = res.data.currentPage;
               this.total = res.data.total;
