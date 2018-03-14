@@ -19,28 +19,28 @@
         </div>
         <div class="c-list">
           <el-table :data="tableData" style="width: 100%" v-loading="loading">
-            <el-table-column label="#" width="80">
+            <el-table-column label="#" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column label="发布住户" width="80">
+            <el-table-column label="发布住户" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="发布时间" width="160">
+            <el-table-column label="发布时间" width="160" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="所属社区" width="80">
+            <el-table-column label="所属社区" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="动态详情" width="200">
+            <el-table-column label="动态详情" width="200" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="缩略图" width="120">
+            <el-table-column label="缩略图" width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="回复数" width="80">
+            <el-table-column label="回复数" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="点赞数" width="80">
+            <el-table-column label="点赞数" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
             <el-table-column label="操作" width="200" fixed="right">

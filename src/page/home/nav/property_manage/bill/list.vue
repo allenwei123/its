@@ -29,34 +29,34 @@
         </div>
         <div class="c-list">
           <el-table :data="tableData" style="width: 100%" v-loading="loading">
-            <el-table-column label="序号" width="80">
+            <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column label="账单号" width="100">
+            <el-table-column label="账单号" width="100" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.title}}</template>
             </el-table-column>
-            <el-table-column label="社区" width="120">
+            <el-table-column label="社区" width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.communityName}}</template>
             </el-table-column>
-            <el-table-column label="楼栋" width="120">
+            <el-table-column label="楼栋" width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.buildingName}}</template>
             </el-table-column>
-            <el-table-column label="房号" width="100">
+            <el-table-column label="房号" width="100" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.roomName}}</template>
             </el-table-column>
-            <el-table-column label="业主姓名" width="150">
+            <el-table-column label="业主姓名" width="150" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.proprietorName}}</template>
             </el-table-column>
-            <el-table-column label="账单名称" width="150">
+            <el-table-column label="账单名称" width="150" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.editorName}}</template>
             </el-table-column>
-            <el-table-column label="账单金额" width="150">
+            <el-table-column label="账单金额" width="150" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.editorName}}</template>
             </el-table-column>
-            <el-table-column label="账单状态" width="150">
+            <el-table-column label="账单状态" width="150" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{getBillStatusName(scope.row.paymentStatus)}}</template>
             </el-table-column>
-            <el-table-column label="缴费方式" width="150">
+            <el-table-column label="缴费方式" width="150" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.paymentMethod}}</template>
             </el-table-column>
             <!--缴费时间目前没有-->

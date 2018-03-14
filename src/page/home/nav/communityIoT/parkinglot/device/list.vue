@@ -14,28 +14,28 @@
         </div>
         <div class="c-list">
           <el-table :data="tableData" style="width: 100%" v-loading="loading">
-            <el-table-column label="序号" width="80">
+            <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column label="车闸" width="100">
+            <el-table-column label="车闸" width="100" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="ID" width="120">
+            <el-table-column label="ID" width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="小区名称" width="120">
+            <el-table-column label="小区名称" width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="楼栋名称" width="120">
+            <el-table-column label="楼栋名称" width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="车闸设备产商" width="120">
+            <el-table-column label="车闸设备产商" width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="型号" width="120">
+            <el-table-column label="型号" width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="运行状态" width="80">
+            <el-table-column label="运行状态" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
             <el-table-column label="操作" width="150" fixed="right">
