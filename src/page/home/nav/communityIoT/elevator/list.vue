@@ -5,7 +5,7 @@
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
             <el-form-item>
-              <el-input placeholder="电梯名/设备ID" v-model.trim="input"></el-input>
+              <el-input placeholder="电梯名" v-model.trim="input"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="query">查询</el-button>

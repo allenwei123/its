@@ -27,8 +27,8 @@
             <el-table-column label="用户姓名" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.userName}}</template>
             </el-table-column>
-            <el-table-column label="身份" :show-overflow-tooltip="true">
-              <template slot-scope="scope">???</template>
+            <el-table-column label="联系方式" :show-overflow-tooltip="true">
+              <template slot-scope="scope">{{scope.row.phone}}</template>
             </el-table-column>
             <el-table-column label="使用方式" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.userCommand}}</template>

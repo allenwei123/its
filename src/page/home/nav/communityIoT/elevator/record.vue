@@ -28,7 +28,7 @@
               <template slot-scope="scope">{{scope.row.userName}}</template>
             </el-table-column>
             <el-table-column label="使用方式" :show-overflow-tooltip="true">
-              <template slot-scope="scope">???</template>
+              <template slot-scope="scope">{{scope.row.userCommand}}</template>
             </el-table-column>
           </el-table>
         </div>

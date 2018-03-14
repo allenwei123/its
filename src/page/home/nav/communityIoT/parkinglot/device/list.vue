@@ -75,7 +75,7 @@
       },
       getTableList() {
         this.loading = true;
-        let url = `vehicle/car-gate/list`;
+        let url = `vehicle/car-gate/page`;
         let params = {};
         if (this.q_input) {
           params['name'] = this.q_input;
