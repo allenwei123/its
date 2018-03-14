@@ -22,7 +22,7 @@
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
             <el-table-column label="使用时间" :show-overflow-tooltip="true">
-              <template slot-scope="scope">{{getTime(scope.row.time, 'yyyy-MM-dd hh:mm')}}</template>
+              <template slot-scope="scope">{{scope.row.time | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
             <el-table-column label="用户姓名" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.userName}}</template>
@@ -43,8 +43,6 @@
   </el-container>
 </template>
 <script>
-  import time from '@/utils/time.js';
-
   export default {
     data() {
       return {
@@ -79,8 +77,6 @@
         }).catch(() => {
           this.loading = false;
         })
-      }, getTime(timestamp, format) {
-        return time.timestampToFormat(timestamp, format);
       }
     }, created() {
       this.query();

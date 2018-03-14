@@ -27,7 +27,7 @@
               <template slot-scope="scope">{{scope.row.phone}}</template>
             </el-table-column>
             <el-table-column label="投诉时间" width="160" :show-overflow-tooltip="true">
-              <template slot-scope="scope">{{getTime(scope.row.createAt, 'yyyy-MM-dd hh:mm')}}</template>
+              <template slot-scope="scope">{{getTime(scope.row.createAt, 'yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
             <el-table-column label="投诉内容" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.content}}</template>

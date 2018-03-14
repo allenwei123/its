@@ -77,7 +77,6 @@
 </template>
 
 <script>
-  import time from '@/utils/time.js';
   export default {
     data () {
       return {
@@ -134,10 +133,6 @@
         }).catch(() => {
           this.loading = false;
         })
-      },
-      getTime(timestamp, format) {
-        if (timestamp == null) return '/';
-        return time.timestampToFormat(timestamp, format);
       }
     },
     created() {

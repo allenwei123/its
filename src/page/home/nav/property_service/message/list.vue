@@ -58,7 +58,6 @@
 </template>
 
 <script>
-  import time from '@/utils/time.js';
   export default {
     name: 'message',
     data () {
@@ -95,9 +94,6 @@
         }).catch(() => {
           this.loading = false;
         })
-      },
-      getTime(timestamp, format) {
-        return time.timestampToFormat(timestamp, format);
       }
     },
     created() {

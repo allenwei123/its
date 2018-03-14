@@ -21,14 +21,14 @@
             </el-table-column>
             <el-table-column prop="phone" label="联系方式" width="150" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column prop="name" label="有效时间" width="280" :show-overflow-tooltip="true">
-              <template slot-scope="scope">{{getTime(scope.row.beginAt, 'yyyy-MM-dd hh:mm')}}~{{getTime(scope.row.endAt, 'yyyy-MM-dd hh:mm')}}</template>
+              <template slot-scope="scope">{{scope.row.beginAt | time('yyyy-MM-dd HH:mm')}}~{{scope.row.endAt | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
             <el-table-column prop="remark" label="备注" width="150" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column prop="date" label="状态" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.releaseStatus === 1 ? '有效' : '失效'}}</template>
             </el-table-column>
             <el-table-column prop="name" label="使用时间" width="160" :show-overflow-tooltip="true">
-              <template slot-scope="scope">{{getTime(scope.row.updateAt, 'yyyy-MM-dd hh:mm')}}</template>
+              <template slot-scope="scope">{{scope.row.updateAt | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
           </el-table>
         </div>
@@ -44,7 +44,6 @@
 </template>
 
 <script>
-  import time from '@/utils/time.js';
   export default {
     name: 'rpass',
     data () {
@@ -81,9 +80,6 @@
         }).catch(() => {
           this.loading = false;
         })
-      },
-      getTime(timestamp, format) {
-        return time.timestampToFormat(timestamp, format);
       }
     },
     created() {

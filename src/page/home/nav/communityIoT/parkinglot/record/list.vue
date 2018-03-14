@@ -49,8 +49,6 @@
   </el-container>
 </template>
 <script>
-  import time from '@/utils/time.js';
-
   export default {
     data() {
       return {
@@ -84,11 +82,9 @@
         // }).catch(() => {
         //   this.loading = false;
         // })
-      }, getTime(timestamp, format) {
-        return time.timestampToFormat(timestamp, format);
       }
     }, created() {
-
+      this.query();
     }
   }
 </script>

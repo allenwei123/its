@@ -36,7 +36,7 @@
               <template slot-scope="scope">{{scope.row.editorName}}</template>
             </el-table-column>
             <el-table-column label="最后操作时间" width="160" :show-overflow-tooltip="true">
-              <template slot-scope="scope">{{getTime(scope.row.updateAt, 'yyyy-MM-dd hh:mm')}}</template>
+              <template slot-scope="scope">{{scope.row.updateAt | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
@@ -73,7 +73,6 @@
 </template>
 
 <script>
-  import time from '@/utils/time.js';
   import NoticeForm from './form';
   import NoticePreview from './preview';
   export default {
@@ -228,10 +227,6 @@
         }).catch(() => {
           this.loading = false;
         })
-      },
-      getTime(timestamp, format) {
-        if (timestamp == null) return '/';
-        return time.timestampToFormat(timestamp, format);
       }
     },
     created() {

@@ -19,19 +19,19 @@
             <el-table-column prop="roomName" label="住房" width="120" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column prop="callerPhoneNum" label="联系方式" width="150" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column label="报警时间" width="160" :show-overflow-tooltip="true">
-              <template slot-scope="scope">{{getTime(scope.row.callTime, 'yyyy-MM-dd hh:mm')}}</template>
+              <template slot-scope="scope">{{scope.row.callTime | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
             <el-table-column prop="date" label="警报状态" width="100" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.receiveStatus === 1 ? '待处理' : scope.row.receiveStatus === 2 ? '已接警' : '已排查' }}</template>
             </el-table-column>
             <el-table-column label="受理时间" width="160" :show-overflow-tooltip="true">
-              <template slot-scope="scope">{{getTime(scope.row.receiveTime, 'yyyy-MM-dd hh:mm')}}</template>
+              <template slot-scope="scope">{{scope.row.receiveTime | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
             <el-table-column label="受理人员" width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.receiverName ? scope.row.receiverName : '/'}}</template>
             </el-table-column>
             <el-table-column label="排查时间" width="160" :show-overflow-tooltip="true">
-              <template slot-scope="scope">{{getTime(scope.row.troubleShootingTime, 'yyyy-MM-dd hh:mm')}}</template>
+              <template slot-scope="scope">{{scope.row.troubleShootingTime | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
             <el-table-column label="排查结果" width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.troubleShootingReport ? scope.row.troubleShootingReport : '/'}}</template>
@@ -50,7 +50,6 @@
 </template>
 
 <script>
-  import time from '@/utils/time.js';
   export default {
     name: 'alarm',
     data () {
@@ -86,10 +85,6 @@
         }).catch(() => {
           this.loading = false;
         })
-      },
-      getTime(timestamp, format) {
-        if (timestamp == null) return '/';
-        return time.timestampToFormat(timestamp, format);
       }
     },
     created() {

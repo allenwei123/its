@@ -65,7 +65,6 @@
 </template>
 
 <script>
-  import time from '@/utils/time.js';
   import NoticeForm from './form';
   export default {
     name: 'fault',
@@ -123,10 +122,6 @@
         // }).catch(() => {
         //   this.loading = false;
         // })
-      },
-      getTime(timestamp, format) {
-        if (timestamp == null) return '/';
-        return time.timestampToFormat(timestamp, format);
       }
     },
     created() {
