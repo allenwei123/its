@@ -8,6 +8,7 @@
               <el-date-picker
                 v-model="input"
                 type="date"
+                value-format="yyyy-MM-dd"
                 placeholder="选择日期">
               </el-date-picker>
             </el-form-item>
@@ -17,7 +18,7 @@
           </el-form>
         </div>
         <div class="c-list">
-          <el-table :data="tableData" style="width: 100%" v-loading="loading">
+          <el-table :data="tableData" style="width: 100%" v-loading="loading" stripe>
             <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
@@ -67,9 +68,9 @@
         let url = `sys/door-record/page?page=${this.currentPage}&size=${this.pageSize}`;
         let params = {};
         params['communityId'] = this.$store.getters.communityId;
-        // params['deviceId'] = this.$route.query.deviceId;
+        params['deviceId'] = this.$route.query.deviceId;
         if (this.q_input) {
-          // params['userName'] = this.q_input;
+          params['time'] = this.q_input;
         }
         this.$xttp.post(url, params).then(res => {
           this.loading = false;

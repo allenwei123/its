@@ -13,34 +13,28 @@
           </el-form>
         </div>
         <div class="c-list">
-          <el-table :data="tableData" style="width: 100%" v-loading="loading">
+          <el-table :data="tableData" style="width: 100%" v-loading="loading" stripe>
             <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column label="车闸" width="100" :show-overflow-tooltip="true">
-              <template slot-scope="scope">???</template>
+            <el-table-column label="车闸" :show-overflow-tooltip="true">
+              <template slot-scope="scope">{{scope.row.gateName}}</template>
             </el-table-column>
-            <el-table-column label="ID" width="120" :show-overflow-tooltip="true">
-              <template slot-scope="scope">???</template>
-            </el-table-column>
-            <el-table-column label="小区名称" width="120" :show-overflow-tooltip="true">
-              <template slot-scope="scope">???</template>
-            </el-table-column>
-            <el-table-column label="楼栋名称" width="120" :show-overflow-tooltip="true">
-              <template slot-scope="scope">???</template>
-            </el-table-column>
-            <el-table-column label="车闸设备产商" width="120" :show-overflow-tooltip="true">
-              <template slot-scope="scope">???</template>
-            </el-table-column>
-            <el-table-column label="型号" width="120" :show-overflow-tooltip="true">
-              <template slot-scope="scope">???</template>
-            </el-table-column>
-            <el-table-column label="运行状态" width="80" :show-overflow-tooltip="true">
-              <template slot-scope="scope">???</template>
+            <!--<el-table-column label="车库名称" :show-overflow-tooltip="true">-->
+              <!--<template slot-scope="scope">/</template>-->
+            <!--</el-table-column>-->
+            <!--<el-table-column label="车闸设备产商" width="120" :show-overflow-tooltip="true">-->
+              <!--<template slot-scope="scope">???</template>-->
+            <!--</el-table-column>-->
+            <!--<el-table-column label="型号" :show-overflow-tooltip="true">-->
+              <!--<template slot-scope="scope">???</template>-->
+            <!--</el-table-column>-->
+            <el-table-column label="运行状态" :show-overflow-tooltip="true">
+              <template slot-scope="scope">{{getStatusName(scope.row.gateStatus)}}</template>
             </el-table-column>
             <el-table-column label="操作" width="150" fixed="right">
               <template slot-scope="scope">
-                <el-button type="primary" size="mini">查看进出记录</el-button>
+                <el-button type="primary" size="mini" @click="viewRecord(scope.row)">进出记录</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -80,7 +74,7 @@
         if (this.q_input) {
           params['name'] = this.q_input;
         }
-        this.$xttp.get(url, params).then(res => {
+        this.$xttp.post(url, params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {
             this.tableData = res.data.records;
@@ -88,6 +82,22 @@
           }
         }).catch(() => {
           this.loading = false;
+        })
+      },
+      getStatusName(status) {
+        let names = {
+          '0': '未知',
+          '1': '运行正常',
+          '2': '运行故障'
+        };
+        return names[status];
+      },
+      viewRecord(item) {
+        this.$router.push({
+          path: 'parkinglotRecord',
+          query: {
+            gateNO: item.gateNO
+          }
         })
       }
     }, created() {

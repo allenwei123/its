@@ -8,6 +8,7 @@
               <el-date-picker
                 v-model="input"
                 type="date"
+                value-format="yyyy-MM-dd"
                 placeholder="选择日期">
               </el-date-picker>
             </el-form-item>
@@ -17,7 +18,7 @@
           </el-form>
         </div>
         <div class="c-list">
-          <el-table :data="tableData" style="width: 100%" v-loading="loading">
+          <el-table :data="tableData" style="width: 100%" v-loading="loading" stripe>
             <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
@@ -25,7 +26,7 @@
               <template slot-scope="scope">???</template>
             </el-table-column>
             <el-table-column label="车牌号码" :show-overflow-tooltip="true">
-              <template slot-scope="scope">???</template>
+              <template slot-scope="scope">{{scope.row.carNo}}</template>
             </el-table-column>
             <el-table-column label="使用时间" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
@@ -34,7 +35,7 @@
               <template slot-scope="scope">???</template>
             </el-table-column>
             <el-table-column label="车辆类型" :show-overflow-tooltip="true">
-              <template slot-scope="scope">???</template>
+              <template slot-scope="scope">{{getChargeTypeName(scope.row.chargeType)}}</template>
             </el-table-column>
           </el-table>
         </div>
@@ -53,7 +54,7 @@
     data() {
       return {
         loading: false,
-        tableData: [{},{},{}],
+        tableData: [],
         pageSize: 10,
         total: 0,
         currentPage: 1,
@@ -66,22 +67,31 @@
         this.q_input = this.input;
         this.getTableList();
       }, getTableList() {
-        // this.loading = true;
-        // let url = `property/rpass/page?page=${this.currentPage}&size=${this.pageSize}`;
-        // let params = {};
-        // params.communityId = this.communityId;
-        // if (this.q_input) {
-        //   params.userName = this.q_input;
-        // }
-        // this.$xttp.post(url, params).then(res => {
-        //   this.loading = false;
-        //   if (res.errorCode === 0) {
-        //     this.tableData = res.data.records;
-        //     this.total = res.data.total;
-        //   }
-        // }).catch(() => {
-        //   this.loading = false;
-        // })
+        this.loading = true;
+        let url = `vehicle/inout/page?page=${this.currentPage}&size=${this.pageSize}`;
+        let params = {};
+        params['gateNO'] = this.$route.query.gateNo;
+        if (this.q_input) {
+          params['inOutDate'] = this.q_input;
+        }
+        this.$xttp.post(url, params).then(res => {
+          this.loading = false;
+          if (res.errorCode === 0) {
+            this.tableData = res.data.records;
+            this.total = res.data.total;
+          }
+        }).catch(() => {
+          this.loading = false;
+        })
+      },
+      getChargeTypeName(type) {
+        let names = {
+          '1': '月卡',
+          '2': '临时车',
+          '3': '免费车',
+          '4': '储值卡'
+        }
+        return names[type];
       }
     }, created() {
       this.query();

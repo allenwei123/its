@@ -13,35 +13,35 @@
           </el-form>
         </div>
         <div class="c-list">
-          <el-table :data="tableData" style="width: 100%" v-loading="loading">
+          <el-table :data="tableData" style="width: 100%" v-loading="loading" stripe>
             <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column label="申报人" width="120" :show-overflow-tooltip="true">
+            <el-table-column label="申报人" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.callerName}}</template>
             </el-table-column>
-            <el-table-column label="住房" width="120" :show-overflow-tooltip="true">
+            <el-table-column label="住房" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.roomName}}</template>
             </el-table-column>
-            <el-table-column label="联系方式" width="150" :show-overflow-tooltip="true">
+            <el-table-column label="联系方式" min-width="150" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.callerPhoneNum}}</template>
             </el-table-column>
-            <el-table-column label="报警时间" width="160" :show-overflow-tooltip="true">
+            <el-table-column label="报警时间" min-width="160" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.callTime | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
-            <el-table-column prop="date" label="警报状态" width="100" :show-overflow-tooltip="true">
+            <el-table-column label="警报状态" min-width="100" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.receiveStatus === 1 ? '待处理' : scope.row.receiveStatus === 2 ? '已接警' : '已排查' }}</template>
             </el-table-column>
-            <el-table-column label="受理时间" width="160" :show-overflow-tooltip="true">
+            <el-table-column label="受理时间" min-width="160" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.receiveTime | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
-            <el-table-column label="受理人员" width="120" :show-overflow-tooltip="true">
+            <el-table-column label="受理人员" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.receiverName ? scope.row.receiverName : '/'}}</template>
             </el-table-column>
-            <el-table-column label="排查时间" width="160" :show-overflow-tooltip="true">
+            <el-table-column label="排查时间" min-width="160" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.troubleShootingTime | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
-            <el-table-column label="排查结果" width="120" :show-overflow-tooltip="true">
+            <el-table-column label="排查结果" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.troubleShootingReport ? scope.row.troubleShootingReport : '/'}}</template>
             </el-table-column>
           </el-table>
