@@ -218,6 +218,9 @@
         let url = `property/notice/page?page=${this.currentPage}&size=${this.pageSize}`;
         let params = {};
         params['communityId'] = this.$store.getters.communityId;
+        if (this.q_input) {
+          params['title'] = this.q_input;
+        }
         this.$xttp.post(url, params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {
