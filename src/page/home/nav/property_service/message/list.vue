@@ -97,13 +97,7 @@
       }
     },
     created() {
-      getCommunityList().then(res => {
-        this.communityList = res;
-        if (this.communityList.length) {
-          this.communityId = this.communityList[0].id;
-          this.getTableList();
-        }
-      });
+      this.query();
     }
   }
 </script>
