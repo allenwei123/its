@@ -7,6 +7,7 @@
 
 <script>
 import './utils/filter';
+
 export default {
   name: 'App'
 }

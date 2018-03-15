@@ -1,21 +1,18 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
-import Home from '@/components/Home'
 import App from '../App'
-import { request } from 'https';
+import store from '@/store';
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/',
-      redirect: '/home',
-      component: App
+      redirect: '/home'
     },
-    { path: '/auth/login', component: () => import('@/page/auth/login') },
-    { path: '/auth/logout', component: () => import('@/page/auth/logout') },
+    { path: '/auth/login', name: 'login', component: (resolve) => require(["@/page/auth/login"], resolve) },
+    { path: '/auth/logout', component: (resolve) => require(["@/page/auth/logout"], resolve) },
     {
       path: '/home',
       redirect: '/home/nav',
@@ -23,108 +20,153 @@ export default new Router({
       children: [{
         path: 'nav',
         redirect: '/home/nav/side',
-        component: r => require.ensure([], () => r(require('../page/home/_res')), 'home'),
+        component: (resolve) => require(["@/page/home/_res"], resolve),
         children: [
           {
             path: 'side',
-            redirect: '/home/nav/side/other',
-            component: r => require.ensure([], () => r(require('../page/home/nav/_res')), 'nav'),
+            redirect: '/home/nav/side/communityFile',
+            component: (resolve) => require(["@/page/home/nav/_res"], resolve),
             children: [
               {
                 path: 'test',
-                component: () => import('@/page/home/nav/property_manage/_res')
-              },
-              {
-                path: 'test',
-                component: () => import('@/page/home/nav/property_manage/_res')
+                component: (resolve) => require(["@/page/home/nav/property_manage/_res"], resolve),
               },
               {
                 path: 'floorFile',
-                component: () => import('@/page/home/nav/property_manage/floorFile/list')
+                component: (resolve) => require(["@/page/home/nav/property_manage/floorFile/list"], resolve),
               },
               {
                 path: 'roomFile',
-                component: () => import('@/page/home/nav/property_manage/roomFile/list')
+                component: (resolve) => require(["@/page/home/nav/property_manage/roomFile/list"], resolve),
               },
               {
-                path: 'roomFile',
-                component: () => import('@/page/home/nav/property_manage/roomFile/list')
+                path: 'carFile',
+                component: (resolve) => require(["@/page/home/nav/property_manage/carFile/list"], resolve),
               },
               {
-                path: 'property-service/rpass',
-                component: () => import('@/page/home/nav/property_service/rpass/list')
-              },
-              {
-                path: 'property-service/alarm',
-                component: () => import('@/page/home/nav/property_service/alarm/list')
-              },
-              {
-                path: 'property-service/notice',
-                component: () => import('@/page/home/nav/property_service/notice/list')
-              },
-              {
-                path: 'other',
-                name: 'dangan',
-                component: r => require.ensure([], () => r(require('../page/home/nav/property_manage/charge/other')), 'side')
+                path: 'communityFile',
+                name: 'communityFile',
+                component: (resolve) => require(["@/page/home/nav/property_manage/charge/other"], resolve),
               },
               {
                 path: 'userFile',
-                component: r => require.ensure([], () => r(require('../page/home/nav/property_manage/userFile/list')), 'side')
+                component: (resolve) => require(["@/page/home/nav/property_manage/userFile/list"], resolve),
               },
               {
                 path: 'role',
-                component: r => require.ensure([], () => r(require('@/page/home/nav/property_manage/role/role')), 'side')
+                component: (resolve) => require(["@/page/home/nav/property_manage/role/role"], resolve),
               },
               {
                 path: 'empl',
-                component: r => require.ensure([], () => r(require('@/page/home/nav/property_manage/empl/empl')), 'side')
+                component: (resolve) => require(["@/page/home/nav/property_manage/empl/empl"], resolve),
               },
               {
                 path: 'schedul',
-                component: r => require.ensure([], () => r(require('@/page/home/nav/property_manage/schedul/schedul')), 'side')
+                component: (resolve) => require(["@/page/home/nav/property_manage/schedul/schedul"], resolve),
               },
               {
                 path: 'class',
-                component: r => require.ensure([], () => r(require('@/page/home/nav/property_manage/class/class')), 'side')
+                component: (resolve) => require(["@/page/home/nav/property_manage/class/class"], resolve),
               },
-              // {
-              //   path: 'work/attendance',
-              //   component: r => require.ensure([], () => r(require('@/page/home/nav/property_manage/work/attendance')), 'side')
-              // }
+              {
+                path: 'checkIn',
+                component: (resolve) => require(["@/page/home/nav/property_manage/checkIn/checkIn"], resolve)
+              },
+              {
+                path: 'bill',
+                component: (resolve) => require(["@/page/home/nav/property_manage/bill/list"], resolve)
+              },
             ]
           },
           // 物业服务
           {
             path: 'propertyService',
             redirect: 'propertyService/rpass',
-            component: () => import('@/page/home/nav/_res'),
+            component: (resolve) => require(["@/page/home/nav/_res"], resolve),
             children: [
-              { path: 'rpass', component: () => import('@/page/home/nav/property_service/rpass/list') },
-              { path: 'alarm', component: () => import('@/page/home/nav/property_service/alarm/list') },
-              { path: 'notice', component: () => import('@/page/home/nav/property_service/notice/list') },
-              { path: 'complaint', component: () => import('@/page/home/nav/property_service/complaint/list') },
-              { path: 'fault', component: () => import('@/page/home/nav/property_service/fault/list') },
-              { path: 'message', component: () => import('@/page/home/nav/property_service/message/list') }
+              {
+                path: 'rpass',
+                component: (resolve) => require(["@/page/home/nav/property_service/rpass/list"], resolve)
+              },
+              {
+                path: 'alarm',
+                component: (resolve) => require(["@/page/home/nav/property_service/alarm/list"], resolve)
+              },
+              {
+                path: 'notice',
+                component: (resolve) => require(["@/page/home/nav/property_service/notice/list"], resolve)
+              },
+              {
+                path: 'complaint',
+                component: (resolve) => require(["@/page/home/nav/property_service/complaint/list"], resolve)
+              },
+              {
+                path: 'fault',
+                component: (resolve) => require(["@/page/home/nav/property_service/fault/list"], resolve)
+              },
+              {
+                path: 'message', component: (resolve) => require(["@/page/home/nav/property_service/message/list"], resolve)
+              }
             ]
           },
           // 社区物联
           {
             path: 'communityIoT',
             redirect: 'communityIoT/elevator',
-            component: () => import('@/page/home/nav/_res'),
+            component: (resolve) => require(["@/page/home/nav/_res"], resolve),
             children: [
-              { path: 'elevator', component: () => import('@/page/home/nav/communityIoT/elevator/list') },
-              { path: 'elevatorFault', component: () => import('@/page/home/nav/communityIoT/elevator/fault') },
-              { path: 'elevatorRecord', component: () => import('@/page/home/nav/communityIoT/elevator/record') },
-              { path: 'door', component: () => import('@/page/home/nav/communityIoT/door/list') },
-              { path: 'doorRecord', component: () => import('@/page/home/nav/communityIoT/door/record') },
-              { path: 'parkinglotDevice', component: () => import('@/page/home/nav/communityIoT/parkinglot/device/list') },
-              { path: 'parkinglotRecord', component: () => import('@/page/home/nav/communityIoT/parkinglot/record/list') },
-              { path: 'monitoringD', component: () => import('@/page/home/nav/communityIoT/monitoring/devices') },
-              { path: 'monitoringC', component: () => import('@/page/home/nav/communityIoT/monitoring/currentT') }
+              {
+                path: 'elevator',
+                component: (resolve) => require(["@/page/home/nav/communityIoT/elevator/list"], resolve)
+              },
+              {
+                path: 'elevatorFault',
+                component: (resolve) => require(["@/page/home/nav/communityIoT/elevator/fault"], resolve)
+              },
+              {
+                path: 'elevatorRecord',
+                component: (resolve) => require(["@/page/home/nav/communityIoT/elevator/record"], resolve)
+              },
+              {
+                path: 'door',
+                component: (resolve) => require(["@/page/home/nav/communityIoT/door/list"], resolve)
+              },
+              {
+                path: 'doorRecord',
+                component: (resolve) => require(["@/page/home/nav/communityIoT/door/record"], resolve)
+              },
+              {
+                path: 'parkinglotDevice',
+                component: (resolve) => require(["@/page/home/nav/communityIoT/parkinglot/device/list"], resolve)
+              },
+              {
+                path: 'parkinglotRecord',
+                component: (resolve) => require(["@/page/home/nav/communityIoT/parkinglot/record/list"], resolve)
+              },
+              {
+                path: 'monitoringD',
+                component: (resolve) => require(["@/page/home/nav/communityIoT/monitoring/devices"], resolve)
+              },
+              {
+                path: 'monitoringC',
+                component: (resolve) => require(["@/page/home/nav/communityIoT/monitoring/currentT"], resolve)
+              },
+              {
+                path: 'onePass',
+                component: (resolve) => require(["@/page/home/nav/communityIoT/onePass/list"], resolve)
+              },
             ]
+          }, {
+            path: 'main',
+            component: (resolve) => require(["@/page/home/nav/main"], resolve)
           }]
       },]
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  next();
+})
+export default router;
+

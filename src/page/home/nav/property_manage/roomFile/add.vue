@@ -9,15 +9,8 @@
             <el-input v-model="form.code"></el-input>
             </el-form-item>
             
-            <el-form-item label="社区名称" prop="communityId" :label-width="formLabelWidth" class="c-must" >
-              <el-select v-model="form.communityId" clearable @change="selectCommunity">
-                <el-option
-                  v-for="item in options"
-                  :key="item.id"
-                  :value="item.id"
-                  :label="item.name">
-                </el-option>
-              </el-select>
+            <el-form-item label="社区名称" :label-width="formLabelWidth" prop="code" class="c-must">
+              <el-input v-model="form.communityIdShow" :disabled="true"></el-input>
             </el-form-item>
 
             <el-form-item label="楼栋名称" prop="buildingId" :label-width="formLabelWidth" class="c-must">
@@ -48,7 +41,7 @@
 </template>
 
 <script>
-import { communityId } from '@/biz/community';
+import { communityId,toName } from '@/biz/community';
 
 export default {
   name: "floorFileForm",
@@ -59,7 +52,8 @@ export default {
       form: {
         name: "",
         code: "",
-        communityId: "",
+        communityIdShow: toName(this.$store.getters.communityList,this.$store.getters.communityId),
+        communityId: this.$store.getters.communityId,
         buildingId: "",
         floorNo: "",
         floorCode: ""
@@ -67,30 +61,21 @@ export default {
       rules: {
         name: [{ required: true, message: "请输入房间名称", trigger: "blur" }],
         code: [{ required: true, message: "请输入房间编号", trigger: "blur" }],
-        communityId: [
-          { required: true, message: "请选择社区名称", trigger: "blur" }
-        ],
         buildingId: [{ required: true, message: "请输入楼栋名称", trigger: "blur" }],
         floorNo: [{ required: true, message: "请输入楼层", trigger: "blur" }],
         floorCode: [
           { required: true, message: "请输入楼层号", trigger: "blur" }
         ]
       },
-      options:[],//社区下拉
       floorOptions: [],//楼层下拉
       current: 1 ,//1 初始 2：添加后 3：编辑后
     };
   },
   props: ["msg","add"],
   created() {
-    communityId().then(res => {
-      if(res.length){
-        this.options = res;
-      }
-    })
+    this.selectCommunity();
     if(this.add){//判断此时组件为 编辑
       this.form = this.add;
-      this.selectCommunity();
       this.titleFont = '编辑房间档案';
     }
   },

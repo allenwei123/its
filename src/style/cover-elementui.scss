@@ -48,7 +48,7 @@ $headerBg:#23262b;
 }
 
 .el-table th {
-  background-color: $headerBg;
+  background-color: $headerBg !important;
   .cell {
     color:#fff;
   }
@@ -70,5 +70,15 @@ $headerBg:#23262b;
   .el-dialog {
     margin-top: 5vh !important;
     width:90%;
+  }
+}
+//设置侧边栏方向
+.el-submenu__icon-arrow {
+  right: 5px !important;
+}
+
+.c-header {
+  .el-select {
+    width:110px;
   }
 }

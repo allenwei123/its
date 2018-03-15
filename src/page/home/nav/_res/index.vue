@@ -7,10 +7,10 @@
 
         <div class="c-settingMenu" @click="cn()">三</div>
 
-        <el-menu :collapse="isCollapse" background-color="#4a5064" text-color="#fff" active-text-color="#409EFF" default-active="5a990a513d6af1cbc8da299e">
+        <el-menu width="200px" v-if="asideData.length" :collapse="isCollapse" background-color="#4a5064" text-color="#fff" :default-active="$route.path" active-text-color="#409EFF">
           <el-submenu  v-for="(itemNemu,index) in asideData" :index="itemNemu.id" v-bind:key="index">
             <template slot="title"><i class="iconfont icon-wuyeguanli">&nbsp;</i><span slot="title" class="c-aside-title">{{ itemNemu.name }}</span></template>
-            <el-menu-item class="test" v-for="(itemGroup,index) in itemNemu.children" v-bind:key="index" :index="itemGroup.id" @click="alink(itemGroup)">{{ itemGroup.name  }}</el-menu-item>
+            <el-menu-item class="test" v-for="(itemGroup) in itemNemu.menuItem" v-bind:key="itemGroup.link" :index="itemGroup.link" @click="alink(itemGroup)">{{ itemGroup.title  }}</el-menu-item>
 
           </el-submenu>
         </el-menu>
@@ -25,42 +25,33 @@
 <script>
 import obj1 from '../../../../mock/mok.json'
 import { mapGetters } from "vuex"
+import aside from '@/mock/menuList'
 
   export default {
     name: 'side',
     data() {
       return {
-        index:'1-1',
+        indexFlag:null,
         index1:'1-2',
-        arrData: obj1.data[0].children,
         isCollapse:false
       }
     },
     computed: mapGetters(["asideData"]),
     components:{
     },
-    created() {
-
+    mounted() {
+      console.log(this.$store.getters.communityId)
     },
-    mounted:() => {
+    updated() {
     },
-    watch: {
-    // 如果路由有变化，会再次执行该方法
-    '$route': 'test1'
-  },
     methods:{
       alink(item) {
-        this.$router.push({path:item.url,query:{page:1}})
+        this.$router.push({path:item.link})
       },
       cn() {
           this.isCollapse = !this.isCollapse;
           this.$store.dispatch('change_aside',!this.isCollapse);
       },
-      test1() {
-        let arr = ['side','propertyService','communityIoT'];
-        let currentIndex = arr.indexOf(this.$route.path.split('/')[3]);
-        this.arrData = obj1.data[currentIndex].children;
-      }
     }
   }
 </script>

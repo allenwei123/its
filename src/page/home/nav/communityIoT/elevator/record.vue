@@ -17,18 +17,18 @@
           </el-form>
         </div>
         <div class="c-list">
-          <el-table :data="tableData" style="width: 100%" v-loading="loading">
-            <el-table-column label="序号" width="80">
+          <el-table :data="tableData" style="width: 100%" v-loading="loading" stripe>
+            <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column label="使用时间">
-              <template slot-scope="scope">{{getTime(scope.row.time, 'yyyy-MM-dd hh:mm')}}</template>
+            <el-table-column label="使用时间" :show-overflow-tooltip="true">
+              <template slot-scope="scope">{{scope.row.time | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
-            <el-table-column label="用户姓名">
+            <el-table-column label="用户姓名" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.userName}}</template>
             </el-table-column>
-            <el-table-column label="使用方式">
-              <template slot-scope="scope">???</template>
+            <el-table-column label="使用方式" :show-overflow-tooltip="true">
+              <template slot-scope="scope">{{scope.row.userCommand}}</template>
             </el-table-column>
           </el-table>
         </div>
@@ -43,8 +43,6 @@
   </el-container>
 </template>
 <script>
-  import time from '@/utils/time.js';
-
   export default {
     data() {
       return {
@@ -65,7 +63,7 @@
         this.loading = true;
         let url = `sys/elevator-record/page?page=${this.currentPage}&size=${this.pageSize}`;
         let params = {};
-        params['communityId'] = this.$route.query.communityId;
+        params['communityId'] = this.$store.getters.communityId;
         params['deviceId'] = this.$route.query.id;
         if (this.q_input) {
           // params['name'] = this.q_input;
@@ -79,8 +77,6 @@
         }).catch(() => {
           this.loading = false;
         })
-      }, getTime(timestamp, format) {
-        return time.timestampToFormat(timestamp, format);
       }
     }, created() {
       this.query();

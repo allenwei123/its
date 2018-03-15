@@ -4,11 +4,6 @@
       <div class="c-notice-container">
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
-            <el-form-item>
-              <el-select v-model="communityId" placeholder="社区">
-                <el-option v-for="item in communityList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-              </el-select>
-            </el-form-item>
             <el-form-item label="">
               <el-input  placeholder="标题" v-model.trim="input"></el-input>
             </el-form-item>
@@ -21,29 +16,29 @@
           </el-form>
         </div>
         <div class="c-list">
-          <el-table :data="tableData" style="width: 100%" v-loading="loading">
-            <el-table-column prop="" label="#" width="80">
+          <el-table :data="tableData" style="width: 100%" v-loading="loading" stripe>
+            <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column label="标题" width="180">
+            <el-table-column label="标题" min-width="180" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.title}}</template>
             </el-table-column>
-            <el-table-column label="类型" width="60">
+            <el-table-column label="类型" min-width="60" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{getNoticeTypeName(scope.row.noticeType)}}</template>
             </el-table-column>
             <!--<el-table-column label="发布对象" width="100">-->
               <!--<template slot-scope="scope">???</template>-->
             <!--</el-table-column>-->
-            <el-table-column label="状态" width="100">
+            <el-table-column label="状态" min-width="100" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{getPublishStatusName(scope.row.publishStatus)}}</template>
             </el-table-column>
-            <el-table-column label="最后操作人员" width="150">
+            <el-table-column label="最后操作人员" min-width="150" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.editorName}}</template>
             </el-table-column>
-            <el-table-column label="最后操作时间" width="160">
-              <template slot-scope="scope">{{getTime(scope.row.updateAt, 'yyyy-MM-dd hh:mm')}}</template>
+            <el-table-column label="最后操作时间" min-width="160" :show-overflow-tooltip="true">
+              <template slot-scope="scope">{{scope.row.updateAt | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="操作" width="300" :fixed="tableData.length ? 'right' : '/'">
               <template slot-scope="scope">
                 <el-button type="primary" size="mini" @click="preview(scope.row)">预览</el-button>
                 <!--已发布-->
@@ -78,10 +73,8 @@
 </template>
 
 <script>
-  import time from '@/utils/time.js';
   import NoticeForm from './form';
   import NoticePreview from './preview';
-  import {communityId as getCommunityList} from '@/biz/community';
   export default {
     name: 'notice',
     components: {
@@ -91,8 +84,6 @@
     data () {
       return {
         loading: false,
-        communityList: [],
-        communityId: '',
         tableData: [],
         pageSize: 10,
         total: 0,
@@ -103,15 +94,13 @@
         previewVisible: false,
         previewNoticeInfo: null,
         input: '',
-        q_input: null,
-        q_communityId: ''
+        q_input: null
       }
     },
     methods: {
       query() {
         this.currentPage = 1;
         this.q_input = this.input;
-        this.q_communityId = this.communityId;
         this.getTableList();
       },
       // 获取通知类型名称
@@ -163,7 +152,7 @@
           }).catch(() => {
             this.loading = false;
           })
-        });
+        }).catch(() => {});
       },
       // 修改
       modify(item) {
@@ -228,7 +217,10 @@
         this.loading = true;
         let url = `property/notice/page?page=${this.currentPage}&size=${this.pageSize}`;
         let params = {};
-        params['communityId'] = this.q_communityId;
+        params['communityId'] = this.$store.getters.communityId;
+        if (this.q_input) {
+          params['title'] = this.q_input;
+        }
         this.$xttp.post(url, params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {
@@ -238,20 +230,10 @@
         }).catch(() => {
           this.loading = false;
         })
-      },
-      getTime(timestamp, format) {
-        if (timestamp == null) return '/';
-        return time.timestampToFormat(timestamp, format);
       }
     },
     created() {
-      getCommunityList().then(res => {
-        this.communityList = res;
-        if (this.communityList.length) {
-          this.communityId = this.communityList[0].id;
-          this.query();
-        }
-      });
+      this.query();
     }
   }
 </script>

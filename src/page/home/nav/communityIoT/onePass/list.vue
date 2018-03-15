@@ -6,25 +6,15 @@
         </ul>
         <div class="c-search">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
-            
+             
             <el-form-item>
-              <el-select v-model="formInline.floorSer" clearable placeholder="选择楼栋搜索">
-                <el-option
-                  v-for="item in floorOptions"
-                  :key="item.id"
-                  :value="item.id"
-                  :label="item.name">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item>
-              <el-input v-model="formInline.name" placeholder="房间名称搜索"></el-input>
+              <el-input v-model="formInline.keyType" placeholder="卡片类型"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
             </el-form-item>
           </el-form>
-          <el-button type="primary" class="c-addBtn" @click="onSubmit">新增房间</el-button>
+          <el-button type="primary" class="c-addBtn" @click="onSubmit">新增卡片</el-button>
         </div>
       </div>
       
@@ -45,22 +35,12 @@
         <el-table-column
           prop="name"
           align="center"
-          label="房间名称">
+          label="楼栋名称">
         </el-table-column>
         <el-table-column
           prop="code"
           align="center"
-          label="房间编号">
-        </el-table-column>
-        <el-table-column
-          prop="floorNo"
-          align="center"
-          label="房间楼层">
-        </el-table-column>
-        <el-table-column
-          prop="floorCode"
-          align="center"
-          label="楼层号">
+          label="楼栋编号">
         </el-table-column>
         <el-table-column
           align="center"
@@ -95,12 +75,12 @@
         <SeePage v-if="see" :msg="see" @upsee="seeChange"  :data="seeData"></SeePage>
       </transition>
       <el-dialog title="温馨提示" :visible.sync="visible2">
-            <p>请问您是否确定删除这条数据吗？</p>
-            <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
-              <el-button type="primary" size="mini" @click="confirmDel">确定</el-button>
-            </div>
-        </el-dialog>
+          <p>请问您是否确定删除这条数据吗？</p>
+          <div style="text-align: right; margin: 0">
+            <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
+            <el-button type="primary" size="mini" @click="confirmDel">确定</el-button>
+          </div>
+      </el-dialog>
     </el-main>
 </template>
 
@@ -108,21 +88,20 @@
 import axios from "axios";
 import AddPage from "./add";
 import SeePage from "./see";
+import { communityId } from '@/biz/community';
 
 export default {
-  name: "floorFileList",
+  name: "onePass",
   data() {
     return {
-      isSou: false,
       tableData: [],
       navDetailData: [
-        { id: 0, name: "首页" },
-        { id: 1, name: "基础管理" },
-        { id: 2, name: "房间档案" }
+        { id: 0, name: "社区物联" },
+        { id: 1, name: "一卡通管理" },
+        { id: 2, name: "一卡通档案" }
       ],
       formInline: {
-        name: "",
-        select:''
+        keyType: ""
       },
       currentPage: 1,
       loading: false,
@@ -131,9 +110,8 @@ export default {
       notice:null,//编辑传送的值
       see:false,//控制查看组件弹出
       seeData:null,//查看数据
-      floorOptions:[],//楼栋下拉框数据
       visible2:false,
-      delData:null,//记录删除数据
+      delData:null
     };
   },
   components: {
@@ -146,7 +124,7 @@ export default {
       this.isShow = !this.isShow;
     },
     handleCurrentChange(val) {
-      this.sendAjax(val,this.formInline.floorSer,this.formInline.name);
+      this.sendAjax(val);
     },
     handleClick(row) {
       //查看
@@ -159,35 +137,12 @@ export default {
       this.notice = row;
     },
     delHandle(row) {
-      
-    },
-    selectCommunity(num){
-      let obj = { communityId:this.$store.getters.communityId };
-      this.$xttp.get(`/community/building/list`,{params:obj})
-        .then(res => {
-          if(!res.errorCode){
-            this.floorOptions = res.data;
-            this.formInline.floorSer = this.floorOptions[0].id;
-          }
-          if(num) {
-            this.sendAjax(1,this.formInline.floorSer)
-          }
-        })
-    },
-    change(msg) {//与添加弹窗交互
-      if(msg == 1) {
-        this.isShow = false;
-      }else if(msg == 2 || msg == 3) {
-        this.isShow = false;
-      }
-    },
-    delHandle(row) {
       this.visible2 = true;
       this.delData = row; 
     },
     confirmDel(){
       if(this.delData.id){
-        this.$xttp.get(`/community/room/${this.delData.id}/delete`)
+        this.$xttp.get(`/community/building/${this.delData.id}/delete`)
         .then(res=> {
           if(!res.errorCode){
             this.visible2 = false;
@@ -198,27 +153,29 @@ export default {
         })
       }
     },
+    change(msg) {//与添加弹窗交互
+      if(msg == 1) {
+        this.isShow = false;
+      }else if(msg == 2 || msg == 3) {
+        this.isShow = false;
+      }
+    },
     seeChange(msg) {//与查看弹窗交互
       this.see = false;
     },
     find(){
-      this.sendAjax(1,this.formInline.floorSer,this.formInline.name);
+      this.sendAjax(null,this.formInline.select,this.formInline.name);
     },
-    sendAjax(page,buildingId,name) {
+    sendAjax(page,name) {
       let nPage = page || this.$route.query.page || 1;
-      let obj = {page:nPage}
-      if(buildingId){
-        obj.buildingId = this.formInline.floorSer;
-      }else {
-        delete obj.buildingId ;
-      }
+      let obj = {page:nPage,communityId:this.$store.getters.communityId}
       if(name){
         obj.name = this.formInline.name;
       }else {
         delete obj.name ;
       }
       this.loading = true;
-      this.$xttp.get("/community/room/page",{params:obj})
+      this.$xttp.post("/user/card/get/list",obj)
       .then(res => {
         if (!res.errorCode) {
           this.tableData = res.data.records;
@@ -241,7 +198,8 @@ export default {
     }
   },
   created() {
-    this.selectCommunity(1);
+    // this.sendAjax();
+    this.sendAjax(1);
   },
   mounted() {}
 };

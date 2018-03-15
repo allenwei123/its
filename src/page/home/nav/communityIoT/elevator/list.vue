@@ -5,12 +5,7 @@
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
             <el-form-item>
-              <el-select v-model="communityId" placeholder="社区">
-                <el-option v-for="item in communityList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item>
-              <el-input placeholder="电梯名/设备ID" v-model.trim="input"></el-input>
+              <el-input placeholder="电梯名" v-model.trim="input"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="query">查询</el-button>
@@ -18,32 +13,32 @@
           </el-form>
         </div>
         <div class="c-list">
-          <el-table :data="tableData" style="width: 100%" v-loading="loading">
-            <el-table-column label="序号" width="80">
+          <el-table :data="tableData" style="width: 100%" v-loading="loading" stripe>
+            <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column label="电梯名" width="100">
+            <el-table-column label="电梯名" min-width="100" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.name}}</template>
             </el-table-column>
-            <el-table-column label="设备ID" width="220">
+            <el-table-column label="设备ID" min-width="220" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.id}}</template>
             </el-table-column>
-            <el-table-column label="所在社区" width="120">
+            <el-table-column label="所在社区" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.houseName}}</template>
             </el-table-column>
-            <el-table-column label="所属楼栋" width="120">
+            <el-table-column label="所属楼栋" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.buildName}}</template>
             </el-table-column>
-            <el-table-column label="产商" width="120">
+            <el-table-column label="产商" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.brandName}}</template>
             </el-table-column>
-            <el-table-column label="型号" width="120">
+            <el-table-column label="型号" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.elevatorTypeName}}</template>
             </el-table-column>
-            <el-table-column label="运行状态" width="80">
+            <el-table-column label="运行状态" min-width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{getStatusName(scope.row.elevatorStatus)}}</template>
             </el-table-column>
-            <el-table-column label="操作" width="200" fixed="right">
+            <el-table-column label="操作" width="200" :fixed="tableData.length ? 'right' : '/'">
               <template slot-scope="scope">
                 <el-button type="primary" size="mini" @click="viewFault(scope.row)">故障记录</el-button>
                 <el-button type="primary" size="mini" @click="viewRecord(scope.row)">使用记录</el-button>
@@ -62,33 +57,27 @@
   </el-container>
 </template>
 <script>
-  import {communityId as getCommunityList} from '@/biz/community';
-
   export default {
     name: 'message', data() {
       return {
         loading: false,
-        communityList: [],
-        communityId: '',
         tableData: [],
         pageSize: 10,
         total: 0,
         currentPage: 1,
         input: '',
-        q_input: null,
-        q_communityId: ''
+        q_input: null
       }
     }, methods: {
       query() {
         this.currentPage = 1;
         this.q_input = this.input;
-        this.q_communityId = this.communityId;
         this.getTableList();
       }, getTableList() {
         this.loading = true;
         let url = `/communityIoT/elevator/list?page=${this.currentPage}&size=${this.pageSize}`;
         let params = {};
-        params['communityId'] = this.q_communityId;
+        params['communityId'] = this.$store.getters.communityId;
         if (this.q_input) {
           params['name'] = this.q_input;
         }
@@ -125,19 +114,12 @@
         this.$router.push({
           path: 'elevatorRecord',
           query: {
-            id: item.id,
-            communityId: this.q_communityId
+            id: item.id
           }
         })
       }
     }, created() {
-      getCommunityList().then(res => {
-        this.communityList = res;
-        if (this.communityList.length) {
-          this.communityId = this.communityList[0].id;
-          this.query();
-        }
-      });
+      this.query();
     }
   }
 </script>

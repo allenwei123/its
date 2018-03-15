@@ -9,8 +9,15 @@
             <el-input v-model="form.code"></el-input>
             </el-form-item>
             
-            <el-form-item label="社区名称" :label-width="formLabelWidth" prop="code" class="c-must">
-              <el-input v-model="form.communityIdShow" :disabled="true"></el-input>
+            <el-form-item label="社区名称" :label-width="formLabelWidth" prop="communityId" class="c-must">
+              <el-select v-model="form.communityId" clearable>
+                <el-option
+                  v-for="item in options"
+                  :key="item.id"
+                  :value="item.id"
+                  :label="item.name">
+                </el-option>
+              </el-select>
             </el-form-item>
 
             <el-form-item :label-width="formLabelWidth">
@@ -22,7 +29,7 @@
 </template>
 
 <script>
-import { toName } from "@/biz/community";
+import { communityId } from "@/biz/community";
 
 export default {
   name: "floorFileForm",
@@ -33,20 +40,27 @@ export default {
       form: {
         code: "",
         name: "",
-        communityIdShow: toName(this.$store.getters.communityList,this.$store.getters.communityId),
-        communityId: this.$store.getters.communityId,
+        communityId: ""
       },
       rules: {
         name: [{ required: true, message: "请输入楼栋名称", trigger: "blur" }],
-        code: [{ required: true, message: "请输入楼栋编号", trigger: "blur" }]
+        code: [{ required: true, message: "请输入楼栋编号", trigger: "blur" }],
+        communityId: [
+          { required: true, message: "请选择社区名称", trigger: "blur" }
+        ]
       },
+      options: [],
       cityArr: [],
       current: 1 //1 初始 2：添加后 3：编辑后
     };
   },
   props: ["msg", "add"],
   created() {
-  
+    communityId().then(res => {
+      if (res.length) {
+        this.options = res;
+      }
+    });
     if (this.add) {
       //判断此时组件为 编辑
       this.cityArr = [
