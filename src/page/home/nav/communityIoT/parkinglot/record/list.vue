@@ -63,9 +63,13 @@
       }
     }, methods: {
       query() {
-        this.currentPage = 1;
         this.q_input = this.input;
-        this.getTableList();
+        if (this.currentPage !== 1) {
+          this.currentPage = 1;
+        }
+        else {
+          this.getTableList();
+        }
       }, getTableList() {
         this.loading = true;
         let url = `vehicle/inout/page?page=${this.currentPage}&size=${this.pageSize}`;
@@ -90,7 +94,7 @@
           '2': '临时车',
           '3': '免费车',
           '4': '储值卡'
-        }
+        };
         return names[type];
       }
     }, created() {

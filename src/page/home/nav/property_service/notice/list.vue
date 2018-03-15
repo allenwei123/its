@@ -99,9 +99,13 @@
     },
     methods: {
       query() {
-        this.currentPage = 1;
         this.q_input = this.input;
-        this.getTableList();
+        if (this.currentPage !== 1) {
+          this.currentPage = 1;
+        }
+        else {
+          this.getTableList();
+        }
       },
       // 获取通知类型名称
       getNoticeTypeName(type) {

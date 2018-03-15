@@ -92,10 +92,14 @@
     },
     methods: {
       query() {
-        this.currentPage = 1;
         this.q_input = this.input;
         this.q_status = this.status;
-        this.getTableList();
+        if (this.currentPage !== 1) {
+          this.currentPage = 1;
+        }
+        else {
+          this.getTableList();
+        }
       },
       // 账单状态
       getBillStatusName(status) {
