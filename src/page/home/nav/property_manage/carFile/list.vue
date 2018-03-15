@@ -56,7 +56,7 @@
       </transition>
 
       <el-dialog title="温馨提示" :visible.sync="visible2">
-          <p>请问您是否确定删除这条数据吗？</p>
+          <p>请问您是否确定解绑车辆吗？</p>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
             <el-button type="primary" size="mini" @click="confirmDel">确定</el-button>
@@ -70,6 +70,7 @@ import AddPage from "./add";
 // import SeePage from "./sched_see";
 import { mapGetters } from "vuex";
 import scheduleList from '@/mock/scheduleList'
+import {communityId as getCommunityList} from '@/biz/community';
 import time from '@/utils/time.js';
 
 export default {
@@ -80,6 +81,8 @@ export default {
       roleOptions: [],
       isSou: false,
       tableData: [],
+      msg: '',
+      // communityId:'',
       navDetailData: [
         { id: 0, name: "物业管理" },
         { id: 1, name: "基础管理" },
@@ -121,6 +124,10 @@ export default {
       this.isShow = true;
       this.notice = row;
     },
+    handleUnbundl(row) {
+      this.visible2 = true;
+      this.delData = row;
+    },
     delHandle(row) {
       this.visible2 = true;
       this.delData = row; 
@@ -159,13 +166,14 @@ export default {
     },
     confirmDel(){
       if(this.delData.id){
-        this.$xttp.get(`/task/class/${this.delData.id}/delete`)
+        this.$xttp.get(`/vehicle/deleteCarNo/${this.delData.id}`)
         .then(res=> {
           if(!res.errorCode){
             this.visible2 = false;
             this.delData = null;
-            this.$message({message:res.data,type:'success'});
-            this.find();
+            this.$message({message:'解绑成功',type:'success'});
+            // this.find();
+            this.getTableList();
           }
         })
       }
@@ -182,6 +190,7 @@ export default {
       })
     },
     getTableList() {
+
       let communityId = scheduleList[0].communityId
 
       this.$xttp.get(`/vehicle/${communityId}/page`)
@@ -200,18 +209,22 @@ export default {
                 })
     },
     find(){
-      var postCode = this.formInline.role;
-      let communityId = scheduleList[0].communityId
-      this.$xttp.get('/task/class/list',{params:{communityId:communityId,postCode:postCode,propertyId:'5a82adee9ce976452b7001ee'}})
+      let communityId = scheduleList[0].communityId;
+      let carNo = this.formInline.carNo;
+ 
+      this.$xttp.get(`/vehicle/${communityId}/page?carNo=${carNo}`)
                 .then(res => {
-                  if(!res.errorCode) {
-                    this.tableData = res.data
-                  }
-                  this.loading = false;
-                }).catch(err =>{
-                  this.loading = false;
-                })
-      
+        if(!res.errorCode) {
+          this.tableData = res.data.records;
+          localStorage.setItem("communityId",res.data.records[0].communityId);
+          this.currentPage = res.data.currentPage;
+          this.total = res.data.total;
+          this.totalPage = res.data.totalPage;
+        }
+        this.loading = false;
+      }).catch(err =>{
+        this.loading = false;
+      })
     }
   },
   created() {
