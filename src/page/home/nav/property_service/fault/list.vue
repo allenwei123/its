@@ -5,7 +5,7 @@
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
             <el-form-item label="">
-              <el-input  placeholder="标题" v-model.trim="input"></el-input>
+              <el-input  placeholder="请输入故障申报编号" v-model.trim="input"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="query">查询</el-button>
@@ -16,37 +16,50 @@
           </el-form>
         </div>
         <div class="c-list">
-          <el-table :data="tableData" style="width: 100%" v-loading="loading">
-            <el-table-column prop="" label="#" width="80">
-              <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
+          <el-table :data="item" v-for="(item, idx) in tableData" :key="idx" style="width: 100%" v-loading="loading">
+            <el-table-column prop="id" label="编号" width="180">
+              <!-- <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template> -->
             </el-table-column>
-            <el-table-column prop="" label="故障类型" width="80">
-              <template slot-scope="scope">???</template>
+            <el-table-column prop="faultType" label="故障类型" width="80">
+              <template slot-scope="scope">{{scope.row.faultType=== 1 ? '住户' : scope.row.faultType === 2 ? '公共' : '其它' }}</template>
             </el-table-column>
-            <el-table-column prop="" label="申报人" width="120">
-              <template slot-scope="scope">???</template>
+            <el-table-column prop="userName" label="申报人" width="120">
             </el-table-column>
-            <el-table-column prop="" label="身份" width="80">
-              <template slot-scope="scope">???</template>
+            <el-table-column prop="identity" label="身份" width="80">
+              <template slot-scope="scope">{{scope.row.identity=== 1 ? '住户' : scope.row.faultType === 2 ? '物业' : '其它' }}</template>
             </el-table-column>
-            <el-table-column prop="" label="联系方式" width="120">
-              <template slot-scope="scope">???</template>
+            <el-table-column prop="contact" label="联系方式" width="120">
             </el-table-column>
-            <el-table-column prop="" label="申报时间" width="160">
-              <template slot-scope="scope">???</template>
+            <el-table-column prop="playTime" label="申报时间" width="160">
+              <template slot-scope="scope">{{getTime(scope.row.playTime, 'yyyy-MM-dd hh:mm')}}</template>
             </el-table-column>
-            <el-table-column prop="" label="故障描述" width="120">
-              <template slot-scope="scope">???</template>
+            <el-table-column prop="faultItem" label="故障描述" width="120">
+              <template slot-scope="scope">{{
+                scope.row.faultItem === 1 ? '水电煤气' :
+                scope.row.faultItem === 2 ? '房屋结构' : 
+                scope.row.faultItem === 3 ? '消防安防' : 
+                scope.row.faultItem === 9 ? '其它' : 
+                scope.row.faultItem === 10 ? '电梯' : 
+                scope.row.faultItem === 11 ? '门禁' : '其它'
+                }}
+              </template>
             </el-table-column>
-            <el-table-column prop="" label="故障状态" width="80">
-              <template slot-scope="scope">???</template>
+            <el-table-column prop="faultStatus" label="故障状态" width="80">
+              <template slot-scope="scope">{{
+                scope.row.faultStatus === 0 ? '已取消' :
+                scope.row.faultStatus === 1 ? '待接受' : 
+                scope.row.faultStatus === 2 ? '待分派' : 
+                scope.row.faultStatus === 3 ? '待检修' : 
+                scope.row.faultStatus === 4 ? '已完成' : '已驳回'
+                }}
+              </template>
             </el-table-column>
-            <el-table-column prop="" label="操作" width="180" fixed="right">
+            <el-table-column prop="" label="操作" width="400" fixed="right" align="center">
               <template slot-scope="scope">
-                <el-button type="primary" size="small">查看详情</el-button>
-                <el-button type="primary" size="small">受理故障</el-button>
-                <el-button type="primary" size="small">驳回申报</el-button>
-                <el-button type="primary" size="small">分配人员</el-button>
+                <el-button type="primary" size="small" @click="handleClick(scope.row)">查看详情</el-button>
+                <el-button type="primary" size="small" @click="faultAccept(scope.row)">受理故障</el-button>
+                <el-button type="primary" size="small" @click="rejectAccept(scope.row)">驳回申报</el-button>
+                <el-button type="primary" size="small" @click="assign(scope.row)">分配人员</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -58,19 +71,43 @@
           </el-pagination>
         </div>
       </div>
+      <transition name = "fade1">
+        <AddPage v-if="addSee" :msg="addSee" @upsee="addChange" @addSuccess="getTableList"></AddPage>
+      </transition>
 
-      <NoticeForm :visible.sync="formVisible"></NoticeForm>
+      <transition name="fade">
+        <SeePage v-if="see" :msg="see" @upsee="seeChange"  :data="seeData" @accept="faultAccept(seeData)" @del="rejectAccept(seeData)"></SeePage>
+      </transition>
+
+      <transition name = "fade">
+        <AssignPage v-if="showAssign" :msg="showAssign" @upsee="assignChange" :data="assignData" @assignSuccess="assign(assignData)"></AssignPage>
+      </transition>
+      
+      <el-dialog title="温馨提示" :visible.sync="visible2">
+          <p>请问您确定提交吗？</p>
+          <div style="text-align: right; margin: 0">
+            <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
+            <el-button type="primary" size="mini" @click="confirm">确定</el-button>
+          </div>
+      </el-dialog>
     </el-main>
   </el-container>
 </template>
 
 <script>
   import time from '@/utils/time.js';
-  import NoticeForm from './form';
+  //新增故障
+  import AddPage from './form';
+  //查看详情
+  import SeePage from "./see";
+  //分配人员
+  import AssignPage from "./assign.vue";
   export default {
     name: 'fault',
     components: {
-      NoticeForm
+      AddPage,
+      SeePage,
+      AssignPage,
     },
     data () {
       return {
@@ -80,10 +117,18 @@
         total: 0,
         currentPage: 1,
         formVisible: false,
+        // formSee: false,
         previewVisible: false,
         previewNoticeInfo: null,
         input: '',
-        q_input: null
+        q_input: null,
+        see: false,//控制查看组件弹出
+        seeData: null,//查看数据
+        showAssign: false, //控制分配人员组件弹出
+        assignData: null,//查看分配人员数组
+        visible2: false,//确认框
+        delData:null,
+        addSee: false, //新增故障页面显示组件弹出
       }
     },
     methods: {
@@ -91,6 +136,89 @@
         this.currentPage = 1;
         this.q_input = this.input;
         this.getTableList();
+      },
+      addChange(msg) {
+        this.addSee = false;
+      },
+      seeChange(msg) {//与查看弹窗交互
+        this.see = false;
+      },
+      assignChange(msg) {
+        this.showAssign = false;
+      },
+      confirm(){
+        this.visible2 = false;
+        this.see = false;
+        this.$message({
+          message: '受理成功',
+          type: 'success'
+        });
+      },
+      //分配人员
+      assign(row) {
+        let url = `property/fault/allocation`;
+        let params = {
+          id: row.id,
+          repairId: row.repairId,
+          repairName: row.repairName,
+          repairContact: row.repairContact
+        }
+        this.$xttp.post(url, params).then(res => {
+          if(res.errorCode === 0) {
+            this.loading = false;
+            this.assignData = res.data;
+            console.log(this.assignData);
+            this.showAssign = true;
+            // this.visible2 = true;
+          }
+        }).catch( () => {
+          this.loading = false;
+        })
+      },
+      //驳回申报
+      rejectAccept(row) {
+        let url = `property/fault/${row.id}/delete`;
+        this.$xttp.get(url).then(res => {
+          if(res.errorCode === 0){
+            this.loading = false;
+            // this.visible2 = true;
+            this.$message({
+              message: '驳回申报成功',
+              type: 'success'
+            });
+            console.log(res);
+          }
+        }).catch(() => {
+            this.loading = false;
+        })
+      },
+      //受理故障
+      faultAccept(row) {
+        let url = `property/fault/editFaultStatus`;
+        this.$xttp.post(url,{id: row.id, faultStatus: row.faultStatus}).then(res => {
+          if(res.errorCode === 0){
+            this.loading = false;
+            this.visible2 = true;
+            this.delData = row; 
+          }
+        }).catch(() => {
+          this.loading = false;
+          this.$message.error('故障受理失败');
+        })
+      },
+      handleClick(row) {
+        //查看详情弹起 并传数据给see组件
+        console.log(33,row.id);
+        //查看报修单详细
+        let url = `property/fault/${row.id}/detail`;
+        this.$xttp.get(url).then(res => {
+          if(res.errorCode === 0 ){
+          this.seeData = res.data;
+          this.see = true;
+          }
+        }).catch( () => {
+          this.loading = false;
+        })
       },
       // 发布公告
       publish(item) {
@@ -107,22 +235,27 @@
         });
       },
       add() {
-        this.formVisible = true;
+        this.addSee = true;
       },
       getTableList() {
         this.loading = true;
-        let url = `property/notice/page?page=${this.currentPage}&size=${this.pageSize}`;
-        // this.$xttp.post(url, {
-        //   communityId: this.communityId
-        // }).then(res => {
-        //   this.loading = false;
-        //   if (res.errorCode === 0) {
-        //     this.tableData = res.data.records;
-        //     this.total = res.data.total;
-        //   }
-        // }).catch(() => {
-        //   this.loading = false;
-        // })
+        let url = `property/fault/getFaultList?page=${this.currentPage}&size=${this.pageSize}`;
+        let params = {
+          "communityId":"5a82adf3b06c97e0cd6c0f3d",
+        };
+        if (this.q_input && this.q_input.length) {
+          params['id'] = this.q_input;
+        };
+        console.log(params);
+        this.$xttp.post(url, params).then(res => {
+          this.loading = false;
+          if (res.errorCode === 0) {
+            this.tableData = [res.data];
+            this.total = res.data.length;
+          }
+        }).catch(() => {
+          this.loading = false;
+        })
       },
       getTime(timestamp, format) {
         if (timestamp == null) return '/';
@@ -130,11 +263,28 @@
       }
     },
     created() {
-
+      this.query();
     }
   }
 </script>
 
 <style scoped lang="scss">
+  // 切换动画
+  .fade-enter-active, .fade-leave-active {
+    transition: all 0.5s ease;
+  }
+        
+  .fade-enter, .fade-leave-active {
+    opacity: 0;
+    transform: rotateY(180deg);
+  }
+  .fade1-enter-active, .fade1-leave-active {
+    transition: all 0.5s ease;
+  }
+        
+  .fade1-enter, .fade1-leave-active {
+    opacity: 0;
+    transform: translateX(-500px);
+  }
 
 </style>

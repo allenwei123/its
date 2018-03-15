@@ -1,30 +1,30 @@
 <template>
-  <el-dialog title="新增故障" :visible.sync="formVisible">
-    <el-form :model="form" label-width="120px">
-      <el-form-item label="故障类型" required>
-        <el-select v-model="form.type" placeholder="故障类型">
+  <el-dialog title="新增故障" :visible.sync="msg" :before-close="handleClose">
+    <el-form :model="form" :rules="rules" ref="ruleForm" label-width="120px">
+      <el-form-item label="故障类型" prop="faultType" required>
+        <el-select v-model="form.faultType"  placeholder="故障类型">
           <el-option label="公共-电梯" value="1"></el-option>
           <el-option label="公共-门禁" value="2"></el-option>
           <el-option label="公共-其他" value="3"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="故障地址" label-width="120px" required>
-        <el-input v-model="form.address" auto-complete="off"></el-input>
+      <el-form-item label="故障地址" label-width="120px" prop="faultAddress" required>
+        <el-input v-model="form.faultAddress" auto-complete="off"></el-input>
       </el-form-item>
-      <el-form-item label="故障描述" required>
-        <el-input type="textarea" v-model="form.body" :rows="5"></el-input>
+      <el-form-item label="故障描述" prop="faultContent" required>
+        <el-input type="textarea" v-model="form.faultContent" :rows="5"></el-input>
       </el-form-item>
-      <el-form-item label="申报人" label-width="120px" required>
-        <el-input v-model="form.address" auto-complete="off"></el-input>
+      <el-form-item label="申报人" label-width="120px" prop="name">
+        <el-input v-model="form.name" auto-complete="off"></el-input>
       </el-form-item>
-      <el-form-item label="联系方式" label-width="120px" required>
-        <el-input v-model="form.address" auto-complete="off"></el-input>
+      <el-form-item label="联系方式" label-width="120px" prop="concant">
+        <el-input v-model="form.concant" auto-complete="off"></el-input>
       </el-form-item>
 
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="closeForm">取 消</el-button>
-      <el-button type="primary" @click="submitForm">确 定</el-button>
+      <el-button @click="handleClose">取 消</el-button>
+      <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
     </div>
   </el-dialog>
 </template>
@@ -33,40 +33,61 @@
   export default {
     data() {
       return {
-        formVisible: this.visible,
         communityList: [],
         form: {
-          address: '',
-          type: '1',
+          faultAddress: '',
+          faultType: '1',
           obj: '',
-          body: ''
-        }
-      }
-    },
-    watch: {
-      visible(val) {
-        this.formVisible = val;
-      },
-      formVisible(val) {
-        this.$emit('update:visible', val);
+          faultContent: '',
+          name: '',
+          concact: '',
+          faultItem: '1',
+          roomId: '',
+          buildingId: '',
+          communityId: '5a82adf3b06c97e0cd6c0f3d',
+        },
+        rules: {
+          faultType: [{required: true, message: '请输入故障类型', trigger: 'blur'}],
+          faultAddress: [{ required: true, message: '请输入故障地址', trigger: 'blur' }],
+          faultContent: [{ required: true, message: '请描述故障', trigger: 'blur' }],
+        },
       }
     },
     methods: {
-      closeForm() {
-        this.formVisible = false;
-      },
-      submitForm() {
-        this.$refs['form'].validate((valid) => {
-          if (valid) {
-            alert('submit!');
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+            if (valid) {
+              this.postData();
+            } else {
+              return false;
+            }
         });
+      },
+      handleClose() {
+        this.$emit("upsee", false );
+      },
+      postData() {
+        let url = `property/fault/addFault`;
+        this.$xttp
+          .post(url, this.form)
+          .then(res => {
+            if (res.errorCode === 0) {
+              this.$message({
+                message: "新增成功",
+                type: "success"
+              });
+              this.handleClose();
+              this.$emit('addSuccess');
+            }else {
+              this.$message({message:res.data.errorMsg,type:'error'});
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
       }
     },
-    props: ['visible'],
+    props: ['msg'],
     created() {
 
     }
