@@ -23,45 +23,44 @@
           </el-form>
         </div>
         <div class="c-list">
-          <el-table :data="tableData" style="width: 100%" v-loading="loading">
+          <el-table :data="tableData" style="width: 100%" v-loading="loading" stripe>
             <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column label="账单号" width="100" :show-overflow-tooltip="true">
+            <el-table-column label="账单号" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.title}}</template>
             </el-table-column>
-            <el-table-column label="社区" width="120" :show-overflow-tooltip="true">
-              <template slot-scope="scope">{{scope.row.communityName}}</template>
-            </el-table-column>
-            <el-table-column label="楼栋" width="120" :show-overflow-tooltip="true">
+            <el-table-column label="楼栋" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.buildingName}}</template>
             </el-table-column>
-            <el-table-column label="房号" width="100" :show-overflow-tooltip="true">
+            <el-table-column label="房号" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.roomName}}</template>
             </el-table-column>
-            <el-table-column label="业主姓名" width="150" :show-overflow-tooltip="true">
+            <el-table-column label="业主姓名" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.proprietorName}}</template>
             </el-table-column>
-            <el-table-column label="账单名称" width="150" :show-overflow-tooltip="true">
+            <el-table-column label="账单名称" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.editorName}}</template>
             </el-table-column>
-            <el-table-column label="账单金额" width="150" :show-overflow-tooltip="true">
+            <el-table-column label="账单金额" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.editorName}}</template>
             </el-table-column>
-            <el-table-column label="账单状态" width="150" :show-overflow-tooltip="true">
+            <el-table-column label="账单状态" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{getBillStatusName(scope.row.paymentStatus)}}</template>
             </el-table-column>
-            <el-table-column label="缴费方式" width="150" :show-overflow-tooltip="true">
+            <el-table-column label="缴费方式" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.paymentMethod}}</template>
             </el-table-column>
             <!--缴费时间目前没有-->
             <!--<el-table-column label="缴费时间" width="160">-->
               <!--<template slot-scope="scope"></template>-->
             <!--</el-table-column>-->
-            <el-table-column label="操作">
-              <el-button type="primary" size="mini">确认缴纳</el-button>
-              <el-button type="primary" size="mini">查看</el-button>
-              <el-button type="primary" size="mini">编辑</el-button>
+            <el-table-column label="操作" width="250" :fixed="tableData.length ? 'right' : '/'">
+              <template slot-scope="scope">
+                <el-button type="primary" size="mini">确认缴纳</el-button>
+                <el-button type="primary" size="mini">查看</el-button>
+                <el-button type="primary" size="mini">编辑</el-button>
+              </template>
             </el-table-column>
           </el-table>
         </div>
@@ -93,10 +92,14 @@
     },
     methods: {
       query() {
-        this.currentPage = 1;
         this.q_input = this.input;
         this.q_status = this.status;
-        this.getTableList();
+        if (this.currentPage !== 1) {
+          this.currentPage = 1;
+        }
+        else {
+          this.getTableList();
+        }
       },
       // 账单状态
       getBillStatusName(status) {

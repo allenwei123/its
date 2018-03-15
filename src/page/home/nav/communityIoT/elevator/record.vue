@@ -17,7 +17,7 @@
           </el-form>
         </div>
         <div class="c-list">
-          <el-table :data="tableData" style="width: 100%" v-loading="loading">
+          <el-table :data="tableData" style="width: 100%" v-loading="loading" stripe>
             <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
@@ -56,9 +56,13 @@
       }
     }, methods: {
       query() {
-        this.currentPage = 1;
         this.q_input = this.input;
-        this.getTableList();
+        if (this.currentPage !== 1) {
+          this.currentPage = 1;
+        }
+        else {
+          this.getTableList();
+        }
       }, getTableList() {
         this.loading = true;
         let url = `sys/elevator-record/page?page=${this.currentPage}&size=${this.pageSize}`;

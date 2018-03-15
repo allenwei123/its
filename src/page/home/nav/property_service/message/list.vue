@@ -13,32 +13,32 @@
           </el-form>
         </div>
         <div class="c-list">
-          <el-table :data="tableData" style="width: 100%" v-loading="loading">
+          <el-table :data="tableData" style="width: 100%" v-loading="loading" stripe>
             <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column label="发布住户" width="80" :show-overflow-tooltip="true">
+            <el-table-column label="发布住户" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="发布时间" width="160" :show-overflow-tooltip="true">
+            <el-table-column label="发布时间" min-width="160" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="所属社区" width="80" :show-overflow-tooltip="true">
+            <el-table-column label="所属社区" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="动态详情" width="200" :show-overflow-tooltip="true">
+            <el-table-column label="动态详情" min-width="200" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="缩略图" width="120" :show-overflow-tooltip="true">
+            <el-table-column label="缩略图" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="回复数" width="80" :show-overflow-tooltip="true">
+            <el-table-column label="回复数" min-width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="点赞数" width="80" :show-overflow-tooltip="true">
+            <el-table-column label="点赞数" min-width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">???</template>
             </el-table-column>
-            <el-table-column label="操作" width="200" fixed="right">
+            <el-table-column label="操作" width="200" :fixed="tableData.length ? 'right' : '/'">
               <template slot-scope="scope">
                 <el-button type="primary" size="mini">查看详情</el-button>
                 <el-button type="primary" size="mini">删除动态</el-button>
@@ -73,9 +73,13 @@
     },
     methods: {
       query() {
-        this.currentPage = 1;
         this.q_input = this.input;
-        this.getTableList();
+        if (this.currentPage !== 1) {
+          this.currentPage = 1;
+        }
+        else {
+          this.getTableList();
+        }
       },
       getTableList() {
         this.loading = true;

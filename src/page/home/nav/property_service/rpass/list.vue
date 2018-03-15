@@ -13,29 +13,29 @@
           </el-form>
         </div>
         <div class="c-list">
-          <el-table :data="tableData" style="width: 100%" v-loading="loading">
+          <el-table :data="tableData" style="width: 100%" v-loading="loading" stripe>
             <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column label="申报人" width="120" :show-overflow-tooltip="true">
+            <el-table-column label="申报人" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.userName}}</template>
             </el-table-column>
-            <el-table-column label="住房" width="150" :show-overflow-tooltip="true">
+            <el-table-column label="住房" min-width="150" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.building}}{{scope.row.room}}</template>
             </el-table-column>
-            <el-table-column label="联系方式" width="150" :show-overflow-tooltip="true">
+            <el-table-column label="联系方式" min-width="150" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.phone}}</template>
             </el-table-column>
-            <el-table-column prop="name" label="有效时间" width="280" :show-overflow-tooltip="true">
+            <el-table-column label="有效时间" min-width="320" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.beginAt | time('yyyy-MM-dd HH:mm')}}~{{scope.row.endAt | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
-            <el-table-column label="备注" width="150" :show-overflow-tooltip="true">
+            <el-table-column label="备注" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.remark}}</template>
             </el-table-column>
-            <el-table-column prop="date" label="状态" width="80" :show-overflow-tooltip="true">
+            <el-table-column label="状态" min-width="100" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.releaseStatus === 1 ? '有效' : '失效'}}</template>
             </el-table-column>
-            <el-table-column prop="name" label="使用时间" width="160" :show-overflow-tooltip="true">
+            <el-table-column label="使用时间" min-width="160" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.updateAt | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
           </el-table>
@@ -67,9 +67,13 @@
     },
     methods: {
       query() {
-        this.currentPage = 1;
         this.q_input = this.input;
-        this.getTableList();
+        if (this.currentPage !== 1) {
+          this.currentPage = 1;
+        }
+        else {
+          this.getTableList();
+        }
       },
       getTableList() {
         this.loading = true;

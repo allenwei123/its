@@ -13,32 +13,32 @@
           </el-form>
         </div>
         <div class="c-list">
-          <el-table :data="tableData" style="width: 100%" v-loading="loading">
+          <el-table :data="tableData" style="width: 100%" v-loading="loading" stripe>
             <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column label="电梯名" width="100" :show-overflow-tooltip="true">
+            <el-table-column label="电梯名" min-width="100" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.name}}</template>
             </el-table-column>
-            <el-table-column label="设备ID" width="220" :show-overflow-tooltip="true">
+            <el-table-column label="设备ID" min-width="220" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.id}}</template>
             </el-table-column>
-            <el-table-column label="所在社区" width="120" :show-overflow-tooltip="true">
+            <el-table-column label="所在社区" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.houseName}}</template>
             </el-table-column>
-            <el-table-column label="所属楼栋" width="120" :show-overflow-tooltip="true">
+            <el-table-column label="所属楼栋" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.buildName}}</template>
             </el-table-column>
-            <el-table-column label="产商" width="120" :show-overflow-tooltip="true">
+            <el-table-column label="产商" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.brandName}}</template>
             </el-table-column>
-            <el-table-column label="型号" width="120" :show-overflow-tooltip="true">
+            <el-table-column label="型号" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.elevatorTypeName}}</template>
             </el-table-column>
-            <el-table-column label="运行状态" width="80" :show-overflow-tooltip="true">
+            <el-table-column label="运行状态" min-width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{getStatusName(scope.row.elevatorStatus)}}</template>
             </el-table-column>
-            <el-table-column label="操作" width="200" fixed="right">
+            <el-table-column label="操作" width="200" :fixed="tableData.length ? 'right' : '/'">
               <template slot-scope="scope">
                 <el-button type="primary" size="mini" @click="viewFault(scope.row)">故障记录</el-button>
                 <el-button type="primary" size="mini" @click="viewRecord(scope.row)">使用记录</el-button>
@@ -70,9 +70,13 @@
       }
     }, methods: {
       query() {
-        this.currentPage = 1;
         this.q_input = this.input;
-        this.getTableList();
+        if (this.currentPage !== 1) {
+          this.currentPage = 1;
+        }
+        else {
+          this.getTableList();
+        }
       }, getTableList() {
         this.loading = true;
         let url = `/communityIoT/elevator/list?page=${this.currentPage}&size=${this.pageSize}`;

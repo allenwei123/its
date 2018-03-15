@@ -13,28 +13,28 @@
           </el-form>
         </div>
         <div class="c-list">
-          <el-table :data="tableData" style="width: 100%" v-loading="loading">
+          <el-table :data="tableData" style="width: 100%" v-loading="loading" stripe>
             <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column label="投诉人" width="180" :show-overflow-tooltip="true">
+            <el-table-column label="投诉人" min-width="180" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.userName}}</template>
             </el-table-column>
-            <el-table-column label="社区" width="180" :show-overflow-tooltip="true">
+            <el-table-column label="社区" min-width="180" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.communityName}}</template>
             </el-table-column>
-            <el-table-column label="联系方式" width="120" :show-overflow-tooltip="true">
+            <el-table-column label="联系方式" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.phone}}</template>
             </el-table-column>
-            <el-table-column label="投诉时间" width="160" :show-overflow-tooltip="true">
+            <el-table-column label="投诉时间" min-width="160" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{getTime(scope.row.createAt, 'yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
-            <el-table-column label="投诉内容" :show-overflow-tooltip="true">
+            <el-table-column label="投诉内容" min-width="150" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.content}}</template>
             </el-table-column>
-            <el-table-column label="操作" width="120" fixed="right">
+            <el-table-column label="操作" width="150" :fixed="tableData.length ? 'right' : '/'">
               <template slot-scope="scope">
-                <el-button type="danger" size="small" @click="del(scope.row)">删除</el-button>
+                <el-button type="danger" size="mini" @click="del(scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -66,9 +66,13 @@
     },
     methods: {
       query() {
-        this.currentPage = 1;
         this.q_input = this.input;
-        this.getTableList();
+        if (this.currentPage !== 1) {
+          this.currentPage = 1;
+        }
+        else {
+          this.getTableList();
+        }
       },
       getTableList() {
         this.loading = true;

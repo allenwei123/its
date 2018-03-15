@@ -4,7 +4,14 @@
       <div class="c-notice-container">
         <div class="c-searchbar">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
-            <el-form-item label="岗位">
+            <el-date-picker
+              v-model="value2"
+              align="right"
+              type="date"
+              placeholder="选择日期"
+              :picker-options="pickerOptions1">
+            </el-date-picker>
+            <el-form-item label="岗位 :">
               <el-select v-model="formInline.class" placeholder="请选择岗位">
                 <el-option v-for="item in roleOptions" :key="item.key" :label="item.name" :value="item.key"></el-option>
               </el-select>
@@ -23,23 +30,19 @@
             <el-table-column label="序号" width="80" align="center">
               <template slot-scope="scope">{{ (currentPage -1) * pageSize + scope.$index + 1 }}</template>
             </el-table-column>
-            <el-table-column label="员工" width="150" align="center">
-              <template slot-scope="scope">{{ scope.row.name }}</template>
+            <el-table-column label="员工" :width="columnWidth" align="center">
+              <template slot-scope="scope">{{ scope.row.userName }}</template>
             </el-table-column>
-            <el-table-column label="打卡次数" width="150" align="center">
-              <template slot-scope="scope">{{ scope.row.name }}</template>
+            <el-table-column label="考勤时间" :width="columnWidth" align="center">
+              <template slot-scope="scope">{{getTime(scope.row.createAt, 'yyyy-MM-dd hh:mm')}}</template>
             </el-table-column>
-            <el-table-column label="迟到次数" width="150" align="center">
-              <template slot-scope="scope">{{ scope.row.name }}</template>
+            <el-table-column label="凭证" :width="columnWidth" align="center">
+              <template slot-scope="scope">{{ scope.row.url }}</template>
             </el-table-column>
-            <el-table-column label="缺卡次数" width="150" align="center">
-              <template slot-scope="scope">{{ scope.row.name }}</template>
-            </el-table-column>
-            <el-table-column label="角色" width="150" align="center">
-              <template slot-scope="scope">{{ scope.row.name }}</template>
-            </el-table-column>
-            <el-table-column label="操作" width="200" align="center">
-              <el-button type="primary" size="mini">查看</el-button>
+            <el-table-column label="操作" :width="columnWidth" align="center">
+               <template slot-scope="scope">
+                 <el-button type="primary" size="mini">查看</el-button>
+               </template>
             </el-table-column>
           </el-table>
         </div>
@@ -60,10 +63,38 @@ import { communityId as getCommunityList } from '@/biz/community'
 export default {
   data () {
     return {
+      columnWidth: '260',
+      q_input: null,
       formInline:{
         class: 'SECURITY',
         name: ''
       },
+      pickerOptions1: {
+          disabledDate(time) {
+            return time.getTime() > Date.now();
+          },
+          shortcuts: [{
+            text: '今天',
+            onClick(picker) {
+              picker.$emit('pick', new Date());
+            }
+          }, {
+            text: '昨天',
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() - 3600 * 1000 * 24);
+              picker.$emit('pick', date);
+            }
+          }, {
+            text: '一周前',
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', date);
+            }
+          }]
+      },
+      value2: '',
       loading: false,
       roleOptions: [],
       tableData: [],
@@ -74,6 +105,13 @@ export default {
   },
   methods: {
     query() {
+      this.currentPage = 1;
+      this.q_input = this.formInline.name;
+      this.getTableList();
+    },
+    getTime(timestamp, format) {
+      if (timestamp == null) return '/';
+      return time.timestampToFormat(timestamp, format);
     },
     initRole(){
       let communityId = scheduleList[0].communityId
@@ -86,16 +124,25 @@ export default {
     },
     getTableList() {
       let communityId = scheduleList[0].communityId
-      let page = this.page
-      let size = this.pageSize
+      // let page = this.page
+      // let size = this.pageSize
+      let params = {
+          "communityId":"5a82adf3b06c97e0cd6c0f3d",
+        };
+      if (this.q_input && this.q_input.length) {
+        params['userName'] = this.q_input;
+        console.log(33,params);
+      };
+      let url = `task/record/list`
       this.loading = true;
       this.$xttp
-          .get('/task/record/page',{params: { page: page, size:size, communityId:communityId }})
+          .get(url, {params})
           .then(res => {
             if(!res.errorCode) {
-              this.tableData = res.data.records
-              this.currentPage = res.data.currentPage;
-              this.total = res.data.total;
+              console.log(res);
+              this.tableData = res.data
+              // this.currentPage = res.data;
+              this.total = res.data.length;
             }
             this.loading = false;
           })
