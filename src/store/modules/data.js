@@ -26,7 +26,7 @@ function a() {
 export default {
     state: {
       asideData: aside[0].group,
-      communityId: localStorage["communityId"] ? JSON.parse(localStorage["communityId"]) : null,
+      communityId: localStorage["communityId"],
       communityList: localStorage["communityList"] ? JSON.parse(localStorage["communityList"]) : null
     },
     mutations: {

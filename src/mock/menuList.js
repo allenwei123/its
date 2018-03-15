@@ -27,18 +27,18 @@ const arr = [
             link:'/home/nav/side/roomFile',
             show: 1
           },
-          {
-            id:'1-1-4',
-            title:'车库档案',
-            link:'/home/nav/side/garageport',
-            show: 1
-          },
-          {
-            id:'1-1-5',
-            title:'车位档案',
-            link:'/home/nav/side/carport',
-            show: 1
-          },
+          // {
+          //   id:'1-1-4',
+          //   title:'车库档案',
+          //   link:'/home/nav/side/garageport',
+          //   show: 1
+          // },
+          // {
+          //   id:'1-1-5',
+          //   title:'车位档案',
+          //   link:'/home/nav/side/carport',
+          //   show: 1
+          // },
           {
             id:'1-1-6',
             title:'车辆档案',
