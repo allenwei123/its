@@ -101,12 +101,6 @@ const arr = [
             title:'账单管理',
             link:'/home/nav/side/bill',
             show: 1
-          },
-          {
-            id:'1-4-2',
-            title:'收费项目',
-            link:'/home/nav/side/chargeProject',
-            show: 1
           }
         ]
       }
