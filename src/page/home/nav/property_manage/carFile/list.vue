@@ -52,7 +52,7 @@
       </div>
       <transition name="fade">
         <!-- <AddPage v-if="add" :msg="add" @upsee="addChange"  :data="addData"></AddPage> -->
-        <AddPage v-if="isShow" :msg="isShow" @upup="change" :add.sync="notice"></AddPage>
+        <AddPage v-if="isShow" :msg="isShow" @reload="getTableList" @upup="change" :add.sync="notice"></AddPage>
       </transition>
 
       <el-dialog title="温馨提示" :visible.sync="visible2">
