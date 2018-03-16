@@ -95,6 +95,7 @@
 </template>
 
 <script>
+  import scheduleList from '@/mock/scheduleList'
   import time from '@/utils/time.js';
   //新增故障
   import AddPage from './form';
@@ -132,10 +133,11 @@
       }
     },
     methods: {
+      getTableList(val) {
+        this.postData(val);
+      },
       query() {
-        this.currentPage = 1;
-        this.q_input = this.input;
-        this.getTableList();
+        this.postData(null, this.input);
       },
       addChange(msg) {
         this.addSee = false;
@@ -237,21 +239,29 @@
       add() {
         this.addSee = true;
       },
-      getTableList() {
+      postData(page, id) {
+        let nPage = page || this.$route.query.page || 1;
+        let params = {page:nPage}
+        if(id){
+          //输入的搜索字添加params中
+          params.id = this.input;
+        }else {
+          delete params.id;
+        }    
+        let communityId = scheduleList[0].communityId;
+        params['communityId'] = communityId;
+        let url = `property/fault/getFaultList?page=${this.currentPage}&size=${this.pageSize}`
         this.loading = true;
-        let url = `property/fault/getFaultList?page=${this.currentPage}&size=${this.pageSize}`;
-        let params = {
-          "communityId":"5a82adf3b06c97e0cd6c0f3d",
-        };
-        if (this.q_input && this.q_input.length) {
-          params['id'] = this.q_input;
-        };
-        console.log(params);
         this.$xttp.post(url, params).then(res => {
-          this.loading = false;
           if (res.errorCode === 0) {
+            console.log(res);
+            // this.tableData = [res.data];
             this.tableData = [res.data];
+            // this.currentPage = res.data;
             this.total = res.data.length;
+            this.loading = false;
+            // this.$router.push({path:this.$route.path,query:{page: nPage }})
+            // this.total = res.data.length;
           }
         }).catch(() => {
           this.loading = false;
@@ -263,7 +273,7 @@
       }
     },
     created() {
-      this.query();
+      this.postData();
     }
   }
 </script>
