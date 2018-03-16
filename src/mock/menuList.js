@@ -101,12 +101,6 @@ const arr = [
             title:'账单管理',
             link:'/home/nav/side/bill',
             show: 1
-          },
-          {
-            id:'1-4-2',
-            title:'收费项目',
-            link:'/home/nav/side/chargeProject',
-            show: 1
           }
         ]
       }
@@ -261,12 +255,6 @@ const arr = [
             id:'3-4-1',
             title:'停车设备',
             link:'/home/nav/communityIoT/parkinglotDevice',
-            show: 1
-          },
-          {
-            id:'3-4-2',
-            title:'进出记录',
-            link:'/home/nav/communityIoT/parkinglotRecord',
             show: 1
           }
         ]

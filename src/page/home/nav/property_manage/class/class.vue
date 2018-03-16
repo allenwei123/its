@@ -130,9 +130,6 @@ export default {
     seeChange(msg) {//与查看弹窗交互
       this.see = false;
     },
-    // find(){
-    //   this.sendAjax(null,this.formInline.name);
-    // },
     postCodeFilter(row, column){
       let postCode = row[column.property]
       if (postCode === 'MANAGER'){
@@ -166,7 +163,6 @@ export default {
     },
     initRole(){
       let communityId = scheduleList[0].communityId
-      console.log(communityId)
       this.$xttp.get(`/user/property/${communityId}/post-list`).then(res => {
         if(!res.errorCode) {
           this.roleOptions = res.data;
@@ -178,7 +174,6 @@ export default {
       this.$xttp.get('/task/class/list',{params:{communityId:communityId,postCode:'SECURITY',propertyId:'5a82adee9ce976452b7001ee'}})
                 .then(res => {
                   if(!res.errorCode) {
-                    console.log(res.data)
                     this.tableData = res.data;
                   }
                   this.loading = false;
@@ -189,8 +184,6 @@ export default {
     find(){
       var postCode = this.formInline.role;
       let communityId = scheduleList[0].communityId
-      console.log(postCode)
-      console.log(communityId)
       this.$xttp.get('/task/class/list',{params:{communityId:communityId,postCode:postCode,propertyId:'5a82adee9ce976452b7001ee'}})
                 .then(res => {
                   if(!res.errorCode) {
