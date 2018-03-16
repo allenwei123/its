@@ -256,12 +256,6 @@ const arr = [
             title:'停车设备',
             link:'/home/nav/communityIoT/parkinglotDevice',
             show: 1
-          },
-          {
-            id:'3-4-2',
-            title:'进出记录',
-            link:'/home/nav/communityIoT/parkinglotRecord',
-            show: 1
           }
         ]
       },

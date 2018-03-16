@@ -61,7 +61,8 @@
         input: '',
         q_input: null
       }
-    }, methods: {
+    },
+    methods: {
       query() {
         this.q_input = this.input;
         if (this.currentPage !== 1) {
@@ -100,7 +101,9 @@
         this.$router.push({
           path: 'parkinglotRecord',
           query: {
-            gateNO: item.gateNO
+            gateName: item.gateName,
+            gateNO: item.gateNO,
+            inOutTag: item.inOutTag
           }
         })
       }
