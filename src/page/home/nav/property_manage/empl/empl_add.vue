@@ -1,7 +1,7 @@
 <template>
       <el-dialog :title="titleFont" :visible.sync="msg" :before-close="handleClose">
         <el-form :model="form" :rules="rules" ref="ruleForm" class="demo-form-inline">
-            <el-form-item label="姓名" :label-width="formLabelWidth" prop="name" class="c-must">
+            <el-form-item label="姓名" :label-width="formLabelWidth" prop="userName" class="c-must">
               <el-input v-model="form.userName"></el-input>
             </el-form-item>
 
@@ -16,17 +16,17 @@
             </el-form-item> -->
             <el-form-item label="岗位" :label-width="formLabelWidth" prop="postCode" class="c-must">
               <el-radio-group v-model="form.postCode">
-                <el-radio :label="item.name" :value="item.key" :key="index" v-for="(item,index) in postCodeOptions"></el-radio>
+                <el-radio :label="item.key" :value="item.name" :key="item.name" v-for="(item,index) in postCodeOptions">{{item.name}}</el-radio>
               </el-radio-group>
             </el-form-item>
 
-            <el-form-item label="性别" :label-width="formLabelWidth" prop="male" class="c-must">
-              <el-select v-model="form.sex" placeholder="请选择">
-                <el-option v-for="item in maleOptions" :key="item.key" :label="item.value" :value="item.key"></el-option>
+            <el-form-item label="性别" :label-width="formLabelWidth" prop="sex" class="c-must">
+              <el-select v-model="form.sex" value-key="key" placeholder="请选择">
+                <el-option v-for="item in maleOptions" :key="item.key" :label="item.value" :value="item.key">{{item.value}}</el-option>
               </el-select>
             </el-form-item>
 
-            <el-form-item label="设置密码" :label-width="formLabelWidth" prop="pwd" class="c-must">
+            <el-form-item label="设置密码" :label-width="formLabelWidth" prop="password" class="c-must">
               <el-input v-model="form.password" type="password"></el-input>
             </el-form-item>
 
@@ -55,7 +55,8 @@ export default {
       form: {
         userName: "",
         phone: "",
-        postCode: '保安',
+        // postCode: 'SECURITY',
+        postCode: '',
         sex:'',
         password: '',
         communityId: this.$store.getters.communityId,
@@ -64,9 +65,11 @@ export default {
         propertyName:'和谐景苑'
       },
       rules: {
-        userName: [{required: true, message: '请输入名称', trigger: 'blur'}],
+        userName: [{required: true, message: '请输入名称', trigger: 'blur,change' }],
         phone: [{ required: true, message: '请输入手机号', trigger: 'blur,change' }],
-        password: [{required: true, message: '请输入密码', trigger: 'blur'}],
+        password: [{required: true, message: '请输入密码', trigger: 'blur,change' }],
+        sex: [{ required: true, message: '请选择性别', trigger: 'blur,change' }],
+        postCode: [{ required: true, message: '请选择岗位', trigger: 'blur,change' }]
       },
       postCodeOptions: [],
       maleOptions: maleOptions,
@@ -75,7 +78,7 @@ export default {
   },
   props: ["msg","add"],
   created() {
-    this.initRole();
+    this.initPost();
     if(this.add){//判断此时组件为 编辑
       this.form = this.add;
       this.titleFont = '编辑员工';
@@ -86,7 +89,7 @@ export default {
     handleClose() {
       this.$emit("upup", this.current );
     },
-    initRole(){
+    initPost(){
       let communityId = scheduleList[0].communityId
       this.$xttp.get(`/user/property/${communityId}/post-list`).then(res => {
         if(!res.errorCode) {
@@ -106,21 +109,19 @@ export default {
     postData() {
       let msg = this.add ? '编辑' : '添加';
       let uri = this.add ? '/community/edit' : '/user/property/create-user';
-      console.log(this.form)
-      console.log(this.uri)
-      return;
       this.$xttp
         .post( uri, this.form)
         .then(res => {
           if (res.errorCode === 0) {
             this.$message({
-              message: msg + "社区成功",
+              message: msg + "员工成功",
               type: "success"
             });
             this.current =  2;
             this.handleClose();
+            this.$emit('reload');
           }else {
-            this.$message({message:res.data.errorMsg,type:'error'});
+            this.$message({message:res.errorMsg,type:'error'});
           }
         })
         .catch(err => {

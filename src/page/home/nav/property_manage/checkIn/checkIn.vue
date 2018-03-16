@@ -48,7 +48,7 @@
         </div>
         <div class="c-pagination">
           <el-pagination
-            layout="total, prev, pager, next, jumper" @current-change="getTableList"
+            layout="total, prev, pager, next, jumper" @current-change="handleCurrentChange"
             :total="total" :page-size="pageSize" :current-page.sync="currentPage">
           </el-pagination>
         </div>
@@ -61,6 +61,7 @@ import time from '@/utils/time.js'
 import scheduleList from '@/mock/scheduleList'
 import { communityId as getCommunityList } from '@/biz/community'
 export default {
+  name: "checkin",
   data () {
     return {
       columnWidth: '260',
@@ -104,10 +105,11 @@ export default {
     }
   },
   methods: {
+    handleCurrentChange(val) {
+      this.getTableList(val);
+    },
     query() {
-      this.currentPage = 1;
-      this.q_input = this.formInline.name;
-      this.getTableList();
+      this.getTableList(null,this.formInline.name);
     },
     getTime(timestamp, format) {
       if (timestamp == null) return '/';
@@ -115,34 +117,34 @@ export default {
     },
     initRole(){
       let communityId = scheduleList[0].communityId
-
       this.$xttp.get(`/user/property/${communityId}/post-list`).then(res => {
         if(!res.errorCode) {
           this.roleOptions = res.data;
         }
       })
     },
-    getTableList() {
-      let communityId = scheduleList[0].communityId
-      // let page = this.page
-      // let size = this.pageSize
-      let params = {
-          "communityId":"5a82adf3b06c97e0cd6c0f3d",
-        };
-      if (this.q_input && this.q_input.length) {
-        params['userName'] = this.q_input;
-        console.log(33,params);
-      };
-      let url = `task/record/list`
+    getTableList(page, userName) {
+      let nPage = page || this.$route.query.page || 1;
+      let params = {page:nPage}
+      if(userName){
+        //输入的搜索字添加params中
+        params.userName = this.formInline.name;
+      }else {
+        delete params.userName ;
+      }        
+      let communityId = scheduleList[0].communityId;
+      params.communityId = communityId;
+      let url = `task/record/page`
       this.loading = true;
       this.$xttp
           .get(url, {params})
           .then(res => {
             if(!res.errorCode) {
               console.log(res);
-              this.tableData = res.data
-              // this.currentPage = res.data;
-              this.total = res.data.length;
+              this.tableData = res.data.records;
+              this.currentPage = res.data.currentPage;
+              this.total = res.data.total;
+              // this.$router.push({path:this.$route.path,query:{page: nPage }})
             }
             this.loading = false;
           })
@@ -152,6 +154,7 @@ export default {
   created () {
     this.initRole();
     this.getTableList();
+    
   }
 }
 </script>
