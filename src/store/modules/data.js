@@ -46,7 +46,7 @@ export default {
       },
       addCommunityId({ commit }, value) {
         if(value) {
-          localStorage.setItem('communityId',JSON.stringify(value));
+          localStorage.setItem('communityId',value);
         }
         else {
           localStorage.removeItem('communityId');
