@@ -23,16 +23,16 @@
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
             <el-table-column label="车闸名称" :show-overflow-tooltip="true">
-              <template slot-scope="scope">???</template>
+              <template slot-scope="scope">{{$route.query.gateName}}</template>
             </el-table-column>
             <el-table-column label="车牌号码" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.carNo}}</template>
             </el-table-column>
             <el-table-column label="使用时间" :show-overflow-tooltip="true">
-              <template slot-scope="scope">???</template>
+              <template slot-scope="scope">{{getTime(scope.row) | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
             <el-table-column label="出入闸类型" :show-overflow-tooltip="true">
-              <template slot-scope="scope">???</template>
+              <template slot-scope="scope">{{gateTypeName}}</template>
             </el-table-column>
             <el-table-column label="车辆类型" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{getChargeTypeName(scope.row.chargeType)}}</template>
@@ -61,7 +61,14 @@
         input: '',
         q_input: null
       }
-    }, methods: {
+    },
+    computed: {
+      gateTypeName() {
+        let inOutTag = parseInt(this.$route.query.inOutTag);
+        return inOutTag === 1 ? '入闸' : '出闸';
+      }
+    },
+    methods: {
       query() {
         this.q_input = this.input;
         if (this.currentPage !== 1) {
@@ -74,7 +81,8 @@
         this.loading = true;
         let url = `vehicle/inout/page?page=${this.currentPage}&size=${this.pageSize}`;
         let params = {};
-        params['gateNO'] = this.$route.query.gateNo;
+        params['gateNO'] = this.$route.query.gateNO;
+        params['inOutTag'] = this.$route.query.inOutTag;
         if (this.q_input) {
           params['inOutDate'] = this.q_input;
         }
@@ -96,6 +104,10 @@
           '4': '储值卡'
         };
         return names[type];
+      },
+      getTime(item) {
+        let inOutTag = parseInt(this.$route.query.inOutTag);
+        return inOutTag === 1 ? item.inTime : item.outTime;
       }
     }, created() {
       this.query();

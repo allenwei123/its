@@ -16,7 +16,7 @@
           </el-form>
         </div>
         <div class="c-list">
-          <el-table :data="item" v-for="(item, idx) in tableData" :key="idx" style="width: 100%" v-loading="loading">
+          <el-table :data="tableData"  style="width: 100%" v-loading="loading">
             <el-table-column prop="id" label="编号" width="180">
               <!-- <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template> -->
             </el-table-column>
@@ -90,6 +90,14 @@
             <el-button type="primary" size="mini" @click="confirm">确定</el-button>
           </div>
       </el-dialog>
+
+      <el-dialog title="温馨提示" :visible.sync="visible3">
+          <p>请问您是否确定删除这条数据吗？</p>
+          <div style="text-align: right; margin: 0">
+            <el-button size="mini" type="text" @click="visible3 = false">取消</el-button>
+            <el-button type="primary" size="mini" @click="confirm">确定</el-button>
+          </div>
+      </el-dialog>
     </el-main>
   </el-container>
 </template>
@@ -130,6 +138,7 @@
         visible2: false,//确认框
         delData:null,
         addSee: false, //新增故障页面显示组件弹出
+        visible3: false,//驳回申报确认框
       }
     },
     methods: {
@@ -183,7 +192,7 @@
         this.$xttp.get(url).then(res => {
           if(res.errorCode === 0){
             this.loading = false;
-            // this.visible2 = true;
+            this.visible3 = true;
             this.$message({
               message: '驳回申报成功',
               type: 'success'
@@ -250,18 +259,16 @@
         }    
         let communityId = scheduleList[0].communityId;
         params['communityId'] = communityId;
-        let url = `property/fault/getFaultList?page=${this.currentPage}&size=${this.pageSize}`
+        let url = `property/fault/queryFaultPage?page=${this.currentPage}&size=${this.pageSize}`;
         this.loading = true;
         this.$xttp.post(url, params).then(res => {
           if (res.errorCode === 0) {
-            console.log(res);
-            // this.tableData = [res.data];
-            this.tableData = [res.data];
-            // this.currentPage = res.data;
-            this.total = res.data.length;
+            console.log(res.data.records);
+            this.tableData = res.data.records;
+            this.currentPage = res.data.currentPage;
+            this.total = res.data.total;
             this.loading = false;
-            // this.$router.push({path:this.$route.path,query:{page: nPage }})
-            // this.total = res.data.length;
+            this.$router.push({path:this.$route.path,query:{page: nPage }})
           }
         }).catch(() => {
           this.loading = false;

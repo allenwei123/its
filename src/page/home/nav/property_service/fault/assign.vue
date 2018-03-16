@@ -48,7 +48,8 @@
                 repairName: '',
                 form: {
                     type: '1',
-                }
+                },
+                current: 1
             }
         },
         methods:{
@@ -60,6 +61,7 @@
                 return time.timestampToFormat(timestamp, format);
             },
             assign(data) {
+                this.$emit("upsee", this.current);
                 let url = `property/fault/allocation`;
                 let params = {
                 id: data.id,
@@ -71,8 +73,12 @@
                 if(res.errorCode === 0) {
                     this.loading = false;
                     this.assignData = res.data;
-                    // this.visible2 = true;
+                    this.current = 2;
                     this.show = false;
+                    this.$message({
+                        message: '受理成功',
+                        type: 'success'
+                    });
                 }
                 }).catch( () => {
                 this.loading = false;
