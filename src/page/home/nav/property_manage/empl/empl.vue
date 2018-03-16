@@ -5,9 +5,12 @@
           <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li>
         </ul>
         <div class="c-search">
-          <el-form :inline="true" :model="formInline" class="demo-form-inline">
-            <el-form-item label="姓名">
-              <el-input v-model="formInline.name" placeholder="关键字搜索"></el-input>
+          <el-form :inline="true" class="demo-form-inline">
+            <el-form-item label="岗位">
+              <el-select v-model="post" placeholder="岗位">
+                <el-option v-for="item in postOptions" :key="item.key" :label="item.name" :value="item.key">
+                </el-option>
+              </el-select>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
@@ -19,32 +22,64 @@
       
       <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." border highlight-current-row ref="multipleTable" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="50"></el-table-column>
-        <el-table-column prop="emp_id" align="center" label="员工ID"></el-table-column>
-        <el-table-column prop="name" align="center" label="姓名"></el-table-column>
-        <el-table-column align="center" prop="role" label="当前角色" width="150" :formatter="roleFilter"></el-table-column>
-        <el-table-column align="center" prop="male" label="性别" :formatter="maleFilter"></el-table-column>
-        <el-table-column align="center" prop="phone" label="手机号" width="150"></el-table-column>
-        <el-table-column align="center" prop="time" label="创建时间" width="200"></el-table-column>
-        <el-table-column align="center" prop="usestate" label="使用状态" :formatter="usestateFilter"></el-table-column>
+        <!-- <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
+        </el-table-column> -->
+        <el-table-column v-if="show" label="id" min-width="120" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{scope.row.id}}</template>
+        </el-table-column>
+        <el-table-column v-if="show" label="社区ID" min-width="120" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{scope.row.communityId}}</template>
+        </el-table-column>
+        <el-table-column label="社区名称" min-width="120" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{scope.row.communityName}}</template>
+        </el-table-column>
+        <el-table-column v-if="show" label="物业公司ID" min-width="120" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{scope.row.propertyId}}</template>
+        </el-table-column>
+        <el-table-column label="物业公司名称" min-width="120" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{scope.row.propertyName}}</template>
+        </el-table-column>
+        <el-table-column label="岗位" min-width="120" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{getPost(scope.row.postCode)}}</template>
+        </el-table-column>
+        <el-table-column v-if="show" label="员工ID" min-width="120" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{scope.row.userId}}</template>
+        </el-table-column>
+        <el-table-column label="员工姓名" min-width="120" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{scope.row.userName}}</template>
+        </el-table-column>
+        <el-table-column label="手机号" min-width="120" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{scope.row.phone}}</template>
+        </el-table-column>
+        <el-table-column label="创建时间" min-width="150" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{scope.row.createAt | time('yyyy-MM-dd HH:mm')}}</template>
+        </el-table-column>
+        <el-table-column v-if="show" label="创建人" min-width="120" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{scope.row.creatorId}}</template>
+        </el-table-column>
+        <el-table-column label="状态" min-width="100" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{getStatus(scope.row.dataStatus)}}</template>
+        </el-table-column>
         <el-table-column align="center" fixed="right" label="操作" width="220">
           <template slot-scope="scope">
             <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button>
-            <el-button v-if="scope.row.usestate==='0'" @click="handleDiabled(scope.row,'1')" type="warning" size="small">启用</el-button>
-            <el-button v-if="scope.row.usestate==='1'" @click="handleAbled(scope.row,'0')" type="danger" size="small">禁止</el-button>
+            <el-button v-if="scope.row.dataStatus ==0 && scope.row.postCode != 'MANAGER'" @click="handleDiabled(scope.row,'1')" type="warning" size="small">启用</el-button>
+            <el-button v-if="scope.row.dataStatus ==1 && scope.row.postCode != 'MANAGER'" @click="handleAbled(scope.row,'0')" type="danger" size="small">禁止</el-button>
           </template>
         </el-table-column>
       </el-table>
-      <div class="c-block">
+      <!-- <div class="c-block">
         <el-pagination
           @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-size="10"
+          :current-page.sync="currentPage"
+          :page-size="pageSize"
           layout="total, prev, pager, next, jumper"
           :total="total">
         </el-pagination>
-      </div>
+      </div> -->
       <transition name="fade1">
-        <AddPage v-if="isShow" :msg="isShow" @upup="change" :add.sync="notice"></AddPage>
+        <AddPage v-if="isShow" :msg="isShow" @reload="getTableList" @upup="change" :add.sync="notice"></AddPage>
       </transition>
       <transition name="fade">
         <SeePage v-if="see" :msg="see" @upsee="seeChange"  :data="seeData"></SeePage>
@@ -61,17 +96,6 @@
 </template>
 
 <script>
-const roleOptions = [
-    { key: '0', value: '物业'},
-    { key: '1', value: '保安'},
-    { key: '2', value: '保洁'},
-    { key: '3', value: '水电'}
-];
-
-const maleOptions = [
-  { key: '0', value: '女' },
-  { key: '1', value: '男' }
-];
 import AddPage from "./empl_add";
 import SeePage from "./empl_see";
 import { mapGetters } from "vuex";
@@ -80,29 +104,18 @@ export default {
   name: "empl",
   data() {
     return {
-      isSou: false,
-      tableData: [{
-        role: '0',
-        dep: '住建部',
-        name: '陈以桐',
-        male: '0',
-        phone: '13211112222',
-        time: '2016-05-03 12:10:59',
-        emp_id: '000',
-        usestate: '0'
-      }],
+      show: false,
+      tableData: [],
       navDetailData: [
         { id: 0, name: "首页" },
         { id: 1, name: "员工管理" },
         { id: 2, name: "员工管理" }
       ],
-      formInline: {
-        name: ""
-      },
-      currentPage: 1,
+      post: 'SECURITY',
+      postOptions: [],
+      q_input: null,
       loading: false,
       isShow: false, //控制添加页面弹出
-      total: 0,//列表总数
       notice:null,//编辑传送的值
       see:false,//控制查看组件弹出
       seeData:null,//查看数据
@@ -119,9 +132,6 @@ export default {
     onSubmit() {//添加按钮
       this.notice = null;
       this.isShow = !this.isShow;
-    },
-    handleCurrentChange(val) {
-      // this.sendAjax(val);
     },
     handleClick(row) {
       //查看
@@ -144,11 +154,22 @@ export default {
     seeChange(msg) {//与查看弹窗交互
       this.see = false;
     },
-    list(){
-      
+    getPost(code) {
+      let codes = {
+        'MANAGER': '物业管理员',
+        'SECURITY': '保安',
+        'CLEANER': '保洁',
+        'SERVICEMAN': '维修工',
+        'SUPPORTSTAFF': '客服人员'
+      };
+      return codes[code];
     },
-    find(){
-      this.sendAjax(null,this.formInline.name);
+    getStatus(status) {
+      let names = {
+        '0': '无效',
+        '1': '有效'
+      };
+      return names[status];
     },
     delHandle(row) {
       this.visible2 = true;
@@ -168,35 +189,6 @@ export default {
       })
       row.usestate = usestate
     },
-    maleFilter(row, column) {
-      let male = row[column.property];
-      if(male == '0'){
-        return '女'
-      }else if(male == '1'){
-        return '男'
-      }
-    },
-    roleFilter(row, column) {
-      let role = row[column.property];
-      if(role == 0){
-        return '超级管理员'
-      }
-      if(role == 1){
-        return '社区管理员'
-      }
-      if(role == 2){
-        return '物业管理员'
-      }
-    },
-    usestateFilter(row, column) {
-      let usestate = row[column.property];
-      if(usestate == 0){
-        return '禁用'
-      }
-      if(usestate == 1){
-        return '正常'
-      }
-    },
     confirmDel(){
       if(this.delData.id){
         this.$xttp.get(`/community/${this.delData.id}/delete`)
@@ -210,41 +202,39 @@ export default {
         })
       }
     },
-    sendAjax(page,name) {
-      let nPage = page || this.$route.query.page || 1;
-      let obj = {page:nPage}
-      if(name){
-        obj.name = this.formInline.name;
-      }else {
-        delete obj.name ;
-      }
-      this.loading = true;
-      this.$xttp.get("/community/page",{params:obj})
-      .then(res => {
-        if (!res.errorCode) {
-          this.tableData = res.data.records;
-          this.currentPage = res.data.currentPage;
-          this.total = res.data.total;
-          this.tableData.forEach(item => {
-            let isdistrict = item.district || '';
-            item.as = item.province + item.city + isdistrict;
-            if (item.createAt) {
-              item.time1 = new Date(item.createAt)
-                .toISOString()
-                .split(".")[0]
-                .replace("T", " ");
-            }
-          });
-          this.$router.push({path:this.$route.path,query:{page: nPage }})
+    initPost(){
+      let communityId = this.$store.getters.communityId;
+      this.$xttp.get(`/user/property/${communityId}/post-list`).then(res => {
+        if(!res.errorCode) {
+          this.postOptions = res.data;
         }
+      })
+    },
+    find(){
+      this.q_input = this.post;
+      this.getTableList();
+    },
+    getTableList() {
+      this.loading = true;
+      let communityId = this.$store.getters.communityId;
+      let url = `user/property/${communityId}/user-list`;
+      let params = {};
+      if (this.q_input) {
+        params['postCode'] = this.q_input;
+      }
+      this.$xttp.get(url, params).then(res => {
         this.loading = false;
-      }).catch(err => {
+        if (res.errorCode === 0) {
+          this.tableData = res.data;
+        }
+      }).catch(() => {
         this.loading = false;
       })
-    }
+    },
   },
   created() {
-    // this.sendAjax();
+    this.initPost();
+    this.getTableList();
   },
   mounted() {
   }

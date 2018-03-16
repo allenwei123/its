@@ -1,17 +1,22 @@
 <template>
     <el-dialog title="社区档案详情" :visible.sync="msg" :before-close="handleClose">
         <ul>
-            <li class="c-list"><span class="c-label">姓名:</span> <span class="c-content"> {{ data.name }} </span></li>
-            <li v-if="data.role == 0" class="c-list"><span class="c-label">当前角色:</span> <span class="c-content"> 超级管理员 </span></li>
-            <li v-if="data.role == 1" class="c-list"><span class="c-label">当前角色:</span> <span class="c-content"> 社区管理员 </span></li>
-            <li v-if="data.role == 2" class="c-list"><span class="c-label">当前角色:</span> <span class="c-content"> 小区管理员 </span></li>
-            <li v-if="data.male == 0" class="c-list"><span class="c-label">性别:</span> <span class="c-content"> 女 </span></li>
-            <li v-if="data.male == 1" class="c-list"><span class="c-label">性别:</span> <span class="c-content"> 男 </span></li>
+            <li class="c-list"><span class="c-label">姓名:</span> <span class="c-content"> {{ data.userName }} </span></li>
+            <li class="c-list"><span class="c-label">社区名称:</span> <span class="c-content"> {{ data.communityName }} </span></li>
+            <li class="c-list"><span class="c-label">物业公司:</span> <span class="c-content"> {{ data.propertyName }} </span></li>
+            <li class="c-list"><span class="c-label">姓名:</span> <span class="c-content"> {{ data.userName }} </span></li>
+            <li v-if="data.postCode == 'MANAGER'" class="c-list"><span class="c-label">岗位:</span> <span class="c-content"> 物业管理员 </span></li>
+            <li v-if="data.postCode == 'SECURITY'" class="c-list"><span class="c-label">岗位:</span> <span class="c-content"> 保安 </span></li>
+            <li v-if="data.postCode == 'CLEANER'" class="c-list"><span class="c-label">岗位:</span> <span class="c-content"> 保洁 </span></li>
+            <li v-if="data.postCode == 'SERVICEMAN'" class="c-list"><span class="c-label">岗位:</span> <span class="c-content"> 维修工 </span></li>
+            <li v-if="data.postCode == 'SUPPORTSTAFF'" class="c-list"><span class="c-label">岗位:</span> <span class="c-content"> 客服人员 </span></li>
+            <li v-if="data.sex == 0" class="c-list"><span class="c-label">性别:</span> <span class="c-content"> 女 </span></li>
+            <li v-if="data.sex == 1" class="c-list"><span class="c-label">性别:</span> <span class="c-content"> 男 </span></li>
             <li class="c-list"><span class="c-label">手机号:</span> <span class="c-content"> {{ data.phone }} </span></li>
-            <li class="c-list"><span class="c-label">创建时间:</span> <span class="c-content"> {{ data.time }} </span></li>
-            <li class="c-list"><span class="c-label">员工ID:</span> <span class="c-content"> {{ data.emp_id }} </span></li>
-            <li v-if="data.usestate == 0" class="c-list"><span class="c-label">使用状态:</span> <span class="c-content"> 已禁用 </span></li>
-            <li v-if="data.usestate == 1" class="c-list"><span class="c-label">使用状态:</span> <span class="c-content"> 启动 </span></li>
+            <li class="c-list"><span class="c-label">创建时间:</span> <span class="c-content"> {{ data.createAt | time('yyyy-MM-dd HH:mm') }} </span></li>
+            <li class="c-list"><span class="c-label">员工ID:</span> <span class="c-content"> {{ data.userId }} </span></li>
+            <li v-if="data.dataStatus == 0" class="c-list"><span class="c-label">使用状态:</span> <span class="c-content"> 无效 </span></li>
+            <li v-if="data.dataStatus == 1" class="c-list"><span class="c-label">使用状态:</span> <span class="c-content"> 有效 </span></li>
         </ul>  
     </el-dialog>
 </template>
