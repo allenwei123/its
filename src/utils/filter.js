@@ -25,6 +25,62 @@ Vue.filter('sex', function (value) {
   }
   return newValue;
 });
+Vue.filter('auditStatus', function (value) {
+  if (!value) return '';
+  let newValue = '';
+  switch (value) {
+    case 0:
+      newValue = '未审核';
+      break;
+    case 1:
+      newValue = '已审核';
+      break;
+    case -1:
+      newValue = '未通过';
+      break;
+    case 3:
+      newValue = '已解绑';
+      break;
+  }
+  return newValue;
+});
+
+Vue.filter('postCode', function (value) {
+  if (!value) return '';
+  let newValue = '';
+  switch (value) {
+    case 'MANAGER':
+      newValue = '物业管理员';
+      break;
+    case 'SECURITY':
+      newValue = '保安';
+      break;
+    case 'CLEANER':
+      newValue = '保洁';
+      break;
+    case 'SERVICEMAN':
+      newValue = '维修工';
+      break;
+    case 'SUPPORTSTAFF':
+      newValue = '客服人员';
+      break;
+  }
+  return newValue;
+});
+
+Vue.filter('dataStatus',function (value) {
+  if (!value) return '';
+  let newValue = '';
+  switch (value) {
+    case 1:
+      newValue = '有效'
+      break;
+    case 0:
+      newValue = '无效';
+      break;
+  }
+  return newValue;
+})
 
 Vue.filter('digitUppercase', function (n) {
   let i;

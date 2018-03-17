@@ -146,6 +146,7 @@ export default {
             });
             this.current =  2;
             this.handleClose();
+            this.$emit('reload');
           }else {
             this.$message({message:res.data.errorMsg,type:'error'});
           }

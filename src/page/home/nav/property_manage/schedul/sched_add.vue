@@ -9,9 +9,9 @@
               <el-input v-model="form.phone"></el-input>
             </el-form-item>
 
-            <el-form-item label="角色" :label-width="formLabelWidth" prop="role" class="c-must">
-              <el-radio-group v-model="form.role">
-                <el-radio :label="item.value" :key="index" v-for="(item,index) in roleOptions"></el-radio>
+            <el-form-item label="岗位" :label-width="formLabelWidth" prop="postCode" class="c-must">
+              <el-radio-group v-model="form.postCode">
+                <el-radio :label="item.value" :key="index" v-for="(item,index) in postpOptions"></el-radio>
               </el-radio-group>
             </el-form-item>
 
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-const roleOptions = [
+const postOptions = [
     { key: '0', value: '物业'},
     { key: '1', value: '保安'},
     { key: '2', value: '保洁'},
@@ -54,7 +54,7 @@ export default {
       form: {
         name: "",
         phone: "",
-        role: 0,
+        postCode: 0,
         male:'男',
         pwd: ''
       },
@@ -63,7 +63,7 @@ export default {
         phone: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
         pwd:[{required: true, message: '请输入密码', trigger: 'blur'} ]
       },
-      roleOptions: roleOptions,
+      postOptions: postOptions,
       maleOptions: maleOptions,
       current: 1 //1 初始 2：添加后 3：编辑后
     };

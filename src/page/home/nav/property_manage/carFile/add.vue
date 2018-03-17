@@ -1,10 +1,10 @@
 <template>
       <el-dialog title="新增车辆" :visible.sync="msg" :before-close="handleClose">
         <el-form :model="form" :rules="rules" ref="ruleForm" class="demo-form-inline">
-            <el-form-item label="所在社区" :label-width="formLabelWidth" prop="communityId" class="c-must">
+            <el-form-item v-if="show" label="所在社区" :label-width="formLabelWidth" prop="communityId" class="c-must">
               <el-input v-model="form.communityId"></el-input>
             </el-form-item>
-            <el-form-item  label="用户ID：" :label-width="formLabelWidth" prop="userId" class="c-must">
+            <el-form-item v-if="show" label="用户ID：" :label-width="formLabelWidth" prop="userId" class="c-must">
               <el-input v-model="form.userId">JSON.parse(localStorage.getItem("userInfo")).id</el-input>
             </el-form-item>
             <el-form-item label="车牌号码：" :label-width="formLabelWidth" prop="communityId" class="c-must">
@@ -104,15 +104,6 @@ export default {
     onExceed() {
       this.$message('只能上传一张图片')
     },
-    // save(formName) {
-    //   this.$refs[formName].validate((valid) => {
-    //       if (valid) {
-    //         this.postData();
-    //       } else {
-    //         return false;
-    //       }
-    //     });
-    // },
     save () {
       if (!this.form.carNo.length) {
         this.showInfo('车牌号码不能为空')
@@ -154,13 +145,11 @@ export default {
       if (this.form.drivingPermitPicUrl) {
           params['drivingPermitPicUrl'] = this.form.drivingPermitPicUrl;
       }
-      console.log(params);
       let url = '/vehicle/applyCarNum'
       this.$xttp.post(url, params).then(res => {
         this.loading = false;
         if(res.errorCode === 0) {
           this.msg = false;
-          console.log(res);
           this.$emit('reload');
         }
       }).catch(() => {

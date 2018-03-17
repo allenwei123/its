@@ -44,6 +44,12 @@ const arr = [
             title:'车辆档案',
             link:'/home/nav/side/carFile',
             show: 1
+          },
+          {
+            id: '1-1-7',
+            title: '用户档案',
+            link:'/home/nav/side/userFile',
+            show: 1
           }
         ]
       },

@@ -90,7 +90,7 @@ export default {
       this.$emit("upup", this.current );
     },
     initPost(){
-      let communityId = scheduleList[0].communityId
+      let communityId = this.$store.getters.communityId
       this.$xttp.get(`/user/property/${communityId}/post-list`).then(res => {
         if(!res.errorCode) {
           this.postCodeOptions = res.data;

@@ -40,8 +40,11 @@
         <el-table-column label="物业公司名称" min-width="120" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{scope.row.propertyName}}</template>
         </el-table-column>
-        <el-table-column label="岗位" min-width="120" align="center" :show-overflow-tooltip="true">
+        <!-- <el-table-column label="岗位" min-width="120" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{getPost(scope.row.postCode)}}</template>
+        </el-table-column> -->
+        <el-table-column label="岗位" min-width="120" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ scope.row.postCode | postCode }}</template>
         </el-table-column>
         <el-table-column v-if="show" label="员工ID" min-width="120" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{scope.row.userId}}</template>
