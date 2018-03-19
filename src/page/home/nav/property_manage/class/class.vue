@@ -27,8 +27,11 @@
           <template slot-scope="scope">{{ scope.row.postCode | postCode}}</template>
         </el-table-column>
         <el-table-column prop="name" label="班次" align="center"  width="150"> </el-table-column>
-        <el-table-column prop="attendTime" label="值班时间" align="center"  width="200"></el-table-column>
-        <el-table-column prop="offTime" label="结束时间" align="center"  width="200"> </el-table-column>
+        <el-table-column label="值班时间" min-width="320" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{scope.row.attendTime}}~{{scope.row.offTime}}</template>
+        </el-table-column>
+        <!-- <el-table-column prop="attendTime" label="值班时间" align="center"  width="200"></el-table-column>
+        <el-table-column prop="offTime" label="结束时间" align="center"  width="200"> </el-table-column> -->
         <el-table-column prop="remark" label="备注信息" align="center"  width="200"> </el-table-column>
         <el-table-column fixed="right" align="center" label="操作" width="200">
           <template slot-scope="scope">

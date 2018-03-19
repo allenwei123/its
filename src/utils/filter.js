@@ -9,6 +9,52 @@ Vue.filter('time', function (value, format) {
   return time.dateFormat(date, _format);
 });
 
+/**
+ * 用户关系
+ */
+Vue.filter('relationship', function (value) {
+  if (!value) return '';
+  let newValue = '';
+  switch (value) {
+    case 1:
+      newValue = '业主';
+      break;
+    case 2:
+      newValue = '家属';
+      break;
+    case 3:
+      newValue = '租客';
+      break;
+  }
+  return newValue;
+});
+
+/**
+ * 政治面貌
+ */
+Vue.filter('politicsStatus', function (value) {
+  if (!value) return '';
+  let newValue = '';
+  switch (value) {
+    case 1:
+      newValue = '群众';
+      break;
+    case 2:
+      newValue = '中共党员(预备党员)'
+      break;
+    case 3:
+      newValue = '共青团员';
+      break;
+    case 4:
+      newValue = '民主党派';
+      break;
+    case 0:
+      newValue = '其他';
+      break;
+  }
+  return newValue;
+});
+
 Vue.filter('sex', function (value) {
   if (!value) return '';
   let newValue = '';

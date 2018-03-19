@@ -17,46 +17,16 @@
         </div>
       </div>
       
-      <el-table
-        class="c-table"
-        :data="tableData"
-        v-loading="loading"
-        element-loading-text="加载中..."
-        border
-        highlight-current-row 
-        ref="multipleTable"
-        style="width: 100%">
-        <el-table-column
-          label="序号"
-          type="index"
-          width="50">
+      <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." border highlight-current-row ref="multipleTable" style="width: 100%">
+        <!-- <el-table-column label="序号" type="index" width="50"></el-table-column> -->
+        <el-table-column label="序号" width="80" align="center">
+          <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
         </el-table-column>
-        <el-table-column
-          prop="name"
-          align="center"
-          label="社区名称">
-        </el-table-column>
-        <el-table-column
-          prop="as"
-          align="center"
-          label="地区">
-        </el-table-column>
-        <el-table-column
-          align="center"
-          prop="address"
-          label="地址"
-          width="200">
-        </el-table-column>
-        <el-table-column
-          align="center"
-          prop="time1"
-          label="创建时间">
-        </el-table-column>
-        <el-table-column
-          align="center"
-          fixed="right"
-          label="操作"
-          width="250">
+        <el-table-column prop="name" align="center" label="社区名称"></el-table-column>
+        <el-table-column prop="as" align="center" label="地区"></el-table-column>
+        <el-table-column align="center" prop="address" label="地址" width="200"></el-table-column>
+        <el-table-column align="center" prop="time1" label="创建时间"></el-table-column>
+        <el-table-column align="center" fixed="right" label="操作" width="250">
           <template slot-scope="scope">
             <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button>
             <el-button @click="editHandle(scope.row)" type="warning" size="small">编辑</el-button>
@@ -68,7 +38,7 @@
         <el-pagination
           @current-change="handleCurrentChange"
           :current-page="currentPage"
-          :page-size="10"
+          :page-size="pageSize"
           layout="total, prev, pager, next, jumper"
           :total="total">
         </el-pagination>
@@ -112,6 +82,7 @@ export default {
       loading: false,
       isShow: false, //控制添加页面弹出
       total: 0,//列表总数
+      pageSize:10,
       notice:null,//编辑传送的值
       see:false,//控制查看组件弹出
       seeData:null,//查看数据

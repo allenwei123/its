@@ -7,7 +7,7 @@
         <div class="c-search">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
             <el-form-item label="车牌号">
-              <el-input v-model="formInline.carNo" placeholder="关键字搜索"></el-input>
+              <el-input v-model.trim="formInline.carNo" placeholder="关键字搜索"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
@@ -27,7 +27,9 @@
         <el-table-column align="center" prop="carType" label="车辆型号" width="120"></el-table-column>
         <el-table-column align="center" prop="carColor" label="车身颜色" width="100"></el-table-column>
         <el-table-column align="center" prop="parkingName" label="车位信息" width="150"></el-table-column>
-        <el-table-column align="center" prop="userName" label="所属住户" width="120"></el-table-column>
+        <el-table-column label="所属住户" width="200" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope"><a href="">{{ scope.row.userName}}</a></template>
+        </el-table-column>
         <el-table-column align="center" prop="drivingPermit" label="行驶证号" width="150"></el-table-column>
         <el-table-column align="center" prop="drivingPermitPicUrl" label="行驶证照" width="200"></el-table-column>
         <el-table-column label="行驶证照" width="200" align="center">
@@ -101,7 +103,7 @@ export default {
       formInline: {
         carNo: ''
       },
-      pageSize:10,
+      pageSize:30,
       total: 0,
       currentPage: 1,
       loading: false,
@@ -184,12 +186,14 @@ export default {
       if (status == 1) {
         this.visible3 = true;
         this.pass = true;
+        this.refuse = false;
         this.carId = id;
         this.status = 1;
       }
       if (status == -1) {
         this.visible3 = true;
         this.refuse = true;
+        this.pass = false;
         this.carId = id;
         this.status = -1;
       }
@@ -247,11 +251,9 @@ export default {
       }
       params['page'] = this.currentPage;
       params['size'] = this.pageSize;
-      console.log(params);
       this.$xttp.get(`/vehicle/${communityId}/page`,params)
           .then(res => {
             if(!res.errorCode) {
-              console.log(res)
               this.tableData = res.data.records;
               this.currentPage = res.data.currentPage;
               this.total = res.data.total;
@@ -270,7 +272,6 @@ export default {
                 .then(res => {
         if(!res.errorCode) {
           this.tableData = res.data.records;
-          // localStorage.setItem("communityId",res.data.records[0].communityId);
           this.currentPage = res.data.currentPage;
           this.total = res.data.total;
           this.totalPage = res.data.totalPage;
