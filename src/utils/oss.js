@@ -48,16 +48,19 @@ export function send(file, success) {
 }
 
 
-export function getUri(key) {
+export function getUri(key,success) {
     let info = window.localStorage.getItem('downloadInfo') == 'undefined' ? null : JSON.parse(window.localStorage.getItem('downloadInfo'));
     let now = Date.parse(new Date()) / 1000;
-
-    if (!info || info.expire < now + 3) {
-        http.get("/oss/bit-test/policy")
+    let expire = 88888888888888888888888888888;
+    if(info) {
+        expire = new Date(info.expiration).getTime()/1000;
+    }
+    if (!info || expire < now + 3) {
+        http.get("/oss/sts-token/read-only")
             .then(res => {
                 if (!res.errorCode) {
                     window.localStorage.setItem('downloadInfo', JSON.stringify(res.data));
-                    getUri(key);
+                    getUri(key,success);
                 }
             })
     }else {
@@ -66,9 +69,11 @@ export function getUri(key) {
             accessKeyId: info.accessKeyId,//info.accessKeyId
             accessKeySecret: info.accessKeySecret,//info.accessKeySecret
             stsToken: info.securityToken,//info.securityToken
-            bucket: info.bucket//info.bucket
+            bucket: info.bucket || 'bit-test'//info.bucket
         });
-        return client.signatureUrl(key);
+        if(success) {
+            success(client.signatureUrl(key));
+        }
     }
 }
 
