@@ -18,6 +18,18 @@
             </el-form-item>
             <el-form-item label="故障描述" label-width="120px" required>
                 <el-input v-model="data.faultContent" auto-complete="off"></el-input>
+                <template>
+                    <el-upload
+                        ref="upload"
+                        action=""
+                        :auto-upload="false"
+                        :limit="3"
+                        accept="image/*"
+                        :on-exceed="onExceed"
+                        list-type="picture-card">
+                        <i class="el-icon-plus"></i>
+                    </el-upload>
+                </template>
             </el-form-item>
             <el-form-item label="故障状态" label-width="120px" required>
                 <el-select v-model="faultStatus" placeholder="故障状态">
@@ -53,6 +65,9 @@
             }
         },
         methods:{
+            onExceed() {
+                this.$message('只能上传三张图片')
+            },
             accept() {
                 this.$emit('accept');
             },

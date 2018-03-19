@@ -18,6 +18,18 @@
             </el-form-item>
             <el-form-item label="故障描述" label-width="120px" required>
                 <el-input v-model="data.faultContent" auto-complete="off"></el-input>
+                    <template>
+                        <el-upload
+                            ref="upload"
+                            action=""
+                            :auto-upload="false"
+                            :limit="3"
+                            accept="image/*"
+                            :on-exceed="onExceed"
+                            list-type="picture-card">
+                            <i class="el-icon-plus"></i>
+                        </el-upload>
+                    </template>
             </el-form-item>
             <el-form-item label="故障状态" label-width="120px" required>
                 <el-input v-model="faultStatus" auto-complete="off"></el-input>
@@ -31,7 +43,7 @@
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="assign(data)">确定分派</el-button>
+            <el-button type="primary" @click="assignConfirm(data)">确定分派</el-button>
         </div>
   </el-dialog>
 </template>
@@ -53,6 +65,9 @@
             }
         },
         methods:{
+            onExceed() {
+                this.$message('只能上传三张图片')
+            },
             handleClose() {
                 this.$emit("upsee", false );
             },
@@ -60,7 +75,7 @@
                 if (timestamp == null) return '/';
                 return time.timestampToFormat(timestamp, format);
             },
-            assign(data) {
+            assignConfirm(data) {
                 this.$emit("upsee", this.current);
                 let url = `property/fault/allocation`;
                 let params = {
@@ -69,21 +84,22 @@
                 repairName: data.repairName,
                 repairContact: data.repairContact
                 }
+                params['faultStatus'] = 3;
                 this.$xttp.post(url, params).then(res => {
-                if(res.errorCode === 0) {
-                    this.loading = false;
-                    this.assignData = res.data;
-                    this.current = 2;
-                    this.show = false;
-                    this.$message({
-                        message: '受理成功',
-                        type: 'success'
-                    });
-                }
+                    if(res.errorCode === 0) {
+                        this.loading = false;
+                        this.assignConfirmData = res.data;
+                        this.current = 2;
+                        this.show = false;
+                        this.$message({
+                            message: '分派成功',
+                            type: 'success'
+                        });
+                    }
                 }).catch( () => {
                 this.loading = false;
                 })    
-            }
+            },
         },
         props: ["msg","data"],
         created() {

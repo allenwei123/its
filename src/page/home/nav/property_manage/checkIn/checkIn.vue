@@ -109,7 +109,7 @@ export default {
       this.getTableList(val);
     },
     query() {
-      this.getTableList(null,this.formInline.name);
+      this.getTableList(null, this.formInline.name);
     },
     getTime(timestamp, format) {
       if (timestamp == null) return '/';
@@ -131,7 +131,7 @@ export default {
         params.userName = this.formInline.name;
       }else {
         delete params.userName ;
-      }        
+      };
       let communityId = scheduleList[0].communityId;
       params.communityId = communityId;
       let url = `task/record/page`

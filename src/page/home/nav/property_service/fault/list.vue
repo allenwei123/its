@@ -15,10 +15,11 @@
             </el-form-item>
           </el-form>
         </div>
+        <!-- 表格 -->
         <div class="c-list">
           <el-table :data="tableData"  style="width: 100%" v-loading="loading">
-            <el-table-column prop="id" label="编号" width="180">
-              <!-- <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template> -->
+            <el-table-column prop="id" label="编号" width="80">
+              <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
             <el-table-column prop="faultType" label="故障类型" width="80">
               <template slot-scope="scope">{{scope.row.faultType=== 1 ? '住户' : scope.row.faultType === 2 ? '公共' : '其它' }}</template>
@@ -34,36 +35,39 @@
               <template slot-scope="scope">{{getTime(scope.row.playTime, 'yyyy-MM-dd hh:mm')}}</template>
             </el-table-column>
             <el-table-column prop="faultItem" label="故障描述" width="120">
-              <template slot-scope="scope">{{
-                scope.row.faultItem === 1 ? '水电煤气' :
-                scope.row.faultItem === 2 ? '房屋结构' : 
-                scope.row.faultItem === 3 ? '消防安防' : 
-                scope.row.faultItem === 9 ? '其它' : 
-                scope.row.faultItem === 10 ? '电梯' : 
-                scope.row.faultItem === 11 ? '门禁' : '其它'
-                }}
-              </template>
+              <template slot-scope="scope">{{getfaultItem(scope.row.faultItem)}}</template>
             </el-table-column>
             <el-table-column prop="faultStatus" label="故障状态" width="80">
-              <template slot-scope="scope">{{
-                scope.row.faultStatus === 0 ? '已取消' :
-                scope.row.faultStatus === 1 ? '待接受' : 
-                scope.row.faultStatus === 2 ? '待分派' : 
-                scope.row.faultStatus === 3 ? '待检修' : 
-                scope.row.faultStatus === 4 ? '已完成' : '已驳回'
-                }}
-              </template>
+              <template slot-scope="scope">{{getPublishStatusName(scope.row.faultStatus)}}</template>
             </el-table-column>
-            <el-table-column prop="" label="操作" width="400" fixed="right" align="center">
+            <el-table-column prop="" label="操作" width="300" fixed="right" align="center">
               <template slot-scope="scope">
-                <el-button type="primary" size="small" @click="handleClick(scope.row)">查看详情</el-button>
-                <el-button type="primary" size="small" @click="faultAccept(scope.row)">受理故障</el-button>
+                <el-button type="primary" size="mini" @click="handleClick(scope.row)">查看详情</el-button>
+                <!-- 已提交 待受理-->
+                <template v-if="scope.row.faultStatus === 1">
+                  <el-button type="primary" size="mini" @click="receive(scope.row)">受理故障</el-button>
+                  <el-button type="danger" size="small" @click="rejectAccept(scope.row)">驳回申报</el-button>
+                </template>
+
+                <!-- 已受理 待分派-->
+                <template v-if="scope.row.faultStatus === 2">
+                  <el-button type="primary" size="mini" @click="assign(scope.row)">指派人员</el-button>
+                  <el-button type="primary" size="mini" @click="assign(scope.row)">专业维修</el-button>
+                </template>
+
+                <!-- 已分派 待检修-->
+                <template v-if="scope.row.faultStatus === 3">
+                  <el-button type="primary" size="mini" @click="assign(scope.row)">检修完成</el-button>
+                </template>
+
+                <!-- <el-button type="primary" size="small" @click="faultAccept(scope.row)">受理故障</el-button>
                 <el-button type="primary" size="small" @click="rejectAccept(scope.row)">驳回申报</el-button>
-                <el-button type="primary" size="small" @click="assign(scope.row)">分配人员</el-button>
+                <el-button type="primary" size="small" @click="assign(scope.row)">分配人员</el-button> -->
               </template>
             </el-table-column>
           </el-table>
         </div>
+
         <div class="c-pagination">
           <el-pagination
             layout="total, prev, pager, next, jumper" @current-change="getTableList"
@@ -71,14 +75,15 @@
           </el-pagination>
         </div>
       </div>
+      <!-- 增加故障 -->
       <transition name = "fade1">
         <AddPage v-if="addSee" :msg="addSee" @upsee="addChange" @addSuccess="getTableList"></AddPage>
       </transition>
-
+      <!-- 查看详情 -->
       <transition name="fade">
         <SeePage v-if="see" :msg="see" @upsee="seeChange"  :data="seeData" @accept="faultAccept(seeData)" @del="rejectAccept(seeData)"></SeePage>
       </transition>
-
+      <!-- 分配人员 -->
       <transition name = "fade">
         <AssignPage v-if="showAssign" :msg="showAssign" @upsee="assignChange" :data="assignData" @assignSuccess="assign(assignData)"></AssignPage>
       </transition>
@@ -95,7 +100,7 @@
           <p>请问您是否确定删除这条数据吗？</p>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="visible3 = false">取消</el-button>
-            <el-button type="primary" size="mini" @click="confirm">确定</el-button>
+              <el-button type="primary" size="mini" @click="confirm">确定</el-button>
           </div>
       </el-dialog>
     </el-main>
@@ -139,6 +144,9 @@
         delData:null,
         addSee: false, //新增故障页面显示组件弹出
         visible3: false,//驳回申报确认框
+        confirmData: '',
+        visible1: false,
+        confirmAssign: '',
       }
     },
     methods: {
@@ -146,24 +154,44 @@
         this.postData(val);
       },
       query() {
-        this.postData(null, this.input);
+        if (this.currentPage !== 1) {
+          this.currentPage = 1;
+        }
+        else {
+          this.postData(null, this.input);
+        }
       },
       addChange(msg) {
         this.addSee = false;
       },
       seeChange(msg) {//与查看弹窗交互
         this.see = false;
+        
       },
       assignChange(msg) {
         this.showAssign = false;
       },
-      confirm(){
-        this.visible2 = false;
-        this.see = false;
-        this.$message({
-          message: '受理成功',
-          type: 'success'
-        });
+      getPublishStatusName(status) {
+        let names = {
+          '-1': '已驳回',
+          '0': '已取消',
+          '1': '已提交',
+          '2': '已受理',
+          '3': '已指派',
+          '4': '已完成',
+        };
+        return names[status];
+      },
+      getfaultItem(status) {
+        let items = {
+          '1': '水电煤气',
+          '2': '房屋结构',
+          '3': '消防安防',
+          '10': '电梯',
+          '11': '门禁',
+          '99': '其它',
+        };
+        return items[status];
       },
       //分配人员
       assign(row) {
@@ -203,14 +231,29 @@
             this.loading = false;
         })
       },
+      //受理故障二次确定弹窗
+      receive(row) {
+        this.visible2 = true;
+        this.confirmData = row;
+      },
+      confirm(confirmData){
+        this.visible2 = false;
+        this.see = false;
+        this.$message({
+          message: '受理成功',
+          type: 'success'
+        });
+        this.confirmData.faultStatus = 2;
+        this.faultAccept(this.confirmData);
+      },
       //受理故障
       faultAccept(row) {
         let url = `property/fault/editFaultStatus`;
         this.$xttp.post(url,{id: row.id, faultStatus: row.faultStatus}).then(res => {
           if(res.errorCode === 0){
             this.loading = false;
-            this.visible2 = true;
-            this.delData = row; 
+            // this.visible2 = true;
+            // this.delData = row;
           }
         }).catch(() => {
           this.loading = false;
