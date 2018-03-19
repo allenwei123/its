@@ -6,8 +6,8 @@
         </ul>
         <div class="c-search">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
-            <el-form-item label="岗位">
-              <el-select v-model="formInline.role" placeholder="岗位">
+            <el-form-item label="角色">
+              <el-select v-model="formInline.role" placeholder="角色">
                 <el-option v-for="item in roleOptions" :key="item.key" :label="item.name" :value="item.key">
                 </el-option>
               </el-select>
@@ -23,14 +23,19 @@
       <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." border highlight-current-row ref="multipleTable" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60"> </el-table-column>
         <el-table-column label="ID" type="id" align="center" prop="id" v-if="show"></el-table-column>
-        <el-table-column prop="postCode" label="岗位" align="center"  width="200"  :formatter="postCodeFilter"> </el-table-column>
+        <el-table-column label="角色" min-width="200" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ scope.row.postCode | postCode}}</template>
+        </el-table-column>
         <el-table-column prop="name" label="班次" align="center"  width="150"> </el-table-column>
-        <el-table-column prop="attendTime" label="值班时间" align="center"  width="200"></el-table-column>
-        <el-table-column prop="offTime" label="结束时间" align="center"  width="200"> </el-table-column>
+        <el-table-column label="值班时间" min-width="320" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{scope.row.attendTime}}~{{scope.row.offTime}}</template>
+        </el-table-column>
+        <!-- <el-table-column prop="attendTime" label="值班时间" align="center"  width="200"></el-table-column>
+        <el-table-column prop="offTime" label="结束时间" align="center"  width="200"> </el-table-column> -->
         <el-table-column prop="remark" label="备注信息" align="center"  width="200"> </el-table-column>
         <el-table-column fixed="right" align="center" label="操作" width="200">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="editHandle(scope.row)">修改</el-button>
+            <el-button type="primary" size="mini" @click="seeHandle(scope.row)">查看</el-button>
             <el-button @click="delHandle(scope.row)" type="danger" size="small">删除</el-button>
           </template>
         </el-table-column>
@@ -47,7 +52,8 @@
       </div> -->
       <transition name="fade">
         <!-- <AddPage v-if="add" :msg="add" @upsee="addChange"  :data="addData"></AddPage> -->
-        <AddPage v-if="isShow" :msg="isShow" @upup="change" :add.sync="notice"></AddPage>
+        <AddPage v-if="isShow" :msg="isShow" @reload="getTableList" @upup="change" :add.sync="notice"></AddPage>
+        <SeePage v-if="isSee" :msg="isSee" @upsee="upsee"  :data="seeData" ></SeePage>
       </transition>
 
       <el-dialog title="温馨提示" :visible.sync="visible2">
@@ -62,13 +68,13 @@
 
 <script>
 import AddPage from "./class_add";
-// import SeePage from "./sched_see";
+import SeePage from "./class_see";
 import { mapGetters } from "vuex";
 import scheduleList from '@/mock/scheduleList'
 import time from '@/utils/time.js';
 
 export default {
-  name: "schedul",
+  name: "class",
   data() {
     return {
       show: false,
@@ -87,6 +93,8 @@ export default {
       currentPage: 1,
       loading: false,
       isShow: false, //控制添加页面弹出
+      isSee: false, //控制查看页面
+      seeData: null,
 
       notice:null,//编辑传送的值
       add:false,//控制查看组件弹出
@@ -97,8 +105,8 @@ export default {
   },
   computed: mapGetters(["showAside"]),
   components: {
-      AddPage
-  //   SeePage
+      AddPage,
+      SeePage
   },
   methods: {
     onSubmit() {//添加按钮
@@ -109,6 +117,11 @@ export default {
       //新增
       this.notice = null;
       this.isShow = !this.isShow;
+    },
+    seeHandle(row) {
+      //查看
+      this.isSee = true;
+      this.seeData = row;
     },
     editHandle(row) {
       //编辑
@@ -127,26 +140,8 @@ export default {
         this.isShow = false;
       }
     },
-    seeChange(msg) {//与查看弹窗交互
-      this.see = false;
-    },
-    postCodeFilter(row, column){
-      let postCode = row[column.property]
-      if (postCode === 'MANAGER'){
-          return '物业管理员'
-      }
-      if (postCode === 'SECURITY'){
-          return '保安'
-      }
-      if (postCode === 'CLEANER'){
-          return '保洁'
-      }
-      if (postCode === 'SERVICEMAN'){
-          return '维修工'
-      }
-      if (postCode === 'SUPPORTSTAFF'){
-          return '客服人员'
-      }
+    upsee(msg) {//与查看弹窗交互
+      this.isSee = false;
     },
     confirmDel(){
       if(this.delData.id){
@@ -161,8 +156,8 @@ export default {
         })
       }
     },
-    initRole(){
-      let communityId = scheduleList[0].communityId
+    initPost(){
+      let communityId = this.$store.getters.communityId
       this.$xttp.get(`/user/property/${communityId}/post-list`).then(res => {
         if(!res.errorCode) {
           this.roleOptions = res.data;
@@ -170,35 +165,35 @@ export default {
       })
     },
     getTableList() {
-      let communityId = scheduleList[0].communityId
+      let communityId = this.$store.getters.communityId
       this.$xttp.get('/task/class/list',{params:{communityId:communityId,postCode:'SECURITY',propertyId:'5a82adee9ce976452b7001ee'}})
-                .then(res => {
-                  if(!res.errorCode) {
-                    this.tableData = res.data;
-                  }
-                  this.loading = false;
-                }).catch(err =>{
-                  this.loading = false;
-                })
+          .then(res => {
+            if(!res.errorCode) {
+              this.tableData = res.data;
+            }
+            this.loading = false;
+          }).catch(err =>{
+            this.loading = false;
+          })
     },
     find(){
       var postCode = this.formInline.role;
-      let communityId = scheduleList[0].communityId
+      let communityId = this.$store.getters.communityId
       this.$xttp.get('/task/class/list',{params:{communityId:communityId,postCode:postCode,propertyId:'5a82adee9ce976452b7001ee'}})
-                .then(res => {
-                  if(!res.errorCode) {
-                    this.tableData = res.data
-                  }
-                  this.loading = false;
-                }).catch(err =>{
-                  this.loading = false;
-                })
+          .then(res => {
+            if(!res.errorCode) {
+              this.tableData = res.data
+            }
+            this.loading = false;
+          }).catch(err =>{
+            this.loading = false;
+          })
       
     }
   },
   created() {
     // this.sendAjax();
-    this.initRole();
+    this.initPost();
     this.getTableList();
   },
   mounted() {

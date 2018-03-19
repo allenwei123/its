@@ -9,6 +9,52 @@ Vue.filter('time', function (value, format) {
   return time.dateFormat(date, _format);
 });
 
+/**
+ * 用户关系
+ */
+Vue.filter('relationship', function (value) {
+  if (!value) return '';
+  let newValue = '';
+  switch (value) {
+    case 1:
+      newValue = '业主';
+      break;
+    case 2:
+      newValue = '家属';
+      break;
+    case 3:
+      newValue = '租客';
+      break;
+  }
+  return newValue;
+});
+
+/**
+ * 政治面貌
+ */
+Vue.filter('politicsStatus', function (value) {
+  if (!value) return '';
+  let newValue = '';
+  switch (value) {
+    case 1:
+      newValue = '群众';
+      break;
+    case 2:
+      newValue = '中共党员(预备党员)'
+      break;
+    case 3:
+      newValue = '共青团员';
+      break;
+    case 4:
+      newValue = '民主党派';
+      break;
+    case 0:
+      newValue = '其他';
+      break;
+  }
+  return newValue;
+});
+
 Vue.filter('sex', function (value) {
   if (!value) return '';
   let newValue = '';
@@ -25,6 +71,62 @@ Vue.filter('sex', function (value) {
   }
   return newValue;
 });
+Vue.filter('auditStatus', function (value) {
+  if (!value) return '';
+  let newValue = '';
+  switch (value) {
+    case 0:
+      newValue = '未审核';
+      break;
+    case 1:
+      newValue = '已审核';
+      break;
+    case -1:
+      newValue = '未通过';
+      break;
+    case 3:
+      newValue = '已解绑';
+      break;
+  }
+  return newValue;
+});
+
+Vue.filter('postCode', function (value) {
+  if (!value) return '';
+  let newValue = '';
+  switch (value) {
+    case 'MANAGER':
+      newValue = '物业管理员';
+      break;
+    case 'SECURITY':
+      newValue = '保安';
+      break;
+    case 'CLEANER':
+      newValue = '保洁';
+      break;
+    case 'SERVICEMAN':
+      newValue = '维修工';
+      break;
+    case 'SUPPORTSTAFF':
+      newValue = '客服人员';
+      break;
+  }
+  return newValue;
+});
+
+Vue.filter('dataStatus',function (value) {
+  if (!value) return '';
+  let newValue = '';
+  switch (value) {
+    case 1:
+      newValue = '有效'
+      break;
+    case 0:
+      newValue = '无效';
+      break;
+  }
+  return newValue;
+})
 
 Vue.filter('digitUppercase', function (n) {
   let i;
@@ -57,3 +159,23 @@ Vue.filter('digitUppercase', function (n) {
     .replace(/(零.)+/g, '零')
     .replace(/^整$/, '零元整');
 });
+
+  Vue.filter('card', function(value) {
+    if (!value) return ''
+    let newValue = '';
+    switch(value) {
+      case 1:
+        newValue = '手机蓝牙';
+        break;
+      case 2:
+        newValue = '蓝牙卡';
+        break;
+      case 4:
+        newValue = 'IC卡';
+        break;
+      case 8:
+        newValue = '临时通行';
+        break;
+    }
+    return newValue;
+  })

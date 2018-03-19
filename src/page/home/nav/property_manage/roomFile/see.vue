@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="社区档案详情" :visible.sync="msg" :before-close="handleClose">
+    <el-dialog title="房间档案详情" :visible.sync="msg" :before-close="handleClose">
         <ul>
             <li class="c-list"><span class="c-label">房间名称:</span> <span class="c-content"> {{ data.name }} </span></li>
             <li class="c-list"><span class="c-label">房间编号:</span> <span class="c-content"> {{ data.code }} </span></li>

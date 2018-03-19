@@ -40,9 +40,15 @@ const arr = [
           //   show: 1
           // },
           {
-            id:'1-1-6',
+            id:'1-1-4',
             title:'车辆档案',
             link:'/home/nav/side/carFile',
+            show: 1
+          },
+          {
+            id: '1-1-5',
+            title: '用户档案',
+            link:'/home/nav/side/userFile',
             show: 1
           }
         ]
@@ -52,12 +58,12 @@ const arr = [
         name:'员工管理',
         show: 1,
         menuItem:[
-          // {
-          //   id:'1-2-1',
-          //   title:'角色管理',
-          //   link:'/home/nav/side/role',
-          //   show: 0
-          // },
+          {
+            id:'1-2-1',
+            title:'角色管理',
+            link:'/home/nav/side/role',
+            show: 1
+          },
           {
             id:'1-2-2',
             title:'员工管理',

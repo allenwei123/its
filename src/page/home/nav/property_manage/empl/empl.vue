@@ -40,8 +40,11 @@
         <el-table-column label="物业公司名称" min-width="120" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{scope.row.propertyName}}</template>
         </el-table-column>
-        <el-table-column label="岗位" min-width="120" align="center" :show-overflow-tooltip="true">
+        <!-- <el-table-column label="岗位" min-width="120" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{getPost(scope.row.postCode)}}</template>
+        </el-table-column> -->
+        <el-table-column label="岗位" min-width="120" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ scope.row.postCode | postCode }}</template>
         </el-table-column>
         <el-table-column v-if="show" label="员工ID" min-width="120" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{scope.row.userId}}</template>
@@ -65,7 +68,7 @@
           <template slot-scope="scope">
             <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button>
             <el-button v-if="scope.row.dataStatus ==0 && scope.row.postCode != 'MANAGER'" @click="handleDiabled(scope.row,'1')" type="warning" size="small">启用</el-button>
-            <el-button v-if="scope.row.dataStatus ==1 && scope.row.postCode != 'MANAGER'" @click="handleAbled(scope.row,'0')" type="danger" size="small">禁止</el-button>
+            <el-button v-if="scope.row.dataStatus ==1 && scope.row.postCode != 'MANAGER'" @click="handleWriteoff(scope.row)" type="danger" size="small">注销</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -86,7 +89,7 @@
       </transition>
 
       <el-dialog title="温馨提示" :visible.sync="visible2">
-          <p>请问您是否确定删除这条数据吗？</p>
+          <p>请问您是否确定注销员工吗？</p>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
             <el-button type="primary" size="mini" @click="confirmDel">确定</el-button>
@@ -119,7 +122,7 @@ export default {
       notice:null,//编辑传送的值
       see:false,//控制查看组件弹出
       seeData:null,//查看数据
-      visible2:false,//控制删除框
+      visible2:false,//控制注销框
       delData:null
     };
   },
@@ -182,23 +185,27 @@ export default {
       })
       row.usestate = usestate
     },
-    handleAbled(row, usestate){
-      this.$message({
-        message: '禁用成功',
-        type: 'success'
-      })
-      row.usestate = usestate
+    handleWriteoff(row){
+      this.visible2 = true;
+      this.delData = row; 
     },
     confirmDel(){
+      console.log(this.delData);
       if(this.delData.id){
-        this.$xttp.get(`/community/${this.delData.id}/delete`)
+        this.$xttp.get(`/user/property/${this.delData.id}/delete`)
         .then(res=> {
           if(!res.errorCode){
             this.visible2 = false;
             this.delData = null;
-            this.$message({message:res.data,type:'success'});
+            this.$message({message:'注销员工成功',type:'success'});
             this.find();
+          } else {
+            this.visible2 = false;
+            this.delData = null;
+            this.$message({message:'注销员工失败',type: 'warning'});
           }
+        }).catch(()=> {
+          console.log(err)
         })
       }
     },
@@ -211,18 +218,25 @@ export default {
       })
     },
     find(){
-      this.q_input = this.post;
-      this.getTableList();
+      // this.q_input = this.post;
+      this.getTableList(this.postCode);
     },
-    getTableList() {
+    getTableList(postCode) {
+      let obj = {};
+      if(postCode){
+        obj.postCode = this.q_input;
+      } else {
+        delete obj.postCode;
+      }
       this.loading = true;
+      
       let communityId = this.$store.getters.communityId;
       let url = `user/property/${communityId}/user-list`;
-      let params = {};
-      if (this.q_input) {
-        params['postCode'] = this.q_input;
-      }
-      this.$xttp.get(url, params).then(res => {
+      // let params = {};
+      // if (this.q_input) {
+      //   params['postCode'] = this.q_input;
+      // }
+      this.$xttp.get(url, {params:obj}).then(res => {
         this.loading = false;
         if (res.errorCode === 0) {
           this.tableData = res.data;

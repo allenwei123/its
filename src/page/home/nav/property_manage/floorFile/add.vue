@@ -33,7 +33,7 @@ export default {
       form: {
         code: "",
         name: "",
-        communityIdShow: toName(this.$store.getters.communityList,this.$store.getters.communityId),
+        communityIdShow: '',
         communityId: this.$store.getters.communityId,
       },
       rules: {
@@ -46,15 +46,10 @@ export default {
   },
   props: ["msg", "add"],
   created() {
-  
     if (this.add) {
       //判断此时组件为 编辑
-      this.cityArr = [
-        this.add.province,
-        this.add.city,
-        this.add.district || ""
-      ];
       this.form = this.add;
+      this.form.communityIdShow = toName(this.$store.getters.communityList,this.$store.getters.communityId);
       this.titleFont = "编辑楼栋档案";
     }
   },

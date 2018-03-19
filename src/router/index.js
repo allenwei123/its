@@ -164,9 +164,17 @@ const router = new Router({
     }
   ]
 })
-
+let errorList = ['/home/nav/side/garageport','/home/nav/side/carport','/home/nav/propertyService/onlineService'];//记录暂时没开发的
 router.beforeEach((to, from, next) => {
-  next();
+  if(errorList.find((val) => { return val == to.path})) {
+    alert('该功能未开发');
+    next(false);
+  }else {
+    next();
+  }
+
+  // if(to.path == a)
+  
 })
 export default router;
 

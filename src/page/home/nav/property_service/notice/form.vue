@@ -29,12 +29,10 @@
             :limit="1"
             accept="image/*"
             :on-exceed="onExceed"
+            :file-list="fileList2"
             list-type="picture-card">
             <i class="el-icon-plus"></i>
           </el-upload>
-          <!--<el-dialog :visible.sync="dialogVisible">-->
-            <!--<img width="100%" :src="dialogImageUrl" alt="">-->
-          <!--</el-dialog>-->
         </template>
       </el-form-item>
       <el-form-item label="公告内容" required>
@@ -52,112 +50,114 @@
 </template>
 
 <script>
-  import {send as ossUpload} from '@/utils/oss';
-  export default {
-    data() {
-      return {
-        formVisible: this.visible,
-        communityList: [],
-        file: null,
-        form: {
-          title: '',
-          type: '1',
-          obj: '',
-          body: '',
-          thumbnailUrl: null
-        }
-      }
+import { send as ossUpload, getUri } from "@/utils/oss";
+export default {
+  data() {
+    return {
+      formVisible: this.visible,
+      communityList: [],
+      file: null,
+      form: {
+        title: "",
+        type: "1",
+        obj: "",
+        body: "",
+        thumbnailUrl: null
+      },
+      fileList2: []
+    };
+  },
+  watch: {
+    visible(val) {
+      this.formVisible = val;
     },
-    watch: {
-      visible(val) {
-        this.formVisible = val;
-      },
-      formVisible(val) {
-        this.$emit('update:visible', val);
-      }
+    formVisible(val) {
+      this.$emit("update:visible", val);
+    }
+  },
+  methods: {
+    showInfo(text) {
+      this.$message({
+        message: text,
+        type: "warning"
+      });
     },
-    methods: {
-      showInfo(text) {
-        this.$message({
-          message: text,
-          type: 'warning'
-        });
-      },
-      closeForm() {
-        this.formVisible = false;
-      },
-      preview() {
+    closeForm() {
+      this.formVisible = false;
+    },
+    preview() {},
+    up() {},
+    onExceed() {
+      this.$message("只能上传一张图片");
+    },
+    save() {
+      if (!this.form.title.length) {
+        this.showInfo("公告标题不能为空");
+        return;
+      }
+      if (!this.form.body.length) {
+        this.showInfo("公告内容不能为空");
+        return;
+      }
 
-      },
-      up() {
+      let files = this.$refs.upload.uploadFiles;
 
-      },
-      onExceed() {
-        this.$message('只能上传一张图片')
-      },
-      save() {
-        if (!this.form.title.length) {
-          this.showInfo('公告标题不能为空');
-          return;
-        }
-        if (!this.form.body.length) {
-          this.showInfo('公告内容不能为空');
-          return;
-        }
-
-        let files = this.$refs.upload.uploadFiles;
-        if (files.length) {
-          ossUpload(files[0].raw, (key) => {
-            this.form.thumbnailUrl = key;
-            this.submitForm();
-          });
-        }
-        else {
+      if (files.length) {
+        ossUpload(files[0].raw, key => {
+          this.form.thumbnailUrl = key;
           this.submitForm();
-        }
-      },
-      submitForm() {
-        this.loading = true;
-        let params = {};
-        params['noticeType'] = this.form.type;
-        params['communityId'] = this.$store.getters.communityId;
-        params['title'] = this.form.title;
-        params['body'] = this.form.body;
-        if (this.form.thumbnailUrl) {
-          params['thumbnailUrl'] = this.form.thumbnailUrl;
-        }
-        let url = 'property/notice/add';
-        if (this.isModify) {
-          url = 'property/notice/edit';
-          params['id'] = this.detail.id;
-        }
-        this.$xttp.post(url, params).then(res => {
-          this.loading = false;
-          if (res.errorCode === 0) {
-            this.formVisible = false;
-            this.$emit('saveSuccess');
-          }
-        }).catch(() => {
-          this.loading = false;
         });
+      } else {
+        this.submitForm();
       }
     },
-    props: ['visible', 'detail', 'isModify'],
-    created() {
-      if(this.isModify) {
-        this.form.title = this.detail.title;
-        this.form.type = this.detail.noticeType.toString();
-        this.form.thumbnailUrl = this.detail.thumbnailUrl;
-        this.form.body = this.detail.body;
+    submitForm() {
+      this.loading = true;
+      let params = {};
+      params["noticeType"] = this.form.type;
+      params["communityId"] = this.$store.getters.communityId;
+      params["title"] = this.form.title;
+      params["body"] = this.form.body;
+      if (this.form.thumbnailUrl) {
+        params["thumbnailUrl"] = this.form.thumbnailUrl;
+      }
+      let url = "property/notice/add";
+      if (this.isModify) {
+        url = "property/notice/edit";
+        params["id"] = this.detail.id;
+      }
+      this.$xttp.post(url, params).then(res => {
+        this.loading = false;
+        if (res.errorCode === 0) {
+          this.formVisible = false;
+          this.$emit('saveSuccess');
+        }
+      }).catch(() => {
+        this.loading = false;
+      });
+    }
+  },
+  props: ["visible", "detail", "isModify"],
+  created() {
+    if (this.isModify) {
+      this.form.title = this.detail.title;
+      this.form.type = this.detail.noticeType.toString();
+      this.form.thumbnailUrl = this.detail.thumbnailUrl;
+      this.form.body = this.detail.body;
+      if (this.detail.thumbnailUrl) {
+        getUri(this.detail.thumbnailUrl,(uri) => {
+          this.fileList2.push({name:'附件',url:uri});
+        });
       }
     }
   }
+};
 </script>
 
 <style scoped>
-  .el-upload {
-    width: 100px;
-    height: 100px;
-    line-height: 100px;
-  }
+.el-upload {
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+}
 </style>

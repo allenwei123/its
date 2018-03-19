@@ -43,7 +43,7 @@ export default {
   data() {
     return {
       formLabelWidth: "120px",
-      titleFont:'添加楼栋档案',
+      titleFont:'添加社区档案',
       form: {
         code: "",
         name: "",
@@ -56,7 +56,6 @@ export default {
         cityArr: [{type: 'array', required: true, message: '请输入地区', trigger: 'blur' }],
         address:[{required: true, message: '请输入详细地址', trigger: 'blur'} ]
       },
-      options:[],
       cityArr: [],
       current: 1 ,//1 初始 2：添加后 3：编辑后
       cityOptions:cityOptions
@@ -64,15 +63,11 @@ export default {
   },
   props: ["msg","add"],
   created() {
-    communityId().then(res => {
-      if(res.length){
-        this.options = res;
-      }
-    })
     if(this.add){//判断此时组件为 编辑
       this.cityArr = [this.add.province,this.add.city,this.add.district || '' ];
       this.form = this.add;
-      this.titleFont = '编辑楼栋档案';
+      this.form.cityArr = [this.add.province,this.add.city,this.add.district || '' ];
+      this.titleFont = '编辑社区档案';
     }
   },
   mounted() {},
@@ -97,9 +92,10 @@ export default {
         this.form.province = this.form.cityArr[0];
         this.form.city = this.form.cityArr[1];
         this.form.district = this.form.cityArr[2];
+        delete this.form.cityArr;
       }
       let msg = this.add ? '编辑' : '添加';
-      let uri = this.add ? '/community/building/edit' : '/community/building/add';
+      let uri = this.add ? '/community/edit' : '/community/add';
       this.$xttp
         .post( uri, this.form)
         .then(res => {

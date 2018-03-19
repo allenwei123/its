@@ -1,10 +1,10 @@
 <template>
       <el-dialog title="新增车辆" :visible.sync="msg" :before-close="handleClose">
-        <el-form :model="form" ref="ruleForm" class="demo-form-inline">
-            <el-form-item label="所在社区" :label-width="formLabelWidth" prop="communityId" class="c-must">
-              <el-input v-model="form.communityId">localStorage.getItem("communityId")</el-input>
+        <el-form :model="form" :rules="rules" ref="ruleForm" class="demo-form-inline">
+            <el-form-item v-if="show" label="所在社区" :label-width="formLabelWidth" prop="communityId" class="c-must">
+              <el-input v-model="form.communityId"></el-input>
             </el-form-item>
-            <el-form-item  label="用户ID：" :label-width="formLabelWidth" prop="userId" class="c-must">
+            <el-form-item v-if="show" label="用户ID：" :label-width="formLabelWidth" prop="userId" class="c-must">
               <el-input v-model="form.userId">JSON.parse(localStorage.getItem("userInfo")).id</el-input>
             </el-form-item>
             <el-form-item label="车牌号码：" :label-width="formLabelWidth" prop="communityId" class="c-must">
@@ -53,7 +53,7 @@ const typeOptions = [
   { key: '2', value: '长班' }
 ];
 export default {
-  name: "ClassAdd",
+  name: "CarAdd",
   data() {
     return {
       formLabelWidth: "120px",
@@ -67,15 +67,13 @@ export default {
         carColor: '',
         drivingPermit: '',
         drivingPermitPicUrl: null
-        // postCode: 'SECURITY',
-        // name: '',
-        // type: '1',
-        // attendTime: '',
-        // offTime: '',
-        // remark: '',
-        // communityId: '5a82adf3b06c97e0cd6c0f3d',
-        // propertyId : '5a82adee9ce976452b7001ee',
-        // userId: JSON.parse(localStorage.getItem("userInfo")).id
+      },
+      rules: {
+        carNo: [{required: true, message: '请输入车牌号', trigger: 'blur,change' }],
+        carType: [{ required: true, message: '请输入车型号', trigger: 'blur,change' }],
+        carColor: [{required: true, message: '请输入车颜色', trigger: 'blur,change' }],
+        drivingPermit: [{ required: true, message: '请输入驾驶证', trigger: 'blur,change' }],
+        drivingPermitPicUrl: [{ required: true, message: '请上传驾驶证照片', trigger: 'blur,change' }]
       },
       file: null,
       roleOptions: [],
@@ -83,16 +81,11 @@ export default {
       typeOptions: typeOptions
     };
   },
+  // props: ["msg"],
   props: ["msg","add"],
   created() {
-    // if(this.add){//判断此时组件为 编辑
-    //   this.form = this.add;
-    //   this.titleFont = '编辑员工';
-    // }
-    this.initRole()
   },
   mounted() {},
-  props: ['msg'],
   watch: {
     visible(val) {
       this.msg = val;
@@ -111,15 +104,6 @@ export default {
     onExceed() {
       this.$message('只能上传一张图片')
     },
-    // save(formName) {
-    //   this.$refs[formName].validate((valid) => {
-    //       if (valid) {
-    //         this.postData();
-    //       } else {
-    //         return false;
-    //       }
-    //     });
-    // },
     save () {
       if (!this.form.carNo.length) {
         this.showInfo('车牌号码不能为空')
@@ -141,6 +125,8 @@ export default {
       if (files.length) {
         ossUpload(files[0], (key) => {
           this.form.drivingPermitPicUrl = key;
+          console.log("ssss")
+          console.log(this.form.drivingPermitPicUrl);
           this.submitForm();
         });
       } else {
@@ -150,13 +136,13 @@ export default {
     submitForm() {
       this.loading = true;
       let params = {};
-      params['communityId'] = this.form.communityId;
+      params['communityId'] = this.$store.getters.communityId;
       params['userId'] = this.form.userId;
       params['carNo'] = this.form.carNo;
       params['carType'] = this.form.carType;
       params['carColor'] = this.form.carColor;
       params['drivingPermit'] = this.form.drivingPermit;
-      if (this.form.thumbnailUrl) {
+      if (this.form.drivingPermitPicUrl) {
           params['drivingPermitPicUrl'] = this.form.drivingPermitPicUrl;
       }
       let url = '/vehicle/applyCarNum'
@@ -164,57 +150,11 @@ export default {
         this.loading = false;
         if(res.errorCode === 0) {
           this.msg = false;
-          console.log(res);
-          // this.$emit('saveSuccess');
+          this.$emit('reload');
         }
       }).catch(() => {
         this.loading = false;
       });
-    },
-    find(){
-      var postCode = this.formInline.role;
-      let communityId = scheduleList[0].communityId
-      this.$xttp.get('/task/class/list',{params:{communityId:communityId,postCode:postCode,propertyId:'5a82adee9ce976452b7001ee'}})
-                .then(res => {
-                  if(!res.errorCode) {
-                    this.tableData = res.data
-                  }
-                  this.loading = false;
-                }).catch(err =>{
-                  this.loading = false;
-                })
-      
-    },
-    postData() {
-      let uri = 'vehicle/applyCarNum';
-      // let uri = this.add ? '/community/edit' : '/task/class/add';
-      console.log(this.form)
-      return;
-      this.$xttp
-        .post( uri, this.form)
-        .then(res => {
-          if (res.errorCode === 0) {
-            this.$message({
-              message: "绑定车辆成功",
-              type: "success"
-            });
-            // this.current =  2;
-            this.handleClose();
-          }else {
-            this.$message({message:res.data.errorMsg,type:'error'});
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
-    initRole(){
-      let communityId = scheduleList[0].communityId
-      this.$xttp.get(`/user/property/${communityId}/post-list`).then(res => {
-        if(!res.errorCode) {
-          this.roleOptions = res.data;
-        }
-      })
     }
   }
 };
