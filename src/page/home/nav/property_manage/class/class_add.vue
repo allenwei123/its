@@ -7,7 +7,7 @@
             <el-form-item v-if="show" label="物业ID:" :label-width="formLabelWidth" prop="propertyId" class="c-must">
               <el-input v-model="form.propertyId"></el-input>
             </el-form-item>
-            <el-form-item label="岗位：" :label-width="formLabelWidth" prop="postCode" class="c-must">
+            <el-form-item label="角色：" :label-width="formLabelWidth" prop="postCode" class="c-must">
               <el-select v-model="form.postCode" placeholder="roleOptions">
                 <!-- <el-option v-for="item in roleOptions" :key="item.key" :label="item.name" :value="item.value"></el-option> -->
                 <el-option v-for="item in roleOptions" :key="item.key" :label="item.name" :value="item.key"></el-option>

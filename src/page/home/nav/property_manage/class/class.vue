@@ -6,8 +6,8 @@
         </ul>
         <div class="c-search">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
-            <el-form-item label="岗位">
-              <el-select v-model="formInline.role" placeholder="岗位">
+            <el-form-item label="角色">
+              <el-select v-model="formInline.role" placeholder="角色">
                 <el-option v-for="item in roleOptions" :key="item.key" :label="item.name" :value="item.key">
                 </el-option>
               </el-select>
@@ -23,7 +23,7 @@
       <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." border highlight-current-row ref="multipleTable" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60"> </el-table-column>
         <el-table-column label="ID" type="id" align="center" prop="id" v-if="show"></el-table-column>
-        <el-table-column label="岗位" min-width="200" align="center" :show-overflow-tooltip="true">
+        <el-table-column label="角色" min-width="200" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.postCode | postCode}}</template>
         </el-table-column>
         <el-table-column prop="name" label="班次" align="center"  width="150"> </el-table-column>
