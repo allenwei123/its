@@ -12,19 +12,14 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/v1':{
-        // target:'http://39.106.249.8:9000/v1',
-        target:'http://apismcm.test.bitiot.com.cn',
-        // target:'http://192.168.10.145:9020',
+        target:'http://192.168.10.151:9000',
         changeOrigin:true
-        // pathRewrite:{
-        //   "^/api": ""
-        // }
       }
     },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
-    port: 8070, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    port: 8081, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,

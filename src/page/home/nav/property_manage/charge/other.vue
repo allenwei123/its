@@ -93,8 +93,7 @@
 <script>
 import AddPage from "./add";
 import SeePage from "./see";
-import { mapGetters } from "vuex";
-
+var a = 3423;
 export default {
   name: "other",
   data() {
@@ -117,10 +116,11 @@ export default {
       see:false,//控制查看组件弹出
       seeData:null,//查看数据
       visible2:false,//控制删除框
-      delData:null
+      delData:null,
     };
   },
-  computed: mapGetters(["showAside"]),
+  computed: {
+  },
   components: {
     AddPage,
     SeePage
@@ -131,7 +131,9 @@ export default {
       this.isShow = !this.isShow;
     },
     handleCurrentChange(val) {
-      this.sendAjax(val);
+      if(this.currentPage !== val){
+        this.sendAjax(val); 
+      };
     },
     handleClick(row) {
       //查看
@@ -155,7 +157,7 @@ export default {
       this.see = false;
     },
     find(){
-      this.sendAjax(null,this.formInline.name);
+      this.sendAjax(1);
     },
     delHandle(row) {
       this.visible2 = true;
@@ -174,10 +176,10 @@ export default {
         })
       }
     },
-    sendAjax(page,name) {
+    sendAjax(page) {
       let nPage = page || this.$route.query.page || 1;
       let obj = {page:nPage}
-      if(name){
+      if(this.formInline.name){
         obj.name = this.formInline.name;
       }else {
         delete obj.name ;

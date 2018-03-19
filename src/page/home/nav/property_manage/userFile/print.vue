@@ -1,6 +1,6 @@
 <template>
   <div class="content c-bigDialog">
-    <el-dialog :title="titleFont" :visible.sync="msg" :before-close="handleClose">
+    <el-dialog :title="titleFont" :visible.sync="isShow" :before-close="handleClose">
       <div class="c-dBody printOrder-data">
         <p>尊敬的业主:</p>
         <p class="c-t-indent">为了更好的提供优质的服务，办理入住时请携带您的相关资料填写业主概况表，我们将为您提供全面、细致、高效服务，谢谢您的配合！</p>
@@ -121,7 +121,7 @@
         </div>
       </div>
       <div slot="footer" class="dialog-footer">
-          <el-button @click="msg = false">取 消</el-button>
+          <el-button @click="handleClose">取 消</el-button>
           <el-button type="primary" @click="save">打印</el-button>
       </div>
     </el-dialog>
@@ -133,10 +133,10 @@ export default {
   name: "print",
   data() {
     return {
-      titleFont: "打印内容"
+      titleFont: "打印内容",
+      isShow:this.msg
     };
   },
-  components: {},
   created() {
     this.data.inhabitantList.forEach(item => {
         switch(item.relationship) {
@@ -153,9 +153,9 @@ export default {
     });
   },
   props: ["data","msg"],
-  mounted: () => {},
   methods: {
     handleClose() {
+      this.isShow = false;
       this.$emit("upup", false );
     },
     save() {

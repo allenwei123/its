@@ -7,9 +7,11 @@
         <div class="c-search">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
              
-            <el-form-item>
-              <el-input v-model="formInline.keyType" placeholder="卡片类型"></el-input>
-            </el-form-item>
+             <el-form-item>
+               <el-select v-model="formInline.keyType">
+                 <el-option v-for="item in cardList" :key="item.id" :value="item.id" :label="item.name"></el-option>
+               </el-select>
+             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
             </el-form-item>
@@ -18,47 +20,49 @@
         </div>
       </div>
       
-      <el-table
-        class="c-table"
-        :data="tableData"
-        v-loading="loading"
-        element-loading-text="加载中..."
-        border
-        highlight-current-row 
-        ref="multipleTable"
-        style="width: 100%">
-        <el-table-column
-          label="序号"
-          type="index"
-          width="50">
+      <el-table :data="tableData" style="width: 100%" v-loading="loading">
+        <el-table-column label="序号" width="50" :show-overflow-tooltip="true" align="center">
+          <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
         </el-table-column>
-        <el-table-column
-          prop="name"
-          align="center"
-          label="楼栋名称">
+        <el-table-column label="卡号" :show-overflow-tooltip="true" width="130" align="center">
+          <template slot-scope="scope">{{ scope.row.keyNo }}</template>
         </el-table-column>
-        <el-table-column
-          prop="code"
-          align="center"
-          label="楼栋编号">
+
+        <el-table-column label="卡片类型" :show-overflow-tooltip="true" align="center">
+          <template slot-scope="scope">{{scope.row.keyType | card }}</template>
         </el-table-column>
-        <el-table-column
-          align="center"
-          prop="time1"
-          label="创建时间">
+
+        <el-table-column label="用户" :show-overflow-tooltip="true" align="center" width="100">
+          <template slot-scope="scope">{{scope.row.name }}</template>
         </el-table-column>
-        <el-table-column
-          align="center"
-          fixed="right"
-          label="操作"
-          width="220">
+
+        <el-table-column label="手机号码" :show-overflow-tooltip="true" align="center">
+          <template slot-scope="scope">{{scope.row.phone }}</template>
+        </el-table-column>
+
+        <el-table-column label="住房信息" :show-overflow-tooltip="true" align="center"  width="200">
+          <template slot-scope="scope">{{scope.row.roomName }}</template>
+        </el-table-column>
+
+        <el-table-column label="录入时间" :show-overflow-tooltip="true" align="center"  width="170">
+          <template slot-scope="scope">{{scope.row.startDate | time }}</template>
+        </el-table-column>
+
+        <el-table-column label="截止时间" :show-overflow-tooltip="true" align="center"  width="170">
+          <template slot-scope="scope">{{scope.row.endDate | time }}</template>
+        </el-table-column>
+
+        <el-table-column label="状态" :show-overflow-tooltip="true" align="center">
+          <template slot-scope="scope">{{scope.row.status }}</template>
+        </el-table-column>
+      
+        <el-table-column label="操作" width="80" fixed="right">
           <template slot-scope="scope">
             <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button>
-            <el-button @click="editHandle(scope.row)" type="warning" size="small">编辑</el-button>
-            <el-button @click="delHandle(scope.row)" type="danger" size="small">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
+      
       <div class="c-block">
         <el-pagination
           @current-change="handleCurrentChange"
@@ -74,13 +78,6 @@
       <transition name="fade">
         <SeePage v-if="see" :msg="see" @upsee="seeChange"  :data="seeData"></SeePage>
       </transition>
-      <el-dialog title="温馨提示" :visible.sync="visible2">
-          <p>请问您是否确定删除这条数据吗？</p>
-          <div style="text-align: right; margin: 0">
-            <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
-            <el-button type="primary" size="mini" @click="confirmDel">确定</el-button>
-          </div>
-      </el-dialog>
     </el-main>
 </template>
 
@@ -88,7 +85,6 @@
 import axios from "axios";
 import AddPage from "./add";
 import SeePage from "./see";
-import { communityId } from '@/biz/community';
 
 export default {
   name: "onePass",
@@ -100,9 +96,11 @@ export default {
         { id: 1, name: "一卡通管理" },
         { id: 2, name: "一卡通档案" }
       ],
+      cardList:[ {name:'手机蓝牙',id:1},{name:'蓝牙卡',id:2},{name:'IC卡',id:4},{name:'临时通行',id:8} ],
       formInline: {
         keyType: ""
       },
+      pageSize: 10,
       currentPage: 1,
       loading: false,
       isShow: false, //控制添加页面弹出
@@ -120,25 +118,18 @@ export default {
   },
   methods: {
     onSubmit() {//添加按钮
-      this.notice = null;
-      this.isShow = !this.isShow;
+      // this.notice = null;
+      // this.isShow = !this.isShow;
     },
     handleCurrentChange(val) {
-      this.sendAjax(val);
+      if(this.currentPage !== val ) {
+        this.sendAjax(val);
+      }
     },
     handleClick(row) {
       //查看
       this.see = true;
       this.seeData = row;
-    },
-    editHandle(row) {
-      //编辑
-      this.isShow = true;
-      this.notice = row;
-    },
-    delHandle(row) {
-      this.visible2 = true;
-      this.delData = row; 
     },
     confirmDel(){
       if(this.delData.id){
@@ -164,15 +155,15 @@ export default {
       this.see = false;
     },
     find(){
-      this.sendAjax(null,this.formInline.select,this.formInline.name);
+      this.sendAjax(1, this.formInline.keyType);
     },
-    sendAjax(page,name) {
+    sendAjax(page,keyType) {
       let nPage = page || this.$route.query.page || 1;
-      let obj = {page:nPage,communityId:this.$store.getters.communityId}
-      if(name){
-        obj.name = this.formInline.name;
+      let obj = {page:nPage,communityId:this.$store.getters.communityId,userId:'5a82a45e9ce93e30677c3f9e'}
+      if(keyType){
+        obj.keyType = this.formInline.keyType;
       }else {
-        delete obj.name ;
+        delete obj.keyType ;
       }
       this.loading = true;
       this.$xttp.post("/user/card/get/list",obj)
@@ -182,8 +173,14 @@ export default {
           this.currentPage = res.data.currentPage;
           this.total = res.data.total;
           this.tableData.forEach(item => {
-            if (item.createAt) {
-              item.time1 = new Date(item.createAt)
+            if (item.startDate) {
+              item.time1 = new Date(item.startDate)//开始时间
+                .toISOString()
+                .split(".")[0]
+                .replace("T", " ");
+            }
+            if (item.endDate) {
+              item.time2 = new Date(item.endDate)//过期时间
                 .toISOString()
                 .split(".")[0]
                 .replace("T", " ");

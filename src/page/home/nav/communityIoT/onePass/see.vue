@@ -1,9 +1,11 @@
 <template>
-    <el-dialog title="社区档案详情" :visible.sync="msg" :before-close="handleClose">
+    <el-dialog title="卡片详情" :visible.sync="msg" :before-close="handleClose">
         <ul>
-            <li class="c-list"><span class="c-label">楼栋名称:</span> <span class="c-content"> {{ data.name }} </span></li>
-            <li class="c-list"><span class="c-label">楼栋编号:</span> <span class="c-content"> {{ data.code }} </span></li>
-            <li class="c-list"><span class="c-label">创建时间:</span> <span class="c-content"> {{ data.createAt | time }} </span></li>
+            <li class="c-list"><span class="c-label">卡编号:</span> <span class="c-content"> {{ data.keyNo }} </span></li>
+            <li class="c-list"><span class="c-label">用户名:</span> <span class="c-content"> {{ data.name }} </span></li>
+            <li class="c-list"><span class="c-label">卡片类型:</span> <span class="c-content"> {{ data.keyType | card }} </span></li>
+            <li class="c-list"><span class="c-label">社区名称:</span> <span class="c-content"> {{ $store.getters.communityName }} </span></li>
+            <li class="c-list"><span class="c-label">住房信息:</span> <span class="c-content"> {{ data.roomName }} </span></li>
         </ul>  
     </el-dialog>
 </template>

@@ -19,7 +19,7 @@
       <!--nav 导航模块-->
       <div class="c-top_bar_area">
         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-          <el-menu-item index="6" >首页</el-menu-item>
+          <el-menu-item index="6" ><router-link to="/home/nav/main">首页</router-link></el-menu-item>
           <el-menu-item index="0" ><router-link to="/home/nav/side/communityFile">物业管理</router-link></el-menu-item>
           <el-menu-item index="1" ><router-link to="/home/nav/propertyService/rpass">物业服务</router-link></el-menu-item>
           <el-menu-item index="2" ><router-link to="/home/nav/communityIoT">社区物联</router-link></el-menu-item>
@@ -54,7 +54,6 @@ import { mapGetters } from "vuex";
     created() {
       let arr = ['side','propertyService','communityIoT'];
       let currentIndex = arr.indexOf(this.$route.path.split('/')[3])>= 0 ? arr.indexOf(this.$route.path.split('/')[3]) : 0;
-      this.$store.dispatch('changeAsideData',currentIndex);
       this.activeIndex = currentIndex.toString();
     },
     methods: {
@@ -69,7 +68,13 @@ import { mapGetters } from "vuex";
       handleCommand(command) {
         this.$store.dispatch('addCommunityId',command);
         this.changeIdToName(command);
-        window.location.reload();
+        const loading = this.$loading({
+          lock: true,
+          text: '正在加载',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
+        this.$store.dispatch('updatedAsideData').then(()=> {loading.close()});
       },
       changeIdToName(id) {
         this.communityList.forEach(item => {
@@ -93,7 +98,7 @@ import { mapGetters } from "vuex";
     background: $headerBg;
     .c-logo {
       float: left;
-      width:148px;
+      width:168px;
       margin-top: 10px;
       margin-left: 20px;
       color:$fontColor;
@@ -102,7 +107,9 @@ import { mapGetters } from "vuex";
       color: #fff;
     }
     .c-navgator {
-      float: right;
+      position: absolute;
+      right: 0px;
+      z-index: 100;
       font-size: 14px;
       li {
         float: left;

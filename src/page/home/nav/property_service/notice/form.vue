@@ -106,6 +106,7 @@
         }
 
         let files = this.$refs.upload.uploadFiles;
+
         if (files.length) {
           ossUpload(files[0].raw, (key) => {
             this.form.thumbnailUrl = key;
@@ -131,15 +132,15 @@
           url = 'property/notice/edit';
           params['id'] = this.detail.id;
         }
-        this.$xttp.post(url, params).then(res => {
-          this.loading = false;
-          if (res.errorCode === 0) {
-            this.formVisible = false;
-            this.$emit('saveSuccess');
-          }
-        }).catch(() => {
-          this.loading = false;
-        });
+        // this.$xttp.post(url, params).then(res => {
+        //   this.loading = false;
+        //   if (res.errorCode === 0) {
+        //     this.formVisible = false;
+        //     this.$emit('saveSuccess');
+        //   }
+        // }).catch(() => {
+        //   this.loading = false;
+        // });
       }
     },
     props: ['visible', 'detail', 'isModify'],

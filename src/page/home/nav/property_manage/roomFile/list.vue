@@ -146,7 +146,9 @@ export default {
       this.isShow = !this.isShow;
     },
     handleCurrentChange(val) {
-      this.sendAjax(val,this.formInline.floorSer,this.formInline.name);
+      if(this.currentPage !== val){
+        this.sendAjax(val,this.formInline.floorSer,this.formInline.name); 
+      };
     },
     handleClick(row) {
       //查看
@@ -157,9 +159,6 @@ export default {
       //编辑
       this.isShow = true;
       this.notice = row;
-    },
-    delHandle(row) {
-      
     },
     selectCommunity(num){
       let obj = { communityId:this.$store.getters.communityId };

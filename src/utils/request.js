@@ -3,7 +3,8 @@ import store from '@/store';
 import { Message } from 'element-ui'
 let service = axios.create({
   baseURL: 'http://apismcm.test.bitiot.com.cn/v1', // api的base_url
-  timeout: 15000 // request timeout
+  // baseURL:'http://192.168.10.151:9000/v1',
+  timeout: 5000 // request timeout
 });
 
 service.interceptors.request.use(config => {

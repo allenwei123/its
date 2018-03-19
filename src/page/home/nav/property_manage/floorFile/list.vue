@@ -125,7 +125,9 @@ export default {
       this.isShow = !this.isShow;
     },
     handleCurrentChange(val) {
-      this.sendAjax(val);
+      if(this.currentPage !== val){
+        this.sendAjax(val); 
+      };
     },
     handleClick(row) {
       //查看
@@ -158,6 +160,7 @@ export default {
       if(msg == 1) {
         this.isShow = false;
       }else if(msg == 2 || msg == 3) {
+        this.sendAjax();
         this.isShow = false;
       }
     },
@@ -165,12 +168,12 @@ export default {
       this.see = false;
     },
     find(){
-      this.sendAjax(null,this.formInline.select,this.formInline.name);
+      this.sendAjax(1);
     },
-    sendAjax(page,name) {
+    sendAjax(page) {
       let nPage = page || this.$route.query.page || 1;
       let obj = {page:nPage,communityId:this.$store.getters.communityId};
-      if(name){
+      if(this.formInline.name){
         obj.name = this.formInline.name;
       }else {
         delete obj.name ;
@@ -190,7 +193,7 @@ export default {
                 .replace("T", " ");
             }
           });
-          this.$router.push({path:this.$route.path,query:{page: nPage }})
+          // this.$router.push({path:this.$route.path,query:{page: nPage }})
         }
         this.loading = false;
       }).catch(err => {
@@ -200,13 +203,6 @@ export default {
   },
   created() {
     this.sendAjax();
-    // communityId().then(res => {
-    //   if(res.length){
-    //     this.options = res;
-    //     this.formInline.select = this.options[0].id;
-    //     this.sendAjax(1, this.options[0].id);
-    //   }
-    // })
   },
   mounted() {}
 };

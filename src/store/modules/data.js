@@ -1,5 +1,6 @@
 import obj1 from '@/mock/mok.json'
 import aside from '@/mock/menuList';
+import http from '@/utils/request';
 
 function a() {
   let arr = arguments[0];
@@ -26,23 +27,34 @@ function a() {
 export default {
     state: {
       asideData: aside[0].group,
-      communityId: localStorage["communityId"],
+      allAside:[],
+      communityId: localStorage["communityId"] ,
       communityList: localStorage["communityList"] ? JSON.parse(localStorage["communityList"]) : null
     },
     mutations: {
-      CHANGE_ASIDEDATA: (state, newToken) => {
-        state.asideData = newToken
+      CHANGE_ASIDEDATA: (state, newValue) => {
+        state.asideData = newValue
       },
       ADDCOMMUNITYID: (state, newValue) => {
         state.communityId = newValue;
       },
       CGCOMMUNITYLIST: (state, newValue) => {
         state.communityList = newValue;
+      },
+      UPDATEDASIDEDATA: (state, newValue ) => {
+        state.allAside = newValue;
+        if(newValue){
+          state.asideData = newValue[0].group;
+        }else {
+          state.asideData = [];
+        }
       }
     },
     actions: {
       changeAsideData({commit,state}, value) {
-        commit('CHANGE_ASIDEDATA',aside[value].group)
+        if(value > -1){
+          commit('CHANGE_ASIDEDATA',state.allAside[value].group)
+        }
       },
       addCommunityId({ commit }, value) {
         if(value) {
@@ -61,6 +73,18 @@ export default {
           localStorage.removeItem('communityList');
         }
         commit('CGCOMMUNITYLIST',value )
+      },
+      updatedAsideData( { commit ,state }) {
+        return new Promise((resolve, reject) => {
+          http.get(`/sys/menu/${state.communityId}/getByOuterKey`)
+            .then(res => {
+              let menuList =res.data?a(aside,res.data.spread.split('')) : null;
+              commit('UPDATEDASIDEDATA', menuList);
+              resolve({msg:'success'})
+            }).catch(err => {
+              reject(err)
+            })
+        } )
       }
     }
   }

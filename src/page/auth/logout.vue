@@ -17,7 +17,6 @@
         text: '正在退出'
       });
       this.$xttp.get('user/signOut').then((res) => {
-        console.log(res);
         this.$store.dispatch('changeToken', null);
         loadingInstance.close();
         this.$router.push('/auth/login');

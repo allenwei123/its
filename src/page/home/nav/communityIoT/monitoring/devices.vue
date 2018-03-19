@@ -26,67 +26,34 @@
         </div>
       </div>
       
-      <el-table
-        class="c-table"
-        :data="tableData"
-        v-loading="loading"
-        element-loading-text="加载中..."
-        border
-        highlight-current-row 
-        ref="multipleTable"
-        style="width: 100%">
-        <el-table-column
-          label="序号"
-          type="index"
-          width="50">
+      <el-table :data="tableData" style="width: 100%" v-loading="loading">
+        <el-table-column label="序号" width="50" :show-overflow-tooltip="true" align="center">
+          <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
         </el-table-column>
-        <el-table-column
-          prop="name"
-          align="center"
-          label="设备名称">
+        <el-table-column label="监控录像" :show-overflow-tooltip="true" width="130" align="center">
+          <template slot-scope="scope">{{ scope.row.keyNo }}</template>
         </el-table-column>
-        <el-table-column
-          prop="as"
-          align="center"
-          label="id">
+
+        <el-table-column label="开始时间" :show-overflow-tooltip="true" align="center">
+          <template slot-scope="scope">{{scope.row.startTime | time }}</template>
         </el-table-column>
-        <el-table-column
-          align="center"
-          prop="address"
-          label="小区名称"
-          width="200">
+
+        <el-table-column label="结束时间" :show-overflow-tooltip="true" align="center">
+          <template slot-scope="scope">{{ scope.row.startTime | time }}</template>
         </el-table-column>
-        <el-table-column
-          align="center"
-          prop="time1"
-          label="所属分组">
+
+        <el-table-column label="监控时长" :show-overflow-tooltip="true" align="center">
+          <template slot-scope="scope">{{ scope.row.startTime }}</template>
         </el-table-column>
-        <el-table-column
-          align="center"
-          prop="time1"
-          label="设备厂商">
-        </el-table-column>
-        <el-table-column
-          align="center"
-          prop="time1"
-          label="型号">
-        </el-table-column>
-        <el-table-column
-          align="center"
-          prop="time1"
-          label="运行状态">
-        </el-table-column>
-        <el-table-column
-          align="center"
-          fixed="right"
-          label="操作"
-          width="150">
+
+      
+        <el-table-column label="操作" width="80" fixed="right">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button>
-            <el-button @click="editHandle(scope.row)" type="warning" size="small">编辑</el-button>
+            <el-button @click="handleClick(scope.row)" type="primary" size="small">播放录像</el-button>
           </template>
         </el-table-column>
       </el-table>
+      
       <div class="c-block">
         <el-pagination
           @current-change="handleCurrentChange"
@@ -100,7 +67,6 @@
 </template>
 
 <script>
-import { communityId } from '@/biz/community';
 
 export default {
   name: "other",
@@ -127,7 +93,9 @@ export default {
   components: {},
   methods: {
     handleCurrentChange(val) {
-      this.sendAjax(val);
+      if(this.currentPage !== val) {
+        this.sendAjax(val);
+      }
     },
     handleClick(row) {
       //查看
@@ -156,12 +124,8 @@ export default {
     },
     sendAjax(page,name) {
       let nPage = page || this.$route.query.page || 1;
-      let obj = {page:nPage};
-      if(communityId){
-        obj.communityId = this.formInline.select;
-      }else {
-        delete obj.communityId ;
-      }
+      let obj = {page:nPage,communityId:this.$store.getters.communityId };
+
       this.loading = true;
       this.$xttp.post("/communityIoT/camera/auth/page",obj)
       .then(res => {
@@ -178,13 +142,7 @@ export default {
     }
   },
   created() {
-    communityId().then(res => {
-      if(res.length){
-        this.options = res;
-        this.formInline.select = this.options[0].id;
-        this.sendAjax(1, this.options[0].id);
-      }
-    })
+     this.sendAjax(1);
   },
   mounted() {
   }

@@ -113,3 +113,23 @@ Vue.filter('digitUppercase', function (n) {
     .replace(/(零.)+/g, '零')
     .replace(/^整$/, '零元整');
 });
+
+  Vue.filter('card', function(value) {
+    if (!value) return ''
+    let newValue = '';
+    switch(value) {
+      case 1:
+        newValue = '手机蓝牙';
+        break;
+      case 2:
+        newValue = '蓝牙卡';
+        break;
+      case 4:
+        newValue = 'IC卡';
+        break;
+      case 8:
+        newValue = '临时通行';
+        break;
+    }
+    return newValue;
+  })
