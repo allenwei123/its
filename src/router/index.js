@@ -76,6 +76,10 @@ const router = new Router({
                 path: 'bill',
                 component: (resolve) => require(["@/page/home/nav/property_manage/bill/list"], resolve)
               },
+              {
+                path: 'slideshow',
+                component: (resolve) => require(["@/page/home/nav/property_manage/slideshow/list"], resolve)
+              }
             ]
           },
           // 物业服务
