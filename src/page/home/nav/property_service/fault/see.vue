@@ -1,23 +1,23 @@
 <template>
     <el-dialog title="故障详情" :visible.sync="msg" :before-close="handleClose">
         <el-form :model="data" label-width="120px">
-            <el-form-item label="申报人" label-width="120px" prop="userName" required>
-                <el-input v-model="data.userName" auto-complete="off"></el-input>
+            <el-form-item label="申报人名" label-width="120px" prop="userName" required>
+                <span>{{data.userName}}</span>
             </el-form-item>
             <el-form-item label="联系方式" label-width="120px" required>
-                <el-input v-model="data.contact" auto-complete="off"></el-input>
+                <span>{{data.contact}}</span>
             </el-form-item>
             <el-form-item label="申报时间" label-width="120px" required>
-                <el-input v-model="time" auto-complete="off"></el-input>
+                <span>{{time}}</span>
             </el-form-item>
             <el-form-item label="申报类型" label-width="120px" required>
-                <el-input v-model="faultType" auto-complete="off"></el-input>
+                <span>{{faultType}}</span>
             </el-form-item>
             <el-form-item label="申报地址" label-width="120px" required>
-                <el-input v-model="data.faultAddress" auto-complete="off"></el-input>
+                <span>{{data.faultAddress}}</span>
             </el-form-item>
             <el-form-item label="故障描述" label-width="120px" required>
-                <el-input v-model="data.faultContent" auto-complete="off"></el-input>
+                <span>{{data.faultContent}}</span>
                 <template>
                     <el-upload
                         ref="upload"
@@ -32,22 +32,50 @@
                 </template>
             </el-form-item>
             <el-form-item label="故障状态" label-width="120px" required>
-                <el-select v-model="faultStatus" placeholder="故障状态">
-                    <el-option label="待受理" value="1"></el-option>
-                    <el-option label="待分派" value="2"></el-option>
-                    <el-option label="待检修" value="3"></el-option>
-                    <el-option label="待评价" value="4"></el-option>
-                    <el-option label="已完成" value="5"></el-option>
-                    <el-option label="已取消" value="6"></el-option>
-                    <el-option label="被驳回" value="7"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="驳回原因" required>
-                <el-input type="textarea" v-model="data.rejectReason" :rows="5"></el-input>
+                <span>{{faultStatus}}</span>
             </el-form-item>
 
+            <template v-if="faultStatus === '已指派' || faultStatus === '已完成' || faultStatus === '待评价'">
+                <el-form-item label="维修人员" label-width="120px" required>
+                    <span>{{data.repairName}}</span>
+                </el-form-item>
+                <el-form-item label="维修联系方式" label-width="120px" required>
+                    <span>{{data.repairContact}}</span>
+                </el-form-item>
+                <el-form-item label="受理时间" label-width="120px" required>
+                    <span>{{acceptTime}}</span>
+                </el-form-item>
+            </template>
+
+            <template v-if="faultStatus === '已驳回'">
+                <el-form-item label="驳回理由" label-width="120px" required>
+                    <span>{{data.rejectReason}}</span>
+                </el-form-item>
+                <el-form-item label="驳回时间" label-width="120px" required>
+                    <span>{{rejectTime}}</span>
+                </el-form-item>
+            </template>
+
+            <template v-if="faultStatus === '待评价'">
+                <!--后台没有完成时间 -->
+                <!-- <el-form-item label="完成时间" label-width="120px" required>
+                    <span>{{rejectTime}}</span>
+                </el-form-item> -->
+            </template>
+
+            <template v-if="faultStatus === '已完成'">
+                <!-- <el-form-item label="完成时间" label-width="120px" required>
+                    <span>{{data.rejectReason}}</span>
+                </el-form-item> -->
+                <el-form-item label="评价等级" label-width="120px" required>
+                    <span>{{data.evaluationGrade}}</span>
+                </el-form-item>
+                <el-form-item label="服务评价" label-width="120px" required>
+                    <span>{{data.evaluation}}</span>
+                </el-form-item>
+            </template>
         </el-form>
-        <div slot="footer" class="dialog-footer">
+        <div slot="footer" class="dialog-footer" v-if="faultStatus === '已提交'">
             <el-button type="primary" @click="accept">受理故障</el-button>
             <el-button @click="del">驳回申报</el-button>
         </div>
@@ -62,6 +90,8 @@
                 time: '',
                 faultType: '',
                 faultStatus: '',
+                acceptTime: '',
+                rejectTime: '',
             }
         },
         methods:{
@@ -84,11 +114,14 @@
         },
         props: ["msg","data"],
         created() {
+            console.log(11,this.data);
             let that = this.data;
             this.time = this.getTime(that.playTime, 'yyyy-MM-dd hh:mm'); 
+            this.acceptTime = this.getTime(that.acceptTime, 'yyyy-MM-dd hh:mm'); 
+            this.rejectTime = this.getTime(that.rejectTime, 'yyyy-MM-dd hh:mm'); 
             this.faultType = that.faultType == 1 ? '住户' : that.faultType == 2 ? '公共' : '其它';
-            this.faultStatus = that.faultStatus == 0 ? '已取消' : that.faultStatus == 1 ? '待接受' : 
-            that.faultStatus == 2 ? '待分派' : that.faultStatus == 3 ? '待检修' : that.faultStatus == 4 ? '已完成' : '已驳回'
+            this.faultStatus = that.faultStatus == 0 ? '已取消' : that.faultStatus == 1 ? '已提交' : 
+            that.faultStatus == 2 ? '已受理' : that.faultStatus == 3 ? '已指派' : that.faultStatus == 4 ? '已完成' : '已驳回'
             console.log(34,this.data);
         }
 

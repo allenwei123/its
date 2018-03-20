@@ -21,8 +21,8 @@
             <el-table-column prop="id" label="编号" width="80">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column prop="faultType" label="故障类型" width="80">
-              <template slot-scope="scope">{{scope.row.faultType=== 1 ? '住户' : scope.row.faultType === 2 ? '公共' : '其它' }}</template>
+            <el-table-column prop="faultType" label="故障类型" min-width="80">
+              <template slot-scope="scope">{{scope.row.faultType=== 1 ? '住户' : scope.row.faultType === 2 ? '公共' : '其它' }}-{{getfaultItem(scope.row.faultItem)}}</template>
             </el-table-column>
             <el-table-column prop="userName" label="申报人" width="120">
             </el-table-column>
@@ -46,23 +46,13 @@
                 <!-- 已提交 待受理-->
                 <template v-if="scope.row.faultStatus === 1">
                   <el-button type="primary" size="mini" @click="receive(scope.row)">受理故障</el-button>
-                  <el-button type="danger" size="small" @click="rejectAccept(scope.row)">驳回申报</el-button>
+                  <el-button type="danger" size="small" @click="reject(scope.row)">驳回申请</el-button>
                 </template>
 
                 <!-- 已受理 待分派-->
                 <template v-if="scope.row.faultStatus === 2">
-                  <el-button type="primary" size="mini" @click="assign(scope.row)">指派人员</el-button>
-                  <el-button type="primary" size="mini" @click="assign(scope.row)">专业维修</el-button>
+                  <el-button type="primary" size="mini" @click="assignHandle(scope.row)">指派人员</el-button>
                 </template>
-
-                <!-- 已分派 待检修-->
-                <template v-if="scope.row.faultStatus === 3">
-                  <el-button type="primary" size="mini" @click="assign(scope.row)">检修完成</el-button>
-                </template>
-
-                <!-- <el-button type="primary" size="small" @click="faultAccept(scope.row)">受理故障</el-button>
-                <el-button type="primary" size="small" @click="rejectAccept(scope.row)">驳回申报</el-button>
-                <el-button type="primary" size="small" @click="assign(scope.row)">分配人员</el-button> -->
               </template>
             </el-table-column>
           </el-table>
@@ -81,13 +71,12 @@
       </transition>
       <!-- 查看详情 -->
       <transition name="fade">
-        <SeePage v-if="see" :msg="see" @upsee="seeChange"  :data="seeData" @accept="faultAccept(seeData)" @del="rejectAccept(seeData)"></SeePage>
+        <SeePage v-if="see" :msg="see" @upsee="seeChange"  :data="seeData" @accept="receive(seeData)" @del="reject(seeData)"></SeePage>
       </transition>
       <!-- 分配人员 -->
-      <transition name = "fade">
+      <!-- <transition name = "fade">
         <AssignPage v-if="showAssign" :msg="showAssign" @upsee="assignChange" :data="assignData" @assignSuccess="assign(assignData)"></AssignPage>
-      </transition>
-
+      </transition> -->
       <el-dialog title="温馨提示" :visible.sync="visible2">
           <p>请问您确定提交吗？</p>
           <div style="text-align: right; margin: 0">
@@ -97,10 +86,19 @@
       </el-dialog>
 
       <el-dialog title="温馨提示" :visible.sync="visible3">
-          <p>请问您是否确定删除这条数据吗？</p>
+          <p>驳回理由 :</p>
+          <el-input type="textarea" v-model.trim="tableData.faultContent" :rows="5"></el-input>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="visible3 = false">取消</el-button>
-              <el-button type="primary" size="mini" @click="confirm">确定</el-button>
+            <el-button type="primary" size="mini" @click="confirmReject">确定</el-button>
+          </div>
+      </el-dialog>
+
+      <el-dialog title="温馨提示" :visible.sync="visible1">
+          <p>指派员工 :</p><span>{{repairName}}</span>
+          <div style="text-align: right; margin: 0">
+            <el-button size="mini" type="text" @click="visible1 = false">取消</el-button>
+            <el-button type="primary" size="mini" @click="assignStaff">确定</el-button>
           </div>
       </el-dialog>
     </el-main>
@@ -115,13 +113,13 @@
   //查看详情
   import SeePage from "./see";
   //分配人员
-  import AssignPage from "./assign.vue";
+  // import AssignPage from "./assign.vue";
   export default {
     name: 'fault',
     components: {
       AddPage,
       SeePage,
-      AssignPage,
+      // AssignPage,
     },
     data () {
       return {
@@ -147,6 +145,8 @@
         confirmData: '',
         visible1: false,
         confirmAssign: '',
+        confirmRejectData: '',
+        repairName: '',
       }
     },
     methods: {
@@ -168,9 +168,9 @@
         this.see = false;
 
       },
-      assignChange(msg) {
-        this.showAssign = false;
-      },
+      // assignChange(msg) {
+      //   this.showAssign = false;
+      // },
       getPublishStatusName(status) {
         let names = {
           '-1': '已驳回',
@@ -193,8 +193,44 @@
         };
         return items[status];
       },
+      handleClick(row) {
+        //查看详情弹起 并传数据给see组件
+        console.log(33,row.id);
+        //查看报修单详细
+        let url = `property/fault/${row.id}/detail`;
+        this.$xttp.get(url).then(res => {
+          if(res.errorCode === 0 ){
+          this.seeData = res.data;
+          this.see = true;
+          return this.seeData;
+          }
+        }).catch( () => {
+          this.loading = false;
+        })
+      },
+      assignHandle(row) {
+        this.visible1 = true;
+        let url = `property/fault/${row.id}/detail`;
+        this.$xttp.get(url).then(res => {
+          if(res.errorCode === 0 ){
+          this.seeData = res.data;
+          return this.seeData;
+          }
+        }).catch( () => {
+          this.loading = false;
+        })
+      },
+      assignStaff (){
+        this.visible1 = false;
+        this.$message({
+          message: '分派成功',
+          type: 'success'
+        });
+        this.assign(this.seeData);
+      },
       //分配人员
       assign(row) {
+        console.log(777, row);
         let url = `property/fault/allocation`;
         let params = {
           id: row.id,
@@ -205,13 +241,30 @@
         this.$xttp.post(url, params).then(res => {
           if(res.errorCode === 0) {
             this.loading = false;
-            this.assignData = res.data;
-            this.showAssign = true;
+            // console.log(123,res.data);
+            this.repairName = res.data.repairName;
+            // this.assignData = res.data;
+            // console.log(this.assignData);
+            // this.showAssign = true;
             // this.visible2 = true;
           }
         }).catch( () => {
           this.loading = false;
         })
+      },
+      //驳回申报弹窗
+      reject(row) {
+        this.visible3 = true;
+        this.confirmRejectData = row;
+      },
+      confirmReject() {
+        this.visible3 = false;
+        this.see = false;
+        this.$message({
+          message: '驳回成功',
+          type: 'success'
+        });
+        this.rejectAccept(this.confirmRejectData);
       },
       //驳回申报
       rejectAccept(row) {
@@ -256,19 +309,6 @@
         }).catch(() => {
           this.loading = false;
           this.$message.error('故障受理失败');
-        })
-      },
-      handleClick(row) {
-        //查看详情弹起 并传数据给see组件
-        //查看报修单详细
-        let url = `property/fault/${row.id}/detail`;
-        this.$xttp.get(url).then(res => {
-          if(res.errorCode === 0 ){
-          this.seeData = res.data;
-          this.see = true;
-          }
-        }).catch( () => {
-          this.loading = false;
         })
       },
       // 发布公告
