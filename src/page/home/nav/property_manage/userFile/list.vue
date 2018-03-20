@@ -18,7 +18,7 @@
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-input v-model="formInline.name" placeholder="楼栋搜索"></el-input>
+              <el-input v-model.trim="formInline.name" placeholder="楼栋搜索"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>

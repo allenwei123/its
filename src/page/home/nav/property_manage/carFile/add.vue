@@ -1,5 +1,5 @@
 <template>
-      <el-dialog title="新增车辆" :visible.sync="msg" :before-close="handleClose">
+      <el-dialog title="新增车辆" :visible.sync="ij" :before-close="handleClose">
         <el-form :model="form" :rules="rules" ref="ruleForm" class="demo-form-inline">
             <el-form-item v-if="show" label="所在社区" :label-width="formLabelWidth" prop="communityId" class="c-must">
               <el-input v-model="form.communityId"></el-input>
@@ -29,12 +29,10 @@
                   :limit="1"
                   accept="image/*"
                   :on-exceed="onExceed"
+                  :file-list="fileList2"
                   list-type="picture-card">
                   <i class="el-icon-plus"></i>
                 </el-upload>
-                <!--<el-dialog :visible.sync="dialogVisible">-->
-                  <!--<img width="100%" :src="dialogImageUrl" alt="">-->
-                <!--</el-dialog>-->
               </template>
             </el-form-item>
             <el-form-item :label-width="formLabelWidth">
@@ -58,7 +56,6 @@ export default {
     return {
       formLabelWidth: "120px",
       show: false,
-      // msg: this.visible,
       form: {
         communityId: localStorage.getItem("communityId"),
         userId: JSON.parse(localStorage.getItem("userInfo")).id,
@@ -76,21 +73,17 @@ export default {
         drivingPermitPicUrl: [{ required: true, message: '请上传驾驶证照片', trigger: 'blur,change' }]
       },
       file: null,
+      fileList2: [],
       roleOptions: [],
       current: 1, //1 初始 2：添加后 3：编辑后
-      typeOptions: typeOptions
+      typeOptions: typeOptions,
+      ij:this.msg
     };
   },
-  // props: ["msg"],
   props: ["msg","add"],
   created() {
   },
   mounted() {},
-  watch: {
-    visible(val) {
-      this.msg = val;
-    }
-  },
   methods: {
     handleClose() {
       this.$emit("upup", this.current );
@@ -121,12 +114,23 @@ export default {
         this.showInfo('行驶证号不能为空')
         return;
       }
+      // let files = this.$refs.upload.uploadFiles;
+      // if (files.length) {
+      //   ossUpload(files[0], (key) => {
+      //     this.form.drivingPermitPicUrl = key;
+      //     console.log("ssss")
+      //     console.log(this.form.drivingPermitPicUrl);
+      //     this.submitForm();
+      //   });
+      // } else {
+      //   this.submitForm();
+      // }
+
       let files = this.$refs.upload.uploadFiles;
+
       if (files.length) {
-        ossUpload(files[0], (key) => {
+        ossUpload(files[0].raw, key => {
           this.form.drivingPermitPicUrl = key;
-          console.log("ssss")
-          console.log(this.form.drivingPermitPicUrl);
           this.submitForm();
         });
       } else {
@@ -149,7 +153,8 @@ export default {
       this.$xttp.post(url, params).then(res => {
         this.loading = false;
         if(res.errorCode === 0) {
-          this.msg = false;
+          alert("sssssss")
+          this.ij = false;
           this.$emit('reload');
         }
       }).catch(() => {

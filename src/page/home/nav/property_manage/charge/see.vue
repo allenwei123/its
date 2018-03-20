@@ -18,9 +18,7 @@ export default {
     }
   },
   props: ["msg","data"],
-  created(){
-      console.log(this.data)
-  },
+  created(){},
   methods:{
       handleClose() {
         this.$emit("upsee", false );

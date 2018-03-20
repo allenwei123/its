@@ -45,12 +45,15 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="c-pagination">
-          <el-pagination
-            layout="total, prev, pager, next, jumper" @current-change="getTableList"
-            :total="total" :page-size="pageSize" :current-page.sync="currentPage">
-          </el-pagination>
-        </div>
+      <div class="c-block">
+        <el-pagination
+          @current-change="getTableList"
+          :current-page="currentPage"
+          :page-size="10"
+          layout="total, prev, pager, next, jumper"
+          :total="total">
+        </el-pagination>
+      </div>
       <transition name="fade">
         <AddPage v-if="isShow" :msg="isShow" @reload="getTableList" @upup="change" :add.sync="notice"></AddPage>
       </transition>
@@ -81,7 +84,6 @@
 import AddPage from "./add";
 import SeePage from "./see";
 import { mapGetters } from "vuex";
-import scheduleList from '@/mock/scheduleList'
 import {communityId as getCommunityList} from '@/biz/community';
 import time from '@/utils/time.js';
 
@@ -103,7 +105,7 @@ export default {
       formInline: {
         carNo: ''
       },
-      pageSize:30,
+      pageSize:10,
       total: 0,
       currentPage: 1,
       loading: false,
@@ -228,32 +230,27 @@ export default {
         })
       }
     },
-    handleCurrentChange () {
-        console.log(currentPage);
-        console.log(pageSize)
-        this.getTableList()
-    },
     initPost(){
-      let communityId = scheduleList[0].communityId
+      let communityId = this.$store.getters.communityId;
       this.$xttp.get(`/user/property/${communityId}/post-list`).then(res => {
         if(!res.errorCode) {
           this.postOptions = res.data;
         }
       })
     },
-    getTableList(carNo) {
-      let params = {};
+
+    getTableList(page,carNo) {
+      let nPage = page || this.$route.query.page || 1;
+      let obj = {page:nPage};
       let communityId = this.$store.getters.communityId;
       if(carNo) {
-        params.carNo = this.formInline.carNo;
+        obj.carNo = this.formInline.carNo;
       } else {
-        delete params.carNo;
+        delete obj.carNo;
       }
-      params['page'] = this.currentPage;
-      params['size'] = this.pageSize;
-      this.$xttp.get(`/vehicle/${communityId}/page`,params)
+      this.$xttp.get(`/vehicle/${communityId}/page`,{params:obj})
           .then(res => {
-            if(!res.errorCode) {
+            if(res.success) {
               this.tableData = res.data.records;
               this.currentPage = res.data.currentPage;
               this.total = res.data.total;
@@ -265,7 +262,7 @@ export default {
           })
     },
     find(){
-      let communityId = scheduleList[0].communityId;
+      let communityId = this.$store.getters.communityId;
       let carNo = this.formInline.carNo;
  
       this.$xttp.get(`/vehicle/${communityId}/page?carNo=${carNo}`)
