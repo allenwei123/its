@@ -1,6 +1,9 @@
 <template>
   <el-container>
     <el-main>
+      <ul class="c-navDetail clear">
+        <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li>
+      </ul>
       <div class="c-rpass-container">
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
@@ -60,6 +63,11 @@
   export default {
     name: 'message', data() {
       return {
+        navDetailData: [
+          { id: 0, name: "首页" },
+          { id: 1, name: "社区物联" },
+          { id: 2, name: "电梯档案" }
+        ],
         loading: false,
         tableData: [],
         pageSize: 10,
@@ -127,4 +135,12 @@
     }
   }
 </script>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+  .c-navDetail {
+    margin-bottom: 10px;
+    li {
+      float: left;
+      margin-right: 10px;
+    }
+  }
+</style>

@@ -87,7 +87,7 @@
       <transition name = "fade">
         <AssignPage v-if="showAssign" :msg="showAssign" @upsee="assignChange" :data="assignData" @assignSuccess="assign(assignData)"></AssignPage>
       </transition>
-      
+
       <el-dialog title="温馨提示" :visible.sync="visible2">
           <p>请问您确定提交吗？</p>
           <div style="text-align: right; margin: 0">
@@ -166,7 +166,7 @@
       },
       seeChange(msg) {//与查看弹窗交互
         this.see = false;
-        
+
       },
       assignChange(msg) {
         this.showAssign = false;
@@ -206,7 +206,6 @@
           if(res.errorCode === 0) {
             this.loading = false;
             this.assignData = res.data;
-            console.log(this.assignData);
             this.showAssign = true;
             // this.visible2 = true;
           }
@@ -225,7 +224,6 @@
               message: '驳回申报成功',
               type: 'success'
             });
-            console.log(res);
           }
         }).catch(() => {
             this.loading = false;
@@ -262,7 +260,6 @@
       },
       handleClick(row) {
         //查看详情弹起 并传数据给see组件
-        console.log(33,row.id);
         //查看报修单详细
         let url = `property/fault/${row.id}/detail`;
         this.$xttp.get(url).then(res => {
@@ -299,14 +296,13 @@
           params.id = this.input;
         }else {
           delete params.id;
-        }    
+        }
         let communityId = scheduleList[0].communityId;
         params['communityId'] = communityId;
         let url = `property/fault/queryFaultPage?page=${this.currentPage}&size=${this.pageSize}`;
         this.loading = true;
         this.$xttp.post(url, params).then(res => {
           if (res.errorCode === 0) {
-            console.log(res.data.records);
             this.tableData = res.data.records;
             this.currentPage = res.data.currentPage;
             this.total = res.data.total;
@@ -333,7 +329,7 @@
   .fade-enter-active, .fade-leave-active {
     transition: all 0.5s ease;
   }
-        
+
   .fade-enter, .fade-leave-active {
     opacity: 0;
     transform: rotateY(180deg);
@@ -341,7 +337,7 @@
   .fade1-enter-active, .fade1-leave-active {
     transition: all 0.5s ease;
   }
-        
+
   .fade1-enter, .fade1-leave-active {
     opacity: 0;
     transform: translateX(-500px);
