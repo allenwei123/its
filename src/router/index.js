@@ -24,7 +24,7 @@ const router = new Router({
         children: [
           {
             path: 'side',
-            redirect: '/home/nav/side/communityFile',
+            redirect: '/home/nav/side/floorFile',
             component: (resolve) => require(["@/page/home/nav/_res"], resolve),
             children: [
               {
@@ -80,6 +80,10 @@ const router = new Router({
                 path: 'bill',
                 component: (resolve) => require(["@/page/home/nav/property_manage/bill/list"], resolve)
               },
+              {
+                path: 'slideshow',
+                component: (resolve) => require(["@/page/home/nav/property_manage/slideshow/list"], resolve)
+              }
             ]
           },
           // 物业服务

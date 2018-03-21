@@ -64,7 +64,7 @@
         <el-table-column label="状态" min-width="100" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{getStatus(scope.row.dataStatus)}}</template>
         </el-table-column>
-        <el-table-column align="center" fixed="right" label="操作" width="220">
+        <el-table-column align="left" fixed="right" label="操作" width="220">
           <template slot-scope="scope">
             <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button>
             <el-button v-if="scope.row.dataStatus ==0 && scope.row.postCode != 'MANAGER'" @click="handleDiabled(scope.row,'1')" type="warning" size="small">启用</el-button>

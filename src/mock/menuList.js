@@ -56,6 +56,12 @@ const arr = [
             title:'车辆档案',
             link:'/home/nav/side/carFile',
             show: 1
+          },
+          {
+            id:'1-5-1',
+            title: '轮播图管理',
+            link:'/home/nav/side/slideshow',
+            show: 1
           }
         ]
       },
@@ -121,7 +127,7 @@ const arr = [
             show: 1
           }
         ]
-      }
+      },
     ]
   },
   {

@@ -16,7 +16,7 @@
             </el-form-item> -->
             <el-form-item label="岗位" :label-width="formLabelWidth" prop="postCode" class="c-must">
               <el-radio-group v-model="form.postCode">
-                <el-radio :label="item.key" :value="item.name" :key="item.name" v-for="(item,index) in postCodeOptions">{{item.name}}</el-radio>
+                <el-radio :label="item.key" :value="item.name" :key="item.name" v-for="(item) in postCodeOptions">{{item.name}}</el-radio>
               </el-radio-group>
             </el-form-item>
 

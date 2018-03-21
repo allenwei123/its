@@ -6,9 +6,9 @@
         </ul>
         <div class="c-search">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
-    
+
             <el-form-item>
-              <el-input v-model="formInline.name" placeholder="用户名"></el-input>
+              <el-input v-model.trim="formInline.name" placeholder="用户名"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
@@ -16,14 +16,14 @@
           </el-form>
         </div>
       </div>
-      
+
       <el-table
         class="c-table"
         :data="tableData"
         v-loading="loading"
         element-loading-text="加载中..."
         border
-        highlight-current-row 
+        highlight-current-row
         ref="multipleTable"
         style="width: 100%">
 
@@ -39,14 +39,14 @@
           <template slot-scope="scope">{{ scope.row.phone }}</template>
         </el-table-column>
 
-        <el-table-column label="昵称"  :show-overflow-tooltip="true" align="center">
+        <el-table-column label="性别  "  :show-overflow-tooltip="true" align="center">
           <template slot-scope="scope">{{scope.row.sex | sex }}</template>
         </el-table-column>
 
-        <el-table-column label="生日昵称"  :show-overflow-tooltip="true" align="center">
+        <el-table-column label="出生日期"  :show-overflow-tooltip="true" align="center">
           <template slot-scope="scope">{{ scope.row.birthday }}</template>
         </el-table-column>
-        
+
         <el-table-column
           align="center"
           fixed="right"

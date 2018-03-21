@@ -6,9 +6,9 @@
         </ul>
         <div class="c-search">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
-            <el-form-item label="角色">
-              <el-select v-model="formInline.role" placeholder="角色">
-                <el-option v-for="item in roleOptions" :key="item.key" :label="item.name" :value="item.key">
+            <el-form-item label="岗位">
+              <el-select v-model.trim="formInline.postCode" placeholder="岗位">
+                <el-option v-for="item in postOptions" :key="item.key" :label="item.name" :value="item.key">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -23,7 +23,7 @@
       <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." border highlight-current-row ref="multipleTable" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60"> </el-table-column>
         <el-table-column label="ID" type="id" align="center" prop="id" v-if="show"></el-table-column>
-        <el-table-column label="角色" min-width="200" align="center" :show-overflow-tooltip="true">
+        <el-table-column label="岗位" min-width="200" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.postCode | postCode}}</template>
         </el-table-column>
         <el-table-column prop="name" label="班次" align="center"  width="150"> </el-table-column>
@@ -78,7 +78,7 @@ export default {
   data() {
     return {
       show: false,
-      roleOptions: [],
+      postOptions: [],
       isSou: false,
       tableData: [],
       navDetailData: [
@@ -87,7 +87,7 @@ export default {
         { id: 2, name: "班次管理" }
       ],
       formInline: {
-        role: 'SECURITY'
+        postCode: 'SECURITY'
       },
       pageSize:10,
       currentPage: 1,
@@ -160,13 +160,14 @@ export default {
       let communityId = this.$store.getters.communityId
       this.$xttp.get(`/user/property/${communityId}/post-list`).then(res => {
         if(!res.errorCode) {
-          this.roleOptions = res.data;
+          this.postOptions = res.data;
         }
       })
     },
     getTableList() {
       let communityId = this.$store.getters.communityId
-      this.$xttp.get('/task/class/list',{params:{communityId:communityId,postCode:'SECURITY',propertyId:'5a82adee9ce976452b7001ee'}})
+      let postCode = this.formInline.postCode
+      this.$xttp.get('/task/class/list',{params:{communityId:communityId,postCode:postCode,propertyId:'5a82adee9ce976452b7001ee'}})
           .then(res => {
             if(!res.errorCode) {
               this.tableData = res.data;
@@ -177,7 +178,7 @@ export default {
           })
     },
     find(){
-      var postCode = this.formInline.role;
+      var postCode = this.formInline.postCode;
       let communityId = this.$store.getters.communityId
       this.$xttp.get('/task/class/list',{params:{communityId:communityId,postCode:postCode,propertyId:'5a82adee9ce976452b7001ee'}})
           .then(res => {

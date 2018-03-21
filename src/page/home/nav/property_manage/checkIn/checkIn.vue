@@ -4,16 +4,25 @@
       <div class="c-notice-container">
         <div class="c-searchbar">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
-            <el-date-picker
-              v-model="value2"
+            <!-- <el-date-picker
+              v-model="formInline.date"
               align="right"
               type="date"
               placeholder="选择日期"
               :picker-options="pickerOptions1">
-            </el-date-picker>
+            </el-date-picker> -->
+             <el-form-item label="">
+              <el-date-picker
+                v-model="formInline.date"
+                type="date"
+                value-format="yyyy-MM-dd"
+                format="yyyy-MM-dd"
+                placeholder="">
+              </el-date-picker>
+            </el-form-item>
             <el-form-item label="岗位 :">
-              <el-select v-model="formInline.class" placeholder="请选择岗位">
-                <el-option v-for="item in roleOptions" :key="item.key" :label="item.name" :value="item.key"></el-option>
+              <el-select v-model="formInline.postCode" placeholder="请选择岗位">
+                <el-option v-for="item in postOptions" :key="item.key" :label="item.name" :value="item.key"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="员工">
@@ -67,9 +76,11 @@ export default {
       columnWidth: '260',
       q_input: null,
       formInline:{
-        class: 'SECURITY',
+        date: '',
+        postCode: 'SECURITY',
         name: ''
       },
+      postOptions:[],
       pickerOptions1: {
           disabledDate(time) {
             return time.getTime() > Date.now();
@@ -116,10 +127,10 @@ export default {
       return time.timestampToFormat(timestamp, format);
     },
     initRole(){
-      let communityId = scheduleList[0].communityId
+      let communityId = this.$store.getters.communityId
       this.$xttp.get(`/user/property/${communityId}/post-list`).then(res => {
         if(!res.errorCode) {
-          this.roleOptions = res.data;
+          this.postOptions = res.data;
         }
       })
     },
@@ -132,8 +143,13 @@ export default {
       }else {
         delete params.userName ;
       };
-      let communityId = scheduleList[0].communityId;
+      let communityId = this.$store.getters.communityId;
+      let date = this.formInline.date;
+      let postCode = this.formInline.postCode;
       params.communityId = communityId;
+      params.date = date;
+      params.postCode = postCode;
+      console.log(params);
       let url = `task/record/page`
       this.loading = true;
       this.$xttp
@@ -153,8 +169,8 @@ export default {
   },
   created () {
     this.initRole();
+    this.formInline.date = time.dateFormat(new Date(),'yyyy-MM-dd');
     this.getTableList();
-    
   }
 }
 </script>

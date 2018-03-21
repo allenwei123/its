@@ -6,28 +6,23 @@
         </ul>
         <div class="c-search">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
-            <el-form-item label="">
+            <el-form-item label="账单日期">
               <el-date-picker
                 v-model="formInline.date"
                 type="date"
+                value-format="yyyy-MM-dd"
                 format="yyyy-MM-dd"
                 placeholder="账单日期">
               </el-date-picker>
             </el-form-item>
             <el-form-item label="角色">
-              <el-select v-model="formInline.role" placeholder="角色">
-                <el-option v-for="item in roleOptions" :key="item.key" :label="item.name" :value="item.key">
+              <el-select v-model="formInline.post" placeholder="角色">
+                <el-option v-for="item in postOptions" :key="item.key" :label="item.name" :value="item.key">
                 </el-option>
               </el-select>
             </el-form-item>
-            <!-- <el-form-item label="班次">
-              <el-select v-model="formInline.schedul" placeholder="班次">
-                <el-option v-for="item in schedulOptions" :key="item.key" :label="item.value" :value="item.key">
-                </el-option>
-              </el-select>
-            </el-form-item> -->
             <el-form-item>
-              <el-button type="primary" @click="onSubmit"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
+              <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
             </el-form-item>
           </el-form>
           <el-button type="primary" icon="el-icon-edit" class="c-addBtn" @click="handleCreate">新增排班</el-button>
@@ -41,22 +36,14 @@
         </el-table-column>
         <el-table-column prop="id" v-if="show"></el-table-column>
         <el-table-column prop="userId" v-if="show"></el-table-column>
-        <el-table-column prop="" label="当前日期" width="180" align="center">
-          <template slot-scope="scope">{{getTime(scope.row.createAt, 'yyyy-MM-dd hh:mm')}}</template>
+        <el-table-column prop="" label="值班日" width="180" align="center">
+          <template slot-scope="scope">{{getTime(scope.row.workDate, 'yyyy-MM-dd')}}</template>
         </el-table-column>
         <el-table-column prop="userName" label="员工" align="center" width="120"></el-table-column>
         <el-table-column prop="className" label="班次" align="center" width="120"></el-table-column>
         <el-table-column label="岗位" min-width="200" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.postCode | postCode}}</template>
         </el-table-column>
-        <!-- <el-table-column prop="updateAt" label="当前日期" width="150" align="center">
-          <template slot-scope="scope">{{getTime(scope.row.updateAt, 'yyyy-MM-dd hh:mm')}}</template>
-        </el-table-column>
-        <el-table-column prop="employeeId" label="员工ID" align="center" width="120"></el-table-column>
-        <el-table-column prop="dataStatus" label="使用状态" width="150" align="center">
-          <template slot-scope="scope">{{ scope.row.dataStatus | dataStatus }}</template>
-        </el-table-column> -->
-        <!-- <el-table-column prop="dataStatus" label="使用状态" align="center" width="120" :formatter="dataStatusFilter"></el-table-column> -->
         <el-table-column fixed="right" label="操作" align="center" width="150">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="handleClick(scope.row)">查看</el-button>
@@ -118,8 +105,8 @@ export default {
   data() {
     return {
       show: false,
-      schedulOptions: schedulOptions,
-      roleOptions: [],
+      // schedulOptions: schedulOptions,
+      postOptions: [],
       isSou: false,
       tableData: [],
       navDetailData: [
@@ -128,8 +115,8 @@ export default {
         { id: 2, name: "排班管理" }
       ],
       formInline: {
-        role: 'SECURITY',
-        date: new  Date()
+        post: 'SECURITY',
+        date: ''
       },
       pageSize:10,
       currentPage: 1,
@@ -160,7 +147,8 @@ export default {
       this.sendAjax(val);
     },
     handleCreate(){
-
+      // this.notice = null;
+      this.isShow = !this.isShow;
     },
     handleClick(row) {
       //查看
@@ -208,7 +196,7 @@ export default {
       let communityId = this.$store.getters.communityId
       this.$xttp.get(`/user/property/${communityId}/post-list`).then(res => {
         if(!res.errorCode) {
-          this.roleOptions = res.data;
+          this.postOptions = res.data;
         }
       })
     },
@@ -227,13 +215,14 @@ export default {
     },
     sendAjax(page) {
       let nPage = page || this.$route.query.page || 1;
-      let communityId = scheduleList[0].communityId
-      console.log(this.formInline.date);
-      // let startDate = getTime(this.formInline.date,'yyyy-MM-dd')
-      // endDate = time(this.formInline.date)
-      let obj = {page:nPage,size:this.pageSize,communityId:communityId}
-      // console.log(startDate);
-      // console.log(obj);
+      let communityId = this.$store.getters.communityId;
+      let date = this.formInline.date;
+      let postCode = this.formInline.post;
+      if(this.formInline.date == ''){
+        this.formInline.date = time.dateFormat(new Date(),'yyyy-MM-dd');
+      }
+      let obj = {page:nPage,size:this.pageSize,communityId:communityId,postCode:postCode,startDate: this.formInline.date,endDate:this.formInline.date}
+      console.log(obj);
       // return;
       // return;
       // if(name){
