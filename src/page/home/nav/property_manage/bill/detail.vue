@@ -62,12 +62,6 @@
   </el-dialog>
 </template>
 
-<style scoped>
-  >>> .el-dialog__body {
-    padding: 0;
-  }
-</style>
-
 <style scoped lang="scss">
   .title {
     position: relative;
