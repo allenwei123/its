@@ -19,18 +19,6 @@
             <el-form-item label="故障描述" label-width="120px" required>
                 <span>{{data.faultContent}}</span>
                 <div class="c-image" v-if="uri"><img :src="uri"></div>
-                <!-- <template>
-                    <el-upload
-                        ref="upload"
-                        action=""
-                        :auto-upload="false"
-                        :limit="3"
-                        accept="image/*"
-                        :on-exceed="onExceed"
-                        list-type="picture-card">
-                        <i class="el-icon-plus"></i>
-                    </el-upload>
-                </template> -->
             </el-form-item>
             <el-form-item label="故障状态" label-width="120px" required>
                 <span>{{faultStatus}}</span>
@@ -59,15 +47,15 @@
 
             <template v-if="faultStatus === '待评价'">
                 <!--后台没有完成时间 -->
-                <!-- <el-form-item label="完成时间" label-width="120px" required>
-                    <span>{{rejectTime}}</span>
-                </el-form-item> -->
+                <el-form-item label="完成时间" label-width="120px" required>
+                    <span>{{data.finishTime}}</span>
+                </el-form-item>
             </template>
 
             <template v-if="faultStatus === '已完成'">
-                <!-- <el-form-item label="完成时间" label-width="120px" required>
-                    <span>{{data.rejectReason}}</span>
-                </el-form-item> -->
+                <el-form-item label="完成时间" label-width="120px" required>
+                    <span>{{data.finishTime}}</span>
+                </el-form-item>
                 <el-form-item label="评价等级" label-width="120px" required>
                     <span>{{data.evaluationGrade}}</span>
                 </el-form-item>
@@ -128,6 +116,7 @@ import { getUri } from '@/utils/oss';
             console.log(34,this.data);
             //图片
             this.uri = that.faultAccessory;
+            // console.log(121,this.uri);
         }
 
     }
@@ -143,4 +132,4 @@ import { getUri } from '@/utils/oss';
         vertical-align: middle;
         }
     }
-</style
+</style>

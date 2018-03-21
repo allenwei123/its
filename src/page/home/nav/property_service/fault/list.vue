@@ -5,7 +5,7 @@
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
             <el-form-item label="">
-              <el-input  placeholder="请输入故障申报编号" v-model.trim="input"></el-input>
+              <el-input  placeholder="申报人" v-model.trim="input"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="query">查询</el-button>
@@ -18,7 +18,7 @@
         <!-- 表格 -->
         <div class="c-list">
           <el-table :data="tableData"  style="width: 100%" v-loading="loading">
-            <el-table-column prop="id" label="编号" width="80">
+            <el-table-column prop="no" label="编号" width="80">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
             <el-table-column prop="faultType" label="故障类型" min-width="80">
@@ -40,7 +40,7 @@
             <el-table-column prop="faultStatus" label="故障状态" width="80">
               <template slot-scope="scope">{{getPublishStatusName(scope.row.faultStatus)}}</template>
             </el-table-column>
-            <el-table-column prop="" label="操作" width="200" fixed="right" align="center">
+            <el-table-column prop="" label="操作" width="300" fixed="right" align="center">
               <template slot-scope="scope">
                 <el-button type="primary" size="mini" @click="handleClick(scope.row)">查看详情</el-button>
                 <!-- 已提交 待受理-->
@@ -267,15 +267,16 @@
           message: '驳回成功',
           type: 'success'
         });
+        this.confirmRejectData.faultStatus = -1;
         this.rejectAccept(this.confirmRejectData);
       },
       //驳回申报
       rejectAccept(row) {
-        let url = `property/fault/${row.id}/delete`;
-        this.$xttp.get(url).then(res => {
+        let url = `property/fault/editFaultStatus`;
+        this.$xttp.post(url,{id: row.id, faultStatus: row.faultStatus}).then(res => {
           if(res.errorCode === 0){
             this.loading = false;
-            this.visible3 = true;
+            // this.visible3 = true;
             this.$message({
               message: '驳回申报成功',
               type: 'success'
@@ -331,14 +332,14 @@
       add() {
         this.addSee = true;
       },
-      postData(page, id) {
+      postData(page, userName) {
         let nPage = page || this.$route.query.page || 1;
         let params = {page:nPage}
-        if(id){
+        if(userName){
           //输入的搜索字添加params中
-          params.id = this.input;
+          params.userName = this.input;
         }else {
-          delete params.id;
+          delete params.userName;
         }
         let communityId = scheduleList[0].communityId;
         params['communityId'] = communityId;

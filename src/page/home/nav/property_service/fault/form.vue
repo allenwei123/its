@@ -3,7 +3,7 @@
     <el-form :model="form" :rules="rules" ref="ruleForm" label-width="120px">
       <el-form-item label="故障类型" prop="faultItem" required>
         <el-select v-model="form.faultItem"  placeholder="故障类型">
-          <el-option label="公共-电梯" value="10"></el-option>
+          <el-option label="公共-消防安防" value="3"></el-option>
           <el-option label="公共-门禁" value="11"></el-option>
           <el-option label="公共-其他" value="99"></el-option>
         </el-select>
@@ -44,7 +44,7 @@
           faultItem: '',
           // roomId: '',
           buildingId: '',
-          communityId: '5a82adf3b06c97e0cd6c0f3d',
+          communityId: this.$store.getters.communityId,
         },
         rules: {
           faultItem: [{required: true, message: '请输入故障类型', trigger: 'blur'}],
@@ -91,7 +91,7 @@
     },
     props: ['msg'],
     created() {
-
+      
     }
   }
 </script>
