@@ -24,7 +24,7 @@ const router = new Router({
         children: [
           {
             path: 'side',
-            redirect: '/home/nav/side/communityFile',
+            redirect: '/home/nav/side/floorFile',
             component: (resolve) => require(["@/page/home/nav/_res"], resolve),
             children: [
               {
