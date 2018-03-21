@@ -1,15 +1,18 @@
 <template>
   <el-container>
     <el-main>
+      <ul class="c-navDetail clear">
+        <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li>
+      </ul>
       <div class="c-rpass-container">
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
-            <el-form-item label="">
-              <el-input placeholder="车闸名称" v-model.trim="input"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="query">查询</el-button>
-            </el-form-item>
+            <!--<el-form-item label="">-->
+              <!--<el-input placeholder="车闸名称" v-model.trim="input"></el-input>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item>-->
+              <!--<el-button type="primary" @click="query">查询</el-button>-->
+            <!--</el-form-item>-->
           </el-form>
         </div>
         <div class="c-list">
@@ -53,6 +56,11 @@
   export default {
     data() {
       return {
+        navDetailData: [
+          { id: 0, name: "首页" },
+          { id: 1, name: "社区物联" },
+          { id: 2, name: "停车设备" }
+        ],
         loading: false,
         tableData: [],
         pageSize: 10,
@@ -77,7 +85,7 @@
         let url = `vehicle/car-gate/page`;
         let params = {};
         if (this.q_input) {
-          params['name'] = this.q_input;
+          params['gateName'] = this.q_input;
         }
         this.$xttp.post(url, params).then(res => {
           this.loading = false;
@@ -112,4 +120,12 @@
     }
   }
 </script>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+  .c-navDetail {
+    margin-bottom: 10px;
+    li {
+      float: left;
+      margin-right: 10px;
+    }
+  }
+</style>

@@ -25,17 +25,7 @@
       Header,
       Content
     },
-    created() {
-      this.$store.dispatch('updatedAsideData')
-        .then(res => {
-          // console.log(res)
-        }).catch(err => {
-          console.log(err)
-        })
-        if (!this.$store.getters.token) {
-          this.$router.push('/auth/login');
-        }
-    }
+    created() { }
   }
 </script>
 

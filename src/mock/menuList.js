@@ -40,15 +40,21 @@ const arr = [
           //   show: 1
           // },
           {
-            id:'1-1-4',
-            title:'车辆档案',
-            link:'/home/nav/side/carFile',
+            id: '1-1-4',
+            title: '用户档案',
+            link:'/home/nav/side/userFile',
             show: 1
           },
           {
-            id: '1-1-5',
-            title: '用户档案',
-            link:'/home/nav/side/userFile',
+            id:'1-1-5',
+            title:'认证档案',
+            link:'/home/nav/side/promiseFile',
+            show: 1
+          },
+          {
+            id:'1-1-6',
+            title:'车辆档案',
+            link:'/home/nav/side/carFile',
             show: 1
           },
           {
@@ -112,6 +118,12 @@ const arr = [
             id:'1-4-1',
             title:'账单管理',
             link:'/home/nav/side/bill',
+            show: 1
+          },
+          {
+            id:'1-4-1',
+            title:'收费项目',
+            link:'/home/nav/side/charge',
             show: 1
           }
         ]
@@ -282,12 +294,12 @@ const arr = [
             link:'/home/nav/communityIoT/onePass',
             show: 1
           },
-          {
-            id:'3-5-2',
-            title:'使用记录',
-            link:'/home/nav/communityIoT/userRecord',
-            show: 1
-          }
+          // {
+          //   id:'3-5-2',
+          //   title:'使用记录',
+          //   link:'/home/nav/communityIoT/userRecord',
+          //   show: 1
+          // }
         ]
       }
     ]

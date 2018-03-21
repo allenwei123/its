@@ -179,3 +179,23 @@ Vue.filter('digitUppercase', function (n) {
     }
     return newValue;
   })
+
+/**
+ * 用户关系
+ */
+Vue.filter('relationship', function (value) {
+  if (!value) return '';
+  let newValue = '';
+  switch (value) {
+    case 1:
+      newValue = '业主';
+      break;
+    case 2:
+      newValue = '家属';
+      break;
+    case 3:
+      newValue = '租客';
+      break;
+  }
+  return newValue;
+});

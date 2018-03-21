@@ -20,8 +20,8 @@
       <div class="c-top_bar_area">
         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
           <el-menu-item index="6" ><router-link to="/home/nav/main">首页</router-link></el-menu-item>
-          <el-menu-item index="0" ><router-link to="/home/nav/side/communityFile">物业管理</router-link></el-menu-item>
-          <el-menu-item index="1" ><router-link to="/home/nav/propertyService/rpass">物业服务</router-link></el-menu-item>
+          <el-menu-item index="0" ><router-link to="/home/nav/side">物业管理</router-link></el-menu-item>
+          <el-menu-item index="1" ><router-link to="/home/nav/propertyService">物业服务</router-link></el-menu-item>
           <el-menu-item index="2" ><router-link to="/home/nav/communityIoT">社区物联</router-link></el-menu-item>
           <el-menu-item index="3" >商圈管理</el-menu-item>
           <el-menu-item index="4" >系统管理</el-menu-item>
@@ -55,6 +55,12 @@ import { mapGetters } from "vuex";
       let arr = ['side','propertyService','communityIoT'];
       let currentIndex = arr.indexOf(this.$route.path.split('/')[3])>= 0 ? arr.indexOf(this.$route.path.split('/')[3]) : 0;
       this.activeIndex = currentIndex.toString();
+      this.$store.dispatch('updatedAsideData')
+        .then(res => {
+          if(res.msg) {
+            this.$store.dispatch('changeAsideData',this.activeIndex);
+          }
+        })
     },
     methods: {
       handleSelect(index) {

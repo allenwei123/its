@@ -25,7 +25,7 @@
           </el-form>
         </div>
       </div>
-      
+
       <el-table :data="tableData" style="width: 100%" v-loading="loading">
         <el-table-column label="序号" width="50" :show-overflow-tooltip="true" align="center">
           <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
@@ -46,14 +46,14 @@
           <template slot-scope="scope">{{ scope.row.startTime }}</template>
         </el-table-column>
 
-      
+
         <el-table-column label="操作" width="80" fixed="right">
           <template slot-scope="scope">
             <el-button @click="handleClick(scope.row)" type="primary" size="small">播放录像</el-button>
           </template>
         </el-table-column>
       </el-table>
-      
+
       <div class="c-block">
         <el-pagination
           @current-change="handleCurrentChange"
@@ -142,7 +142,7 @@ export default {
     }
   },
   created() {
-     this.sendAjax(1);
+     // this.sendAjax(1);
   },
   mounted() {
   }

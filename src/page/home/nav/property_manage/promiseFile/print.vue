@@ -117,7 +117,7 @@
                 </ul>
               </li>
             </ul>
-          </div> 
+          </div>
         </div>
       </div>
       <div slot="footer" class="dialog-footer">
@@ -151,6 +151,26 @@ export default {
             break;
         }
     });
+    if( this.data.carList.length < 3 ) {
+      (function f(arr){
+        if( arr.length < 3 ) {
+          arr.push({id:Math.floor(Math.random()*1000)});
+          f(arr);
+        }else {
+          return ;
+        }
+      })(this.data.carList);
+    }
+    if( this.data.inhabitantList.length < 3 ) {
+      (function f(arr){
+        if( arr.length < 3 ) {
+          arr.push({id:Math.floor(Math.random()*1000)});
+          f(arr);
+        }else {
+          return ;
+        }
+      })(this.data.inhabitantList);
+    }
   },
   props: ["data","msg"],
   methods: {

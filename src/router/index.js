@@ -40,6 +40,10 @@ const router = new Router({
                 component: (resolve) => require(["@/page/home/nav/property_manage/roomFile/list"], resolve),
               },
               {
+                path: 'promiseFile',
+                component: (resolve) => require(["@/page/home/nav/property_manage/promiseFile/list"], resolve),
+              },
+              {
                 path: 'carFile',
                 component: (resolve) => require(["@/page/home/nav/property_manage/carFile/list"], resolve),
               },
@@ -168,7 +172,7 @@ const router = new Router({
     }
   ]
 })
-let errorList = ['/home/nav/side/garageport','/home/nav/side/carport','/home/nav/propertyService/onlineService'];//记录暂时没开发的
+let errorList = ['/home/nav/communityIoT/record','/home/nav/side/carport','/home/nav/propertyService/onlineService','/home/nav/side/charge','/home/nav/propertyService/message'];//记录暂时没开发的
 router.beforeEach((to, from, next) => {
   if(errorList.find((val) => { return val == to.path})) {
     alert('该功能未开发');
@@ -178,7 +182,7 @@ router.beforeEach((to, from, next) => {
   }
 
   // if(to.path == a)
-  
+
 })
 export default router;
 

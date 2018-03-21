@@ -162,7 +162,7 @@
       }
     },
     created() {
-      this.query();
+      // this.query();
     }
   }
 </script>
