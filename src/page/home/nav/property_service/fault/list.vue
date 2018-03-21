@@ -40,13 +40,13 @@
             <el-table-column prop="faultStatus" label="故障状态" width="80">
               <template slot-scope="scope">{{getPublishStatusName(scope.row.faultStatus)}}</template>
             </el-table-column>
-            <el-table-column prop="" label="操作" width="300" fixed="right" align="center">
+            <el-table-column prop="" label="操作" width="200" fixed="right" align="center">
               <template slot-scope="scope">
                 <el-button type="primary" size="mini" @click="handleClick(scope.row)">查看详情</el-button>
                 <!-- 已提交 待受理-->
                 <template v-if="scope.row.faultStatus === 1">
                   <el-button type="primary" size="mini" @click="receive(scope.row)">受理故障</el-button>
-                  <el-button type="danger" size="small" @click="reject(scope.row)">驳回申请</el-button>
+                  <el-button type="danger" size="mini" @click="reject(scope.row)">驳回申请</el-button>
                 </template>
 
                 <!-- 已受理 待分派-->
@@ -147,6 +147,7 @@
         confirmAssign: '',
         confirmRejectData: '',
         repairName: '',
+        // assignStatus: '',//分派状态
       }
     },
     methods: {
@@ -214,7 +215,8 @@
         this.$xttp.get(url).then(res => {
           if(res.errorCode === 0 ){
           this.seeData = res.data;
-          return this.seeData;
+          row.faultStatus = 3;
+          // this.assignStatus = row;
           }
         }).catch( () => {
           this.loading = false;
@@ -227,6 +229,7 @@
           type: 'success'
         });
         this.assign(this.seeData);
+        // this.assignStatus = 3;
       },
       //分配人员
       assign(row) {

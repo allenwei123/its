@@ -18,7 +18,8 @@
             </el-form-item>
             <el-form-item label="故障描述" label-width="120px" required>
                 <span>{{data.faultContent}}</span>
-                <template>
+                <div class="c-image" v-if="uri"><img :src="uri"></div>
+                <!-- <template>
                     <el-upload
                         ref="upload"
                         action=""
@@ -29,7 +30,7 @@
                         list-type="picture-card">
                         <i class="el-icon-plus"></i>
                     </el-upload>
-                </template>
+                </template> -->
             </el-form-item>
             <el-form-item label="故障状态" label-width="120px" required>
                 <span>{{faultStatus}}</span>
@@ -83,7 +84,8 @@
 </template>
 
 <script>
-    import time from '@/utils/time.js';
+import time from '@/utils/time.js';
+import { getUri } from '@/utils/oss';
     export default {
         data() {
             return {
@@ -92,12 +94,13 @@
                 faultStatus: '',
                 acceptTime: '',
                 rejectTime: '',
+                uri:'',
             }
         },
         methods:{
-            onExceed() {
-                this.$message('只能上传三张图片')
-            },
+            // onExceed() {
+            //     this.$message('只能上传三张图片')
+            // },
             accept() {
                 this.$emit('accept');
             },
@@ -123,7 +126,21 @@
             this.faultStatus = that.faultStatus == 0 ? '已取消' : that.faultStatus == 1 ? '已提交' : 
             that.faultStatus == 2 ? '已受理' : that.faultStatus == 3 ? '已指派' : that.faultStatus == 4 ? '已完成' : '已驳回'
             console.log(34,this.data);
+            //图片
+            this.uri = that.faultAccessory;
         }
 
     }
 </script>
+
+<style scoped lang="scss">
+    .c-image {
+        width:100px;
+        height: auto;
+        overflow: hidden;
+        img {
+        width:100%;
+        vertical-align: middle;
+        }
+    }
+</style

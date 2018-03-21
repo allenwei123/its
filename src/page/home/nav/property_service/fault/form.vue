@@ -1,11 +1,11 @@
 <template>
   <el-dialog title="新增故障" :visible.sync="msg" :before-close="handleClose">
     <el-form :model="form" :rules="rules" ref="ruleForm" label-width="120px">
-      <el-form-item label="故障类型" prop="faultType" required>
-        <el-select v-model="form.faultType"  placeholder="故障类型">
-          <el-option label="公共-电梯" value="1"></el-option>
-          <el-option label="公共-门禁" value="2"></el-option>
-          <el-option label="公共-其他" value="3"></el-option>
+      <el-form-item label="故障类型" prop="faultItem" required>
+        <el-select v-model="form.faultItem"  placeholder="故障类型">
+          <el-option label="公共-电梯" value="10"></el-option>
+          <el-option label="公共-门禁" value="11"></el-option>
+          <el-option label="公共-其他" value="99"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="故障地址" label-width="120px" prop="faultAddress" required>
@@ -14,11 +14,11 @@
       <el-form-item label="故障描述" prop="faultContent" required>
         <el-input type="textarea" v-model="form.faultContent" :rows="5"></el-input>
       </el-form-item>
-      <el-form-item label="申报人" label-width="120px" prop="name">
-        <el-input v-model="form.name" auto-complete="off"></el-input>
+      <el-form-item label="申报人" label-width="120px" prop="userName" required>
+        <el-input v-model="form.userName" auto-complete="off"></el-input>
       </el-form-item>
-      <el-form-item label="联系方式" label-width="120px" prop="concant">
-        <el-input v-model="form.concant" auto-complete="off"></el-input>
+      <el-form-item label="联系方式" label-width="120px" prop="contact" required>
+        <el-input v-model="form.contact" auto-complete="off"></el-input>
       </el-form-item>
 
     </el-form>
@@ -36,20 +36,22 @@
         communityList: [],
         form: {
           faultAddress: '',
-          faultType: '1',
-          obj: '',
+          faultType: '2',
+          // obj: '',
           faultContent: '',
-          name: '',
-          concact: '',
-          faultItem: '1',
-          roomId: '',
+          contact: '',
+          userName: '',
+          faultItem: '',
+          // roomId: '',
           buildingId: '',
           communityId: '5a82adf3b06c97e0cd6c0f3d',
         },
         rules: {
-          faultType: [{required: true, message: '请输入故障类型', trigger: 'blur'}],
+          faultItem: [{required: true, message: '请输入故障类型', trigger: 'blur'}],
           faultAddress: [{ required: true, message: '请输入故障地址', trigger: 'blur' }],
           faultContent: [{ required: true, message: '请描述故障', trigger: 'blur' }],
+          userName: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
+          contact: [{ required: true, message: '请填写联系方式', trigger: 'blur' }],
         },
       }
     },
