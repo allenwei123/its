@@ -70,12 +70,12 @@ const arr = [
         name:'员工管理',
         show: 1,
         menuItem:[
-          {
-            id:'1-2-1',
-            title:'角色管理',
-            link:'/home/nav/side/role',
-            show: 1
-          },
+          // {
+          //   id:'1-2-1',
+          //   title:'角色管理',
+          //   link:'/home/nav/side/role',
+          //   show: 1
+          // },
           {
             id:'1-2-2',
             title:'员工管理',

@@ -12,11 +12,12 @@
                 type="date"
                 value-format="yyyy-MM-dd"
                 format="yyyy-MM-dd"
+                @change="changeDate"
                 placeholder="账单日期">
               </el-date-picker>
             </el-form-item>
             <el-form-item label="角色">
-              <el-select v-model="formInline.post" placeholder="角色">
+              <el-select v-model="formInline.post" placeholder="角色" @change="changePostCode">
                 <el-option v-for="item in postOptions" :key="item.key" :label="item.name" :value="item.key">
                 </el-option>
               </el-select>
@@ -36,17 +37,18 @@
         </el-table-column>
         <el-table-column prop="id" v-if="show"></el-table-column>
         <el-table-column prop="userId" v-if="show"></el-table-column>
-        <el-table-column prop="" label="值班日" width="180" align="center">
+        <el-table-column prop="" label="值班日" width="200" align="center">
           <template slot-scope="scope">{{getTime(scope.row.workDate, 'yyyy-MM-dd')}}</template>
         </el-table-column>
-        <el-table-column prop="userName" label="员工" align="center" width="120"></el-table-column>
-        <el-table-column prop="className" label="班次" align="center" width="120"></el-table-column>
-        <el-table-column label="岗位" min-width="200" align="center" :show-overflow-tooltip="true">
+        <el-table-column prop="userName" label="员工" align="center" width="150"></el-table-column>
+        <el-table-column prop="className" label="班次" align="center" width="150"></el-table-column>
+        <el-table-column label="岗位" min-width="120" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.postCode | postCode}}</template>
         </el-table-column>
-        <el-table-column fixed="right" label="操作" align="center" width="150">
+        <el-table-column fixed="right" label="操作" align="center" width="180">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="handleClick(scope.row)">查看</el-button>
+            <el-button type="primary" size="mini" @click="editHandle(scope.row)">修改</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -68,6 +70,15 @@
           :total="total">
         </el-pagination>
       </div>
+      <!-- <transition name="fade1">
+        <AddPage v-if="isShow" :msg="isShow" @upup="change" :add.sync="notice"></AddPage>
+      </transition>
+      <transition name="fade">
+        <SeePage v-if="see" :msg="see" @upsee="seeChange"  :data="seeData"></SeePage>
+      </transition>
+      <transition name="fade2">
+        <EditPage v-if="editShow" :msg="editShow" @upedit="editChange" :editData="editData"></EditPage>
+      </transition> -->
       <transition name="fade1">
         <AddPage v-if="isShow" :msg="isShow" @upup="change" :add.sync="notice"></AddPage>
       </transition>
@@ -86,18 +97,9 @@
 </template>
 
 <script>
-const schedulOptions = [
-  { key: '', value: '休班' },
-  { key: '0', value: '早班' },
-  { key: '1', value: '中班' },
-  { key: '2', value: '晚班' },
-  { key: '3', value: '早中晚班'}
-]
-
 import AddPage from "./sched_add";
 import SeePage from "./sched_see";
 import { mapGetters } from "vuex";
-import scheduleList from '@/mock/scheduleList'
 import time from '@/utils/time.js';
 
 export default {
@@ -105,7 +107,6 @@ export default {
   data() {
     return {
       show: false,
-      // schedulOptions: schedulOptions,
       postOptions: [],
       isSou: false,
       tableData: [],
@@ -159,17 +160,38 @@ export default {
       //编辑
       this.isShow = true;
       this.notice = row;
+      console.log(this.notice);
     },
+    // change(msg) {//与添加弹窗交互
+    //   if(msg == 1) {
+    //     this.isShow = false;
+    //   }else if(msg == 2 || msg == 3) {
+    //     this.sendAjax();
+    //     this.isShow = false;
+    //   }
+    // },
+    // seeChange(msg) {//与查看弹窗交互
+    //   this.see = false;
+    // },
     change(msg) {//与添加弹窗交互
       if(msg == 1) {
         this.isShow = false;
       }else if(msg == 2 || msg == 3) {
-        // this.sendAjax();
+        this.sendAjax();
         this.isShow = false;
       }
     },
     seeChange(msg) {//与查看弹窗交互
       this.see = false;
+    },
+    editChange(msg) {
+      this.editShow = false;
+    },
+    changeDate() {
+      this.sendAjax();
+    },
+    changePostCode() {
+      this.sendAjax();
     },
     find(){
       this.sendAjax(null,this.formInline.name);
@@ -222,14 +244,6 @@ export default {
         this.formInline.date = time.dateFormat(new Date(),'yyyy-MM-dd');
       }
       let obj = {page:nPage,size:this.pageSize,communityId:communityId,postCode:postCode,startDate: this.formInline.date,endDate:this.formInline.date}
-      console.log(obj);
-      // return;
-      // return;
-      // if(name){
-      //   obj.name = this.formInline.name;
-      // }else {
-      //   delete obj.name ;
-      // }
       this.loading = true;
       this.$xttp.post("task/schedule/page",obj)
       .then(res => {

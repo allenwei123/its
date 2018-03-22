@@ -56,10 +56,10 @@ const router = new Router({
                 path: 'userFile',
                 component: (resolve) => require(["@/page/home/nav/property_manage/userFile/list"], resolve),
               },
-              {
-                path: 'role',
-                component: (resolve) => require(["@/page/home/nav/property_manage/role/role"], resolve),
-              },
+              // {
+              //   path: 'role',
+              //   component: (resolve) => require(["@/page/home/nav/property_manage/role/role"], resolve),
+              // },
               {
                 path: 'empl',
                 component: (resolve) => require(["@/page/home/nav/property_manage/empl/empl"], resolve),

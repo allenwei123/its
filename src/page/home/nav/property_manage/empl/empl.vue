@@ -7,7 +7,7 @@
         <div class="c-search">
           <el-form :inline="true" class="demo-form-inline">
             <el-form-item label="岗位">
-              <el-select v-model="post" placeholder="岗位">
+              <el-select v-model="postCode" placeholder="岗位" @change="changPostCode">
                 <el-option v-for="item in postOptions" :key="item.key" :label="item.name" :value="item.key">
                 </el-option>
               </el-select>
@@ -114,7 +114,7 @@ export default {
         { id: 1, name: "员工管理" },
         { id: 2, name: "员工管理" }
       ],
-      post: 'SECURITY',
+      postCode: 'SECURITY',
       postOptions: [],
       q_input: null,
       loading: false,
@@ -217,14 +217,16 @@ export default {
         }
       })
     },
+    changPostCode(){
+      this.getTableList(this.postCode);
+    },
     find(){
-      // this.q_input = this.post;
       this.getTableList(this.postCode);
     },
     getTableList(postCode) {
       let obj = {};
       if(postCode){
-        obj.postCode = this.q_input;
+        obj.postCode = this.postCode;
       } else {
         delete obj.postCode;
       }
@@ -232,10 +234,6 @@ export default {
       
       let communityId = this.$store.getters.communityId;
       let url = `user/property/${communityId}/user-list`;
-      // let params = {};
-      // if (this.q_input) {
-      //   params['postCode'] = this.q_input;
-      // }
       this.$xttp.get(url, {params:obj}).then(res => {
         this.loading = false;
         if (res.errorCode === 0) {

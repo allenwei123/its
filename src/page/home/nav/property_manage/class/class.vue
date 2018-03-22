@@ -7,7 +7,7 @@
         <div class="c-search">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
             <el-form-item label="岗位">
-              <el-select v-model.trim="formInline.postCode" placeholder="岗位">
+              <el-select v-model.trim="formInline.postCode" placeholder="岗位" @change="changePostCode">
                 <el-option v-for="item in postOptions" :key="item.key" :label="item.name" :value="item.key">
                 </el-option>
               </el-select>
@@ -30,8 +30,6 @@
         <el-table-column label="值班时间" min-width="320" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{scope.row.attendTime}}~{{scope.row.offTime}}</template>
         </el-table-column>
-        <!-- <el-table-column prop="attendTime" label="值班时间" align="center"  width="200"></el-table-column>
-        <el-table-column prop="offTime" label="结束时间" align="center"  width="200"> </el-table-column> -->
         <el-table-column prop="remark" label="备注信息" align="center"  width="200"> </el-table-column>
         <el-table-column fixed="right" align="center" label="操作" width="200">
           <template slot-scope="scope">
@@ -163,6 +161,9 @@ export default {
           this.postOptions = res.data;
         }
       })
+    },
+    changePostCode() {
+      this.getTableList();
     },
     getTableList() {
       let communityId = this.$store.getters.communityId
