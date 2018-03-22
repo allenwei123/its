@@ -256,6 +256,8 @@
       //驳回申报弹窗
       reject(row) {
         this.visible3 = true;
+        //清空上一次的故驳回原因
+        this.reason = '';
         this.confirmRejectData = row;
       },
       confirmReject() {
@@ -266,13 +268,17 @@
           type: 'success'
         });
         this.confirmRejectData.faultStatus = -1;
-        // this.confirmRejectData.rejectReason = this.reason;
+        this.confirmRejectData['rejectReason'] = this.reason;
+        console.log('驳回', this.confirmRejectData);
         this.rejectAccept(this.confirmRejectData);
       },
       //驳回申报
       rejectAccept(row) {
         let url = `property/fault/editFaultStatus`;
-        this.$xttp.post(url,{id: row.id, faultStatus: row.faultStatus}).then(res => {
+        this.$xttp.post(url,{id: row.id, 
+          faultStatus: row.faultStatus,
+          rejectReason: row.rejectReason
+        }).then(res => {
           if(res.errorCode === 0){
             this.loading = false;
             this.$message({
