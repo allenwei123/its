@@ -9,7 +9,6 @@
             </el-form-item>
             <el-form-item label="角色：" :label-width="formLabelWidth" prop="postCode" class="c-must">
               <el-select v-model="form.postCode" placeholder="roleOptions">
-                <!-- <el-option v-for="item in roleOptions" :key="item.key" :label="item.name" :value="item.value"></el-option> -->
                 <el-option v-for="item in roleOptions" :key="item.key" :label="item.name" :value="item.key"></el-option>
               </el-select>
             </el-form-item>
@@ -20,12 +19,40 @@
 
             <el-form-item label="班次类型:" :label-width="formLabelWidth" prop="type" class="c-must">
               <el-select v-model="form.type" placeholder="请选择">
-                <!-- <el-option v-for="item in roleOptions" :key="item.key" :label="item.name" :value="item.value"></el-option> -->
                 <el-option v-for="item in typeOptions" :key="item.key" :label="item.value" :value="item.key"></el-option>
               </el-select>
             </el-form-item>
 
-            <el-form-item label="值班时间：" :label-width="formLabelWidth" class="c-must">
+            <el-form-item label="出勤地点：" :label-width="formLabelWidth" prop="name" class="c-must">
+              <el-input v-model="form.attendPlace"></el-input>
+            </el-form-item>
+            <el-form-item label="出勤时间：" :label-width="formLabelWidth" class="c-must">
+              <el-time-select placeholder="出勤时间" v-model="form.attendTime"
+                :picker-options="{
+                  start: '00:00',
+                  step: '00:05',
+                  end: '24:00'
+                }">
+              </el-time-select>
+            </el-form-item>
+            <el-form-item label="退勤地点：" :label-width="formLabelWidth" prop="name" class="c-must">
+              <el-input v-model="form.offPlace"></el-input>
+            </el-form-item>
+            <el-form-item label="退勤时间：" :label-width="formLabelWidth" class="c-must">
+              <el-time-select placeholder="退勤时间" v-model="form.offTime"
+                :picker-options="{
+                  start: '00:00',
+                  step: '00:05',
+                  end: '24:00'
+                }">
+              </el-time-select>
+            </el-form-item>
+
+            <el-form-item label="任务：" :label-width="formLabelWidth" prop="name" class="c-must">
+              <el-input v-model="form.task"></el-input>
+            </el-form-item>
+
+            <!-- <el-form-item label="值班时间：" :label-width="formLabelWidth" class="c-must">
               <el-time-select placeholder="起始时间" v-model="form.attendTime"
                 :picker-options="{
                   start: '00:00',
@@ -34,13 +61,6 @@
                 }">
               </el-time-select>
               ---
-              <!-- <el-time-select placeholder="结束时间" v-model="form.offTime"
-                :picker-options="{
-                  start: '00:00',
-                  step: '00:05',
-                  end: '24:00',
-                  minTime: form.attendTime
-                }"> -->
                 <el-time-select placeholder="结束时间" v-model="form.offTime"
                 :picker-options="{
                   start: '00:00',
@@ -48,7 +68,7 @@
                   end: '24:00'
                 }">
               </el-time-select>
-            </el-form-item>
+            </el-form-item> -->
 
             <el-form-item label="备注：" :label-width="formLabelWidth" prop="remark" class="c-must">
               <el-input v-model="form.remark"></el-input>
@@ -80,11 +100,14 @@ export default {
         postCode: 'SECURITY',
         name: '',
         type: '1',
+        attendPlace: '',
         attendTime: '',
+        offPlace: '',
         offTime: '',
+        task: '',
         remark: '',
-        communityId: '5a82adf3b06c97e0cd6c0f3d',
-        propertyId : '5a82adee9ce976452b7001ee'
+        communityId: this.$store.getters.communityId,
+        propertyId : localStorage.getItem('propertyId')
       },
       rules: {
         name: [{required: true, message: '请输入班次', trigger: 'blur'}],
@@ -121,11 +144,11 @@ export default {
     },
     find(){
       var postCode = this.formInline.role;
-      let communityId = scheduleList[0].communityId
-      this.$xttp.get('/task/class/list',{params:{communityId:communityId,postCode:postCode,propertyId:'5a82adee9ce976452b7001ee'}})
+      let communityId = this.$store.getters.communityId
+      this.$xttp.post('/task/class/page',{params:{communityId:communityId,postCode:postCode}})
                 .then(res => {
                   if(!res.errorCode) {
-                    this.tableData = res.data
+                    this.tableData = res.data.records;
                   }
                   this.loading = false;
                 }).catch(err =>{

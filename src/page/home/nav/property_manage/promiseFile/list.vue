@@ -30,19 +30,11 @@
       </div>
     </div>
 
-    <el-table
-      class="c-table"
-      :data="tableData"
-      v-loading="loading"
-      element-loading-text="加载中..."
-      border
-      highlight-current-row
-      ref="multipleTable"
-      style="width: 100%">
-      <el-table-column
-        label="序号"
-        type="index"
-        width="50">
+    <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." border highlight-current-row ref="multipleTable" style="width: 100%">
+      <el-table-column label="序号" type="index" width="50"></el-table-column>
+
+      <el-table-column label="合同编号" width="200" :show-overflow-tooltip="true" align="center">
+        <template slot-scope="scope">{{ scope.row.contract }}</template>
       </el-table-column>
 
       <el-table-column label="姓名" :show-overflow-tooltip="true" align="center">
@@ -59,10 +51,6 @@
 
       <el-table-column label="住房" width="120" :show-overflow-tooltip="true" align="center">
         <template slot-scope="scope">{{ scope.row.roomName }}</template>
-      </el-table-column>
-
-      <el-table-column label="合同编号" width="200" :show-overflow-tooltip="true" align="center">
-        <template slot-scope="scope">{{ scope.row.contract }}</template>
       </el-table-column>
 
       <el-table-column label="申请时间" width="200" :show-overflow-tooltip="true" align="center">
@@ -125,7 +113,7 @@
         navDetailData: [
           {id: 0, name: "首页"},
           {id: 1, name: "基础管理"},
-          {id: 2, name: "认证档案"}
+          {id: 2, name: "住户认证"}
         ],
         formInline: {
           name: "",

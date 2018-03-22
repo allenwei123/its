@@ -280,8 +280,6 @@ export default {
     }
   },
   created() {
-    // this.sendAjax();
-    // this.initRole();
     this.getTableList();
   },
   mounted() {

@@ -52,11 +52,14 @@ export default {
       form: {
         name: "",
         code: "",
-        communityIdShow: toName(this.$store.getters.communityList,this.$store.getters.communityId),
+        // communityIdShow: toName(this.$store.getters.communityList,this.$store.getters.communityId),
         communityId: this.$store.getters.communityId,
         buildingId: "",
         floorNo: "",
-        floorCode: ""
+        floorCode: "",
+        communityIdShow: this.$store.getters.communityName
+        // communityId: this.$store.getters.communityId,
+        // communityName: this.$store.getters.communityName
       },
       rules: {
         name: [{ required: true, message: "请输入房间名称", trigger: "blur" }],
@@ -77,6 +80,7 @@ export default {
     if(this.add){//判断此时组件为 编辑
       this.form = this.add;
       this.titleFont = '编辑房间档案';
+      this.form.communityIdShow = this.$store.getters.communityName
     }
   },
   mounted() {},

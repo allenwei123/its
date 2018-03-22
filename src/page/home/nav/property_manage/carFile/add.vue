@@ -153,7 +153,6 @@ export default {
       this.$xttp.post(url, params).then(res => {
         this.loading = false;
         if(res.errorCode === 0) {
-          alert("sssssss")
           this.ij = false;
           this.$emit('reload');
         }

@@ -33,8 +33,9 @@ export default {
       form: {
         code: "",
         name: "",
-        communityIdShow: '',
+        communityIdShow: this.$store.getters.communityName,
         communityId: this.$store.getters.communityId,
+        communityName: this.$store.getters.communityName
       },
       rules: {
         name: [{ required: true, message: "请输入楼栋名称", trigger: "blur" }],

@@ -1,39 +1,35 @@
 <template>
       <el-dialog :title="titleFont" :visible.sync="msg" :before-close="handleClose">
         <el-form :model="form" :rules="rules" ref="ruleForm" class="demo-form-inline">
-            <el-form-item label="姓名" :label-width="formLabelWidth" prop="userName" class="c-must">
-              <el-input v-model="form.userName"></el-input>
-            </el-form-item>
 
-            <el-form-item label="手机号码" :label-width="formLabelWidth" prop="phone" class="c-must">
-              <el-input v-model="form.phone"></el-input>
-            </el-form-item>
+          <el-form-item label="岗位" :label-width="formLabelWidth" prop="postCode" class="c-must">
+            <el-radio-group v-model="form.postCode">
+              <el-radio :label="item.key" :value="item.name" :key="item.name" v-for="(item) in postCodeOptions">{{item.name}}</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          
+          <el-form-item label="姓名" :label-width="formLabelWidth" prop="userName" class="c-must">
+            <el-input v-model="form.userName"></el-input>
+          </el-form-item>
 
-            <!-- <el-form-item label="岗位" :label-width="formLabelWidth" prop="role" class="c-must">
-              <el-radio-group v-model="form.postCode">
-                <el-radio :label="item.name" :value="item.key" :key="item.key" v-for="(item,index) in postCodeOptions"></el-radio>
-              </el-radio-group>
-            </el-form-item> -->
-            <el-form-item label="岗位" :label-width="formLabelWidth" prop="postCode" class="c-must">
-              <el-radio-group v-model="form.postCode">
-                <el-radio :label="item.key" :value="item.name" :key="item.name" v-for="(item) in postCodeOptions">{{item.name}}</el-radio>
-              </el-radio-group>
-            </el-form-item>
+          <el-form-item label="手机号码" :label-width="formLabelWidth" prop="phone" class="c-must">
+            <el-input v-model="form.phone"></el-input>
+          </el-form-item>
 
-            <el-form-item label="性别" :label-width="formLabelWidth" prop="sex" class="c-must">
-              <el-select v-model="form.sex" value-key="key" placeholder="请选择">
-                <el-option v-for="item in maleOptions" :key="item.key" :label="item.value" :value="item.key">{{item.value}}</el-option>
-              </el-select>
-            </el-form-item>
+          <el-form-item label="性别" :label-width="formLabelWidth" prop="sex" class="c-must">
+            <el-select v-model="form.sex" value-key="key" placeholder="请选择">
+              <el-option v-for="item in maleOptions" :key="item.key" :label="item.value" :value="item.key">{{item.value}}</el-option>
+            </el-select>
+          </el-form-item>
 
-            <el-form-item label="设置密码" :label-width="formLabelWidth" prop="password" class="c-must">
-              <el-input v-model="form.password" type="password"></el-input>
-            </el-form-item>
+          <el-form-item label="设置密码" :label-width="formLabelWidth" prop="password" class="c-must">
+            <el-input v-model="form.password" type="password"></el-input>
+          </el-form-item>
 
-            <el-form-item :label-width="formLabelWidth">
-              <el-button @click="handleClose">取 消</el-button>
-              <el-button type="primary" @click="save('ruleForm')">保存</el-button>
-            </el-form-item>
+          <el-form-item :label-width="formLabelWidth">
+            <el-button @click="handleClose">取 消</el-button>
+            <el-button type="primary" @click="save('ruleForm')">保存</el-button>
+          </el-form-item>
         </el-form>
     </el-dialog>
 </template>
@@ -61,7 +57,7 @@ export default {
         password: '',
         communityId: this.$store.getters.communityId,
         communityName: this.$store.getters.communityName,
-        propertyId: '5a82adf3b06c97e0cd6c0f3d',
+        propertyId: localStorage.getItem('propertyId'),
         propertyName:'和谐景苑'
       },
       rules: {

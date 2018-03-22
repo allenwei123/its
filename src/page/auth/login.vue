@@ -20,7 +20,7 @@
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleClose">
-      <el-select v-model="value" placeholder="请选择">
+      <el-select v-model="value" placeholder="请选择" @change="change">
         <el-option
           v-for="item in options"
           :key="item.id"
@@ -46,7 +46,8 @@
         pwd: '123456',
         dialogVisible: false,
         options:[] ,//社区列表
-        value: null ,//当前 社区
+        // value: null ,//当前 社区
+        value: localStorage.getItem('communityId') ? localStorage.getItem('communityId') : null
       }
     },
     methods: {
@@ -71,16 +72,19 @@
             //获取用户对应的社区id列表
             this.$xttp.get(`community/${userId}/queryByUserId`)
               .then(res => {
+                console.log(res);
                 if(!res.errorCode) {
                   res.data.forEach(item => {
                     let obj = {
                       name: item.name,
-                      id: item.id
+                      id: item.id,
+                      propertyId: item.propertyId
                     };
                     this.options.push(obj);
                   });
                   this.dialogVisible = true;
                   this.$store.dispatch('cgCommunityList', this.options);
+                  console.log(this.options);
                 }
               })
           }
@@ -90,11 +94,18 @@
           loadingInstance.close();
         });
       },
+      change(value){
+        let name = this.options.find(item => item.id === this.value)['name'];
+        let propertyId = this.options.find(item => item.id === this.value)['propertyId'];
+        localStorage.setItem('communityName',name);
+        localStorage.setItem('propertyId',propertyId);
+      },
       handleClose() {
         this.dialogVisible = false;
       },
       comfirm() {
         if(this.value) {
+          console.log(this.value);
           this.$store.dispatch('addCommunityId',this.value);
           this.dialogVisible = false;
           this.$router.push('/home');

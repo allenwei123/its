@@ -4,24 +4,18 @@
       <div class="c-notice-container">
         <div class="c-searchbar">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
-            <!-- <el-date-picker
-              v-model="formInline.date"
-              align="right"
-              type="date"
-              placeholder="选择日期"
-              :picker-options="pickerOptions1">
-            </el-date-picker> -->
              <el-form-item label="">
               <el-date-picker
                 v-model="formInline.date"
                 type="date"
                 value-format="yyyy-MM-dd"
+                @change="changeDate"
                 format="yyyy-MM-dd"
                 placeholder="">
               </el-date-picker>
             </el-form-item>
-            <el-form-item label="岗位 :">
-              <el-select v-model="formInline.postCode" placeholder="请选择岗位">
+            <el-form-item label="作业类型 :">
+              <el-select v-model="formInline.taskType" placeholder="请选择作业类型">
                 <el-option v-for="item in postOptions" :key="item.key" :label="item.name" :value="item.key"></el-option>
               </el-select>
             </el-form-item>
@@ -39,20 +33,20 @@
             <el-table-column label="序号" width="80" align="center">
               <template slot-scope="scope">{{ (currentPage -1) * pageSize + scope.$index + 1 }}</template>
             </el-table-column>
-            <el-table-column label="员工" :width="columnWidth" align="center">
+            <el-table-column label="员工" min-width="200" align="center" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{ scope.row.userName }}</template>
             </el-table-column>
-            <el-table-column label="考勤时间" :width="columnWidth" align="center">
+            <el-table-column label="考勤时间" min-width="200" align="center" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{getTime(scope.row.createAt, 'yyyy-MM-dd hh:mm')}}</template>
             </el-table-column>
-            <el-table-column label="凭证" :width="columnWidth" align="center">
+            <el-table-column label="凭证" min-width="300" align="center" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{ scope.row.url }}</template>
             </el-table-column>
-            <el-table-column label="操作" :width="columnWidth" align="center">
+            <!-- <el-table-column label="操作" :width="columnWidth" align="center">
                <template slot-scope="scope">
                  <el-button type="primary" size="mini">查看</el-button>
                </template>
-            </el-table-column>
+            </el-table-column> -->
           </el-table>
         </div>
         <div class="c-pagination">
@@ -66,8 +60,17 @@
   </el-container>
 </template>
 <script>
+const postOptions = [
+  {
+    key:'1',
+    name: '巡更'
+  },
+  {
+    key: '2',
+    name: '保洁'
+  }
+]
 import time from '@/utils/time.js'
-import scheduleList from '@/mock/scheduleList'
 import { communityId as getCommunityList } from '@/biz/community'
 export default {
   name: "checkin",
@@ -77,38 +80,13 @@ export default {
       q_input: null,
       formInline:{
         date: '',
-        postCode: 'SECURITY',
+        taskType: '1',
         name: ''
       },
-      postOptions:[],
-      pickerOptions1: {
-          disabledDate(time) {
-            return time.getTime() > Date.now();
-          },
-          shortcuts: [{
-            text: '今天',
-            onClick(picker) {
-              picker.$emit('pick', new Date());
-            }
-          }, {
-            text: '昨天',
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24);
-              picker.$emit('pick', date);
-            }
-          }, {
-            text: '一周前',
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', date);
-            }
-          }]
-      },
+      // postOptions:[],
+      postOptions:postOptions,
       value2: '',
       loading: false,
-      roleOptions: [],
       tableData: [],
       pageSize: 10,
       total: 0,
@@ -125,6 +103,9 @@ export default {
     getTime(timestamp, format) {
       if (timestamp == null) return '/';
       return time.timestampToFormat(timestamp, format);
+    },
+    changeDate(){
+      this.getTableList();
     },
     initRole(){
       let communityId = this.$store.getters.communityId
@@ -145,15 +126,16 @@ export default {
       };
       let communityId = this.$store.getters.communityId;
       let date = this.formInline.date;
-      let postCode = this.formInline.postCode;
+      // let taskType = this.formInline.taskType;
       params.communityId = communityId;
-      params.date = date;
-      params.postCode = postCode;
+      params.startDate = date;
+      params.endDate = date;
+      // params.taskType = taskType;
       console.log(params);
-      let url = `task/record/page`
+      let url = '/task/record/page';
       this.loading = true;
       this.$xttp
-          .get(url, {params})
+          .post(url, params)
           .then(res => {
             if(!res.errorCode) {
               console.log(res);
@@ -168,7 +150,7 @@ export default {
     }
   },
   created () {
-    this.initRole();
+    // this.initRole();
     this.formInline.date = time.dateFormat(new Date(),'yyyy-MM-dd');
     this.getTableList();
   }
