@@ -29,7 +29,7 @@
         <el-table-column
           label="序号"
           type="index"
-          width="50">
+          width="80" align="center">
         </el-table-column>
         <el-table-column
           prop="name"
@@ -47,7 +47,7 @@
           label="创建时间">
         </el-table-column>
         <el-table-column
-          align="center"
+          align="left"
           fixed="right"
           label="操作"
           width="220">

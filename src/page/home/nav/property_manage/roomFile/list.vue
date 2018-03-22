@@ -38,7 +38,7 @@
         <el-table-column prop="floorNo" align="center" label="房间楼层"></el-table-column>
         <el-table-column prop="floorCode" align="center" label="楼层号"></el-table-column>
         <el-table-column align="center" prop="time1" label="创建时间"> </el-table-column>
-        <el-table-column align="center" fixed="right" label="操作" width="220">
+        <el-table-column align="left" fixed="right" label="操作" width="220">
           <template slot-scope="scope">
             <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button>
             <el-button @click="editHandle(scope.row)" type="warning" size="small">编辑</el-button>

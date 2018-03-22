@@ -7,9 +7,9 @@
             <el-form-item v-if="show" label="物业ID:" :label-width="formLabelWidth" prop="propertyId" class="c-must">
               <el-input v-model="form.propertyId"></el-input>
             </el-form-item>
-            <el-form-item label="角色：" :label-width="formLabelWidth" prop="postCode" class="c-must">
-              <el-select v-model="form.postCode" placeholder="roleOptions">
-                <el-option v-for="item in roleOptions" :key="item.key" :label="item.name" :value="item.key"></el-option>
+            <el-form-item label="岗位：" :label-width="formLabelWidth" prop="postCode" class="c-must">
+              <el-select v-model="form.postCode" placeholder="postOptions">
+                <el-option v-for="item in postOptions" :key="item.key" :label="item.name" :value="item.key"></el-option>
               </el-select>
             </el-form-item>
 
@@ -23,7 +23,7 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item label="出勤地点：" :label-width="formLabelWidth" prop="name" class="c-must">
+            <el-form-item label="出勤地点：" :label-width="formLabelWidth" prop="attendPlace">
               <el-input v-model="form.attendPlace"></el-input>
             </el-form-item>
             <el-form-item label="出勤时间：" :label-width="formLabelWidth" class="c-must">
@@ -35,7 +35,7 @@
                 }">
               </el-time-select>
             </el-form-item>
-            <el-form-item label="退勤地点：" :label-width="formLabelWidth" prop="name" class="c-must">
+            <el-form-item label="退勤地点：" :label-width="formLabelWidth" prop="offPlace">
               <el-input v-model="form.offPlace"></el-input>
             </el-form-item>
             <el-form-item label="退勤时间：" :label-width="formLabelWidth" class="c-must">
@@ -48,29 +48,11 @@
               </el-time-select>
             </el-form-item>
 
-            <el-form-item label="任务：" :label-width="formLabelWidth" prop="name" class="c-must">
+            <el-form-item label="任务：" :label-width="formLabelWidth" prop="task">
               <el-input v-model="form.task"></el-input>
             </el-form-item>
 
-            <!-- <el-form-item label="值班时间：" :label-width="formLabelWidth" class="c-must">
-              <el-time-select placeholder="起始时间" v-model="form.attendTime"
-                :picker-options="{
-                  start: '00:00',
-                  step: '00:05',
-                  end: '24:00'
-                }">
-              </el-time-select>
-              ---
-                <el-time-select placeholder="结束时间" v-model="form.offTime"
-                :picker-options="{
-                  start: '00:00',
-                  step: '00:05',
-                  end: '24:00'
-                }">
-              </el-time-select>
-            </el-form-item> -->
-
-            <el-form-item label="备注：" :label-width="formLabelWidth" prop="remark" class="c-must">
+            <el-form-item label="备注：" :label-width="formLabelWidth" prop="remark">
               <el-input v-model="form.remark"></el-input>
             </el-form-item>
 
@@ -115,7 +97,7 @@ export default {
         offTime: [{ required: true, message: '请选择结束时间', trigger: 'blur' }],
         remark: [{ required: true, message: '请填写备注', trigger: 'blur' }]
       },
-      roleOptions: [],
+      postOptions: [],
       current: 1, //1 初始 2：添加后 3：编辑后
       typeOptions: typeOptions
     };
@@ -179,10 +161,10 @@ export default {
         });
     },
     initRole(){
-      let communityId = scheduleList[0].communityId
+      let communityId = this.$store.getters.communityId;
       this.$xttp.get(`/user/property/${communityId}/post-list`).then(res => {
         if(!res.errorCode) {
-          this.roleOptions = res.data;
+          this.postOptions = res.data;
         }
       })
     }

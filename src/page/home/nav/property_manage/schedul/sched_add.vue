@@ -21,16 +21,51 @@
 
             <hr style="height:1px;border:none;border-top:1px dashed #cecece;" />
 
-            <el-form-item label="班次：" prop="class" class="c-must" style="display:block;margin-top:25px;">
-              <el-radio-group v-model="form.class">
-                <el-radio :label="item.id" :value="item.name" :key="item.name" v-for="(item) in classData">{{item.name}}</el-radio>
-              </el-radio-group>
-            </el-form-item>
             <el-form-item label="员工：" prop="empl" class="c-must" style="display:block;margin-top:20px;">
-              <el-select v-model="form.empl" placeholder="请选择员工">
+              <el-select v-model="form.empl" placeholder="请选择员工" @change="changEmpl">
                 <el-option v-for="item in emplData" :key="item.userId" :label="item.userName" :value="item.userId">
                 </el-option>
               </el-select>
+            </el-form-item>
+            <el-form-item label="班次：" prop="class" class="c-must" style="display:block;margin-top:25px;float:left;">
+              <el-radio-group v-model="form.class">
+                <el-radio @change="changeRadio" :label="item.id" :value="item.name" :key="item.name" v-for="(item) in classData" border>{{item.name}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item v-if="isShow">
+              <div class="demo-input-suffix">
+                <el-input
+                  placeholder="班次名称"
+                  v-model="form.name">
+                </el-input>
+                <el-time-select placeholder="出勤时间" v-model="form.attendTime"
+                :picker-options="{
+                  start: '00:00',
+                  step: '00:05',
+                  end: '24:00'
+                  }">
+                </el-time-select>
+                <el-time-select placeholder="退勤时间" v-model="form.offTime"
+                  :picker-options="{
+                    start: '00:00',
+                    step: '00:05',
+                    end: '24:00'
+                  }">
+                </el-time-select>
+                <div style="min-height:20px;"></div>
+                <el-input
+                  placeholder="出勤地点"
+                  v-model="form.attendPlace">
+                </el-input>
+                <el-input
+                  placeholder="退勤地点"
+                  v-model="form.offPlace">
+                </el-input>
+                <el-input
+                  placeholder="任务"
+                  v-model="form.task">
+                </el-input>      
+              </div>
             </el-form-item>
            
             <el-form-item :label-width="formLabelWidth" style="margin-top:20px;margin-left:40%;" >
@@ -50,11 +85,18 @@ export default {
     return {
       formLabelWidth: "120px",
       titleFont:'新增排班',
+      isShow: false,
       form: {
         postCode: 'SECURITY',
         date: '',
         empl: '',
-        class: ''
+        class: '',
+        name: '',
+        attendTime: '',
+        offTime: '',
+        task:'',
+        attendPlace: '',
+        offPlace: ''
       },
       rules: {
         empl: [{ required: true, message: "请选中员工", trigger: "blur" }],
@@ -79,6 +121,10 @@ export default {
     handleClose() {
       this.$emit("upup", this.current );
     },
+    changEmpl(value){
+      this.form.empl = value;
+      console.log(this.form.empl)
+    },
     initPost(){
       let communityId = this.$store.getters.communityId
       this.$xttp.get(`/user/property/${communityId}/post-list`).then(res => {
@@ -94,6 +140,7 @@ export default {
           .then(res => {
             if(!res.errorCode) {
               this.emplData = res.data
+              
             }
           })
     },
@@ -107,10 +154,27 @@ export default {
       this.$xttp.post(`/task/class/page`,params)
       .then(res => {
         if(!res.errorCode) {
-          console.log(res);
           this.classData = res.data.records;
         }
       })
+    },
+    changeRadio() {
+      this.isShow = true;
+      let id = this.form.class;
+      this.$xttp.get(`task/class/${id}/detail`)
+          .then(res => {
+            if( res.success) {
+              this.form.name = res.data.name;
+              this.form.attendTime = res.data.attendTime;
+              this.form.attendPlace = res.data.attendPlace;
+              this.form.offPlace = res.data.offPlace;
+              this.form.offTime = res.data.offTime;
+              this.form.task = res.data.task;
+            }
+          }).catch(err => {
+            console.log(err)
+          })
+      
     },
     save() {
       if(this.form.empl == ''){
@@ -128,20 +192,32 @@ export default {
       let classId = this.form.class;
       let postCode = this.form.postCode;
       let workDate = this.form.date;
-      let userId = this.$store.getters.uid;
-      // let userName = this.$store.getters.userInfo[0].name;
+      let userId = this.form.empl;
       let communityId = this.$store.getters.communityId;
       let propertyId = localStorage.getItem('propertyId');
+      let className = this.form.name;
+
+      let attendTime = this.form.attendTime;
+      let attendPlace = this.form.attendPlace;
+      let offTime = this.form.offTime;
+      let offPlace = this.form.offPlace;
+      let task = this.form.task;
+
       let params = {};
       params['employeeId'] = employeeId;
       params['classId'] = classId;
+      params['className'] = className;
       params['postCode'] = postCode;
       params['workDate'] = workDate;
       params['userId'] = userId;
-      // params['userName'] = userName;
       params['communityId'] = communityId;
       params['propertyId'] = propertyId;
-      console.log(params);
+      params['attendTime'] = attendTime;
+
+      params['attendPlace'] = attendPlace;
+      params['offTime'] = offTime;
+      params['offPlace'] = offPlace;
+      params['task'] = task;
       
       let msg = this.add ? "编辑" : "添加";
       let uri = this.add
@@ -166,9 +242,9 @@ export default {
         });
     },
     changePostCode(){
+      this.form.empl = '';
       this.initEmpl();
       this.initClass();
-
     }
   },
   created() {
@@ -186,6 +262,26 @@ export default {
   padding: 10px 5px;
   min-width: 100px;
   display: inline-block;
+  margin-top: 20px;
+}
+
+.el-input{
+  width: 200px;
+}
+.el-radio-group{
+
+}
+.el-radio.is-bordered+.el-radio.is-bordered{
+  margin-right: 10px;
+}
+
+.el-radio.is-bordered{
+  height: 40px;
+}
+.el-radio.is-bordered[data-v-e77d2842]{
+  margin-right: 10px;
+  margin-top: 0px;
+  margin-bottom: 10px;
 }
   
 </style>

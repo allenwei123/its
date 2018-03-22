@@ -4,7 +4,10 @@
             <li class="c-list"><span class="c-label">岗位:</span> <span class="c-content"> {{ data.postCode | postCode}} </span></li>
             <li class="c-list"><span class="c-label">班次:</span> <span class="c-content"> {{ data.name }} </span></li>
             <li class="c-list"><span class="c-label">值班时间:</span> <span class="c-content"> {{ data.attendTime }} - {{ data.offTime }} </span></li>
-             <li class="c-list"><span class="c-label">备注信息:</span> <span class="c-content"> {{ data.remark }}</span></li>
+            <li class="c-list"><span class="c-label">出勤地点:</span> <span class="c-content"> {{ data.attendPlace}} </span></li>
+            <li class="c-list"><span class="c-label">任务:</span> <span class="c-content"> {{ data.task }} </span></li>
+            <li class="c-list"><span class="c-label">退勤地点:</span> <span class="c-content"> {{ data.offPlace }} - {{ data.offTime }} </span></li>
+            <li class="c-list"><span class="c-label">备注信息:</span> <span class="c-content"> {{ data.remark }}</span></li>
         </ul>  
     </el-dialog>
 </template>
