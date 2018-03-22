@@ -38,29 +38,7 @@
               <el-button type="primary" @click="save">保存</el-button>
             </el-form-item>
           </el-form>
-        </div>
-        <!-- <hr style="height:1px;border:none;border-top:1px dashed #0066CC;" />
-        <div style="margin-top:75px;">
-          <el-form ref="form" :rules="rules" :model="form" label-width="200px">
-             <el-form-item label="班次" label-width="200px" prop="class" class="c-must">
-              <el-radio-group v-model="form.class">
-                <el-radio :label="item.id" :value="item.name" :key="item.name" v-for="(item) in classData">{{item.name}}</el-radio>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item label="员工" prop="empl" class="c-must">
-              <el-select v-model="form.empl" placeholder="请选择员工">
-                <el-option v-for="item in emplData" :key="item.userId" :label="item.userName" :value="item.userId">
-                </el-option>
-              </el-select>
-            </el-form-item>
-           
-            <el-form-item :label-width="formLabelWidth" >
-              <el-button @click="handleClose">取 消</el-button>
-              <el-button type="primary" @click="save">保存</el-button>
-            </el-form-item>
-          </el-form>
-        </div> -->
-        
+        </div>       
     </el-dialog>
 </template>
 
@@ -78,10 +56,6 @@ export default {
         empl: '',
         class: ''
       },
-      // form: {
-      //   empl: '',
-      //   class: ''
-      // },
       rules: {
         empl: [{ required: true, message: "请选中员工", trigger: "blur" }],
         class: [{ required: true, message: "请选中班次", trigger: "blur" }]
@@ -94,7 +68,7 @@ export default {
   },
   props: ["msg","add"],
   created() {
-    if(this.add) {
+    if(!this.add) {
       // 判定此时组件为 编辑
       this.form = this.add;
       this.titleFont = "编辑排班";
@@ -124,14 +98,17 @@ export default {
           })
     },
     initClass() {
-      var postCode = this.form.postCode;
+      let postCode = this.form.postCode;
       let communityId = this.$store.getters.communityId;
-      let propertyId = localStorage.getItem('propertyId');
-      this.$xttp.get(`/task/class/list`,{params:{communityId:communityId,postCode:postCode,propertyId:propertyId}})
+      let params = {};
+      params['communityId'] = communityId;
+      params['postCode'] = postCode;
+      console.log(params)
+      this.$xttp.post(`/task/class/page`,params)
       .then(res => {
         if(!res.errorCode) {
           console.log(res);
-          this.classData = res.data
+          this.classData = res.data.records;
         }
       })
     },
@@ -145,10 +122,6 @@ export default {
         return;
       }
       this.postData();
-      console.log(this.form.empl)
-      console.log(this.form.class)
-      console.log(this.form.postCode)
-      console.log(this.form.date)
     },
     postData() {
       let employeeId = this.form.empl;

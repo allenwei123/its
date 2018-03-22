@@ -84,7 +84,7 @@ export default {
       navDetailData: [
         { id: 0, name: "首页" },
         { id: 1, name: "基础管理" },
-        { id: 2, name: "人员档案" }
+        { id: 2, name: "住户档案" }
       ],
       formInline: {
         name: ""

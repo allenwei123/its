@@ -41,13 +41,13 @@ const arr = [
           // },
           {
             id: '1-1-4',
-            title: '用户档案',
+            title: '住户档案',
             link:'/home/nav/side/userFile',
             show: 1
           },
           {
             id:'1-1-5',
-            title:'认证档案',
+            title:'住户认证',
             link:'/home/nav/side/promiseFile',
             show: 1
           },

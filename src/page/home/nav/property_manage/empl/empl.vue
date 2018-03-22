@@ -225,11 +225,7 @@ export default {
     },
     getTableList(postCode) {
       let obj = {};
-      if(postCode){
-        obj.postCode = this.postCode;
-      } else {
-        delete obj.postCode;
-      }
+      obj['postCode'] = this.postCode;
       this.loading = true;
       
       let communityId = this.$store.getters.communityId;

@@ -57,7 +57,7 @@ export default {
         password: '',
         communityId: this.$store.getters.communityId,
         communityName: this.$store.getters.communityName,
-        propertyId: '5a82adf3b06c97e0cd6c0f3d',
+        propertyId: localStorage.getItem('propertyId'),
         propertyName:'和谐景苑'
       },
       rules: {

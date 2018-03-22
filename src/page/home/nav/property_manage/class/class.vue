@@ -21,7 +21,10 @@
       </div>
       
       <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." border highlight-current-row ref="multipleTable" style="width: 100%">
-        <el-table-column label="序号" type="index" align="center" width="60"> </el-table-column>
+        <!-- <el-table-column label="序号" type="index" align="center" width="60"> </el-table-column> -->
+        <el-table-column label="序号" width="80" align="center">
+          <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
+        </el-table-column>
         <el-table-column label="ID" type="id" align="center" prop="id" v-if="show"></el-table-column>
         <el-table-column label="岗位" min-width="200" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.postCode | postCode}}</template>
@@ -39,15 +42,15 @@
         </el-table-column>
       </el-table>
 
-      <!-- <div class="c-block">
+      <div class="c-block">
         <el-pagination
-          @current-change="handleCurrentChange"
+          @current-change="getTableList"
           :current-page="currentPage"
           :page-size="pageSize"
           layout="total, prev, pager, next, jumper"
           :total="total">
         </el-pagination>
-      </div> -->
+      </div>
       <transition name="fade">
         <!-- <AddPage v-if="add" :msg="add" @upsee="addChange"  :data="addData"></AddPage> -->
         <AddPage v-if="isShow" :msg="isShow" @reload="getTableList" @upup="change" :add.sync="notice"></AddPage>
@@ -87,9 +90,10 @@ export default {
       formInline: {
         postCode: 'SECURITY'
       },
-      pageSize:10,
-      currentPage: 1,
       loading: false,
+      pageSize:10,
+      total: 0,
+      currentPage: 1,
       isShow: false, //控制添加页面弹出
       isSee: false, //控制查看页面
       seeData: null,
@@ -141,6 +145,9 @@ export default {
     upsee(msg) {//与查看弹窗交互
       this.isSee = false;
     },
+    handleCurrentChange(){
+      this.getTableList()
+    },
     confirmDel(){
       if(this.delData.id){
         this.$xttp.get(`/task/class/${this.delData.id}/delete`)
@@ -165,13 +172,30 @@ export default {
     changePostCode() {
       this.getTableList();
     },
-    getTableList() {
+    getTableList(page) {
       let communityId = this.$store.getters.communityId
-      let postCode = this.formInline.postCode
-      this.$xttp.get('/task/class/list',{params:{communityId:communityId,postCode:postCode,propertyId:'5a82adee9ce976452b7001ee'}})
+      let postCode = this.formInline.postCode;
+
+      let nPage = page || this.$route.query.page || 1;
+      let params = {page:nPage};
+
+      params['communityId'] = communityId;
+      params['postCode'] = postCode;
+      // params['page'] = this.currentPage;
+      // params['size'] = 10;
+      console.log(params);
+      // this.$xttp.post('/task/class/page',{params:{communityId:communityId,postCode:postCode,propertyId:propertyId}})
+      this.$xttp.post('/task/class/page',params)
           .then(res => {
             if(!res.errorCode) {
-              this.tableData = res.data;
+              // this.tableData = res.data.records;
+              // this.total = res.data.total;
+              // this.currentPage = res.data.currentPage;
+
+              this.tableData = res.data.records;
+              this.currentPage = res.data.currentPage;
+              this.total = res.data.total;
+              this.totalPage = res.data.totalPage;
             }
             this.loading = false;
           }).catch(err =>{
@@ -179,17 +203,22 @@ export default {
           })
     },
     find(){
-      var postCode = this.formInline.postCode;
-      let communityId = this.$store.getters.communityId
-      this.$xttp.get('/task/class/list',{params:{communityId:communityId,postCode:postCode,propertyId:'5a82adee9ce976452b7001ee'}})
-          .then(res => {
-            if(!res.errorCode) {
-              this.tableData = res.data
-            }
-            this.loading = false;
-          }).catch(err =>{
-            this.loading = false;
-          })
+      this.getTableList();
+    //   let postCode = this.formInline.postCode;
+    //   let communityId = this.$store.getters.communityId
+    //   let propertyId = localStorage.getItem('propertyId')
+    //   console.log(postCode)
+    //   console.log(communityId)
+    //   console.log(propertyId)
+    //   this.$xttp.post('/task/class/page',{params:{communityId:communityId,postCode:postCode,propertyId:propertyId}})
+    //       .then(res => {
+    //         if(!res.errorCode) {
+    //           this.tableData = res.data.records;
+    //         }
+    //         this.loading = false;
+    //       }).catch(err =>{
+    //         this.loading = false;
+    //       })
       
     }
   },

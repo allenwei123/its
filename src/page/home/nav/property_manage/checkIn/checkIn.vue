@@ -4,18 +4,12 @@
       <div class="c-notice-container">
         <div class="c-searchbar">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
-            <!-- <el-date-picker
-              v-model="formInline.date"
-              align="right"
-              type="date"
-              placeholder="选择日期"
-              :picker-options="pickerOptions1">
-            </el-date-picker> -->
              <el-form-item label="">
               <el-date-picker
                 v-model="formInline.date"
                 type="date"
                 value-format="yyyy-MM-dd"
+                @change="changeDate"
                 format="yyyy-MM-dd"
                 placeholder="">
               </el-date-picker>
@@ -110,6 +104,9 @@ export default {
       if (timestamp == null) return '/';
       return time.timestampToFormat(timestamp, format);
     },
+    changeDate(){
+      this.getTableList();
+    },
     initRole(){
       let communityId = this.$store.getters.communityId
       this.$xttp.get(`/user/property/${communityId}/post-list`).then(res => {
@@ -129,11 +126,11 @@ export default {
       };
       let communityId = this.$store.getters.communityId;
       let date = this.formInline.date;
-      let taskType = this.formInline.taskType;
+      // let taskType = this.formInline.taskType;
       params.communityId = communityId;
       params.startDate = date;
       params.endDate = date;
-      params.taskType = taskType;
+      // params.taskType = taskType;
       console.log(params);
       let url = '/task/record/page';
       this.loading = true;
