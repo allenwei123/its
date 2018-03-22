@@ -65,8 +65,8 @@
             </template>
         </el-form>
         <div slot="footer" class="dialog-footer" v-if="faultStatus === '已提交'">
-            <el-button type="primary" @click="accept">受理故障</el-button>
-            <el-button @click="del">驳回申报</el-button>
+            <!-- <el-button type="primary" @click="accept">受理故障</el-button>
+            <el-button @click="del">驳回申报</el-button> -->
         </div>
   </el-dialog>
 </template>
@@ -89,12 +89,12 @@ import { getUri } from '@/utils/oss';
             // onExceed() {
             //     this.$message('只能上传三张图片')
             // },
-            accept() {
-                this.$emit('accept');
-            },
-            del() {
-                this.$emit('del');
-            },
+            // accept() {
+            //     this.$emit('accept');
+            // },
+            // del() {
+            //     this.$emit('del');
+            // },
             handleClose() {
                 this.$emit("upsee", false );
             },
@@ -107,9 +107,9 @@ import { getUri } from '@/utils/oss';
         created() {
             console.log(11,this.data);
             let that = this.data;
-            this.time = this.getTime(that.playTime, 'yyyy-MM-dd hh:mm'); 
-            this.acceptTime = this.getTime(that.acceptTime, 'yyyy-MM-dd hh:mm'); 
-            this.rejectTime = this.getTime(that.rejectTime, 'yyyy-MM-dd hh:mm'); 
+            this.time = this.getTime(that.playTime, 'yyyy-MM-dd HH:mm'); 
+            this.acceptTime = this.getTime(that.acceptTime, 'yyyy-MM-dd HH:mm'); 
+            this.rejectTime = this.getTime(that.rejectTime, 'yyyy-MM-dd HH:mm'); 
             this.faultType = that.faultType == 1 ? '住户' : that.faultType == 2 ? '公共' : '其它';
             this.faultStatus = that.faultStatus == 0 ? '已取消' : that.faultStatus == 1 ? '已提交' : 
             that.faultStatus == 2 ? '已受理' : that.faultStatus == 3 ? '已指派' : that.faultStatus == 4 ? '已完成' : '已驳回'

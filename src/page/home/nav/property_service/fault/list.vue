@@ -32,7 +32,7 @@
             <el-table-column prop="contact" label="联系方式" width="120">
             </el-table-column>
             <el-table-column prop="playTime" label="申报时间" width="160">
-              <template slot-scope="scope">{{getTime(scope.row.playTime, 'yyyy-MM-dd hh:mm')}}</template>
+              <template slot-scope="scope">{{getTime(scope.row.playTime, 'yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
             <el-table-column prop="faultItem" label="故障描述" width="120">
               <template slot-scope="scope">{{getfaultItem(scope.row.faultItem)}}</template>
@@ -87,7 +87,7 @@
 
       <el-dialog title="温馨提示" :visible.sync="visible3">
           <p>驳回理由 :</p>
-          <el-input type="textarea" v-model.trim="tableData.faultContent" :rows="5"></el-input>
+          <el-input type="textarea" v-model.trim="reason" :rows="5"></el-input>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="visible3 = false">取消</el-button>
             <el-button type="primary" size="mini" @click="confirmReject">确定</el-button>
@@ -148,6 +148,8 @@
         confirmRejectData: '',
         repairName: '',
         // assignStatus: '',//分派状态
+        reason: '',
+        staff: '',
       }
     },
     methods: {
@@ -196,11 +198,12 @@
       },
       handleClick(row) {
         //查看详情弹起 并传数据给see组件
-        console.log(33,row.id);
+        // console.log(33,row.id);
         //查看报修单详细
         let url = `property/fault/${row.id}/detail`;
         this.$xttp.get(url).then(res => {
           if(res.errorCode === 0 ){
+          this.repairName = res.data.repairName;
           this.seeData = res.data;
           this.see = true;
           return this.seeData;
@@ -211,45 +214,40 @@
       },
       assignHandle(row) {
         this.visible1 = true;
-        let url = `property/fault/${row.id}/detail`;
-        this.$xttp.get(url).then(res => {
-          if(res.errorCode === 0 ){
-          this.seeData = res.data;
-          row.faultStatus = 3;
-          // this.assignStatus = row;
-          }
-        }).catch( () => {
-          this.loading = false;
-        })
+        this.assignData = row;
       },
-      assignStaff (){
+      assignStaff (assignData){
+        if(!this.staff.repairName){
+         this.visible1 = false;
+         this.$message({
+            message: '暂无可派人员',
+            type: 'warning'
+          });
+          return false;
+        }
         this.visible1 = false;
         this.$message({
           message: '分派成功',
           type: 'success'
         });
-        this.assign(this.seeData);
-        // this.assignStatus = 3;
+        this.assignData.faultStatus = 3;
+        console.log(22,this.staff);
+        this.assign(this.staff);
       },
       //分配人员
-      assign(row) {
-        console.log(777, row);
+      assign(assignData) {
+        console.log(33,assignData);
         let url = `property/fault/allocation`;
         let params = {
-          id: row.id,
-          repairId: row.repairId,
-          repairName: row.repairName,
-          repairContact: row.repairContact
+          id: assignData.id,
+          repairId: assignData.repairId,
+          repairName: assignData.repairName,
+          repairContact: assignData.repairContact
         }
         this.$xttp.post(url, params).then(res => {
           if(res.errorCode === 0) {
             this.loading = false;
-            // console.log(123,res.data);
             this.repairName = res.data.repairName;
-            // this.assignData = res.data;
-            // console.log(this.assignData);
-            // this.showAssign = true;
-            // this.visible2 = true;
           }
         }).catch( () => {
           this.loading = false;
@@ -258,6 +256,8 @@
       //驳回申报弹窗
       reject(row) {
         this.visible3 = true;
+        //清空上一次的故驳回原因
+        this.reason = '';
         this.confirmRejectData = row;
       },
       confirmReject() {
@@ -268,15 +268,19 @@
           type: 'success'
         });
         this.confirmRejectData.faultStatus = -1;
+        this.confirmRejectData['rejectReason'] = this.reason;
+        console.log('驳回', this.confirmRejectData);
         this.rejectAccept(this.confirmRejectData);
       },
       //驳回申报
       rejectAccept(row) {
         let url = `property/fault/editFaultStatus`;
-        this.$xttp.post(url,{id: row.id, faultStatus: row.faultStatus}).then(res => {
+        this.$xttp.post(url,{id: row.id, 
+          faultStatus: row.faultStatus,
+          rejectReason: row.rejectReason
+        }).then(res => {
           if(res.errorCode === 0){
             this.loading = false;
-            // this.visible3 = true;
             this.$message({
               message: '驳回申报成功',
               type: 'success'
@@ -307,8 +311,9 @@
         this.$xttp.post(url,{id: row.id, faultStatus: row.faultStatus}).then(res => {
           if(res.errorCode === 0){
             this.loading = false;
-            // this.visible2 = true;
-            // this.delData = row;
+            this.repairName = res.data.repairName;
+            this.staff = res.data;
+            console.log(11,this.staff);
           }
         }).catch(() => {
           this.loading = false;
