@@ -169,7 +169,7 @@
         } else if (num == 3) {
           //注销
           this.$xttp
-            .get(`/user/property/${row.id}/relieve`)
+            .get(`/user/property/${row.roomId}/relieve`)
             .then(res => {
               if (!res.errorCode) {
                 this.$message({

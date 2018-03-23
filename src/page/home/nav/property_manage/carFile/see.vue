@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="车辆档案详情" :visible.sync="msg" :before-close="handleClose">
+    <el-dialog title="车辆认证详情" :visible.sync="msg" :before-close="handleClose">
         <ul>
             <li class="c-list"><span class="c-label">车牌号:</span> <span class="c-content"> {{ data.carNo }} </span></li>
             <li class="c-list"><span class="c-label">用户ID:</span> <span class="c-content"> {{ data.userId }} </span></li>

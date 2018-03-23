@@ -14,18 +14,26 @@
             </el-form-item>
 
             <el-form-item label="班次：" :label-width="formLabelWidth" prop="name" class="c-must">
-              <el-input v-model="form.name"></el-input>
+              <el-col :span="14">
+                <el-input v-model.trim="form.name" placeholder="请输入班次"></el-input>
+              </el-col>
             </el-form-item>
 
-            <el-form-item label="班次类型:" :label-width="formLabelWidth" prop="type" class="c-must">
+            <el-form-item label="班次类型：" :label-width="formLabelWidth" prop="type" class="c-must">
               <el-select v-model="form.type" placeholder="请选择">
                 <el-option v-for="item in typeOptions" :key="item.key" :label="item.value" :value="item.key"></el-option>
               </el-select>
             </el-form-item>
 
             <el-form-item label="出勤地点：" :label-width="formLabelWidth" prop="attendPlace">
-              <el-input v-model="form.attendPlace"></el-input>
+              <el-col :span="14">
+                <el-input v-model.trim="form.attendPlace" placeholder="请输入出勤地点"></el-input>
+              </el-col>
             </el-form-item>
+
+            <!-- <el-form-item label="出勤地点：" :label-width="formLabelWidth" prop="attendPlace">
+              <el-input v-model="form.attendPlace"></el-input>
+            </el-form-item> -->
             <el-form-item label="出勤时间：" :label-width="formLabelWidth" class="c-must">
               <el-time-select placeholder="出勤时间" v-model="form.attendTime"
                 :picker-options="{
@@ -35,9 +43,13 @@
                 }">
               </el-time-select>
             </el-form-item>
+
             <el-form-item label="退勤地点：" :label-width="formLabelWidth" prop="offPlace">
-              <el-input v-model="form.offPlace"></el-input>
+              <el-col :span="14">
+                <el-input v-model.trim="form.offPlace" placeholder="请输入退勤地点"></el-input>
+              </el-col>
             </el-form-item>
+
             <el-form-item label="退勤时间：" :label-width="formLabelWidth" class="c-must">
               <el-time-select placeholder="退勤时间" v-model="form.offTime"
                 :picker-options="{
@@ -49,11 +61,15 @@
             </el-form-item>
 
             <el-form-item label="任务：" :label-width="formLabelWidth" prop="task">
-              <el-input v-model="form.task"></el-input>
+              <el-col :span="14">
+                <el-input v-model.trim="form.task" placeholder="请输入任务"></el-input>
+              </el-col>
             </el-form-item>
 
             <el-form-item label="备注：" :label-width="formLabelWidth" prop="remark">
-              <el-input v-model="form.remark"></el-input>
+              <el-col :span="14">
+                <el-input v-model.trim="form.remark" placeholder="请输入备注"></el-input>
+              </el-col>
             </el-form-item>
 
             <el-form-item :label-width="formLabelWidth">

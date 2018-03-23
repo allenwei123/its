@@ -20,7 +20,7 @@
         </div>
       </div>
       
-      <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." border highlight-current-row ref="multipleTable" style="width: 100%">
+      <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." border highlight-current-row ref="multipleTable" style="width: 100%" :default-sort = "{prop: 'createAt', order: 'descending'}">
         <el-table-column label="序号" type="index" align="center" width="50"></el-table-column>
         <!-- <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
@@ -55,7 +55,7 @@
         <el-table-column label="手机号" min-width="120" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{scope.row.phone}}</template>
         </el-table-column>
-        <el-table-column label="创建时间" min-width="150" align="center" :show-overflow-tooltip="true">
+        <el-table-column label="创建时间" min-width="150" align="center" :show-overflow-tooltip="true" sortable>
           <template slot-scope="scope">{{scope.row.createAt | time('yyyy-MM-dd HH:mm')}}</template>
         </el-table-column>
         <el-table-column v-if="show" label="创建人" min-width="120" :show-overflow-tooltip="true">
