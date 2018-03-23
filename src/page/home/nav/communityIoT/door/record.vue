@@ -72,10 +72,10 @@
         let url = `sys/door-record/page?page=${this.currentPage}&size=${this.pageSize}`;
         let params = {};
         params['communityId'] = this.$store.getters.communityId;
-        params['deviceId'] = this.$route.query.deviceId;
-        if (this.q_input) {
-          params['time'] = this.q_input;
-        }
+        // params['deviceId'] = this.$route.query.deviceId;
+        // if (this.q_input) {
+        //   params['time'] = this.q_input;
+        // }
         this.$xttp.post(url, params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {

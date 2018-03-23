@@ -159,7 +159,7 @@ export default {
     },
     sendAjax(page,keyType) {
       let nPage = page || this.$route.query.page || 1;
-      let obj = {page:nPage,communityId:this.$store.getters.communityId,userId:'5a82a45e9ce93e30677c3f9e'}
+      let obj = {page:nPage,communityId:this.$store.getters.communityId,userId:'5a9a68960cf2378eab90c4b9'}
       if(keyType){
         obj.keyType = this.formInline.keyType;
       }else {
