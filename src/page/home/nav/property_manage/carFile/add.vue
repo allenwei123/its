@@ -76,6 +76,7 @@ export default {
       form: {
         communityId: localStorage.getItem("communityId"),
         userId: JSON.parse(localStorage.getItem("userInfo")).id,
+        // userId: '',
         carNo: '',
         postCode: 'SECURITY',
         empl: ''
@@ -173,15 +174,16 @@ export default {
       this.loading = true;
       let params = {};
       params['communityId'] = this.$store.getters.communityId;
-      params['userId'] = this.form.userId;
+      params['userId'] = this.form.empl;
       params['carNo'] = this.form.carNo;
-      params['carType'] = this.form.carType;
-      params['carColor'] = this.form.carColor;
-      params['drivingPermit'] = this.form.drivingPermit;
-      if (this.form.drivingPermitPicUrl) {
-          params['drivingPermitPicUrl'] = this.form.drivingPermitPicUrl;
-      }
-      let url = '/vehicle/applyCarNum'
+      // params['clientType'] = '1001';
+      // let clientType = '1001'; 
+      // console.log(this.form.empl);
+      console.log(params);
+      // console.log(clientType)
+      let url = '/vehicle/applyCarNum/property';
+      // let url = `/vehicle/applyCarNum?clientType=${clientType}`
+      console.log(url);
       this.$xttp.post(url, params).then(res => {
         this.loading = false;
         if(res.errorCode === 0) {

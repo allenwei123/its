@@ -1,4 +1,5 @@
 <template>
+  <el-container>
     <el-main>
       <div>
         <ul class="c-navDetail clear">
@@ -13,19 +14,22 @@
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
+              <el-button type="primary" @click="query">查询</el-button>
             </el-form-item>
           </el-form>
           <el-button type="primary" class="c-addBtn" @click="addClass">新增班次</el-button>
         </div>
       </div>
-      
-      <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." border highlight-current-row ref="multipleTable" style="width: 100%">
-        <!-- <el-table-column label="序号" type="index" align="center" width="60"> </el-table-column> -->
-        <el-table-column label="序号" width="80" align="center">
+      <el-table class="c-table" :data="tableData" style="width: 100%" v-loading="loading" stripe >
+        <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
         </el-table-column>
-        <el-table-column label="ID" type="id" align="center" prop="id" v-if="show"></el-table-column>
+        <el-table-column v-if="show" label="ID" min-width="80" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ scope.row.id }}</template>
+        </el-table-column>
+        <el-table-column label="创建时间" min-width="160" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ scope.row.createAt | time('yyyy-MM-dd HH:mm:ss') }}</template>
+        </el-table-column>
         <el-table-column label="岗位" min-width="200" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.postCode | postCode}}</template>
         </el-table-column>
@@ -33,203 +37,159 @@
         <el-table-column label="值班时间" min-width="320" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{scope.row.attendTime}}~{{scope.row.offTime}}</template>
         </el-table-column>
-        <el-table-column prop="remark" label="备注信息" align="center"  width="200"> </el-table-column>
+        <el-table-column label="备注信息" align="center" width="200" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ scope.row.remark }}</template>
+        </el-table-column>
         <el-table-column fixed="right" align="center" label="操作" width="200">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="seeHandle(scope.row)">查看</el-button>
+            <!-- <el-button type="primary" size="mini" @click="editHandle(scope.row)">编辑</el-button> -->
             <el-button @click="delHandle(scope.row)" type="danger" size="small">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
-
-      <div class="c-block">
+      <div class="c-pagination">
         <el-pagination
-          @current-change="getTableList"
-          :current-page="currentPage"
-          :page-size="pageSize"
-          layout="total, prev, pager, next, jumper"
-          :total="total">
+          layout="total, prev, pager, next, jumper" @current-change="getTableList"
+          :total="total" :page-size="pageSize" :current-page.sync="currentPage">
         </el-pagination>
       </div>
+
       <transition name="fade">
-        <!-- <AddPage v-if="add" :msg="add" @upsee="addChange"  :data="addData"></AddPage> -->
-        <AddPage v-if="isShow" :msg="isShow" @reload="getTableList" @upup="change" :add.sync="notice"></AddPage>
-        <SeePage v-if="isSee" :msg="isSee" @upsee="upsee"  :data="seeData" ></SeePage>
+        <SeePage v-if="isSee" :msg="isSee" @upsee="upsee" :data="seeData"></SeePage>
+        <AddPage v-if="isShow" :msg="isShow" @reload="query" @upup="change" :add.sync="classData"></AddPage>
       </transition>
 
       <el-dialog title="温馨提示" :visible.sync="visible2">
-          <p>请问您是否确定删除这条数据吗？</p>
-          <div style="text-align: right; margin: 0">
-            <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
-            <el-button type="primary" size="mini" @click="confirmDel">确定</el-button>
-          </div>
+        <p>请问您确定要删除这条数据吗？</p>
+        <div style="text-align: right; marigin: 0">
+          <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
+          <el-button type="primary" size="mini" @click="confirmDel">确定</el-button>
+        </div>
       </el-dialog>
     </el-main>
+  </el-container>
 </template>
 
 <script>
-import AddPage from "./class_add";
-import SeePage from "./class_see";
+import SeePage from './see';
+import AddPage from './add';
+
 import { mapGetters } from "vuex";
-import scheduleList from '@/mock/scheduleList'
 import time from '@/utils/time.js';
+  export default {
+    name: 'class',
+    data () {
+      return {
+        loading: false,
+        show: false,
+        navDetailData: [
+          { id: 0, name: "物业管理" },
+          { id: 1, name: "作业管理" },
+          { id: 2, name: "班次管理" }
+        ],
+        formInline: {
+          postCode: 'SECURITY'
+        },
+        postOptions:[],
+        tableData: [],
+        pageSize: 10,
+        total: 0,
+        currentPage: 1,
+        input: '',
+        q_input: null,
+        isSee: false,
+        seeData: null,
+        classData: null,
+        isShow: false,
 
-export default {
-  name: "class",
-  data() {
-    return {
-      show: false,
-      postOptions: [],
-      isSou: false,
-      tableData: [],
-      navDetailData: [
-        { id: 0, name: "物业管理" },
-        { id: 1, name: "作业管理" },
-        { id: 2, name: "班次管理" }
-      ],
-      formInline: {
-        postCode: 'SECURITY'
-      },
-      loading: false,
-      pageSize:10,
-      total: 0,
-      currentPage: 1,
-      isShow: false, //控制添加页面弹出
-      isSee: false, //控制查看页面
-      seeData: null,
-
-      notice:null,//编辑传送的值
-      add:false,//控制查看组件弹出
-      addData:null,//查看数据
-      visible2:false,//控制删除框
-      delData:null
-    };
-  },
-  computed: mapGetters(["showAside"]),
-  components: {
-      AddPage,
-      SeePage
-  },
-  methods: {
-    onSubmit() {//添加按钮
-      this.notice = null;
-      this.isShow = !this.isShow;
-    },
-    addClass() {
-      //新增
-      this.notice = null;
-      this.isShow = !this.isShow;
-    },
-    seeHandle(row) {
-      //查看
-      this.isSee = true;
-      this.seeData = row;
-    },
-    editHandle(row) {
-      //编辑
-      this.isShow = true;
-      this.notice = row;
-    },
-    delHandle(row) {
-      this.visible2 = true;
-      this.delData = row; 
-    },
-    change(msg) {//与添加弹窗交互
-      if(msg == 1) {
-        this.isShow = false;
-      }else if(msg == 2 || msg == 3) {
-        // this.sendAjax();
-        this.isShow = false;
+        visible2: false, //控制删除弹出框
+        delData: null
       }
     },
-    upsee(msg) {//与查看弹窗交互
-      this.isSee = false;
+    computed: mapGetters(["showAside"]),
+    components: {
+      SeePage,
+      AddPage
     },
-    handleCurrentChange(){
-      this.getTableList()
-    },
-    confirmDel(){
-      if(this.delData.id){
-        this.$xttp.get(`/task/class/${this.delData.id}/delete`)
-        .then(res=> {
-          if(!res.errorCode){
+    methods: {
+      query() {
+        if (this.currentPage !== 1) {
+          this.currentPage = 1;
+        }
+        else {
+          this.getTableList();
+        }
+      },
+      getTableList() {
+        this.loading = true;
+        let params = {};
+        params.communityId = this.$store.getters.communityId;
+        params.postCode = this.formInline.postCode;
+        let url = `/task/class/page?page=${this.currentPage}&size=${this.pageSize}`;
+        this.$xttp.post(url, params).then(res => {
+          this.loading = false;
+          if (res.errorCode === 0) {
+            this.tableData = res.data.records;
+            this.total = res.data.total;
+          }
+        }).catch(() => {
+          this.loading = false;
+        })
+      },
+      initPost(){
+        let communityId = this.$store.getters.communityId
+        this.$xttp.get(`/user/property/${communityId}/post-list`).then(res => {
+          if(!res.errorCode) {
+            this.postOptions = res.data;
+          }
+        })
+      },
+      changePostCode(){
+        this.query();
+      },
+      addClass (){
+        this.classData = null;
+        this.isShow = !this.isShow;
+      },
+      seeHandle(row){
+        // 查看
+        this.isSee = true;
+        this.seeData = row;
+      },
+      upsee(msg) {  //查看弹窗交互
+        this.isSee = false;
+      },
+      change(msg) {
+        if (msg == 1) {
+          this.isShow = false;
+        } else if(msg == 2 || msg == 3) {
+          this.isShow = false;
+        }
+      },
+      delHandle(row){
+        this.visible2 = true;
+        this.delData = row; 
+      },
+      confirmDel(){
+        if(this.delData.id) {
+          this.$xttp.get(`/task/class/${this.delData.id}/delete`)
+          .then(res => {
             this.visible2 = false;
             this.delData = null;
             this.$message({message:res.data,type:'success'});
-            this.find();
-          }
-        })
-      }
-    },
-    initPost(){
-      let communityId = this.$store.getters.communityId
-      this.$xttp.get(`/user/property/${communityId}/post-list`).then(res => {
-        if(!res.errorCode) {
-          this.postOptions = res.data;
-        }
-      })
-    },
-    changePostCode() {
-      this.getTableList();
-    },
-    getTableList(page) {
-      let communityId = this.$store.getters.communityId
-      let postCode = this.formInline.postCode;
-
-      let nPage = page || this.$route.query.page || 1;
-      let params = {page:nPage};
-
-      params['communityId'] = communityId;
-      params['postCode'] = postCode;
-      // params['page'] = this.currentPage;
-      // params['size'] = 10;
-      console.log(params);
-      // this.$xttp.post('/task/class/page',{params:{communityId:communityId,postCode:postCode,propertyId:propertyId}})
-      this.$xttp.post('/task/class/page',params)
-          .then(res => {
-            if(!res.errorCode) {
-              // this.tableData = res.data.records;
-              // this.total = res.data.total;
-              // this.currentPage = res.data.currentPage;
-
-              this.tableData = res.data.records;
-              this.currentPage = res.data.currentPage;
-              this.total = res.data.total;
-              this.totalPage = res.data.totalPage;
-            }
-            this.loading = false;
-          }).catch(err =>{
+            this.query();
+          }).catch(()=> {
             this.loading = false;
           })
+        }
+      }
     },
-    find(){
-      this.getTableList();
-    //   let postCode = this.formInline.postCode;
-    //   let communityId = this.$store.getters.communityId
-    //   let propertyId = localStorage.getItem('propertyId')
-    //   console.log(postCode)
-    //   console.log(communityId)
-    //   console.log(propertyId)
-    //   this.$xttp.post('/task/class/page',{params:{communityId:communityId,postCode:postCode,propertyId:propertyId}})
-    //       .then(res => {
-    //         if(!res.errorCode) {
-    //           this.tableData = res.data.records;
-    //         }
-    //         this.loading = false;
-    //       }).catch(err =>{
-    //         this.loading = false;
-    //       })
-      
+    created() {
+      this.initPost()
+      this.query();
     }
-  },
-  created() {
-    // this.sendAjax();
-    this.initPost();
-    this.getTableList();
-  },
-  mounted() {
   }
-};
 </script>
 
 <style scoped lang="scss">
@@ -262,17 +222,9 @@ export default {
 .fade-enter-active, .fade-leave-active {
   transition: all 0.5s ease;
 }
-       
+
 .fade-enter, .fade-leave-active {
   opacity: 0;
   transform: rotateY(180deg);
-}
-.fade1-enter-active, .fade1-leave-active {
-  transition: all 0.5s ease;
-}
-       
-.fade1-enter, .fade1-leave-active {
-  opacity: 0;
-  transform: translateX(-500px);
 }
 </style>

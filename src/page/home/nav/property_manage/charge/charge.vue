@@ -44,22 +44,22 @@
         <el-table-column v-if="show" label="创建时间" min-width="160" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.createAt | time('yyyy-MM-dd HH:mm:ss') }}</template>
         </el-table-column>
-        <el-table-column label="员工" min-width="200" align="center" :show-overflow-tooltip="true">
-          <template slot-scope="scope">{{ scope.row.userName }}</template>
+        <el-table-column label="收费项目" min-width="200" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ scope.row.itemName }}</template>
         </el-table-column>
-        <el-table-column label="考勤时间" min-width="200" align="center" :show-overflow-tooltip="true">
+        <el-table-column label="创建时间" min-width="200" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{getTime(scope.row.createAt, 'yyyy-MM-dd hh:mm')}}</template>
         </el-table-column>
-        <el-table-column label="凭证" min-width="300" align="center" :show-overflow-tooltip="true">
-          <template slot-scope="scope">{{ scope.row.url }}</template>
+        <el-table-column label="状态" min-width="300" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ scope.row.dataStatus }}</template>
         </el-table-column>
-        <!-- <el-table-column fixed="right" align="center" label="操作" width="200">
+        <el-table-column fixed="right" align="center" label="操作" width="200">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="seeHandle(scope.row)">查看</el-button>
             <el-button type="primary" size="mini" @click="editHandle(scope.row)">编辑</el-button>
             <el-button @click="delHandle(scope.row)" type="danger" size="small">删除</el-button>
           </template>
-        </el-table-column> -->
+        </el-table-column>
       </el-table>
       <div class="c-pagination">
         <el-pagination
@@ -96,11 +96,11 @@ import time from '@/utils/time.js';
       return {
         loading: false,
         show: false,
-        taskType :'1',
+        taskType :'2',
         navDetailData: [
           { id: 0, name: "物业管理" },
-          { id: 1, name: "排班管理" },
-          { id: 2, name: "保安考勤" }
+          { id: 1, name: "收费管理" },
+          { id: 2, name: "收费管理" }
         ],
         formInline: {
           empl: '',
@@ -137,7 +137,7 @@ import time from '@/utils/time.js';
           }
           }]
         },
-        postCode:'SECURITY',
+        postCode:'CLEANER',
         emplData: [],
         tableData: [],
         pageSize: 10,
@@ -164,28 +164,30 @@ import time from '@/utils/time.js';
       getTableList() {
         this.loading = true;
         let params = {};
-        params.communityId = this.$store.getters.communityId;
-        params.taskType = this.taskType;
-        if(this.formInline.empl){
-          params.userName = this.formInline.empl;
-        } else {
-          delete params.userName;
-        }
+        let communityId = this.$store.getters.communityId;
+        // params.taskType = this.taskType;
+        // if(this.formInline.empl){
+        //   params.userName = this.formInline.empl;
+        // } else {
+        //   delete params.userName;
+        // }
 
-        if(this.formInline.rangeDate[0]== ''){
-          params.startDate = time.dateFormat(new Date(),'yyyy-MM-01')
-        } else {
-          params.startDate = (this.formInline.rangeDate)[0]
-        }
-        if(this.formInline.rangeDate[1]== ''){
-          params.endDate = time.dateFormat(new Date(),'yyyy-MM-30')
-        } else {
-          params.endDate = (this.formInline.rangeDate)[1]
-        }
-        let url = `/task/record/page?page=${this.currentPage}&size=${this.pageSize}`;
-        this.$xttp.post(url, params).then(res => {
+        // if(this.formInline.rangeDate[0]== ''){
+        //   params.startDate = time.dateFormat(new Date(),'yyyy-MM-01')
+        // } else {
+        //   params.startDate = (this.formInline.rangeDate)[0]
+        // }
+        // if(this.formInline.rangeDate[1]== ''){
+        //   params.endDate = time.dateFormat(new Date(),'yyyy-MM-30')
+        // } else {
+        //   params.endDate = (this.formInline.rangeDate)[1]
+        // }
+        // {params:{postCode:postCode}}
+        let url = `/fees/item/page?page=${this.currentPage}&size=${this.pageSize}`;
+        this.$xttp.get(url, {params:{communityId:communityId}}).then(res => {
           this.loading = false;
           if (res.success) {
+            console.log(res);
             this.tableData = res.data.records;
             this.total = res.data.total;
           }

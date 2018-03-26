@@ -16,7 +16,7 @@
           <el-button type="primary" class="c-addBtn" @click="addCar">新增车辆</el-button>
         </div>
       </div>
-      
+
       <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." border highlight-current-row ref="multipleTable" style="width: 100%">
         <el-table-column label="序号" width="80" align="center">
           <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
@@ -24,25 +24,17 @@
         <el-table-column v-if="show" align="center" prop="id" label=""></el-table-column>
         <el-table-column v-if="show" align="center" prop="userId" label=""></el-table-column>
         <el-table-column align="center" prop="carNo" label="车牌号" width="160"></el-table-column>
-        <!-- <el-table-column align="center" prop="carType" label="车辆型号" width="120"></el-table-column>
-        <el-table-column align="center" prop="carColor" label="车身颜色" width="100"></el-table-column> -->
-        <!-- <el-table-column align="center" prop="parkingName" label="车库信息" width="250"></el-table-column> -->
         <el-table-column label="车库信息" width="250" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.parkingName}}</template>
         </el-table-column>
         <el-table-column label="所属住户" width="200" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope"><a href="">{{ scope.row.userName}}</a></template>
         </el-table-column>
-        <!-- <el-table-column align="center" prop="drivingPermit" label="行驶证号" width="150"></el-table-column> -->
-        <!-- <el-table-column align="center" prop="drivingPermitPicUrl" label="行驶证照" width="200"></el-table-column> -->
-        <!-- <el-table-column label="行驶证照" width="200" align="center">
-          <template slot-scope="scope"><a href="">{{ scope.row.drivingPermitPicUrl}}</a></template>
-        </el-table-column> -->
         <el-table-column align="center" prop="auditStatus" label="审核状态" :formatter="auditStatusFilter" width="120"></el-table-column>
         <el-table-column align="left" fixed="right" label="操作" width="240">
           <template slot-scope="scope">
             <!-- <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button> -->
-            <el-button v-if="scope.row.auditStatus == 1" @click="handleUnbundl(scope.row)" type="danger" size="small">注销</el-button>
+            <el-button v-if="scope.row.auditStatus == 1 || scope.row.auditStatus == -1" @click="handleUnbundl(scope.row)" type="danger" size="small">注销</el-button>
             <el-button v-if="scope.row.auditStatus == 0" @click="handleDone(scope.row, '1')" type="success" size="small">通过</el-button>
             <el-button v-if="scope.row.auditStatus == 0" @click="handleDone(scope.row,'-1')" type="warning" size="small">拒绝</el-button>
           </template>
@@ -157,7 +149,7 @@ export default {
     },
     delHandle(row) {
       this.visible2 = true;
-      this.delData = row; 
+      this.delData = row;
     },
     seeChange(msg){
       this.isSee = false;
@@ -267,7 +259,7 @@ export default {
     find(){
       let communityId = this.$store.getters.communityId;
       let carNo = this.formInline.carNo;
- 
+
       this.$xttp.get(`/vehicle/${communityId}/page?carNo=${carNo}`)
                 .then(res => {
         if(!res.errorCode) {
@@ -320,7 +312,7 @@ export default {
 .fade-enter-active, .fade-leave-active {
   transition: all 0.5s ease;
 }
-       
+
 .fade-enter, .fade-leave-active {
   opacity: 0;
   transform: rotateY(180deg);
@@ -328,7 +320,7 @@ export default {
 .see-enter-active, .see-leave-active {
   transition: all 0.5s ease;
 }
-       
+
 .see-enter, .see-leave-active {
   opacity: 0;
   transform: translateX(-500px);

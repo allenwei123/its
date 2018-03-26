@@ -7,10 +7,18 @@
       </ul>
       <div class="c-search">
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
-
+          <el-form-item>
+            <el-select v-model="formInline.floorSer" clearable placeholder="选择楼栋搜索">
+              <el-option
+                v-for="item in floorOptions"
+                :key="item.id"
+                :value="item.id"
+                :label="item.name">
+              </el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item>
             <el-select v-model="formInline.value" placeholder="请选择状态">
-
               <el-option
                 v-for="item in statusList"
                 :key="item.id"
@@ -31,13 +39,16 @@
     </div>
 
     <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." border highlight-current-row ref="multipleTable" style="width: 100%">
-      <el-table-column label="序号" type="index" width="50"></el-table-column>
+      <!-- <el-table-column label="序号" type="index" width="50"></el-table-column> -->
+      <el-table-column label="序号" width="80" align="center" :show-overflow-tooltip="true">
+        <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
+      </el-table-column>
 
       <el-table-column label="合同编号" width="200" :show-overflow-tooltip="true" align="center">
         <template slot-scope="scope">{{ scope.row.contract }}</template>
       </el-table-column>
 
-      <el-table-column label="姓名" :show-overflow-tooltip="true" align="center">
+      <el-table-column label="姓名" width="120" :show-overflow-tooltip="true" align="center">
         <template slot-scope="scope">{{ scope.row.name }}</template>
       </el-table-column>
 
@@ -66,7 +77,7 @@
       </el-table-column>
 
       <el-table-column label="审核时间" width="200" :show-overflow-tooltip="true" align="center">
-        <template slot-scope="scope">{{ scope.row.auditTime }}</template>
+        <template slot-scope="scope">{{ scope.row.auditTime | time('yyyy-MM-dd HH:mm:ss') }}</template>
       </el-table-column>
 
       <el-table-column
@@ -91,11 +102,29 @@
       <el-pagination
         @current-change="handleCurrentChange"
         :current-page="currentPage"
-        :page-size="10"
+        :page-size="pageSize"
         layout="total, prev, pager, next, jumper"
         :total="total">
       </el-pagination>
     </div>
+
+    <el-dialog title="温馨提示" :visible.sync="visible3">
+      <p v-if="pass">确定认证通过吗？</p>
+      <p v-if="refuse">确定驳回认证吗？</p>
+      <div style="text-align: right; margin: 0">
+        <el-button size="mini" type="text" @click="visible3 = false">取消</el-button>
+        <el-button type="primary" size="mini" @click="confirmPR">确定</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="温馨提示" :visible.sync="visible2">
+      <p>请问您确定注销住户吗？</p>
+      <div style="text-align: right; margin: 0">
+        <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
+        <el-button type="primary" size="mini" @click="confirmDel">确定</el-button>
+      </div>
+    </el-dialog>
+
     <printPage v-if="boolDialog" :data.sync="printData" @upup="change" :msg="boolDialog"></printPage>
   </el-main>
 </template>
@@ -103,6 +132,7 @@
 <script>
   import printPage from "./print";
   import {mapGetters} from "vuex";
+  import time from '@/utils/time.js';
 
   export default {
     name: "PromiseFile",
@@ -110,23 +140,32 @@
       return {
         isSou: false,
         tableData: [],
+        floorOptions: [],
         navDetailData: [
           {id: 0, name: "首页"},
           {id: 1, name: "基础管理"},
           {id: 2, name: "住户认证"}
         ],
         formInline: {
+          floorSer: '',
           name: "",
           value: ''
         },
+        // currentPage: 1,
+        pageSize: 10,
+        total: 0,
         currentPage: 1,
         loading: false,
         total: 0, //列表总数
         seeData: null, //查看数据
-        statusList: [{id: 0, name: '未审核'}, {id: 1, name: '审核通过'}, {id: -1, name: '驳回'}, {id: -2, name: '违规'}], //审核状态下拉框数据
+        statusList: [{id: 0, name: '待审核'}, {id: 1, name: '已通过'}, {id: -1, name: '已拒绝'}, {id: -2, name: '已注销'}], //审核状态下拉框数据
         visible2: false,
         boolDialog: false, //控制打印窗口
-        printData: null
+        printData: null,
+
+        visible3: false,
+        pass: false,
+        refuse: false
       };
     },
     computed: mapGetters(["showAside"]),
@@ -156,51 +195,76 @@
           //1 审核  2 驳回
           status = num == 1 ? 1 : -1;
           msg = num == 1 ? '审核' : '驳回';
-          this.$xttp
-            .post(`/user/property/audit`, {id: row.id, auditStatus: status})
-            .then(res => {
-              if (!res.errorCode) {
-                this.$message({
-                  message: `温馨提示，该次${msg}成功！`,
-                  type: "success"
-                });
-              }
-            });
+          let id = row.id;
+
+          if(num == 1){
+            this.visible3 = true;
+            this.pass = true;
+            this.refuse = false;
+            this.id = id;
+            this.status = 1;
+          }
+
+          if (num == 2){
+            this.visible3 = true;
+            this.pass = false;
+            this.refuse = true;
+            this.id = id;
+            this.status = -1;
+          }
         } else if (num == 3) {
-          //注销
-          this.$xttp
-            .get(`/user/property/${row.roomId}/relieve`)
-            .then(res => {
-              if (!res.errorCode) {
-                this.$message({
-                  message: `温馨提示，该次注销成功！`,
-                  type: "success"
-                });
-              }
-            });
+          this.visible2 = true;
+          this.delData = row;
         }
       },
       change(msg) {
         //与打印交互
         this.boolDialog = false;
       },
-      confirmDel() {
-        if (this.delData.id) {
-          this.$xttp
-            .get(`/community/building/${this.delData.id}/delete`)
-            .then(res => {
-              if (!res.errorCode) {
-                this.visible2 = false;
-                this.delData = null;
-                this.$message({message: res.data, type: "success"});
-                this.find();
-              }
+      confirmPR() {
+        this.$xttp
+        .post(`/user/property/audit`, {id: row.id, auditStatus: status})
+        .then(res => {
+          if (!res.errorCode) {
+            this.$message({
+              message: `温馨提示，该次${msg}成功！`,
+              type: "success"
             });
-        }
+            this.find();
+          }
+        });
+      },
+      confirmDel() {
+        this.$xttp
+          .get(`/user/property/${this.delData.roomId}/relieve`)
+          .then(res => {
+            if (!res.errorCode) {
+              this.$message({
+                message: `温馨提示，该次注销成功！`,
+                type: "success"
+              });
+              this.visible2 = false;
+              this.delData = null;
+              this.find();
+            }
+          });
       },
       change(msg) {
         //与添加弹窗交互
         this.boolDialog = msg;
+      },
+      selectCommunity(num){
+        let obj = { communityId:this.$store.getters.communityId };
+        this.$xttp.get(`/community/building/list`,{params:obj})
+          .then(res => {
+            if(!res.errorCode){
+              this.floorOptions = res.data;
+              this.formInline.floorSer = this.floorOptions[0].id;
+            }
+            if(num) {
+              this.sendAjax(1,this.formInline.floorSer)
+            }
+          })
       },
       seeChange(msg) {
         //与查看弹窗交互
@@ -271,6 +335,7 @@
       }
     },
     created() {
+      this.selectCommunity();
       this.sendAjax(1);
     }
   };

@@ -13,6 +13,9 @@
               </el-select>
             </el-form-item>
             <el-form-item>
+              <el-input v-model="name" placeholder="姓名/工号"></el-input>
+            </el-form-item>
+            <el-form-item>
               <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
             </el-form-item>
           </el-form>
@@ -116,6 +119,7 @@ export default {
       ],
       postCode: 'SECURITY',
       postOptions: [],
+      name: '',
       q_input: null,
       loading: false,
       isShow: false, //控制添加页面弹出
@@ -226,6 +230,11 @@ export default {
     getTableList(postCode) {
       let obj = {};
       obj['postCode'] = this.postCode;
+      // if(this.name){
+      //   obj['name'] = this.name;
+      // } else {
+      //   delete obj.name;
+      // }
       this.loading = true;
       
       let communityId = this.$store.getters.communityId;

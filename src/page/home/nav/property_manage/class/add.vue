@@ -68,7 +68,7 @@
 
             <el-form-item label="备注：" :label-width="formLabelWidth" prop="remark">
               <el-col :span="14">
-                <el-input v-model.trim="form.remark" placeholder="请输入备注"></el-input>
+                <el-input type="textarea" :rows="2" v-model.trim="form.remark" placeholder="请输入备注"></el-input>
               </el-col>
             </el-form-item>
 

@@ -9,12 +9,12 @@ const arr = [
         name:'基础管理',
         show: 1,
         menuItem:[
-          {
-            id:'1-1-1',
-            title:'社区档案',
-            link:'/home/nav/side/communityFile',
-            show: 1
-          },
+          // {
+          //   id:'1-1-1',
+          //   title:'社区档案',
+          //   link:'/home/nav/side/communityFile',
+          //   show: 1
+          // },
           {
             id:'1-1-2',
             title:'楼栋档案',
@@ -119,12 +119,12 @@ const arr = [
             link:'/home/nav/side/cleaner',
             show: 1
           },
-          {
-            id:'1-3-4',
-            title:'考勤管理',
-            link:'/home/nav/side/checkIn',
-            show: 1
-          }
+          // {
+          //   id:'1-3-4',
+          //   title:'考勤管理',
+          //   link:'/home/nav/side/checkIn',
+          //   show: 1
+          // }
         ]
       },
       {
@@ -140,7 +140,7 @@ const arr = [
           },
           {
             id:'1-4-1',
-            title:'收费项目',
+            title:'收费管理',
             link:'/home/nav/side/charge',
             show: 1
           }
