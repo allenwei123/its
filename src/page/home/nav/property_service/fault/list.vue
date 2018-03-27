@@ -1,9 +1,22 @@
 <template>
   <el-container>
     <el-main>
+      <ul class="c-navDetail clear">
+        <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li>
+      </ul>
       <div class="c-notice-container">
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
+            <el-select v-model="value1" placeholder="全部状态">
+              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+            <el-date-picker
+              v-model="value6"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期">
+            </el-date-picker>
             <el-form-item label="">
               <el-input  placeholder="申报人" v-model.trim="input"></el-input>
             </el-form-item>
@@ -17,30 +30,30 @@
         </div>
         <!-- 表格 -->
         <div class="c-list">
-          <el-table :data="tableData"  style="width: 100%" v-loading="loading">
+          <el-table :data="tableData"  style="width: 100%" v-loading="loading" align="center">
             <el-table-column prop="no" label="编号" width="80">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column prop="faultType" label="故障类型" min-width="80">
+            <el-table-column prop="faultType" label="故障类型" min-width="80" align="center">
               <template slot-scope="scope">{{scope.row.faultType=== 1 ? '住户' : scope.row.faultType === 2 ? '公共' : '其它' }}-{{getfaultItem(scope.row.faultItem)}}</template>
             </el-table-column>
-            <el-table-column prop="userName" label="申报人" width="120">
+            <el-table-column prop="userName" label="申报人" width="120" align="center">
             </el-table-column>
-            <el-table-column prop="identity" label="身份" width="80">
+            <el-table-column prop="identity" label="身份" width="80" align="center">
               <template slot-scope="scope">{{scope.row.identity=== 1 ? '住户' : scope.row.faultType === 2 ? '物业' : '其它' }}</template>
             </el-table-column>
-            <el-table-column prop="contact" label="联系方式" width="120">
+            <el-table-column prop="contact" label="联系方式" width="120" align="center">
             </el-table-column>
-            <el-table-column prop="playTime" label="申报时间" width="160">
+            <el-table-column prop="playTime" label="申报时间" width="160" align="center">
               <template slot-scope="scope">{{getTime(scope.row.playTime, 'yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
-            <el-table-column prop="faultItem" label="故障描述" width="120">
+            <el-table-column prop="faultItem" label="故障描述" width="120" align="center">
               <template slot-scope="scope">{{getfaultItem(scope.row.faultItem)}}</template>
             </el-table-column>
-            <el-table-column prop="faultStatus" label="故障状态" width="80">
+            <el-table-column prop="faultStatus" label="故障状态" width="80" align="center">
               <template slot-scope="scope">{{getPublishStatusName(scope.row.faultStatus)}}</template>
             </el-table-column>
-            <el-table-column prop="" label="操作" width="300" fixed="right" align="center">
+            <el-table-column prop="" label="操作" width="300" fixed="right" align="left">
               <template slot-scope="scope">
                 <el-button type="primary" size="mini" @click="handleClick(scope.row)">查看详情</el-button>
                 <!-- 已提交 待受理-->
@@ -127,6 +140,32 @@
     },
     data () {
       return {
+        value6: '',
+        value1: '',
+        options: [{
+          value: '0',
+          label: '已取消'
+        }, {
+          value: '1',
+          label: '已提交'
+        }, {
+          value: '2',
+          label: '已受理'
+        }, {
+          value: '3',
+          label: '已指派'
+        }, {
+          value: '4',
+          label: '已完成'
+        }, {
+          value: '-1',
+          label: '已驳回'
+        }],
+        navDetailData: [
+          { id: 0, name: "物业服务" },
+          { id: 1, name: "故障报修" },
+          { id: 2, name: "故障管理" }
+        ],
         loading: false,
         tableData: [],
         pageSize: 10,
@@ -159,11 +198,13 @@
         this.postData(val);
       },
       query() {
+        console.log(this.value1);
         if (this.currentPage !== 1) {
           this.currentPage = 1;
         }
         else {
-          this.postData(null, this.input);
+          //value1 故障状态查询
+          this.postData(null, this.input, this.value1);
         }
       },
       addChange(msg) {
@@ -344,7 +385,7 @@
       add() {
         this.addSee = true;
       },
-      postData(page, userName) {
+      postData(page, userName, faultStatus) {
         let nPage = page || this.$route.query.page || 1;
         let params = {page:nPage}
         if(userName){
@@ -352,6 +393,12 @@
           params.userName = this.input;
         }else {
           delete params.userName;
+        };
+        if(faultStatus){
+          //输入的搜索字添加params中
+          params.faultStatus = this.value1;
+        }else {
+          delete params.faultStatus;
         }
         let communityId = scheduleList[0].communityId;
         params['communityId'] = communityId;
@@ -398,6 +445,14 @@
   .fade1-enter, .fade1-leave-active {
     opacity: 0;
     transform: translateX(-500px);
+  }
+
+  .c-navDetail {
+    margin-bottom: 10px;
+    li {
+      float: left;
+      margin-right: 10px;
+    }
   }
 
 </style>
