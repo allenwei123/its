@@ -17,7 +17,7 @@
             <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column label="申报人" min-width="120" :show-overflow-tooltip="true">
+            <el-table-column label="报警住户" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.callerName}}</template>
             </el-table-column>
             <el-table-column label="住房" min-width="120" :show-overflow-tooltip="true">
@@ -32,10 +32,10 @@
             <el-table-column label="警报状态" min-width="100" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.receiveStatus === 1 ? '待处理' : scope.row.receiveStatus === 2 ? '已接警' : '已排查' }}</template>
             </el-table-column>
-            <el-table-column label="受理时间" min-width="160" :show-overflow-tooltip="true">
+            <el-table-column label="接警时间" min-width="160" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.receiveTime | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
-            <el-table-column label="受理人员" min-width="120" :show-overflow-tooltip="true">
+            <el-table-column label="接警保安" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.receiverName ? scope.row.receiverName : '/'}}</template>
             </el-table-column>
             <el-table-column label="排查时间" min-width="160" :show-overflow-tooltip="true">

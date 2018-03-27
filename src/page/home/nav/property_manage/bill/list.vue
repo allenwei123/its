@@ -264,7 +264,7 @@ export default {
           // this.confirmData.billStatus = 0;
           break;
         case '确认缴费':
-          var url = `fees/property-bill/${row.id}/ payment`;
+          var url = `fees/property-bill/${row.id}/payment`;
           break;
         case '全部生效':
           var url = `fees/property-bill/publishAll`;
@@ -281,7 +281,7 @@ export default {
             }
           }).catch(() => {
             this.loading = false;
-            this.$message.error('生效失败');
+            this.$message.error('失败');
           })
           break;
         case '一键催交':
@@ -296,7 +296,7 @@ export default {
           }
         }).catch(() => {
           this.loading = false;
-          this.$message.error('生效失败');
+          this.$message.error('失败');
         })
     },
     // 账单状态

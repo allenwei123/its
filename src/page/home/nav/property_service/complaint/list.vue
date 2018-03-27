@@ -20,12 +20,12 @@
             <el-table-column label="投诉人" min-width="180" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.userName}}</template>
             </el-table-column>
-            <el-table-column label="社区" min-width="180" :show-overflow-tooltip="true">
-              <template slot-scope="scope">{{scope.row.communityName}}</template>
+            <el-table-column label="身份" min-width="180" :show-overflow-tooltip="true">
+              <template slot-scope="scope">{{identity(scope.row.messageSource)}}</template>
             </el-table-column>
-            <el-table-column label="联系方式" min-width="120" :show-overflow-tooltip="true">
+            <!-- <el-table-column label="联系方式" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.phone}}</template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column label="投诉时间" min-width="160" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{getTime(scope.row.createAt, 'yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
@@ -65,6 +65,13 @@
       }
     },
     methods: {
+      identity(status) {
+        let names = {
+          "1": "住户",
+          "2": '物业'
+        };
+        return names[status];
+      },
       query() {
         this.q_input = this.input;
         if (this.currentPage !== 1) {

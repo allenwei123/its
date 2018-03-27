@@ -29,14 +29,20 @@
             <el-table-column label="有效时间" min-width="320" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.beginAt | time('yyyy-MM-dd HH:mm')}}~{{scope.row.endAt | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
-            <el-table-column label="备注" min-width="120" :show-overflow-tooltip="true">
+            <el-table-column label="放行备注" min-width="120" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.remark}}</template>
+            </el-table-column>
+            <el-table-column label="备注照片" min-width="120" :show-overflow-tooltip="true">
+              <template slot-scope="scope">{{scope.row.url}}</template>
             </el-table-column>
             <el-table-column label="状态" min-width="100" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.releaseStatus === 1 ? '有效' : '失效'}}</template>
             </el-table-column>
             <el-table-column label="使用时间" min-width="160" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.updateAt | time('yyyy-MM-dd HH:mm')}}</template>
+            </el-table-column>
+            <el-table-column label="放行保安" min-width="100" :show-overflow-tooltip="true">
+              <template slot-scope="scope">{{scope.row.verifierName}}</template>
             </el-table-column>
           </el-table>
         </div>
