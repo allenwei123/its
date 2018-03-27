@@ -18,7 +18,7 @@
         <el-input v-model="form.userName" auto-complete="off"></el-input>
       </el-form-item>
       <el-form-item label="联系方式" label-width="120px" prop="contact" required>
-        <el-input v-model="form.contact" auto-complete="off"></el-input>
+        <el-input v-model.number="form.contact" auto-complete="off"></el-input>
       </el-form-item>
 
     </el-form>
@@ -51,7 +51,7 @@
           faultAddress: [{ required: true, message: '请输入故障地址', trigger: 'blur' }],
           faultContent: [{ required: true, message: '请描述故障', trigger: 'blur' }],
           userName: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
-          contact: [{ required: true, message: '请填写联系方式', trigger: 'blur' }],
+          contact: [{ type: "number", required: true, message: '请填写联系方式', trigger: 'blur' }],
         },
       }
     },
