@@ -1,6 +1,6 @@
 <template>
-  <el-dialog :title="detail.feeItemName + '账单'" :visible.sync="formVisible">
-    <div>
+  <el-dialog :title="pay + '账单'" :visible.sync="msg" :before-close="handleClose">
+    <div class="printOrder-data">
       <div class="title">
         <h1>{{$store.getters.communityName}}{{detail.feeItemName}}账单</h1>
         <!--<span>账单号：{{detail.billId}}</span>-->
@@ -8,9 +8,9 @@
       <div class="bill">
         <div class="header">
           <ul>
-            <li>账单名称：{{detail.billDetailName}}</li>
-            <li>姓名：{{detail.proprietorName}}</li>
-            <li>楼栋房号：{{detail.roomName}}</li>
+            <!-- <li>账单名称：{{detail.billDetailName}}</li> -->
+            <li>楼栋房号：{{roomLocation}}</li>
+            <li>姓名：{{proprietorName}}</li>
           </ul>
         </div>
         <table>
@@ -24,43 +24,100 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>{{detail.feeItemName}}</td>
-              <td>{{detail.used}}</td>
-              <td>{{detail.unitPrice}}</td>
-              <td>{{detail.currentFee}}</td>
-              <td>{{detail.remark}}</td>
+            <tr v-for="(item, idx) in billDetailList" :key="idx">
+              <td>{{item.feeItemName}}</td>
+              <td>{{item.used}}</td>
+              <td>{{(item.unitPrice/10000).toFixed(2)}}</td>
+              <td>{{(item.currentFee/10000).toFixed(2)}}</td>
+              <td>{{item.remark}}</td>
             </tr>
             <tr>
               <td>合计</td>
-              <td colspan="4" style="text-align: right">{{detail.subtotal}}</td>
+              <td colspan="4" style="text-align: right">{{(propertyBill.totalPrice/10000).toFixed(2)}}</td>
             </tr>
             <tr>
               <td>大写金额</td>
-              <td colspan="4" style="text-align: right">{{detail.subtotal | digitUppercase}}</td>
+              <td colspan="4" style="text-align: right">{{(propertyBill.totalPrice/10000).toFixed(2) | digitUppercase}}</td>
             </tr>
             <tr>
               <td>缴纳状态</td>
-              <td colspan="4" style="text-align: right">{{getBillStatusName(detail.paymentStatus)}}</td>
+              <td colspan="4" style="text-align: right">{{getBillStatusName(propertyBill.billStatus)}}</td>
+            </tr>
+            <!-- 缴纳人待定 -->
+            <tr>
+              <td>缴纳人</td>
+              <td colspan="4" style="text-align: right">{{propertyBill.proprietorName}}</td>
             </tr>
             <tr>
               <td>缴纳方式</td>
-              <td colspan="4" style="text-align: right"></td>
+              <td colspan="4" style="text-align: right">{{propertyBill.paymentMethod}}</td>
             </tr>
-            <tr>
+            <tr v-if="pay==='已缴费'">
               <td>缴纳时间</td>
-              <td colspan="4" style="text-align: right"></td>
+              <td colspan="4" style="text-align: right">{{getTime(propertyBill.updateAt, 'yyyy-MM-dd HH:mm')}}</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="closeForm">取消</el-button>
+      <el-button @click="handleClose">取消</el-button>
       <el-button type="primary" @click="print">打印账单</el-button>
     </div>
   </el-dialog>
 </template>
+
+<script>
+import time from "@/utils/time.js";
+  export default {
+    data() {
+      return {
+        billDetailList: '',
+        propertyBill: '',
+        pay: '',
+        roomLocation: '',
+        proprietorName: '',
+      }
+    },
+    methods: {
+      handleClose() {
+        this.$emit('upsee');
+      },
+      print() {
+        let prinText = document.getElementsByClassName("printOrder-data")[0].innerHTML;
+        document.body.innerHTML = prinText;
+        window.print();
+        window.location.reload();
+        return false;
+      },
+      // 账单状态
+      getBillStatusName(status) {
+        let names = {
+          "0": "待缴费",
+          "1": "已缴费",
+          "-1": '待生效',
+          "2": '已超期'
+        };
+        return names[status];
+      },
+      getTime(timestamp, format) {
+        if (timestamp == null) return "/";
+        return time.timestampToFormat(timestamp, format);
+      },
+    },
+    props: ['msg', 'detail'],
+    created() {
+      console.log(this.detail);
+      this.propertyBill = this.detail.propertyBill;
+      this.billDetailList = this.detail.billDetailList;
+      let that = this.propertyBill;
+      this.pay = this.getBillStatusName(that.billStatus);
+      this.roomLocation = that.roomLocation;
+      this.proprietorName = that.proprietorName;
+      // console.log(that);
+    }
+  }
+</script>
 
 <style scoped lang="scss">
   .title {
@@ -104,41 +161,3 @@
     }
   }
 </style>
-
-<script>
-  export default {
-    data() {
-      return {
-        formVisible: this.visible
-      }
-    },
-    watch: {
-      visible(val) {
-        this.formVisible = val;
-      },
-      formVisible(val) {
-        this.$emit('update:visible', val);
-      }
-    },
-    methods: {
-      closeForm() {
-        this.formVisible = false;
-      },
-      print() {
-
-      },
-      // 账单状态
-      getBillStatusName(status) {
-        let names = {
-          '0': '未缴费',
-          '1': '已缴费'
-        };
-        return names[status];
-      },
-    },
-    props: ['visible', 'detail'],
-    created() {
-      console.log(this.detail);
-    }
-  }
-</script>

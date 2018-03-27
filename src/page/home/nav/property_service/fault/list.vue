@@ -53,6 +53,7 @@
                 <template v-if="scope.row.faultStatus === 2">
                   <el-button type="primary" size="mini" @click="assignHandle(scope.row)">指派人员</el-button>
                 </template>
+                
               </template>
             </el-table-column>
           </el-table>
