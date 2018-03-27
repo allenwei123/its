@@ -8,10 +8,8 @@
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
             <el-form-item>
-              <el-select v-model="status">
-                <el-option label="全部账单" value=""></el-option>
-                <el-option label="未缴费" value="0"></el-option>
-                <el-option label="已缴费" value="1"></el-option>
+              <el-select v-model="value1" placeholder="全部状态">
+                <el-option v-for="temp in options" :key="temp.value" :label="temp.label" :value="temp.value"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="">
@@ -39,34 +37,34 @@
         </div>
         <div class="c-list">
           <el-table :data="tableData" style="width: 100%" v-loading="loading" stripe>
-            <el-table-column label="账单号" width="80" :show-overflow-tooltip="true">
+            <el-table-column label="账单号" width="80" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column prop="roomLocation" label="楼栋房号" width="180" :show-overflow-tooltip="true">
+            <el-table-column prop="roomLocation" label="楼栋房号" width="180" :show-overflow-tooltip="true" align="center">
             </el-table-column>
-            <el-table-column prop="proprietorName" label="业主姓名" min-width="120" :show-overflow-tooltip="true">
+            <el-table-column prop="proprietorName" label="业主姓名" min-width="120" :show-overflow-tooltip="true" align="center">
             </el-table-column>
             <!-- 无 -->
             <!-- <el-table-column prop="roomName" label="账单名称" min-width="150" :show-overflow-tooltip="true"> -->
               <!-- <template slot-scope="scope">{{scope.row.billDetailName}}</template> -->
             <!-- </el-table-column> -->
-            <el-table-column prop="totalPrice" label="账单金额" min-width="120" :show-overflow-tooltip="true">
+            <el-table-column prop="totalPrice" label="账单金额" min-width="120" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{(scope.row.totalPrice /10000).toFixed(2)}}</template>
             </el-table-column>
-            <el-table-column prop="makeAt" label="账单生成日" width="180" :show-overflow-tooltip="true">
+            <el-table-column prop="makeAt" label="账单生成日" width="180" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{getTime(scope.row.makeAt, 'yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
-            <el-table-column prop="billStatus" label="账单状态" min-width="120" :show-overflow-tooltip="true">
+            <el-table-column prop="billStatus" label="账单状态" min-width="120" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{getBillStatusName(scope.row.billStatus)}}</template>
             </el-table-column>
-            <el-table-column prop="receiveWay" label="缴费方式" min-width="120" :show-overflow-tooltip="true">
+            <el-table-column prop="receiveWay" label="缴费方式" min-width="120" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{payBillStatus(scope.row.receiveWay)}}</template>
             </el-table-column>
-            <el-table-column prop="updateAt" label="缴费时间" width="160">
+            <el-table-column prop="updateAt" label="缴费时间" width="160" align="center">
               <template slot-scope="scope" v-if="scope.row.billStatus === 1">{{getTime(scope.row.updateAt, 'yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
             <!-- 操作 -->
-            <el-table-column label="操作" width="300" :fixed="tableData.length ? 'right' : '/'" align="center">
+            <el-table-column label="操作" width="300" :fixed="tableData.length ? 'right' : '/'" align="left">
               <template slot-scope="scope">
 
                 <el-button type="primary" size="mini" @click="seeDetail(scope.row)">查看详情</el-button>
@@ -135,6 +133,17 @@ export default {
   },
   data() {
     return {
+      value1: '',
+      options: [{
+        value: '0',
+        label: '待缴费'
+      }, {
+        value: '1',
+        label: '已缴费'
+      }, {
+        value: '-1',
+        label: '待生效'
+      }],
       navDetailData: [
         { id: 0, name: "物业管理" },
         { id: 1, name: "收费管理" },
@@ -148,8 +157,6 @@ export default {
       total: 0,
       currentPage: 1,
       input: "",
-      // q_input: null,
-      // q_status: "",
       see: false,
       seeData: null,
       item: '',
@@ -171,7 +178,7 @@ export default {
       if (this.currentPage !== 1) {
         this.currentPage = 1;
       } else {
-        this.postData(null, this.date, this.status);
+        this.postData(null, this.date, this.value1);
       }
     },
     //查看详情
@@ -317,7 +324,7 @@ export default {
       };
       return names[status];
     },
-    postData(page, makeAt, billStatus) {
+    postData(page, makeAt, billStatusSet) {
       let nPage = page || this.$route.query.page || 1;
       let params = { page: nPage };
       if (makeAt) {
@@ -326,11 +333,11 @@ export default {
       } else {
         delete params.makeAt;
       };
-      if (billStatus) {
+      if (billStatusSet) {
         //输入的搜索字添加params中
-        params.billStatus = this.status;
+        params.billStatusSet = [this.value1];
       } else {
-        delete params.billStatus;
+        delete params.billStatusSet;
       };
       let communityId = this.$store.getters.communityId;
       params.communityId = communityId;

@@ -46,7 +46,6 @@
             </template>
 
             <template v-if="faultStatus === '待评价'">
-                <!--后台没有完成时间 -->
                 <el-form-item label="完成时间" label-width="120px" required>
                     <span>{{data.finishTime}}</span>
                 </el-form-item>
@@ -105,7 +104,6 @@ import { getUri } from '@/utils/oss';
         },
         props: ["msg","data"],
         created() {
-            // console.log(11,this.data);
             let that = this.data;
             this.time = this.getTime(that.playTime, 'yyyy-MM-dd HH:mm'); 
             this.acceptTime = this.getTime(that.acceptTime, 'yyyy-MM-dd HH:mm'); 
@@ -113,7 +111,6 @@ import { getUri } from '@/utils/oss';
             this.faultType = that.faultType == 1 ? '住户' : that.faultType == 2 ? '公共' : '其它';
             this.faultStatus = that.faultStatus == 0 ? '已取消' : that.faultStatus == 1 ? '已提交' : 
             that.faultStatus == 2 ? '已受理' : that.faultStatus == 3 ? '已指派' : that.faultStatus == 4 ? '已完成' : '已驳回'
-            // console.log('详情页',this.data.repairName);
             //图片
             this.uri = that.faultAccessory;
             // console.log(121,this.uri);
