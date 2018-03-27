@@ -209,17 +209,6 @@ export default {
       this.notice = row;
       console.log(this.notice);
     },
-    // change(msg) {//与添加弹窗交互
-    //   if(msg == 1) {
-    //     this.isShow = false;
-    //   }else if(msg == 2 || msg == 3) {
-    //     this.sendAjax();
-    //     this.isShow = false;
-    //   }
-    // },
-    // seeChange(msg) {//与查看弹窗交互
-    //   this.see = false;
-    // },
     change(msg) {//与添加弹窗交互
       if(msg == 1) {
         this.isShow = false;
@@ -296,7 +285,6 @@ export default {
         startDate = '';
         endDate = '';
       }else{
-        alert(rangeDate)
         startDate = rangeDate[0];
         endDate = rangeDate[1];
       }
@@ -305,7 +293,7 @@ export default {
       this.loading = true;
       this.$xttp.post("task/schedule/page",obj)
       .then(res => {
-        if (!res.errorCode) {
+        if (res.success) {
           this.tableData = res.data.records;
           this.currentPage = res.data.currentPage;
           this.total = res.data.total;

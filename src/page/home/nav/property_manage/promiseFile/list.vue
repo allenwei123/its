@@ -171,7 +171,6 @@
     methods: {
       handleCurrentChange(val) {
         if (this.currentPage !== val) {
-          alert(this.formInline.name);
           this.sendAjax(val, this.formInline.name);
         }
       },

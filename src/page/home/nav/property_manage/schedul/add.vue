@@ -1,6 +1,6 @@
 <template>
       <el-dialog :title="titleFont" :visible.sync="msg" :before-close="handleClose">
-        <div class="c-search">
+        <!-- <div class="c-search"> -->
           <el-form :inline="true" :rules="rules" :model="form" class="demo-form-inline">
             <el-form-item label="" prop="date">
               <el-date-picker
@@ -73,7 +73,7 @@
               <el-button type="primary" @click="save">保存</el-button>
             </el-form-item>
           </el-form>
-        </div>       
+        <!-- </div>        -->
     </el-dialog>
 </template>
 
@@ -110,13 +110,6 @@ export default {
     };
   },
   props: ["msg","add"],
-  // created() {
-  //   if(this.add) {
-  //     // 判定此时组件为 编辑
-  //     this.form = this.add;
-  //     this.titleFont = "编辑排班";
-  //   }
-  // },
   mounted() {},
   methods: {
     handleClose() {
@@ -124,7 +117,6 @@ export default {
     },
     changEmpl(value){
       this.form.empl = value;
-      console.log(this.form.empl)
     },
     initPost(){
       let communityId = this.$store.getters.communityId
@@ -139,7 +131,7 @@ export default {
       let postCode = this.form.postCode
       this.$xttp.get(`/user/property/${communityId}/user-list`,{params:{postCode:postCode}})
           .then(res => {
-            if(!res.errorCode) {
+            if(res.success) {
               this.emplData = res.data
               
             }
@@ -151,10 +143,10 @@ export default {
       let params = {};
       params['communityId'] = communityId;
       params['postCode'] = postCode;
-      console.log(params)
+
       this.$xttp.post(`/task/class/page`,params)
       .then(res => {
-        if(!res.errorCode) {
+        if(res.success) {
           if(res.data.total == 0){
             this.isSee = false;
           }
@@ -257,23 +249,14 @@ export default {
     }
   },
   created() {
+    this.initPost();
+    this.initEmpl();
+    this.initClass();
     if(this.add) {
       // 判定此时组件为 编辑
       this.form = this.add;
       this.titleFont = "编辑排班";
-      this.initPost();
-      this.initEmpl();
-      this.initClass();
-    }else{
-      this.initPost();
-    // this.form.date = time.dateFormat(new Date(),'yyyy-MM-dd');
-    this.initEmpl();
-    this.initClass();
     }
-    // this.initPost();
-    // this.form.date = time.dateFormat(new Date(),'yyyy-MM-dd');
-    // this.initEmpl();
-    // this.initClass();
   }
 };
 </script>

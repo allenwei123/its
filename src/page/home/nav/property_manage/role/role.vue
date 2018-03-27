@@ -10,10 +10,10 @@
               <el-input v-model="formInline.role" placeholder="关键字搜索"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
+              <el-button type="primary"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
             </el-form-item>
           </el-form>
-          <el-button type="primary" class="c-addBtn" @click="onSubmit">新增角色</el-button>
+          <!-- <el-button type="primary" class="c-addBtn" @click="onSubmit">新增角色</el-button> -->
         </div>
       </div>
       

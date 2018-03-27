@@ -1,31 +1,29 @@
 <template>
       <el-dialog :title="titleFont" :visible.sync="msg" :before-close="handleClose">
         <el-form :model="form" :rules="rules" ref="ruleForm" class="demo-form-inline">
-            <el-form-item label="社区名称" :label-width="formLabelWidth" prop="name" class="c-must">
+            <el-form-item label="项目名称：" :label-width="formLabelWidth" prop="name" class="c-must">
               <el-input v-model="form.name"></el-input>
             </el-form-item>
 
-            <el-form-item label="社区编号" prop="code" :label-width="formLabelWidth" class="c-must">
-            <el-input v-model="form.code"></el-input>
+            <el-form-item label="计费规则：" :label-width="formLabelWidth" prop="chargeType" class="c-must">
+              <el-radio-group v-model="form.chargeType">
+                <el-radio :label="item.key" :value="item.value" :key="item.value" v-for="(item) in chargeTypesOptions" border>{{item.value}}</el-radio>
+              </el-radio-group>
             </el-form-item>
-            <el-form-item label="地区" prop="cityArr" :label-width="formLabelWidth" class="c-must c-eascader">
-              <el-cascader
-                :options="cityOptions"
-                v-model="cityArr"
-                @change="changeProvince"
-              >
-              </el-cascader>
+            <el-form-item label="计费单价：" prop="price" :label-width="formLabelWidth" class="c-must">
+              <el-input v-model="form.price"></el-input>
+            </el-form-item>
+            <el-form-item label="适用楼栋：" :label-width="formLabelWidth" prop="floorSer" class="c-must">
+              <el-select v-model="form.floorSer" @change="changeFloor" clearable placeholder="选择适用楼栋">
+                <el-option
+                  v-for="item in floorOptions"
+                  :key="item.id"
+                  :value="item.id"
+                  :label="item.name">
+                </el-option>
+              </el-select>
             </el-form-item>
 
-            <el-form-item label="详细地址" prop="address" :label-width="formLabelWidth" class="c-must">
-            <el-input v-model="form.address"></el-input>
-            </el-form-item>
-            
-            <!-- <el-form-item label="坐标" :label-width="formLabelWidth" class="c-must" >
-              <el-input class="c-ip2" v-model="x"></el-input>
-              <el-input class="c-ip2" v-model="y"></el-input>
-              <el-button @click="geolocation">获取坐标</el-button>
-            </el-form-item> -->
             <el-form-item :label-width="formLabelWidth">
               <el-button @click="handleClose">取 消</el-button>
               <el-button type="primary" @click="save('ruleForm')">保存</el-button>
@@ -43,19 +41,21 @@ export default {
   data() {
     return {
       formLabelWidth: "120px",
-      titleFont:'添加社区档案',
+      titleFont:'新增项目',
       form: {
-        code: "",
-        name: "",
-        cityArr: [],
-        address:''
+        price: '',
+        name: '',
+        chargeType: '1',
+        floorSer: ''
       },
       rules: {
-        name: [{required: true, message: '请输入社区名称', trigger: 'blur'}],
+        name: [{required: true, message: '请输入项目名称', trigger: 'blur'}],
         code: [{ required: true, message: '请输入社区编号', trigger: 'blur' }],
         cityArr: [{type: 'array', required: true, message: '请输入地区', trigger: 'blur' }],
         address:[{required: true, message: '请输入详细地址', trigger: 'blur'} ]
       },
+      floorOptions:[],
+      chargeTypesOptions: [],
       cityArr: [],
       current: 1 ,//1 初始 2：添加后 3：编辑后
       cityOptions:cityOptions
@@ -69,6 +69,8 @@ export default {
       this.form.cityArr = [this.add.province,this.add.city,this.add.district || '' ];
       this.titleFont = '编辑社区档案';
     }
+    this.selectCommunity();
+    this.chargeType();
   },
   mounted() {},
   methods: {
@@ -113,6 +115,31 @@ export default {
         .catch(err => {
           console.log(err);
         });
+    },
+    selectCommunity(num){
+      let obj = { communityId:this.$store.getters.communityId };
+      this.$xttp.get(`/community/building/list`,{params:obj})
+        .then(res => {
+          if(res.success){
+            this.floorOptions = res.data;
+            this.form.floorSer = this.floorOptions[0].id;
+          }
+          // if(num) {
+          //   this.sendAjax(1,this.formInline.floorSer)
+          // }
+        })
+    },
+    chargeType(){
+      let url = '/fees/rule-types';
+      this.$xttp.get(url).then(res => {
+        if(res.success){
+          this.chargeTypesOptions = res.data.ruleTypes;
+          // this.form.chargeType = '1';
+        }
+      })
+    },
+    changeFloor(){
+
     }
   }
 };

@@ -5,37 +5,21 @@
         <ul class="c-navDetail clear">
           <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li>
         </ul>
-        <div class="c-search">
-          <el-form :inline="true" :model="formInline" class="demo-form-inline">
-            <el-form-item label="员工：" prop="empl">
-              <el-select v-model="formInline.empl" clearable placeholder="请选择员工">
-                <el-option v-for="item in emplData" :key="item.userName" :label="item.userName" :value="item.userName"> 
-                </el-option>
-              </el-select>
+       <div class="c-notice-container">
+        <div class="c-searchbar">
+          <el-form :inline="true" class="demo-form-inline">
+            <el-form-item style="float: right; margin-bottom: 4px;">
+              <el-button type="primary plain" @click="take(null, $event)">周期管理</el-button>
             </el-form-item>
-            <el-form-item label="时间：">
-              <el-date-picker
-                v-model="formInline.rangeDate"
-                type="daterange"
-                align="right"
-                format="yyyy 年 MM 月 dd 日"
-                value-format="yyyy-MM-dd"
-                unlink-panels
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                :picker-options="pickerOptions">
-              </el-date-picker>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="query">查询</el-button>
+            <el-form-item style="float: right; margin-bottom: 4px;">
+              <el-button type="success plain" @click="addProject">新增项目</el-button>
             </el-form-item>
           </el-form>
-          <!-- <el-button type="primary" class="c-addBtn" @click="addClass">新增班次</el-button> -->
         </div>
       </div>
+      </div>
       <el-table class="c-table" :data="tableData" style="width: 100%" v-loading="loading" stripe >
-        <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
+        <el-table-column label="序号" width="120" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
         </el-table-column>
         <el-table-column v-if="show" label="ID" min-width="80" align="center" :show-overflow-tooltip="true">
@@ -47,15 +31,9 @@
         <el-table-column label="收费项目" min-width="200" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.itemName }}</template>
         </el-table-column>
-        <el-table-column label="创建时间" min-width="200" align="center" :show-overflow-tooltip="true">
-          <template slot-scope="scope">{{getTime(scope.row.createAt, 'yyyy-MM-dd hh:mm')}}</template>
-        </el-table-column>
-        <el-table-column label="状态" min-width="300" align="center" :show-overflow-tooltip="true">
-          <template slot-scope="scope">{{ scope.row.dataStatus }}</template>
-        </el-table-column>
-        <el-table-column fixed="right" align="center" label="操作" width="200">
+        <el-table-column fixed="right" align="center" label="操作" width="400">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="seeHandle(scope.row)">查看</el-button>
+            <el-button v-if="scope.row.itemName == '基础管理费'" type="primary" size="mini" @click="seeHandle(scope.row)">编辑单价</el-button>
             <el-button type="primary" size="mini" @click="editHandle(scope.row)">编辑</el-button>
             <el-button @click="delHandle(scope.row)" type="danger" size="small">删除</el-button>
           </template>
@@ -68,10 +46,10 @@
         </el-pagination>
       </div>
 
-      <!-- <transition name="fade">
-        <SeePage v-if="isSee" :msg="isSee" @upsee="upsee" :data="seeData"></SeePage>
-        <AddPage v-if="isShow" :msg="isShow" @reload="query" @upup="change" :add.sync="classData"></AddPage>
-      </transition> -->
+      <transition name="fade">
+        <!-- <SeePage v-if="isSee" :msg="isSee" @upsee="upsee" :data="seeData"></SeePage> -->
+        <AddPage v-if="isShow" :msg="isShow" @reload="query" @upup="change" :add.sync="projectData"></AddPage>
+      </transition>
 
       <!-- <el-dialog title="温馨提示" :visible.sync="visible2">
         <p>请问您确定要删除这条数据吗？</p>
@@ -86,7 +64,7 @@
 
 <script>
 // import SeePage from './see';
-// import AddPage from './add';
+import AddPage from './add';
 
 import { mapGetters } from "vuex";
 import time from '@/utils/time.js';
@@ -96,61 +74,24 @@ import time from '@/utils/time.js';
       return {
         loading: false,
         show: false,
-        taskType :'2',
+        isShow: false,
         navDetailData: [
           { id: 0, name: "物业管理" },
           { id: 1, name: "收费管理" },
           { id: 2, name: "收费管理" }
         ],
-        formInline: {
-          empl: '',
-          rangeDate: '',
-          // startDate: '',
-          // endDate: ''
-          start:'',
-          end:''
-        },
-        pickerOptions: {
-          shortcuts: [{
-          text: '最近一周',
-          onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', [start, end]);
-          }
-          }, {
-          text: '最近一个月',
-          onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit('pick', [start, end]);
-          }
-          }, {
-          text: '最近三个月',
-          onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-              picker.$emit('pick', [start, end]);
-          }
-          }]
-        },
-        postCode:'CLEANER',
-        emplData: [],
         tableData: [],
         pageSize: 10,
         total: 0,
+        msg: '',
         currentPage: 1,
-        input: '',
-        q_input: null
+        projectData: null
       }
     },
     computed: mapGetters(["showAside"]),
     components: {
       // SeePage,
-      // AddPage
+      AddPage
     },
     methods: {
       query() {
@@ -165,29 +106,11 @@ import time from '@/utils/time.js';
         this.loading = true;
         let params = {};
         let communityId = this.$store.getters.communityId;
-        // params.taskType = this.taskType;
-        // if(this.formInline.empl){
-        //   params.userName = this.formInline.empl;
-        // } else {
-        //   delete params.userName;
-        // }
-
-        // if(this.formInline.rangeDate[0]== ''){
-        //   params.startDate = time.dateFormat(new Date(),'yyyy-MM-01')
-        // } else {
-        //   params.startDate = (this.formInline.rangeDate)[0]
-        // }
-        // if(this.formInline.rangeDate[1]== ''){
-        //   params.endDate = time.dateFormat(new Date(),'yyyy-MM-30')
-        // } else {
-        //   params.endDate = (this.formInline.rangeDate)[1]
-        // }
-        // {params:{postCode:postCode}}
+        let propertyId = localStorage.getItem('propertyId');
         let url = `/fees/item/page?page=${this.currentPage}&size=${this.pageSize}`;
-        this.$xttp.get(url, {params:{communityId:communityId}}).then(res => {
+        this.$xttp.get(url, {params:{communityId:communityId,propertyId:propertyId}}).then(res => {
           this.loading = false;
           if (res.success) {
-            console.log(res);
             this.tableData = res.data.records;
             this.total = res.data.total;
           }
@@ -195,26 +118,22 @@ import time from '@/utils/time.js';
           this.loading = false;
         })
       },
-      changePostCode(){
-        this.query();
+      addProject() {
+        this.projectData = null;
+        this.isShow = !this.isShow;
       },
-      initEmpl() {
-        let communityId = this.$store.getters.communityId
-        let postCode = this.postCode
-        this.$xttp.get(`/user/property/${communityId}/user-list`,{params:{postCode:postCode}})
-        .then(res => {
-          if(!res.errorCode) {
-            this.emplData = res.data  
-          }
-        })
-      },
-      getTime(timestamp, format) {
-        if (timestamp == null) return '/';
-        return time.timestampToFormat(timestamp, format);
+      //  upsee(msg) {  //查看弹窗交互
+      //   this.isSee = false;
+      // },
+      change(msg) {
+        if (msg == 1) {
+          this.isShow = false;
+        } else if(msg == 2 || msg == 3) {
+          this.isShow = false;
+        }
       },
     },
     created() {
-      this.initEmpl()
       this.query();
     }
   }

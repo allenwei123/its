@@ -1,7 +1,7 @@
 <template>
     <el-dialog title="社区档案详情" :visible.sync="msg" :before-close="handleClose">
         <ul>
-            <li class="c-list"><span class="c-label">姓名:</span> <span class="c-content"> {{ data.userName }} </span></li>
+            <li class="c-list"><span class="c-label">工号:</span> <span class="c-content"> {{ data.employeeId }} </span></li>
             <li class="c-list"><span class="c-label">社区名称:</span> <span class="c-content"> {{ data.communityName }} </span></li>
             <li class="c-list"><span class="c-label">物业公司:</span> <span class="c-content"> {{ data.propertyName }} </span></li>
             <li class="c-list"><span class="c-label">姓名:</span> <span class="c-content"> {{ data.userName }} </span></li>
