@@ -8,7 +8,7 @@
         <div class="c-search">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
             <el-form-item label="员工：" prop="empl">
-              <el-select v-model="formInline.empl" clearable placeholder="请选择员工">
+              <el-select v-model="formInline.empl" clearable placeholder="请选择员工" @change="changeEmpl">
                 <el-option v-for="item in emplData" :key="item.userName" :label="item.userName" :value="item.userName"> 
                 </el-option>
               </el-select>
@@ -18,6 +18,7 @@
                 v-model="formInline.rangeDate"
                 type="daterange"
                 align="right"
+                @change="changRangeDate"
                 format="yyyy 年 MM 月 dd 日"
                 value-format="yyyy-MM-dd"
                 unlink-panels
@@ -172,16 +173,14 @@ import time from '@/utils/time.js';
           delete params.userName;
         }
 
-        if(this.formInline.rangeDate[0]== ''){
+        if(this.formInline.rangeDate == '' || this.formInline.rangeDate == null || this.formInline.rangeDate == 'undefined'){
           params.startDate = time.dateFormat(new Date(),'yyyy-MM-01')
-        } else {
-          params.startDate = (this.formInline.rangeDate)[0]
-        }
-        if(this.formInline.rangeDate[1]== ''){
           params.endDate = time.dateFormat(new Date(),'yyyy-MM-30')
         } else {
+          params.startDate = (this.formInline.rangeDate)[0];
           params.endDate = (this.formInline.rangeDate)[1]
         }
+
         let url = `/task/record/page?page=${this.currentPage}&size=${this.pageSize}`;
         this.$xttp.post(url, params).then(res => {
           this.loading = false;
@@ -193,9 +192,7 @@ import time from '@/utils/time.js';
           this.loading = false;
         })
       },
-      changePostCode(){
-        this.query();
-      },
+
       initEmpl() {
         let communityId = this.$store.getters.communityId
         let postCode = this.postCode
@@ -210,6 +207,12 @@ import time from '@/utils/time.js';
         if (timestamp == null) return '/';
         return time.timestampToFormat(timestamp, format);
       },
+      changRangeDate(){
+        this.query();
+      },
+      changeEmpl(){
+        this.query()
+      }
     },
     created() {
       this.initEmpl()

@@ -2,6 +2,12 @@
       <el-dialog :title="titleFont" :visible.sync="msg" :before-close="handleClose">
         <el-form :model="form" :rules="rules" ref="ruleForm" class="demo-form-inline">
 
+          <el-form-item label="工号：" :label-width="formLabelWidth" prop="employeeId" class="c-must">
+            <el-col :span="14">
+              <el-input v-model.trim="form.employeeId" placeholder="请输入工号"></el-input>
+            </el-col>
+          </el-form-item>
+
           <el-form-item label="岗位：" :label-width="formLabelWidth" prop="postCode" class="c-must">
             <el-radio-group v-model="form.postCode">
               <el-radio :label="item.key" :value="item.name" :key="item.name" v-for="(item) in postCodeOptions">{{item.name}}</el-radio>
@@ -59,6 +65,7 @@ export default {
       formLabelWidth: "120px",
       titleFont:'添加员工',
       form: {
+        employeeId: '',
         userName: "",
         phone: "",
         // postCode: 'SECURITY',
@@ -71,11 +78,12 @@ export default {
         propertyName:'和谐景苑'
       },
       rules: {
-        userName: [{required: true, message: '请输入名称', trigger: 'blur,change' }],
-        phone: [{ required: true, message: '请输入手机号', trigger: 'blur,change' }],
-        password: [{required: true, message: '请输入密码', trigger: 'blur,change' }],
-        sex: [{ required: true, message: '请选择性别', trigger: 'blur,change' }],
-        postCode: [{ required: true, message: '请选择岗位', trigger: 'blur,change' }]
+        employeeId: [{required: true, message: '请输入工号', trigger: 'blur' }],
+        userName: [{required: true, message: '请输入名称', trigger: 'blur' }],
+        phone: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
+        password: [{required: true, message: '请输入密码', trigger: 'blur' }],
+        sex: [{ required: true, message: '请选择性别', trigger: 'blur' }],
+        postCode: [{ required: true, message: '请选择岗位', trigger: 'blur' }]
       },
       postCodeOptions: [],
       maleOptions: maleOptions,

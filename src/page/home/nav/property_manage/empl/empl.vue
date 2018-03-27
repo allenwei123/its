@@ -34,37 +34,46 @@
         <el-table-column v-if="show" label="社区ID" min-width="120" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{scope.row.communityId}}</template>
         </el-table-column>
-        <el-table-column label="社区名称" min-width="120" align="center" :show-overflow-tooltip="true">
+        <el-table-column label="员工号" min-width="120" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{scope.row.employeeId}}</template>
+        </el-table-column>
+        <el-table-column label="姓名" min-width="120" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{scope.row.userName}}</template>
+        </el-table-column>
+        <el-table-column v-if="show" label="社区名称" min-width="120" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{scope.row.communityName}}</template>
         </el-table-column>
         <el-table-column v-if="show" label="物业公司ID" min-width="120" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{scope.row.propertyId}}</template>
         </el-table-column>
-        <el-table-column label="物业公司名称" min-width="120" align="center" :show-overflow-tooltip="true">
+        <el-table-column v-if="show" label="物业公司名称" min-width="120" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{scope.row.propertyName}}</template>
         </el-table-column>
         <!-- <el-table-column label="岗位" min-width="120" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{getPost(scope.row.postCode)}}</template>
         </el-table-column> -->
-        <el-table-column label="岗位" min-width="120" align="center" :show-overflow-tooltip="true">
+        <el-table-column label="角色" min-width="120" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.postCode | postCode }}</template>
         </el-table-column>
+
+        <el-table-column label="性别" min-width="120" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ scope.row.sex | sex }}</template>
+        </el-table-column>
+
         <el-table-column v-if="show" label="员工ID" min-width="120" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{scope.row.userId}}</template>
         </el-table-column>
-        <el-table-column label="员工姓名" min-width="120" align="center" :show-overflow-tooltip="true">
-          <template slot-scope="scope">{{scope.row.userName}}</template>
-        </el-table-column>
+        
         <el-table-column label="手机号" min-width="120" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{scope.row.phone}}</template>
         </el-table-column>
-        <el-table-column label="创建时间" min-width="150" align="center" :show-overflow-tooltip="true" sortable>
+        <el-table-column v-if="show" label="创建时间" min-width="150" align="center" :show-overflow-tooltip="true" sortable>
           <template slot-scope="scope">{{scope.row.createAt | time('yyyy-MM-dd HH:mm')}}</template>
         </el-table-column>
         <el-table-column v-if="show" label="创建人" min-width="120" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{scope.row.creatorId}}</template>
         </el-table-column>
-        <el-table-column label="状态" min-width="100" align="center" :show-overflow-tooltip="true">
+        <el-table-column label="使用状态" min-width="100" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{getStatus(scope.row.dataStatus)}}</template>
         </el-table-column>
         <el-table-column align="left" fixed="right" label="操作" width="220">
