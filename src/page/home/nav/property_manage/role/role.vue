@@ -17,19 +17,15 @@
         </div>
       </div>
       
-      <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." border highlight-current-row ref="multipleTable" style="width: 100%">
-        <el-table-column label="序号" type="index" align="center" width="60"> </el-table-column>
-        <el-table-column prop="role" label="角色" align="center"  width="150" :formatter="roleFilter"> </el-table-column>
-        <el-table-column prop="duty" label="功能职责" align="center"  width="120"> </el-table-column>
-        <el-table-column prop="time" label="创建时间" align="center"  width="200"> </el-table-column>
-        <el-table-column prop="num" label="人员数量" align="center"  width="120"> </el-table-column>
-        <el-table-column prop="state" label="状态" align="center"  width="120" :formatter="stateFilter"> </el-table-column>
-        <el-table-column prop="usestate" label="使用状态" align="center"  width="120" :formatter="usestateFilter"> </el-table-column>
-        <el-table-column fixed="right" align="center" label="操作" width="200">
+      <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." highlight-current-row ref="multipleTable" style="width: 100%">
+        <el-table-column label="序号" type="index" align="center" width="120"> </el-table-column>
+        <el-table-column prop="key" label="ID" align="center"  width="200"> </el-table-column>
+        <el-table-column prop="name" label="角色" align="center"  width="240"> </el-table-column>
+        <el-table-column align="center" label="操作" width="700">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="handleClick(scope.row)">查看</el-button>
-            <el-button size="mini" type="danger" v-if="scope.row.usestate==='1'" @click="handleDiabled(scope.row,'0')">禁用</el-button>
-            <el-button v-if="scope.row.usestate==='0'" @click="handleAbled(scope.row,'1')" size="mini" type="success">启用</el-button>
+            <el-button type="primary" size="mini" @click="handleClick(scope.row)">查看权限</el-button>
+            <!-- <el-button size="mini" type="danger" v-if="scope.row.usestate==='1'" @click="handleDiabled(scope.row,'0')">禁用</el-button>
+            <el-button v-if="scope.row.usestate==='0'" @click="handleAbled(scope.row,'1')" size="mini" type="success">启用</el-button> -->
           </template>
         </el-table-column>
       </el-table>
@@ -60,17 +56,6 @@
 </template>
 
 <script>
-const roleOptions = [
-    { key: '0', value: '物业'},
-    { key: '1', value: '保安'},
-    { key: '2', value: '保洁'},
-    { key: '3', value: '水电'}
-];
-
-const maleOptions = [
-  { key: '0', value: '女' },
-  { key: '1', value: '男' }
-];
 import AddPage from "./role_add";
 import SeePage from "./role_see";
 import { mapGetters } from "vuex";
@@ -80,41 +65,7 @@ export default {
   data() {
     return {
       isSou: false,
-      tableData: [
-        {
-          role: '0',
-          dep: '住建部',
-          duty: '管理房地产',
-          time: '2016-05-03 12:10:59',
-          num: 200,
-          state: '0',
-          usestate: '0'
-        }, {
-          role: '1',
-          dep: '住建部',
-          duty: '管理房地产',
-          time: '2016-05-03 12:10:59',
-          num: 200,
-          state: '0',
-          usestate: '1'
-        }, {
-          role: '2',
-          dep: '住建部',
-          duty: '管理房地产',
-          time: '2016-05-03 12:10:59',
-          num: 200,
-          state: '1',
-          usestate: '0'
-        }, {
-          role: '3',
-          dep: '住建部',
-          duty: '管理房地产',
-          time: '2016-05-03 12:10:59',
-          num: 200,
-          state: '0',
-          usestate: '1'
-        }
-      ], 
+      tableData: [], 
       navDetailData: [
         { id: 0, name: "首页" },
         { id: 1, name: "员工管理" },
@@ -227,6 +178,15 @@ export default {
         return '异常'
       }
     },
+    getRole(){
+      let communityId = this.$store.getters.communityId;
+      this.$xttp.get(`/user/property/${communityId}/post-list`).then(res => {
+        if(res.success) {
+          console.log(res);
+          this.tableData = res.data;
+        }
+      })
+    },
     confirmDel(){
       if(this.delData.id){
         this.$xttp.get(`/community/${this.delData.id}/delete`)
@@ -275,6 +235,7 @@ export default {
   },
   created() {
     // this.sendAjax();
+    this.getRole()
   },
   mounted() {
   }

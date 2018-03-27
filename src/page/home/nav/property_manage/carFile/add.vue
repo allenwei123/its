@@ -8,9 +8,27 @@
               <el-input v-model="form.userId">JSON.parse(localStorage.getItem("userInfo")).id</el-input>
             </el-form-item>
             <el-form-item label="车牌号码：" :label-width="formLabelWidth" prop="communityId" class="c-must">
-              <el-input v-model="form.carNo"></el-input>
+              <el-col :span="12">
+                <el-input v-model="form.carNo" placeholder="请输入车牌号"></el-input>
+              </el-col>
             </el-form-item>
-            <el-form-item label="车辆型号：" label-width="120px" required>
+            <el-form-item label="岗位：" :label-width="formLabelWidth" prop="postCode" class="c-must">
+              <el-select v-model="form.postCode" placeholder="postOptions" @change="changePostCode">
+                <el-option v-for="item in postOptions" :key="item.key" :label="item.name" :value="item.key"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="员工：" :label-width="formLabelWidth" prop="empl" class="c-must">
+              <el-select v-model="form.empl" placeholder="请选择员工">
+                <el-option v-for="item in emplData" :key="item.userId" :label="item.userName" :value="item.userId"></el-option>
+              </el-select>
+            </el-form-item>
+            <!-- <el-form-item label="员工：" prop="empl" class="c-must" style="display:block;margin-top:20px;">
+              <el-select v-model="form.empl" placeholder="请选择员工" @change="changEmpl">
+                <el-option v-for="item in emplData" :key="item.userId" :label="item.userName" :value="item.userId">
+                </el-option>
+              </el-select>
+            </el-form-item> -->
+            <!-- <el-form-item label="车辆型号：" label-width="120px" required>
               <el-input v-model="form.carType"></el-input>
             </el-form-item>
             <el-form-item label="车身颜色：" label-width="120px" required>
@@ -34,7 +52,7 @@
                   <i class="el-icon-plus"></i>
                 </el-upload>
               </template>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item :label-width="formLabelWidth">
               <el-button @click="handleClose">取 消</el-button>
               <el-button type="primary" @click="save('ruleForm')">保存</el-button>
@@ -44,7 +62,6 @@
 </template>
 
 <script>
-import scheduleList from '@/mock/scheduleList'
 import {send as ossUpload} from '@/utils/oss';
 const typeOptions = [
   { key: '1', value: '轮班' },
@@ -59,11 +76,14 @@ export default {
       form: {
         communityId: localStorage.getItem("communityId"),
         userId: JSON.parse(localStorage.getItem("userInfo")).id,
+        // userId: '',
         carNo: '',
-        carType: '',
-        carColor: '',
-        drivingPermit: '',
-        drivingPermitPicUrl: null
+        postCode: 'SECURITY',
+        empl: ''
+        // carType: '',
+        // carColor: '',
+        // drivingPermit: '',
+        // drivingPermitPicUrl: null
       },
       rules: {
         carNo: [{required: true, message: '请输入车牌号', trigger: 'blur,change' }],
@@ -77,11 +97,15 @@ export default {
       roleOptions: [],
       current: 1, //1 初始 2：添加后 3：编辑后
       typeOptions: typeOptions,
-      ij:this.msg
+      ij:this.msg,
+      postOptions: [],
+      emplData: []
     };
   },
   props: ["msg","add"],
   created() {
+    this.initRole();
+    this.initEmpl();
   },
   mounted() {},
   methods: {
@@ -102,18 +126,26 @@ export default {
         this.showInfo('车牌号码不能为空')
         return;
       }
-      if (!this.form.carType.length) {
-        this.showInfo('车辆型号不能为空')
+      if (!this.form.postCode.length) {
+        this.showInfo('请选择岗位')
         return;
       }
-      if (!this.form.carColor.length) {
-        this.showInfo('车身颜色不能为空')
+      if (!this.form.empl.length) {
+        this.showInfo('请选择员工')
         return;
       }
-      if (!this.form.drivingPermit.length) {
-        this.showInfo('行驶证号不能为空')
-        return;
-      }
+      // if (!this.form.carType.length) {
+      //   this.showInfo('车辆型号不能为空')
+      //   return;
+      // }
+      // if (!this.form.carColor.length) {
+      //   this.showInfo('车身颜色不能为空')
+      //   return;
+      // }
+      // if (!this.form.drivingPermit.length) {
+      //   this.showInfo('行驶证号不能为空')
+      //   return;
+      // }
       // let files = this.$refs.upload.uploadFiles;
       // if (files.length) {
       //   ossUpload(files[0], (key) => {
@@ -126,30 +158,32 @@ export default {
       //   this.submitForm();
       // }
 
-      let files = this.$refs.upload.uploadFiles;
+      // let files = this.$refs.upload.uploadFiles;
 
-      if (files.length) {
-        ossUpload(files[0].raw, key => {
-          this.form.drivingPermitPicUrl = key;
-          this.submitForm();
-        });
-      } else {
-        this.submitForm();
-      }
+      // if (files.length) {
+      //   ossUpload(files[0].raw, key => {
+      //     this.form.drivingPermitPicUrl = key;
+      //     this.submitForm();
+      //   });
+      // } else {
+      //   this.submitForm();
+      // }
+      this.submitForm();
     },
     submitForm() {
       this.loading = true;
       let params = {};
       params['communityId'] = this.$store.getters.communityId;
-      params['userId'] = this.form.userId;
+      params['userId'] = this.form.empl;
       params['carNo'] = this.form.carNo;
-      params['carType'] = this.form.carType;
-      params['carColor'] = this.form.carColor;
-      params['drivingPermit'] = this.form.drivingPermit;
-      if (this.form.drivingPermitPicUrl) {
-          params['drivingPermitPicUrl'] = this.form.drivingPermitPicUrl;
-      }
-      let url = '/vehicle/applyCarNum'
+      // params['clientType'] = '1001';
+      // let clientType = '1001'; 
+      // console.log(this.form.empl);
+      console.log(params);
+      // console.log(clientType)
+      let url = '/vehicle/applyCarNum/property';
+      // let url = `/vehicle/applyCarNum?clientType=${clientType}`
+      console.log(url);
       this.$xttp.post(url, params).then(res => {
         this.loading = false;
         if(res.errorCode === 0) {
@@ -159,6 +193,30 @@ export default {
       }).catch(() => {
         this.loading = false;
       });
+    },
+    initRole(){
+      let communityId = this.$store.getters.communityId;
+      this.$xttp.get(`/user/property/${communityId}/post-list`).then(res => {
+        if(!res.errorCode) {
+          this.postOptions = res.data;
+        }
+      })
+    },
+    initEmpl() {
+      let communityId = this.$store.getters.communityId
+      let postCode = this.form.postCode
+      this.$xttp.get(`/user/property/${communityId}/user-list`,{params:{postCode:postCode}})
+          .then(res => {
+            if(!res.errorCode) {
+              this.emplData = res.data
+              
+            }
+          })
+    },
+    changePostCode(){
+      this.form.empl = '';
+      this.initEmpl();
+      // this.initClass();
     }
   }
 };

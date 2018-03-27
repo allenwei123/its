@@ -8,20 +8,20 @@
         ref="multipleTable"
         style="width: 100%">
 
-        <el-table-column label="昵称"  :show-overflow-tooltip="true" align="center">
-          <template slot-scope="scope">{{ scope.row.nickName }}</template>
+        <el-table-column label="住房"  :show-overflow-tooltip="true" align="center">
+          <template slot-scope="scope">{{ scope.row.roomLocation }}</template>
         </el-table-column>
 
-        <el-table-column label="手机号"  :show-overflow-tooltip="true" align="center">
-          <template slot-scope="scope">{{ scope.row.phone }}</template>
-        </el-table-column>
+        <!-- <el-table-column label="手机号"  :show-overflow-tooltip="true" align="center">
+          <template slot-scope="scope">{{ scope.row.roomLocation }}</template>
+        </el-table-column> -->
 
         <el-table-column label="身份"  :show-overflow-tooltip="true" align="center">
           <template slot-scope="scope">{{scope.row.relationship | relationship }}</template>
         </el-table-column>
 
-        <el-table-column label="生日昵称"  :show-overflow-tooltip="true" align="center">
-          <template slot-scope="scope">{{ scope.row.birthday }}</template>
+        <el-table-column label="认证时间"  :show-overflow-tooltip="true" align="center">
+          <template slot-scope="scope">{{ scope.row.checkInTime | time('yyyy-MM-dd HH:mm:ss') }}</template>
         </el-table-column>
       </el-table>
     </el-dialog>

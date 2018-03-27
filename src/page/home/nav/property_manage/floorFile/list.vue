@@ -26,10 +26,8 @@
         highlight-current-row 
         ref="multipleTable"
         style="width: 100%">
-        <el-table-column
-          label="序号"
-          type="index"
-          width="80" align="center">
+        <el-table-column label="序号" width="80" align="center">
+          <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
         </el-table-column>
         <el-table-column
           prop="name"
@@ -104,6 +102,7 @@ export default {
         name: ""
       },
       currentPage: 1,
+      pageSize: 10,
       loading: false,
       isShow: false, //控制添加页面弹出
       total: 0,//列表总数

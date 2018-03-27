@@ -48,18 +48,26 @@ const router = new Router({
                 component: (resolve) => require(["@/page/home/nav/property_manage/carFile/list"], resolve),
               },
               {
-                path: 'communityFile',
-                name: 'communityFile',
-                component: (resolve) => require(["@/page/home/nav/property_manage/charge/other"], resolve),
+                path: 'carport',
+                component: (resolve) => require(["@/page/home/nav/property_manage/carport/carport"], resolve),
+              },
+              // {
+              //   path: 'communityFile',
+              //   name: 'communityFile',
+              //   component: (resolve) => require(["@/page/home/nav/property_manage/charge/other"], resolve),
+              // },
+              {
+                path: 'charge',
+                component: (resolve) => require(["@/page/home/nav/property_manage/charge/charge"], resolve)
               },
               {
                 path: 'userFile',
                 component: (resolve) => require(["@/page/home/nav/property_manage/userFile/list"], resolve),
               },
-              // {
-              //   path: 'role',
-              //   component: (resolve) => require(["@/page/home/nav/property_manage/role/role"], resolve),
-              // },
+              {
+                path: 'role',
+                component: (resolve) => require(["@/page/home/nav/property_manage/role/role"], resolve),
+              },
               {
                 path: 'empl',
                 component: (resolve) => require(["@/page/home/nav/property_manage/empl/empl"], resolve),
@@ -71,6 +79,14 @@ const router = new Router({
               {
                 path: 'class',
                 component: (resolve) => require(["@/page/home/nav/property_manage/class/class"], resolve),
+              },
+              {
+                path: 'security',
+                component: (resolve) => require(["@/page/home/nav/property_manage/security/security"], resolve)
+              },
+              {
+                path: 'cleaner',
+                component: (resolve) => require(["@/page/home/nav/property_manage/cleaner/cleaner"], resolve)
               },
               {
                 path: 'checkIn',
@@ -172,7 +188,7 @@ const router = new Router({
     }
   ]
 })
-let errorList = ['/home/nav/communityIoT/record','/home/nav/side/carport','/home/nav/propertyService/onlineService','/home/nav/side/charge','/home/nav/propertyService/message'];//记录暂时没开发的
+let errorList = ['/home/nav/communityIoT/record','/home/nav/propertyService/onlineService','/home/nav/propertyService/message'];//记录暂时没开发的
 router.beforeEach((to, from, next) => {
   if(errorList.find((val) => { return val == to.path})) {
     alert('该功能未开发');

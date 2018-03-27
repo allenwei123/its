@@ -9,12 +9,12 @@ const arr = [
         name:'基础管理',
         show: 1,
         menuItem:[
-          {
-            id:'1-1-1',
-            title:'社区档案',
-            link:'/home/nav/side/communityFile',
-            show: 1
-          },
+          // {
+          //   id:'1-1-1',
+          //   title:'社区档案',
+          //   link:'/home/nav/side/communityFile',
+          //   show: 1
+          // },
           {
             id:'1-1-2',
             title:'楼栋档案',
@@ -53,8 +53,14 @@ const arr = [
           },
           {
             id:'1-1-6',
-            title:'车辆档案',
+            title:'车辆认证',
             link:'/home/nav/side/carFile',
+            show: 1
+          },
+          {
+            id:'1-1-7',
+            title:'车库档案',
+            link:'/home/nav/side/carport',
             show: 1
           },
           {
@@ -70,12 +76,12 @@ const arr = [
         name:'员工管理',
         show: 1,
         menuItem:[
-          // {
-          //   id:'1-2-1',
-          //   title:'角色管理',
-          //   link:'/home/nav/side/role',
-          //   show: 1
-          // },
+          {
+            id:'1-2-1',
+            title:'角色管理',
+            link:'/home/nav/side/role',
+            show: 1
+          },
           {
             id:'1-2-2',
             title:'员工管理',
@@ -86,7 +92,7 @@ const arr = [
       },
       {
         id:'1-3',
-        name:'作业管理',
+        name:'工作管理',
         show: 1,
         menuItem:[
           {
@@ -103,10 +109,22 @@ const arr = [
           },
           {
             id:'1-3-3',
-            title:'考勤记录',
-            link:'/home/nav/side/checkIn',
+            title:'保安考勤',
+            link:'/home/nav/side/security',
             show: 1
-          }
+          },
+          {
+            id:'1-3-3',
+            title:'保洁考勤',
+            link:'/home/nav/side/cleaner',
+            show: 1
+          },
+          // {
+          //   id:'1-3-4',
+          //   title:'考勤管理',
+          //   link:'/home/nav/side/checkIn',
+          //   show: 1
+          // }
         ]
       },
       {
@@ -122,7 +140,7 @@ const arr = [
           },
           {
             id:'1-4-1',
-            title:'收费项目',
+            title:'收费管理',
             link:'/home/nav/side/charge',
             show: 1
           }

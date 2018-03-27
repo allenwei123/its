@@ -2,28 +2,38 @@
       <el-dialog :title="titleFont" :visible.sync="msg" :before-close="handleClose">
         <el-form :model="form" :rules="rules" ref="ruleForm" class="demo-form-inline">
 
-          <el-form-item label="岗位" :label-width="formLabelWidth" prop="postCode" class="c-must">
+          <el-form-item label="岗位：" :label-width="formLabelWidth" prop="postCode" class="c-must">
             <el-radio-group v-model="form.postCode">
               <el-radio :label="item.key" :value="item.name" :key="item.name" v-for="(item) in postCodeOptions">{{item.name}}</el-radio>
             </el-radio-group>
           </el-form-item>
           
-          <el-form-item label="姓名" :label-width="formLabelWidth" prop="userName" class="c-must">
+          <!-- <el-form-item label="姓名" :label-width="formLabelWidth" prop="userName" class="c-must">
             <el-input v-model="form.userName"></el-input>
+          </el-form-item> -->
+
+          <el-form-item label="姓名：" :label-width="formLabelWidth" prop="userName" class="c-must">
+            <el-col :span="14">
+              <el-input v-model.trim="form.userName" placeholder="请输入姓名"></el-input>
+            </el-col>
           </el-form-item>
 
-          <el-form-item label="手机号码" :label-width="formLabelWidth" prop="phone" class="c-must">
-            <el-input v-model="form.phone"></el-input>
+          <el-form-item label="手机号码：" :label-width="formLabelWidth" prop="phone" class="c-must">
+            <el-col :span="14">
+              <el-input v-model.trim="form.phone" placeholder="请输入手机号"></el-input>
+            </el-col>
           </el-form-item>
 
-          <el-form-item label="性别" :label-width="formLabelWidth" prop="sex" class="c-must">
+          <el-form-item label="性别：" :label-width="formLabelWidth" prop="sex" class="c-must">
             <el-select v-model="form.sex" value-key="key" placeholder="请选择">
               <el-option v-for="item in maleOptions" :key="item.key" :label="item.value" :value="item.key">{{item.value}}</el-option>
             </el-select>
           </el-form-item>
 
-          <el-form-item label="设置密码" :label-width="formLabelWidth" prop="password" class="c-must">
-            <el-input v-model="form.password" type="password"></el-input>
+          <el-form-item label="设置密码：" :label-width="formLabelWidth" prop="password" class="c-must">
+            <el-col :span="14">
+              <el-input v-model.trim="form.password" type="password" placeholder="请输入密码"></el-input>
+            </el-col>
           </el-form-item>
 
           <el-form-item :label-width="formLabelWidth">

@@ -4,49 +4,37 @@
         <ul class="c-navDetail clear">
           <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li>
         </ul>
-        <div class="c-search">
-          <el-form :inline="true" :model="formInline" class="demo-form-inline">
-            <el-form-item label="车牌号">
-              <el-input v-model.trim="formInline.carNo" placeholder="关键字搜索"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
-            </el-form-item>
-          </el-form>
-          <el-button type="primary" class="c-addBtn" @click="addCar">新增车辆</el-button>
-        </div>
       </div>
-
+      
       <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." border highlight-current-row ref="multipleTable" style="width: 100%">
         <el-table-column label="序号" width="80" align="center">
           <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
         </el-table-column>
         <el-table-column v-if="show" align="center" prop="id" label=""></el-table-column>
-        <el-table-column v-if="show" align="center" prop="userId" label=""></el-table-column>
-        <el-table-column align="center" prop="carNo" label="车牌号" width="160"></el-table-column>
-        <el-table-column label="车库信息" width="250" align="center" :show-overflow-tooltip="true">
-          <template slot-scope="scope">{{ scope.row.parkingName}}</template>
+        <el-table-column label="车库名称" width="250" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ scope.row.carportName}}</template>
         </el-table-column>
-        <el-table-column label="所属住户" width="200" align="center" :show-overflow-tooltip="true">
-          <template slot-scope="scope"><a href="">{{ scope.row.userName}}</a></template>
+        <el-table-column label="车位数量" width="200" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope"><a href="">{{ scope.row.carNum}}</a></template>
         </el-table-column>
-        <el-table-column align="center" prop="auditStatus" label="审核状态" :formatter="auditStatusFilter" width="120"></el-table-column>
-        <el-table-column align="left" fixed="right" label="操作" width="240">
+        <el-table-column label="具体地址" width="250" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ scope.row.address}}</template>
+        </el-table-column>
+        <el-table-column label="关联楼栋" width="200" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope"><a href="">{{ scope.row.linkBuild}}</a></template>
+        </el-table-column>
+        <el-table-column align="center" fixed="right" label="操作" width="240">
           <template slot-scope="scope">
-            <!-- <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button> -->
-            <el-button v-if="scope.row.auditStatus == 1 || scope.row.auditStatus == -1" @click="handleUnbundl(scope.row)" type="danger" size="small">注销</el-button>
-            <el-button v-if="scope.row.auditStatus == 0" @click="handleDone(scope.row, '1')" type="success" size="small">通过</el-button>
-            <el-button v-if="scope.row.auditStatus == 0" @click="handleDone(scope.row,'-1')" type="warning" size="small">拒绝</el-button>
+            <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button>
           </template>
         </el-table-column>
       </el-table>
       <div class="c-block">
         <el-pagination
-          @current-change="getTableList"
-          :current-page="currentPage"
+          :current-page="1"
           :page-size="10"
           layout="total, prev, pager, next, jumper"
-          :total="total">
+          :total="2">
         </el-pagination>
       </div>
       <transition name="fade">
@@ -76,10 +64,9 @@
 </template>
 
 <script>
-import AddPage from "./add";
-import SeePage from "./see";
+// import AddPage from "./add";
+// import SeePage from "./see";
 import { mapGetters } from "vuex";
-import {communityId as getCommunityList} from '@/biz/community';
 import time from '@/utils/time.js';
 
 export default {
@@ -89,13 +76,25 @@ export default {
       show: false,
       postOptions: [],
       isSou: false,
-      tableData: [],
+      tableData: [{
+        "id": "a03432bc03d45cc232",
+        "carportName": "和谐景苑地下车库",
+        "address": "广东省广州市海珠区和谐景苑小区332号",
+        "carNum": "132",
+        "linkBuild": "和谐景苑小区A区1栋"
+      },{
+        "id": "a03432bc03d45cc231",
+        "carportName": "和谐景苑地下车库B",
+        "address": "广东省广州市天河区中山大道北223号",
+        "carNum": "532",
+        "linkBuild": "荷花苑A区1栋"
+      }],
       msg: '',
       // communityId:'',
       navDetailData: [
         { id: 0, name: "物业管理" },
         { id: 1, name: "基础管理" },
-        { id: 2, name: "车辆认证" }
+        { id: 2, name: "车库档案" }
       ],
       formInline: {
         carNo: ''
@@ -120,19 +119,10 @@ export default {
   },
   computed: mapGetters(["showAside"]),
   components: {
-      AddPage,
-      SeePage
+    //   AddPage,
+    //   SeePage
   },
   methods: {
-    onSubmit() {//添加按钮
-      this.notice = null;
-      this.isShow = !this.isShow;
-    },
-    addCar() {
-      //新增
-      this.notice = null;
-      this.isShow = !this.isShow;
-    },
     handleClick(row) {
       //查看
       this.isSee = true;
@@ -149,7 +139,7 @@ export default {
     },
     delHandle(row) {
       this.visible2 = true;
-      this.delData = row;
+      this.delData = row; 
     },
     seeChange(msg){
       this.isSee = false;
@@ -162,21 +152,7 @@ export default {
         this.isShow = false;
       }
     },
-    auditStatusFilter(row, column){
-      let auditStatus = row[column.property]
-      if (auditStatus === 0){
-          return '未审核'
-      }
-      if (auditStatus === 1) {
-        return '已审核'
-      }
-      if (auditStatus === -1) {
-        return '未通过'
-      }
-      if (auditStatus === 3) {
-        return '已解绑'
-      }
-    },
+    
     handleDone(row,status){
       var id = row.id;
       var status = status;
@@ -224,58 +200,9 @@ export default {
           }
         })
       }
-    },
-    initPost(){
-      let communityId = this.$store.getters.communityId;
-      this.$xttp.get(`/user/property/${communityId}/post-list`).then(res => {
-        if(!res.errorCode) {
-          this.postOptions = res.data;
-        }
-      })
-    },
-
-    getTableList(page,carNo) {
-      let nPage = page || this.$route.query.page || 1;
-      let obj = {page:nPage};
-      let communityId = this.$store.getters.communityId;
-      if(carNo) {
-        obj.carNo = this.formInline.carNo;
-      } else {
-        delete obj.carNo;
-      }
-      this.$xttp.get(`/vehicle/${communityId}/page`,{params:obj})
-          .then(res => {
-            if(res.success) {
-              this.tableData = res.data.records;
-              this.currentPage = res.data.currentPage;
-              this.total = res.data.total;
-              this.totalPage = res.data.totalPage;
-            }
-            this.loading = false;
-          }).catch(err =>{
-            this.loading = false;
-          })
-    },
-    find(){
-      let communityId = this.$store.getters.communityId;
-      let carNo = this.formInline.carNo;
-
-      this.$xttp.get(`/vehicle/${communityId}/page?carNo=${carNo}`)
-                .then(res => {
-        if(!res.errorCode) {
-          this.tableData = res.data.records;
-          this.currentPage = res.data.currentPage;
-          this.total = res.data.total;
-          this.totalPage = res.data.totalPage;
-        }
-        this.loading = false;
-      }).catch(err =>{
-        this.loading = false;
-      })
     }
   },
   created() {
-    this.getTableList();
   },
   mounted() {
   }
@@ -312,7 +239,7 @@ export default {
 .fade-enter-active, .fade-leave-active {
   transition: all 0.5s ease;
 }
-
+       
 .fade-enter, .fade-leave-active {
   opacity: 0;
   transform: rotateY(180deg);
@@ -320,9 +247,10 @@ export default {
 .see-enter-active, .see-leave-active {
   transition: all 0.5s ease;
 }
-
+       
 .see-enter, .see-leave-active {
   opacity: 0;
   transform: translateX(-500px);
 }
 </style>
+

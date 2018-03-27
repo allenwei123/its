@@ -8,7 +8,7 @@
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
             
             <el-form-item>
-              <el-select v-model="formInline.floorSer" clearable placeholder="选择楼栋搜索">
+              <el-select v-model="formInline.floorSer" @change="changeFloor" clearable placeholder="选择楼栋搜索">
                 <el-option
                   v-for="item in floorOptions"
                   :key="item.id"
@@ -29,16 +29,14 @@
       </div>
       
       <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." border highlight-current-row ref="multipleTable" style="width: 100%">
-        <!-- <el-table-column label="序号" type="index" width="50"></el-table-column> -->
         <el-table-column label="序号" width="80" align="center">
           <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
         </el-table-column>
-        <el-table-column prop="name" align="center" label="房间名称"></el-table-column>
-        <el-table-column prop="code" align="center" label="房间编号"></el-table-column>
-        <el-table-column prop="floorNo" align="center" label="房间楼层"></el-table-column>
-        <el-table-column prop="floorCode" align="center" label="楼层号"></el-table-column>
-        <el-table-column align="center" prop="time1" label="创建时间"> </el-table-column>
-        <el-table-column align="left" fixed="right" label="操作" width="220">
+        <el-table-column prop="name" align="center" label="房号"></el-table-column>
+        <el-table-column prop="buildingId" align="center" label="所属楼栋"></el-table-column>
+        <el-table-column prop="floorNo" align="center" label="所在楼层"></el-table-column>
+        <el-table-column prop="area" align="center" label="房间面积(P)"></el-table-column>
+        <el-table-column align="center" fixed="right" label="操作" width="220">
           <template slot-scope="scope">
             <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button>
             <el-button @click="editHandle(scope.row)" type="warning" size="small">编辑</el-button>
@@ -56,7 +54,7 @@
         </el-pagination>
       </div>
       <transition name="fade1">
-        <AddPage v-if="isShow" :msg="isShow" @upup="change" :add.sync="notice"></AddPage>
+        <AddPage v-if="isShow" :msg="isShow" @upup="change"  @reload="find" :add.sync="notice"></AddPage>
       </transition>
       <transition name="fade">
         <SeePage v-if="see" :msg="see" @upsee="seeChange"  :data="seeData"></SeePage>
@@ -89,6 +87,7 @@ export default {
       ],
       formInline: {
         name: "",
+        floorSer: '',
         select:''
       },
       currentPage: 1,
@@ -165,6 +164,9 @@ export default {
         })
       }
     },
+    changeFloor(){
+      this.find();
+    },
     seeChange(msg) {//与查看弹窗交互
       this.see = false;
     },
@@ -184,9 +186,6 @@ export default {
       }else {
         delete obj.name ;
       }
-
-      console.log(obj);
-      // return;
       this.loading = true;
       this.$xttp.get("/community/room/page",{params:obj})
       .then(res => {

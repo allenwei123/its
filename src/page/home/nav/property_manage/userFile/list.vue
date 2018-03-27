@@ -8,7 +8,7 @@
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
 
             <el-form-item>
-              <el-input v-model.trim="formInline.name" placeholder="用户名"></el-input>
+              <el-input v-model.trim="formInline.name" placeholder="手机号码"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>

@@ -12,8 +12,8 @@
               </el-date-picker>
             </el-form-item>
 
-            <el-form-item label="角色：">
-              <el-select v-model="form.postCode" @change="changePostCode()" placeholder="角色">
+            <el-form-item label="岗位：">
+              <el-select v-model="form.postCode" @change="changePostCode()" placeholder="岗位">
                 <el-option v-for="item in postOptions" :key="item.key" :label="item.name" :value="item.key">
                 </el-option>
               </el-select>
@@ -27,7 +27,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="班次：" prop="class" class="c-must" style="display:block;margin-top:25px;float:left;">
+            <el-form-item v-if="isSee" label="班次：" prop="class" class="c-must" style="display:block;margin-top:25px;float:left;">
               <el-radio-group v-model="form.class">
                 <el-radio @change="changeRadio" :label="item.id" :value="item.name" :key="item.name" v-for="(item) in classData" border>{{item.name}}</el-radio>
               </el-radio-group>
@@ -86,6 +86,7 @@ export default {
       formLabelWidth: "120px",
       titleFont:'新增排班',
       isShow: false,
+      isSee: false,
       form: {
         postCode: 'SECURITY',
         date: '',
@@ -154,7 +155,13 @@ export default {
       this.$xttp.post(`/task/class/page`,params)
       .then(res => {
         if(!res.errorCode) {
-          this.classData = res.data.records;
+          if(res.data.total == 0){
+            this.isSee = false;
+          }
+          else{
+            this.isSee = true;
+            this.classData = res.data.records;
+          }
         }
       })
     },
@@ -182,7 +189,7 @@ export default {
         return;
       }
       if(this.form.class == ''){
-        this.$message({message:'请选择班次',type:'warning'});
+        this.$message({message:'请选择班次,如没有班次请先去创建班次',type:'warning'});
         return;
       }
       this.postData();
@@ -218,7 +225,7 @@ export default {
       params['offTime'] = offTime;
       params['offPlace'] = offPlace;
       params['task'] = task;
-      
+          
       let msg = this.add ? "编辑" : "添加";
       let uri = this.add
         ? "/task/schedule/edit"
@@ -245,6 +252,7 @@ export default {
       this.form.empl = '';
       this.initEmpl();
       this.initClass();
+      this.isShow = false;
     }
   },
   created() {

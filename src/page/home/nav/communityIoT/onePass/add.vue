@@ -101,7 +101,7 @@ export default {
         .then(res => {
           if (res.errorCode === 0) {
             this.$message({
-              message: msg + "社区成功",
+              message: msg + "楼栋成功",
               type: "success"
             });
             this.current = 2;
