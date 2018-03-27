@@ -96,7 +96,10 @@
       </el-dialog>
 
       <el-dialog title="温馨提示" :visible.sync="visible1">
-          <p>指派员工 :</p><span>{{repairName}}</span>
+          <span>指派员工 :</span>
+          <el-select v-model="value" placeholder="请选择维修人员">
+            <el-option v-for="item in repairData" :key="item.userId" :label="item.userName" :value="item.userName"></el-option>
+          </el-select>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="visible1 = false">取消</el-button>
             <el-button type="primary" size="mini" @click="assignStaff">确定</el-button>
@@ -130,7 +133,6 @@
         total: 0,
         currentPage: 1,
         formVisible: false,
-        // formSee: false,
         previewVisible: false,
         previewNoticeInfo: null,
         input: '',
@@ -147,10 +149,9 @@
         visible1: false,
         confirmAssign: '',
         confirmRejectData: '',
-        repairName: '',
-        // assignStatus: '',//分派状态
         reason: '',
-        staff: '',
+        repairData: '',
+        value:'',
       }
     },
     methods: {
@@ -213,15 +214,26 @@
           this.loading = false;
         })
       },
+      workMan() {
+        let url = `user/property/${this.$store.getters.communityId}/user-list?postCode=SERVICEMAN`;
+        this.$xttp.get(url).then(res => {
+          if(res.errorCode === 0) {
+            this.loading = false;
+            this.repairData = res.data;
+          }
+        }).catch( () => {
+          this.loading = false;
+        })
+      },
       assignHandle(row) {
         this.visible1 = true;
         this.assignData = row;
       },
       assignStaff (assignData){
-        if(!this.staff.repairName){
+        if(!this.value){
          this.visible1 = false;
          this.$message({
-            message: '暂无可派人员',
+            message: '请选择维修人员',
             type: 'warning'
           });
           return false;
@@ -232,23 +244,20 @@
           type: 'success'
         });
         this.assignData.faultStatus = 3;
-        console.log(22,this.staff);
-        this.assign(this.staff);
+        this.assign(this.assignData);
       },
       //分配人员
       assign(assignData) {
-        console.log(33,assignData);
         let url = `property/fault/allocation`;
         let params = {
           id: assignData.id,
-          repairId: assignData.repairId,
-          repairName: assignData.repairName,
-          repairContact: assignData.repairContact
+          // repairId: assignData.repairId,
+          repairName: this.value,
+          // repairContact: assignData.repairContact
         }
         this.$xttp.post(url, params).then(res => {
           if(res.errorCode === 0) {
             this.loading = false;
-            this.repairName = res.data.repairName;
           }
         }).catch( () => {
           this.loading = false;
@@ -312,9 +321,6 @@
         this.$xttp.post(url,{id: row.id, faultStatus: row.faultStatus}).then(res => {
           if(res.errorCode === 0){
             this.loading = false;
-            this.repairName = res.data.repairName;
-            this.staff = res.data;
-            console.log(11,this.staff);
           }
         }).catch(() => {
           this.loading = false;
@@ -369,6 +375,7 @@
       }
     },
     created() {
+      this.workMan();
       this.postData();
     }
   }
