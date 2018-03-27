@@ -6,7 +6,7 @@
         </ul>
         <div class="c-search">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
-            <el-form-item label="账单日期">
+            <!-- <el-form-item label="账单日期">
               <el-date-picker
                 v-model="formInline.date"
                 type="date"
@@ -15,9 +15,24 @@
                 @change="changeDate"
                 placeholder="账单日期">
               </el-date-picker>
+            </el-form-item> -->
+            <el-form-item label="时间：">
+              <el-date-picker
+                v-model="formInline.rangeDate"
+                type="daterange"
+                align="right"
+                @change="changeRangeDate"
+                format="yyyy 年 MM 月 dd 日"
+                value-format="yyyy-MM-dd"
+                unlink-panels
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                :picker-options="pickerOptions">
+              </el-date-picker>
             </el-form-item>
-            <el-form-item label="角色">
-              <el-select v-model="formInline.post" placeholder="角色" @change="changePostCode">
+            <el-form-item label="">
+              <el-select v-model="formInline.post" placeholder="请选项岗位" @change="changePostCode">
                 <el-option v-for="item in postOptions" :key="item.key" :label="item.name" :value="item.key">
                 </el-option>
               </el-select>
@@ -43,13 +58,16 @@
         </el-table-column>
         <el-table-column prop="userName" label="员工" align="center" width="150"></el-table-column>
         <el-table-column prop="className" label="班次" align="center" width="150"></el-table-column>
+        <el-table-column prop="" label="班次" width="200" align="center">
+          <template slot-scope="scope">{{scope.row.className}}({{scope.row.attendTimeStr}}-{{scope.row.offTimeStr}})</template>
+        </el-table-column>
         <el-table-column label="岗位" min-width="120" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.postCode | postCode}}</template>
         </el-table-column>
         <el-table-column fixed="right" label="操作" align="center" width="180">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="handleClick(scope.row)">查看</el-button>
-            <el-button type="primary" size="mini" @click="editHandle(scope.row)">修改</el-button>
+            <!-- <el-button type="primary" size="mini" @click="handleClick(scope.row)">查看</el-button> -->
+            <el-button type="warning" size="mini" @click="editHandle(scope.row)">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -81,7 +99,7 @@
         <EditPage v-if="editShow" :msg="editShow" @upedit="editChange" :editData="editData"></EditPage>
       </transition> -->
       <transition name="fade1">
-        <AddPage v-if="isShow" :msg="isShow" @upup="change" :add.sync="notice"></AddPage>
+        <AddPage v-if="isShow" :msg="isShow" @upup="change" @reload="sendAjax" :add.sync="notice"></AddPage>
       </transition>
       <transition name="fade">
         <SeePage v-if="see" :msg="see" @upsee="seeChange"  :data="seeData"></SeePage>
@@ -98,8 +116,8 @@
 </template>
 
 <script>
-import AddPage from "./sched_add";
-import SeePage from "./sched_see";
+import AddPage from "./add";
+import SeePage from "./see";
 import { mapGetters } from "vuex";
 import time from '@/utils/time.js';
 
@@ -117,14 +135,42 @@ export default {
         { id: 2, name: "排班管理" }
       ],
       formInline: {
+        rangeDate: '',
         post: 'SECURITY',
         date: ''
       },
+      pickerOptions: {
+        shortcuts: [{
+        text: '最近一周',
+        onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', [start, end]);
+        }
+        }, {
+        text: '最近一个月',
+        onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+            picker.$emit('pick', [start, end]);
+        }
+        }, {
+        text: '最近三个月',
+        onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+            picker.$emit('pick', [start, end]);
+        }
+        }]
+      },
+      total: 0,//列表总数
       pageSize:10,
       currentPage: 1,
       loading: false,
       isShow: false, //控制添加页面弹出
-      total: 0,//列表总数
       notice:null,//编辑传送的值
       see:false,//控制查看组件弹出
       seeData:null,//查看数据
@@ -178,7 +224,7 @@ export default {
       if(msg == 1) {
         this.isShow = false;
       }else if(msg == 2 || msg == 3) {
-        this.sendAjax();
+        // this.sendAjax();
         this.isShow = false;
       }
     },
@@ -215,6 +261,9 @@ export default {
       })
       row.usestate = usestate
     },
+    changeRangeDate() {
+      this.sendAjax();
+    },
     initPost(){
       let communityId = this.$store.getters.communityId
       this.$xttp.get(`/user/property/${communityId}/post-list`).then(res => {
@@ -239,12 +288,20 @@ export default {
     sendAjax(page) {
       let nPage = page || this.$route.query.page || 1;
       let communityId = this.$store.getters.communityId;
-      let date = this.formInline.date;
+      let rangeDate = this.formInline.rangeDate;
+      let startDate;
+      let endDate;
       let postCode = this.formInline.post;
-      if(this.formInline.date == ''){
-        this.formInline.date = time.dateFormat(new Date(),'yyyy-MM-dd');
+      if(rangeDate == '' || rangeDate == 'undefined' || rangeDate == null){
+        startDate = '';
+        endDate = '';
+      }else{
+        alert(rangeDate)
+        startDate = rangeDate[0];
+        endDate = rangeDate[1];
       }
-      let obj = {page:nPage,size:this.pageSize,communityId:communityId,postCode:postCode,startDate: this.formInline.date,endDate:this.formInline.date}
+
+      let obj = {page:nPage,size:this.pageSize,communityId:communityId,postCode:postCode,startDate: startDate,endDate:endDate}
       this.loading = true;
       this.$xttp.post("task/schedule/page",obj)
       .then(res => {

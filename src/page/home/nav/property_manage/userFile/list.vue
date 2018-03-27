@@ -8,7 +8,7 @@
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
 
             <el-form-item>
-              <el-input v-model.trim="formInline.name" placeholder="手机号码"></el-input>
+              <el-input v-model.trim="formInline.contractPhone" placeholder="手机号码"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
@@ -36,7 +36,7 @@
         </el-table-column>
 
         <el-table-column label="手机号"  :show-overflow-tooltip="true" align="center">
-          <template slot-scope="scope">{{ scope.row.phone }}</template>
+          <template slot-scope="scope">{{ scope.row.contractPhone }}</template>
         </el-table-column>
 
         <el-table-column label="性别  "  :show-overflow-tooltip="true" align="center">
@@ -87,7 +87,7 @@ export default {
         { id: 2, name: "住户档案" }
       ],
       formInline: {
-        name: ""
+        contractPhone: ""
       },
       pageSize:10,
       currentPage: 1,
@@ -102,7 +102,7 @@ export default {
   },
   methods: {
     handleCurrentChange(val) {
-      this.sendAjax(val, this.formInline.name);
+      this.sendAjax(val, this.formInline.contractPhone);
     },
     handle(row) {
       this.see = true;
@@ -126,15 +126,15 @@ export default {
       this.see = false;
     },
     find() {
-      this.sendAjax(1, this.formInline.name);
+      this.sendAjax(1, this.formInline.contractPhone);
     },
-    sendAjax(page, name) {
+    sendAjax(page, contractPhone) {
       let nPage = page || this.$route.query.page || 1;
       let obj = { page: nPage ,communityId:this.$store.getters.communityId};
-      if (name) {
-        obj.name = this.formInline.name;
+      if (contractPhone) {
+        obj.contractPhone = this.formInline.contractPhone;
       } else {
-        delete obj.name;
+        delete obj.contractPhone;
       }
       this.loading = true;
       this.$xttp

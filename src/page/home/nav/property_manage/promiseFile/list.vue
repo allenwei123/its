@@ -8,7 +8,7 @@
       <div class="c-search">
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
           <el-form-item>
-            <el-select v-model="formInline.floorSer" clearable placeholder="选择楼栋搜索">
+            <el-select v-model="formInline.floorSer" clearable placeholder="选择楼栋搜索" @change="changeFloor">
               <el-option
                 v-for="item in floorOptions"
                 :key="item.id"
@@ -18,7 +18,7 @@
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-select v-model="formInline.value" placeholder="请选择状态">
+            <el-select v-model="formInline.value" clearable placeholder="请选择状态" @change="changeStatus">
               <el-option
                 v-for="item in statusList"
                 :key="item.id"
@@ -29,7 +29,7 @@
           </el-form-item>
 
           <el-form-item>
-            <el-input v-model="formInline.name" placeholder="用户名"></el-input>
+            <el-input v-model.trim="formInline.name" placeholder="用户名"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
@@ -80,11 +80,7 @@
         <template slot-scope="scope">{{ scope.row.auditTime | time('yyyy-MM-dd HH:mm:ss') }}</template>
       </el-table-column>
 
-      <el-table-column
-        align="center"
-        fixed="right"
-        label="操作"
-        width="200">
+      <el-table-column align="center" fixed="right" label="操作" width="200">
         <template slot-scope="scope">
           <el-button @click="printHandle(scope.row)" v-if="scope.row.auditStatus == 1" type="primary" size="small">
             认证详情
@@ -148,7 +144,7 @@
         ],
         formInline: {
           floorSer: '',
-          name: "",
+          name: '',
           value: ''
         },
         // currentPage: 1,
@@ -158,7 +154,7 @@
         loading: false,
         total: 0, //列表总数
         seeData: null, //查看数据
-        statusList: [{id: 0, name: '待审核'}, {id: 1, name: '已通过'}, {id: -1, name: '已拒绝'}, {id: -2, name: '已注销'}], //审核状态下拉框数据
+        statusList: [{id: 0, name: '未审核'}, {id: 1, name: '已通过'}, {id: -1, name: '驳回'}, {id: -2, name: '违规'}, {id: 2, name: '已注销'}, {id: 3, name: '已解绑'}], //审核状态下拉框数据
         visible2: false,
         boolDialog: false, //控制打印窗口
         printData: null,
@@ -175,6 +171,7 @@
     methods: {
       handleCurrentChange(val) {
         if (this.currentPage !== val) {
+          alert(this.formInline.name);
           this.sendAjax(val, this.formInline.name);
         }
       },
@@ -273,9 +270,15 @@
       find() {
         this.sendAjax(null, this.formInline.name);
       },
-      sendAjax(page, communityId, name) {
+      changeStatus(){
+        this.find();
+      },
+      changeFloor(){
+        this.find();
+      },
+      sendAjax(page, name) {
         let nPage = page || this.$route.query.page || 1;
-        let obj = {page: nPage, relationship: 1, communityId: this.$store.getters.communityId ,auditStatus:this.formInline.value};
+        let obj = {page: nPage, relationship: 1, communityId: this.$store.getters.communityId ,buildingId:this.formInline.floorSer,auditStatus:this.formInline.value,name:this.formInline.name};
         if (name) {
           obj.name = this.formInline.name;
         } else {
