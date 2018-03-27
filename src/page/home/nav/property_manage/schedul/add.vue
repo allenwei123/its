@@ -1,8 +1,8 @@
 <template>
       <el-dialog :title="titleFont" :visible.sync="msg" :before-close="handleClose">
         <div class="c-search">
-          <el-form :inline="true" :model="form" class="demo-form-inline">
-            <el-form-item label="">
+          <el-form :inline="true" :rules="rules" :model="form" class="demo-form-inline">
+            <el-form-item label="" prop="date">
               <el-date-picker
                 v-model="form.date"
                 type="date"
@@ -12,7 +12,7 @@
               </el-date-picker>
             </el-form-item>
 
-            <el-form-item label="岗位：">
+            <el-form-item label="岗位：" prop="postCode">
               <el-select v-model="form.postCode" @change="changePostCode()" placeholder="岗位">
                 <el-option v-for="item in postOptions" :key="item.key" :label="item.name" :value="item.key">
                 </el-option>
@@ -38,14 +38,14 @@
                   placeholder="班次名称"
                   v-model="form.name">
                 </el-input>
-                <el-time-select placeholder="出勤时间" v-model="form.attendTime"
+                <el-time-select placeholder="出勤时间" v-model="form.attendTimeStr"
                 :picker-options="{
                   start: '00:00',
                   step: '00:05',
                   end: '24:00'
                   }">
                 </el-time-select>
-                <el-time-select placeholder="退勤时间" v-model="form.offTime"
+                <el-time-select placeholder="退勤时间" v-model="form.offTimeStr"
                   :picker-options="{
                     start: '00:00',
                     step: '00:05',
@@ -80,21 +80,21 @@
 <script>
 import time from '@/utils/time.js';
 export default {
-  name: "EmplAdd",
+  name: "SchedulAdd",
   data() {
     return {
       formLabelWidth: "120px",
       titleFont:'新增排班',
-      isShow: false,
       isSee: false,
+      isShow: false,
       form: {
         postCode: 'SECURITY',
         date: '',
         empl: '',
         class: '',
         name: '',
-        attendTime: '',
-        offTime: '',
+        attendTimeStr: '',
+        offTimeStr: '',
         task:'',
         attendPlace: '',
         offPlace: ''
@@ -110,13 +110,13 @@ export default {
     };
   },
   props: ["msg","add"],
-  created() {
-    if(!this.add) {
-      // 判定此时组件为 编辑
-      this.form = this.add;
-      this.titleFont = "编辑排班";
-    }
-  },
+  // created() {
+  //   if(this.add) {
+  //     // 判定此时组件为 编辑
+  //     this.form = this.add;
+  //     this.titleFont = "编辑排班";
+  //   }
+  // },
   mounted() {},
   methods: {
     handleClose() {
@@ -204,9 +204,9 @@ export default {
       let propertyId = localStorage.getItem('propertyId');
       let className = this.form.name;
 
-      let attendTime = this.form.attendTime;
+      let attendTimeStr = this.form.attendTimeStr;
       let attendPlace = this.form.attendPlace;
-      let offTime = this.form.offTime;
+      let offTimeStr = this.form.offTimeStr;
       let offPlace = this.form.offPlace;
       let task = this.form.task;
 
@@ -219,10 +219,10 @@ export default {
       params['userId'] = userId;
       params['communityId'] = communityId;
       params['propertyId'] = propertyId;
-      params['attendTime'] = attendTime;
+      params['attendTimeStr'] = attendTimeStr;
 
       params['attendPlace'] = attendPlace;
-      params['offTime'] = offTime;
+      params['offTimeStr'] = offTimeStr;
       params['offPlace'] = offPlace;
       params['task'] = task;
           
@@ -240,6 +240,7 @@ export default {
             });
             this.current = 2;
             this.handleClose();
+            this.$emit('reload');
           } else {
             this.$message({ message: res.data.errorMsg, type: "error" });
           }
@@ -256,10 +257,23 @@ export default {
     }
   },
   created() {
-    this.initPost();
-    this.form.date = time.dateFormat(new Date(),'yyyy-MM-dd');
+    if(this.add) {
+      // 判定此时组件为 编辑
+      this.form = this.add;
+      this.titleFont = "编辑排班";
+      this.initPost();
+      this.initEmpl();
+      this.initClass();
+    }else{
+      this.initPost();
+    // this.form.date = time.dateFormat(new Date(),'yyyy-MM-dd');
     this.initEmpl();
     this.initClass();
+    }
+    // this.initPost();
+    // this.form.date = time.dateFormat(new Date(),'yyyy-MM-dd');
+    // this.initEmpl();
+    // this.initClass();
   }
 };
 </script>

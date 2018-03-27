@@ -19,7 +19,7 @@
               </el-col>
             </el-form-item>
 
-            <el-form-item label="班次类型：" :label-width="formLabelWidth" prop="type" class="c-must">
+            <el-form-item v-if="show" label="班次类型：" :label-width="formLabelWidth" prop="type" class="c-must">
               <el-select v-model="form.type" placeholder="请选择">
                 <el-option v-for="item in typeOptions" :key="item.key" :label="item.value" :value="item.key"></el-option>
               </el-select>
@@ -81,14 +81,13 @@
 </template>
 
 <script>
-import scheduleList from '@/mock/scheduleList'
-
 const typeOptions = [
   { key: '1', value: '轮班' },
   { key: '2', value: '长班' }
 ];
 export default {
   name: "ClassAdd",
+  isShow: false,
   data() {
     return {
       formLabelWidth: "120px",
@@ -125,6 +124,10 @@ export default {
     //   this.titleFont = '编辑员工';
     // }
     this.initRole()
+    if(this.add){  //判断此时组件为编辑
+    this.form = this.add;
+    this.titleFont = '编辑班次';
+    }
   },
   mounted() {},
   methods: {
@@ -156,7 +159,7 @@ export default {
     },
     postData() {
       let msg = this.add ? '编辑' : '添加';
-      let uri = this.add ? '/community/edit' : '/task/class/add';
+      let uri = this.add ? '/task/class/edit' : '/task/class/add';
       this.$xttp
         .post( uri, this.form)
         .then(res => {
