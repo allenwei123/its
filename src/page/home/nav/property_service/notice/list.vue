@@ -1,9 +1,22 @@
 <template>
   <el-container>
     <el-main>
+      <ul class="c-navDetail clear">
+        <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li>
+      </ul>
       <div class="c-notice-container">
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
+            <el-select v-model="value1" placeholder="全部状态" clearable @change="changeStatus">
+              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+            <el-date-picker
+              v-model="value6"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期" clearable @change="changeStatus">
+            </el-date-picker>
             <el-form-item label="">
               <el-input  placeholder="标题" v-model.trim="input"></el-input>
             </el-form-item>
@@ -17,28 +30,28 @@
         </div>
         <div class="c-list">
           <el-table :data="tableData" style="width: 100%" v-loading="loading" stripe>
-            <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
+            <el-table-column label="序号" width="80" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column label="标题" min-width="180" :show-overflow-tooltip="true">
+            <el-table-column label="标题" min-width="180" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{scope.row.title}}</template>
             </el-table-column>
-            <el-table-column label="类型" min-width="60" :show-overflow-tooltip="true">
+            <el-table-column label="类型" min-width="60" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{getNoticeTypeName(scope.row.noticeType)}}</template>
             </el-table-column>
             <!--<el-table-column label="发布对象" width="100">-->
               <!--<template slot-scope="scope">???</template>-->
             <!--</el-table-column>-->
-            <el-table-column label="状态" min-width="100" :show-overflow-tooltip="true">
+            <el-table-column label="状态" min-width="100" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{getPublishStatusName(scope.row.publishStatus)}}</template>
             </el-table-column>
-            <el-table-column label="最后操作人员" min-width="150" :show-overflow-tooltip="true">
+            <el-table-column label="最后操作人员" min-width="150" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{scope.row.editorName}}</template>
             </el-table-column>
-            <el-table-column label="最后操作时间" min-width="160" :show-overflow-tooltip="true">
+            <el-table-column label="最后操作时间" min-width="160" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{scope.row.updateAt | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
-            <el-table-column label="操作" width="300" :fixed="tableData.length ? 'right' : '/'">
+            <el-table-column label="操作" width="300" :fixed="tableData.length ? 'right' : '/'" align="left">
               <template slot-scope="scope">
                 <el-button type="primary" size="mini" @click="preview(scope.row)">预览</el-button>
                 <!--已发布-->
@@ -83,6 +96,23 @@
     },
     data () {
       return {
+        value6: '',
+        value1: '',
+        options: [ {
+          value: '0',
+          label: '未发布'
+        }, {
+          value: '1',
+          label: '已发布'
+        }, {
+          value: '-1',
+          label: '已撤销'
+        }],
+        navDetailData: [
+          { id: 0, name: "物业服务" },
+          { id: 1, name: "消息管理" },
+          { id: 2, name: "社区公告" }
+        ],
         loading: false,
         tableData: [],
         pageSize: 10,
@@ -106,6 +136,9 @@
         else {
           this.getTableList();
         }
+      },
+      changeStatus() {
+        this.query();
       },
       // 获取通知类型名称
       getNoticeTypeName(type) {
@@ -243,5 +276,12 @@
 </script>
 
 <style scoped lang="scss">
+  .c-navDetail {
+    margin-bottom: 10px;
+    li {
+      float: left;
+      margin-right: 10px;
+    }
+  }
 
 </style>

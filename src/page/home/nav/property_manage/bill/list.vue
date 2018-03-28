@@ -8,7 +8,7 @@
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
             <el-form-item>
-              <el-select v-model="value1" placeholder="全部状态">
+              <el-select v-model="value1" placeholder="全部状态" clearable @change="changeStatus">
                 <el-option v-for="temp in options" :key="temp.value" :label="temp.label" :value="temp.value"></el-option>
               </el-select>
             </el-form-item>
@@ -18,7 +18,7 @@
                 type="month"
                 format="yyyy年MM月"
                 value-format="yyyy/MM/01"
-                placeholder="账单日期">
+                placeholder="账单日期" clearable @change="changeStatus">
               </el-date-picker>
             </el-form-item>
             <el-form-item label="">
@@ -180,6 +180,9 @@ export default {
       } else {
         this.postData(null, this.date, this.value1);
       }
+    },
+    changeStatus() {
+      this.query();
     },
     //查看详情
     seeDetail(row) {
