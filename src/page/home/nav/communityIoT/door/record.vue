@@ -1,16 +1,21 @@
 <template>
   <el-container>
     <el-main>
+      <div>{{deviceName}}</div>
       <div class="c-rpass-container">
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
             <el-form-item label="">
               <el-date-picker
-                v-model="input"
-                type="date"
-                value-format="yyyy-MM-dd"
-                placeholder="选择日期">
+                v-model="value6"
+                type="daterange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期" clearable @change="changeStatus">
               </el-date-picker>
+            </el-form-item>
+            <el-form-item label="">
+              <el-input  placeholder="用户姓名" v-model.trim="input"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="query">查询</el-button>
@@ -19,20 +24,20 @@
         </div>
         <div class="c-list">
           <el-table :data="tableData" style="width: 100%" v-loading="loading" stripe>
-            <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
+            <el-table-column label="序号" width="80" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column label="使用时间" :show-overflow-tooltip="true">
-              <template slot-scope="scope">{{scope.row.time | time('yyyy-MM-dd HH:mm')}}</template>
-            </el-table-column>
-            <el-table-column label="用户姓名" :show-overflow-tooltip="true">
+            <el-table-column label="用户姓名" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{scope.row.userName}}</template>
             </el-table-column>
-            <el-table-column label="联系方式" :show-overflow-tooltip="true">
+            <el-table-column label="身份" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{scope.row.phone}}</template>
             </el-table-column>
-            <el-table-column label="使用方式" :show-overflow-tooltip="true">
-              <template slot-scope="scope">{{scope.row.userCommand}}</template>
+            <el-table-column label="使用时间" :show-overflow-tooltip="true" align="center">
+              <template slot-scope="scope">{{scope.row.time | time('yyyy-MM-dd HH:mm')}}</template>
+            </el-table-column>
+            <el-table-column label="使用方式" :show-overflow-tooltip="true" align="center">
+              <template slot-scope="scope">{{getuseStyle(scope.row.useStyle)}}</template>
             </el-table-column>
           </el-table>
         </div>
@@ -50,15 +55,18 @@
   export default {
     data() {
       return {
+        value6: '',
         loading: false,
         tableData: [],
         pageSize: 10,
         total: 0,
         currentPage: 1,
         input: '',
-        q_input: null
+        q_input: null,
+        deviceName: '',
       }
-    }, methods: {
+    },
+    methods: {
       query() {
         this.q_input = this.input;
         if (this.currentPage !== 1) {
@@ -67,7 +75,18 @@
         else {
           this.getTableList();
         }
-      }, getTableList() {
+      },
+      changeStatus() {
+        this.query();
+      }, 
+      getuseStyle(status) {
+        let names = {
+          '1': '蓝牙',
+          '2': '远程'
+        };
+        return names[status];
+      },
+      getTableList() {
         this.loading = true;
         let url = `sys/door-record/page?page=${this.currentPage}&size=${this.pageSize}`;
         let params = {};
@@ -86,7 +105,8 @@
           this.loading = false;
         })
       }
-    }, created() {
+    }, 
+    created() {
       this.query();
     }
   }
