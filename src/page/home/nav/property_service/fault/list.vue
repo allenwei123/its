@@ -195,7 +195,7 @@
     },
     methods: {
       getTableList(val) {
-        this.postData(val);
+        this.postData(val, this.input, this.value1);
       },
       query() {
         console.log(this.value1);
@@ -404,6 +404,7 @@
         params['communityId'] = communityId;
         let url = `property/fault/queryFaultPage?page=${this.currentPage}&size=${this.pageSize}`;
         this.loading = true;
+        console.log(params);
         this.$xttp.post(url, params).then(res => {
           if (res.errorCode === 0) {
             this.tableData = res.data.records;
@@ -423,7 +424,7 @@
     },
     created() {
       this.workMan();
-      this.postData();
+      this.query();
     }
   }
 </script>

@@ -22,7 +22,7 @@
               </el-date-picker>
             </el-form-item>
             <el-form-item label="">
-              <el-input  placeholder="业主姓名" v-model.trim="input"></el-input>
+              <el-input  placeholder="房号" v-model.trim="input"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="query">查询</el-button>
@@ -70,7 +70,8 @@
                 <el-button type="primary" size="mini" @click="seeDetail(scope.row)">查看详情</el-button>
                 <!-- 账单状态 未生效-->
                 <template v-if="scope.row.billStatus === -1">
-                  <el-button type="primary" size="mini" @click="edit(scope.row)">编辑</el-button>
+                  <!-- @click="edit(scope.row)" 暂无接口 -->
+                  <el-button type="primary" size="mini">编辑</el-button>
                   <el-button type="warning" size="mini" @click="take(scope.row, $event)">生效</el-button>
                 </template>
 
@@ -159,7 +160,6 @@ export default {
       input: "",
       see: false,
       seeData: null,
-      item: '',
       // 编辑账单
       show: false,
       editData: '',
@@ -172,7 +172,7 @@ export default {
   },
   methods: {
     getTableList(val) {
-      this.postData(val);
+      this.postData(val, this.date, this.value1);
     },
     query() {
       if (this.currentPage !== 1) {
@@ -283,8 +283,6 @@ export default {
           this.$xttp.post(url, params).then(res => {
             if(res.errorCode === 0){
               this.loading = false;
-              // this.staff = res.data;
-              // console.log(res);
             }
           }).catch(() => {
             this.loading = false;
@@ -299,7 +297,6 @@ export default {
       this.$xttp.get(url).then(res => {
           if(res.errorCode === 0){
             this.loading = false;
-            // this.staff = res.data;
           }
         }).catch(() => {
           this.loading = false;
@@ -324,14 +321,14 @@ export default {
       };
       return names[status];
     },
-    postData(page, makeAt, billStatusSet) {
+    postData(page, makeBillAt, billStatusSet) {
       let nPage = page || this.$route.query.page || 1;
       let params = { page: nPage };
-      if (makeAt) {
+      if (makeBillAt) {
         //输入的搜索字添加params中
-        params.makeAt = this.date;
+        params.makeBillAt = this.date;
       } else {
-        delete params.makeAt;
+        delete params.makeBillAt;
       };
       if (billStatusSet) {
         //输入的搜索字添加params中
@@ -342,7 +339,7 @@ export default {
       let communityId = this.$store.getters.communityId;
       params.communityId = communityId;
       console.log(33,params);
-      let url = `fees/property-bill/with-details/page?page=${this.currentPage}&size=${this.pageSize}`;
+      let url = `fees/property-bill/page?page=${this.currentPage}&size=${this.pageSize}`;
       this.loading = true;
       this.$xttp
         .post(url, params)
@@ -350,12 +347,9 @@ export default {
           this.loading = false;
           if (res.errorCode === 0) {
             this.loading = false;
-            this.item = res.data.records;
-            for(let i=0; i<this.item.length; i++){
-              this.tableData[i] = this.item[i].propertyBill;
-            }
+            console.log('res', res.data.records);
+            this.tableData = res.data.records;
             this.total = res.data.total;
-            // console.log(22,this.tableData);
           }
         })
         .catch(() => {
