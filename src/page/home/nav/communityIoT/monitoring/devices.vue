@@ -6,21 +6,23 @@
         </ul>
         <div class="c-search">
           <el-form :inline="true" class="demo-form-inline">
-            <!-- <el-form-item label="社区名称">
-              <el-select v-model="formInline.select" clearable placeholder="请选择">
-                <el-option
-                  v-for="item in options"
-                  :key="item.id"
-                  :value="item.id"
-                  :label="item.name">
-                </el-option>
-              </el-select>
-            </el-form-item> -->
+            <el-select v-model="value1" placeholder="品牌" clearable  @change="changeStatus">
+              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+            <el-select v-model="value2" placeholder="型号" clearable  @change="changeStatus">
+              <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+            <el-select v-model="value2" placeholder="全部楼栋" clearable  @change="changeStatus">
+              <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
             <el-form-item label="查找">
               <el-input v-model="input" placeholder="监控设备名称"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
+            </el-form-item>
+            <el-form-item style="float: right">
+              <el-button type="primary" @click="add">新增监控</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -42,7 +44,11 @@
           <!-- <template slot-scope="scope">{{ scope.row.startTime | time }}</template> -->
         </el-table-column>
 
-        <el-table-column label="型号" :show-overflow-tooltip="true" align="center" prop="deviceId">
+        <el-table-column label="型号" :show-overflow-tooltip="true" align="center" prop="brandNo">
+          <!-- <template slot-scope="scope">{{ scope.row.startTime }}</template> -->
+        </el-table-column>
+
+        <el-table-column label="设备编号" :show-overflow-tooltip="true" align="center" prop="deviceId">
           <!-- <template slot-scope="scope">{{ scope.row.startTime }}</template> -->
         </el-table-column>
 
@@ -51,9 +57,9 @@
           <!-- <template slot-scope="scope">{{ scope.row.startTime }}</template> -->
         </el-table-column>
 
-        <el-table-column label="操作" width="120" fixed="right">
+        <el-table-column label="操作" width="120" fixed="right" align="left">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="primary" size="small">播放录像</el-button>
+            <el-button @click="handleClick(scope.row)" type="primary" size="small">查看录像</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -67,23 +73,56 @@
           :total="total">
         </el-pagination>
       </div>
+
+       <!-- 新增监控 -->
+      <transition name="fade">
+        <AddPage v-if="show" :msg="show" @change=addChange></AddPage>
+      </transition>
+
     </el-main>
 </template>
 
 <script>
-
+import AddPage from "./add";
 export default {
+  components: {
+    AddPage
+  },
   name: "other",
   data() {
     return {
+      show: false,
       isSou: false,
       tableData: [],
+       //电梯品牌
+        value1: '',
+        options: [ {
+          value: '0',
+          label: '戈尔'
+        }, {
+          value: '1',
+          label: '格尔马'
+        }, {
+          value: '-1',
+          label: 'taiger'
+        }],
+        //型号
+        value2: '',
+        options2: [ {
+          value: '0',
+          label: 'l'
+        }, {
+          value: '1',
+          label: 's'
+        }, {
+          value: '-1',
+          label: 'sss'
+        }],
       navDetailData: [
-        { id: 0, name: "首页" },
         { id: 1, name: "社区物联" },
-        { id: 2, name: "监控设备" }
+        { id: 0, name: "监控管理" },
+        { id: 2, name: "设备监控" }
       ],
-      options:[],//社区列表
       input: '',
       currentPage: 1,
       loading: false,
@@ -93,7 +132,6 @@ export default {
       pageSize: 10
     };
   },
-  components: {},
   methods: {
     handleCurrentChange(val) {
       this.sendAjax(val);
@@ -113,6 +151,12 @@ export default {
     editHandle(row) {
       //编辑
     },
+    add() {
+        this.show = true;
+    },
+    addChange() {
+      this.show = false;
+    },
     seeChange(msg) {//与查看弹窗交互
       this.see = false;
     },
@@ -123,6 +167,9 @@ export default {
           this.sendAjax(null,this.input);
       }
         
+    },
+    changeStatus() {
+      this.find();
     },
     confirmDel(){
       if(this.delData.id){
@@ -197,4 +244,13 @@ export default {
     top: 0px;
   }
 }
+
+  .fade-enter-active, .fade-leave-active {
+        transition: all 0.5s ease;
+    }
+
+    .fade-enter, .fade-leave-active {
+      opacity: 0;
+      transform: rotateY(180deg);
+    }
 </style>
