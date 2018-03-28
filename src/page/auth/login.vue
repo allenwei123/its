@@ -84,7 +84,7 @@
                   });
                   this.dialogVisible = true;
                   this.$store.dispatch('cgCommunityList', this.options);
-                  console.log(this.options);
+                  // console.log(this.options);
                 }
               })
           }

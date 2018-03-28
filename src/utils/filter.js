@@ -68,6 +68,8 @@ Vue.filter('sex', function (value) {
     case 2:
       newValue = '女';
       break;
+    default:
+      newValue = '未知';
   }
   return newValue;
 });

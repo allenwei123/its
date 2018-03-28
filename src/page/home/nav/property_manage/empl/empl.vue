@@ -7,13 +7,13 @@
         <div class="c-search">
           <el-form :inline="true" class="demo-form-inline">
             <el-form-item label="岗位">
-              <el-select v-model="postCode" placeholder="岗位" @change="changPostCode">
+              <el-select v-model="postCode" clearable placeholder="岗位" @change="changPostCode">
                 <el-option v-for="item in postOptions" :key="item.key" :label="item.name" :value="item.key">
                 </el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-input v-model="name" placeholder="姓名/工号"></el-input>
+              <el-input v-model="employeeId" placeholder="工号"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
@@ -128,7 +128,7 @@ export default {
       ],
       postCode: 'SECURITY',
       postOptions: [],
-      name: '',
+      employeeId: '',
       q_input: null,
       loading: false,
       isShow: false, //控制添加页面弹出
@@ -203,7 +203,6 @@ export default {
       this.delData = row; 
     },
     confirmDel(){
-      console.log(this.delData);
       if(this.delData.id){
         this.$xttp.get(`/user/property/${this.delData.id}/delete`)
         .then(res=> {
@@ -239,11 +238,11 @@ export default {
     getTableList(postCode) {
       let obj = {};
       obj['postCode'] = this.postCode;
-      // if(this.name){
-      //   obj['name'] = this.name;
-      // } else {
-      //   delete obj.name;
-      // }
+      if(this.employeeId){
+        obj['employeeId'] = this.employeeId;
+      } else {
+        delete obj.employeeId;
+      }
       this.loading = true;
       
       let communityId = this.$store.getters.communityId;
