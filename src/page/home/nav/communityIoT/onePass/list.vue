@@ -6,12 +6,14 @@
         </ul>
         <div class="c-search">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
-             
              <el-form-item>
-               <el-select v-model="formInline.keyType">
+               <el-select v-model="formInline.keyType" placeholder="全部卡类型" clearable  @change="changeStatus">
                  <el-option v-for="item in cardList" :key="item.id" :value="item.id" :label="item.name"></el-option>
                </el-select>
              </el-form-item>
+            <el-form-item label="">
+              <el-input v-model="input" placeholder="卡号/用户"></el-input>
+            </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
             </el-form-item>
@@ -36,31 +38,35 @@
           <template slot-scope="scope">{{scope.row.name }}</template>
         </el-table-column>
 
-        <el-table-column label="手机号码" :show-overflow-tooltip="true" align="center">
+        <!-- <el-table-column label="身份" :show-overflow-tooltip="true" align="center">
           <template slot-scope="scope">{{scope.row.phone }}</template>
         </el-table-column>
+
+        <el-table-column label="手机号码" :show-overflow-tooltip="true" align="center">
+          <template slot-scope="scope">{{scope.row.phone }}</template>
+        </el-table-column> -->
 
         <el-table-column label="住房信息" :show-overflow-tooltip="true" align="center"  width="200">
           <template slot-scope="scope">{{scope.row.roomName }}</template>
         </el-table-column>
 
-        <el-table-column label="录入时间" :show-overflow-tooltip="true" align="center"  width="170">
-          <template slot-scope="scope">{{scope.row.startDate | time }}</template>
+        <el-table-column label="有效期" :show-overflow-tooltip="true" align="center"  width="170">
+          <template slot-scope="scope">{{scope.row.startDate | time }} ~ {{scope.row.endDate | time }}</template>
         </el-table-column>
 
-        <el-table-column label="截止时间" :show-overflow-tooltip="true" align="center"  width="170">
+        <!-- <el-table-column label="截止时间" :show-overflow-tooltip="true" align="center"  width="170">
           <template slot-scope="scope">{{scope.row.endDate | time }}</template>
-        </el-table-column>
+        </el-table-column> -->
 
         <el-table-column label="状态" :show-overflow-tooltip="true" align="center">
-          <template slot-scope="scope">{{scope.row.status }}</template>
+          <template slot-scope="scope">{{ getdataStatus(scope.row.dataStatus) }}</template>
         </el-table-column>
       
-        <el-table-column label="操作" width="80" fixed="right">
+        <!-- <el-table-column label="操作" width="80" fixed="right" align="left">
           <template slot-scope="scope">
             <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
       
       <div class="c-block">
@@ -72,9 +78,11 @@
           :total="total">
         </el-pagination>
       </div>
+      <!-- 新增卡片 -->
       <transition name="fade1">
-        <AddPage v-if="isShow" :msg="isShow" @upup="change" :add.sync="notice"></AddPage>
+        <AddPage v-if="show" :msg="show" @change=addChange></AddPage>
       </transition>
+
       <transition name="fade">
         <SeePage v-if="see" :msg="see" @upsee="seeChange"  :data="seeData"></SeePage>
       </transition>
@@ -96,7 +104,7 @@ export default {
         { id: 1, name: "一卡通管理" },
         { id: 2, name: "一卡通档案" }
       ],
-      cardList:[ {name:'手机蓝牙',id:1},{name:'蓝牙卡',id:2},{name:'IC卡',id:4},{name:'临时通行',id:8} ],
+      cardList:[ {name:'手机蓝牙',id:1},{name:'蓝牙卡',id:2},{name:'IC卡',id:4},{name:'二维码',id:8} ],
       formInline: {
         keyType: ""
       },
@@ -109,7 +117,9 @@ export default {
       see:false,//控制查看组件弹出
       seeData:null,//查看数据
       visible2:false,
-      delData:null
+      delData:null,
+      input: '',
+      show:false,
     };
   },
   components: {
@@ -117,20 +127,26 @@ export default {
     SeePage
   },
   methods: {
-    onSubmit() {//添加按钮
-      // this.notice = null;
-      // this.isShow = !this.isShow;
+    onSubmit() {
+      this.show= true;
     },
     handleCurrentChange(val) {
       if(this.currentPage !== val ) {
         this.sendAjax(val);
       }
     },
-    handleClick(row) {
-      //查看
-      this.see = true;
-      this.seeData = row;
+    getdataStatus(status) {
+      let names = {
+        '1': '有效',
+        '0': '失效'
+      };
+      return names[status];
     },
+    // handleClick(row) {
+    //   //查看
+    //   this.see = true;
+    //   this.seeData = row;
+    // },
     confirmDel(){
       if(this.delData.id){
         this.$xttp.get(`/community/building/${this.delData.id}/delete`)
@@ -157,9 +173,15 @@ export default {
     find(){
       this.sendAjax(1, this.formInline.keyType);
     },
+    changeStatus() {
+      this.find();
+    },
+    addChange() {
+      this.show = false;
+    },
     sendAjax(page,keyType) {
       let nPage = page || this.$route.query.page || 1;
-      let obj = {page:nPage,communityId:this.$store.getters.communityId,userId:'5a9a68960cf2378eab90c4b9'}
+      let obj = {page:nPage,communityId:this.$store.getters.communityId,userId:'5a82a45e9ce93e30677c3f9e'}
       if(keyType){
         obj.keyType = this.formInline.keyType;
       }else {
@@ -169,6 +191,7 @@ export default {
       this.$xttp.post("/user/card/get/list",obj)
       .then(res => {
         if (!res.errorCode) {
+          console.log(res);
           this.tableData = res.data.records;
           this.currentPage = res.data.currentPage;
           this.total = res.data.total;

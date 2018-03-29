@@ -5,13 +5,15 @@
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
             <el-form-item label="">
+              <el-form-item label="">
               <el-date-picker
                 v-model="date"
-                type="month"
-                format="yyyy年MM月"
-                value-format="yyyy/MM/01"
-                placeholder="账单日期" clearable @change="changeStatus">
+                type="daterange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期" clearable @change="changeStatus">
               </el-date-picker>
+            </el-form-item>
             </el-form-item>
             <el-form-item label="">
               <el-input  placeholder="车牌号" v-model.trim="input"></el-input>
@@ -23,22 +25,22 @@
         </div>
         <div class="c-list">
           <el-table :data="tableData" style="width: 100%" v-loading="loading" stripe>
-            <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
+            <el-table-column label="序号" width="80" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column label="车闸名称" :show-overflow-tooltip="true">
-              <template slot-scope="scope">{{$route.query.gateName}}</template>
-            </el-table-column>
-            <el-table-column label="车牌号码" :show-overflow-tooltip="true">
+            <el-table-column label="车牌号码" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{scope.row.carNo}}</template>
             </el-table-column>
-            <el-table-column label="使用时间" :show-overflow-tooltip="true">
-              <template slot-scope="scope">{{getTime(scope.row) | time('yyyy-MM-dd HH:mm')}}</template>
-            </el-table-column>
-            <el-table-column label="出入闸类型" :show-overflow-tooltip="true">
+            <el-table-column label="出入闸类型" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{gateTypeName}}</template>
             </el-table-column>
-            <el-table-column label="车辆类型" :show-overflow-tooltip="true">
+            <el-table-column label="通过时间" :show-overflow-tooltip="true" align="center">
+              <template slot-scope="scope">{{getTime(scope.row) | time('yyyy-MM-dd HH:mm')}}</template>
+            </el-table-column>
+            <el-table-column label="车闸名称" :show-overflow-tooltip="true" align="center">
+              <template slot-scope="scope">{{$route.query.gateName}}</template>
+            </el-table-column>
+            <el-table-column label="车辆类型" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{getChargeTypeName(scope.row.chargeType)}}</template>
             </el-table-column>
           </el-table>
