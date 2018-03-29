@@ -19,7 +19,7 @@
                 </el-table-column>
                 <el-table-column fixed="right" align="center" label="操作" width="100">
                     <template slot-scope="scope">
-                        <el-button type="primary" size="mini" @click="editPrice(scope.row)">修改价格</el-button>
+                        <el-button type="primary" size="mini"  @keyup="textChange" @click="editPrice(scope.row)">修改价格</el-button>
                         <!-- <el-button @click="delHandle(scope.row)" type="danger" size="small">删除</el-button> -->
                     </template>
                 </el-table-column>
@@ -43,7 +43,7 @@ export default {
         arr:[1,2,4,5],
         tableData: [],
         page:1,
-        pageSize: 20,
+        pageSize: 100,
         currentPage: 1
             
     }
@@ -53,6 +53,10 @@ export default {
     this.getTableList();
   },
   methods:{
+      //过虐input
+      textChange(){
+          console.log(888)
+      },
       handleClose() {
         this.$emit("upsee", false );
       },
@@ -75,13 +79,16 @@ export default {
         })
       },
       editPrice(row){
+          
           let Id = row.id;
           let url = `/fees/rule/${Id}/edit`;
 
           this.$prompt('请输入价格', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
-            inputType: 'password'
+            // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+            inputPattern: /^[+|-]?\d*\.?\d*$/,
+            inputErrorMessage: '请输入数字类型',
             }).then(({ value }) => {
                 let unitPrice = value * 1000;
                 console.log(unitPrice);
@@ -91,10 +98,10 @@ export default {
                     }
                 })
         }).catch(() => {
-            this.$message({
-                type: 'info',
-                message: '取消修改价格'
-            });       
+            // this.$message({
+            //     type: 'info',
+            //     message: '取消修改价格'
+            // });       
         });
       }
   }
