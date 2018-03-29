@@ -5,13 +5,17 @@
             <el-input v-model="form.name"></el-input>
             </el-form-item>
 
-            <el-form-item label="楼栋编号" :label-width="formLabelWidth" prop="code" class="c-must">
-            <el-input v-model="form.code"></el-input>
+            <el-form-item label="楼面层数" :label-width="formLabelWidth" prop="code" class="c-must">
+            <el-input type="number" v-model="form.overGround" placeholder="从一层开始算"></el-input>
             </el-form-item>
-            
-            <el-form-item label="社区名称" :label-width="formLabelWidth" prop="code" class="c-must">
-              <el-input v-model="form.communityIdShow" :disabled="true"></el-input>
+
+            <el-form-item label="地下层数" :label-width="formLabelWidth" prop="code" class="c-must">
+              <el-input type="number" v-model="form.underGround" placeholder="从负一层开始算" ></el-input>
             </el-form-item>
+
+          <el-form-item label="房间数量" :label-width="formLabelWidth" prop="code" class="c-must">
+            <el-input type="number" v-model="form.roomNum" ></el-input>
+          </el-form-item>
 
             <el-form-item :label-width="formLabelWidth">
               <el-button @click="handleClose">取 消</el-button>
@@ -31,15 +35,18 @@ export default {
       formLabelWidth: "120px",
       titleFont: "添加楼栋档案",
       form: {
-        code: "",
+        overGround: "",
         name: "",
-        communityIdShow: this.$store.getters.communityName,
+        underGround: '',
+        roomNum:'',
         communityId: this.$store.getters.communityId,
         communityName: this.$store.getters.communityName
       },
       rules: {
         name: [{ required: true, message: "请输入楼栋名称", trigger: "blur" }],
-        code: [{ required: true, message: "请输入楼栋编号", trigger: "blur" }]
+        overGround: [{ required: true, message: "请输入楼面层数", trigger: "blur" }],
+        underGround: [{ required: true, message: "请输入地下层数", trigger: "blur" }],
+        roomNum: [{ required: true, message: "请输入房间数量", trigger: "blur" }],
       },
       cityArr: [],
       current: 1 //1 初始 2：添加后 3：编辑后

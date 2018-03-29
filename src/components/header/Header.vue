@@ -18,15 +18,15 @@
       </ul>
       <!--nav 导航模块-->
       <div class="c-top_bar_area">
-        <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-          <el-menu-item index="6" ><router-link to="/home/nav/main">首页</router-link></el-menu-item>
-          <el-menu-item index="0" ><router-link to="/home/nav/side">物业管理</router-link></el-menu-item>
-          <el-menu-item index="1" ><router-link to="/home/nav/propertyService">物业服务</router-link></el-menu-item>
-          <el-menu-item index="2" ><router-link to="/home/nav/communityIoT">社区物联</router-link></el-menu-item>
-          <el-menu-item index="3" >商圈管理</el-menu-item>
-          <el-menu-item index="4" >系统管理</el-menu-item>
-          <el-menu-item index="5" >统计分析</el-menu-item>
-        </el-menu>
+        <ul class="c-top-nav">
+          <li v-for="(item,index) in items" :key="item.name" v-bind:class="{'c-nav-active':activeIndex == index}" @click="navClick(item,index)" >{{ item.name}}</li>
+          <!--<li class="c-nav-active">物业管理</li>-->
+          <!--<li>物业服务</li>-->
+          <!--<li>社区物联</li>-->
+          <!--<li>商圈管理</li>-->
+          <!--<li>系统管理</li>-->
+          <!--<li>统计分析</li>-->
+        </ul>
       </div>
     </div>
   </div>
@@ -39,9 +39,13 @@ import { mapGetters } from "vuex";
     data() {
       return {
         items: [
-          {n: '控制台', src: '/about'},
-          {n: '文档', src: '/docs'},
-          {n: '技能', src: 'http://aliyun.com'},
+          {name: '首页', src: '/home/nav/main'},
+          {name: '物业管理', src: '/home/nav/side'},
+          {name: '物业服务', src: '/home/nav/propertyService'},
+          {name: '社区物联', src: '/home/nav/communityIoT'},
+          {name: '商圈管理', src: ''},
+          {name: '系统管理', src: ''},
+          {name: '统计分析', src: ''},
         ],
         activeIndex: '0',
         currentUser:'',
@@ -52,20 +56,22 @@ import { mapGetters } from "vuex";
       this.changeIdToName(this.communityId);
     },
     created() {
-      let arr = ['side','propertyService','communityIoT'];
+      let arr = ['main','side','propertyService','communityIoT'];
       let currentIndex = arr.indexOf(this.$route.path.split('/')[3])>= 0 ? arr.indexOf(this.$route.path.split('/')[3]) : 0;
       this.activeIndex = currentIndex.toString();
-      this.$store.dispatch('updatedAsideData')
-        .then(res => {
-          if(res.msg) {
-            this.$store.dispatch('changeAsideData',this.activeIndex);
-          }
-        })
+      if(this.activeIndex) {
+        this.$store.dispatch('updatedAsideData')
+          .then(res => {
+            if(res.msg) {
+              this.$store.dispatch('changeAsideData',this.activeIndex - 1);
+            }
+          })
+      }
     },
     methods: {
       handleSelect(index) {
-        if(index !== '6'){
-          this.$store.dispatch('changeAsideData',index);
+        if(index){
+          this.$store.dispatch('changeAsideData',index - 1);
         }
       },
       logout() {
@@ -86,15 +92,22 @@ import { mapGetters } from "vuex";
         this.communityList.forEach(item => {
           if(item.id == id) this.currentUser = item.name;
         });
+      },
+      navClick(item,index) {
+        this.activeIndex = index;
+        this.$router.push({path:item.src});
+        if(index){
+          this.$store.dispatch('changeAsideData',index - 1);
+        }
       }
     },
   }
 </script>
 
 <style scoped lang="scss">
-  $headerBg:#23262b;
+  $headerBg:#3988ff;
   $fontColor:#fff;
-  $headerH: 40px;
+  $headerH: 50px;
   .c-header {
     position: fixed;
     top: 0;
@@ -105,12 +118,29 @@ import { mapGetters } from "vuex";
     .c-logo {
       float: left;
       width:168px;
-      margin-top: 10px;
+      margin-top: 15px;
       margin-left: 20px;
       color:$fontColor;
     }
     .c-account {
       color: #fff;
+    }
+    .c-top-nav {
+      margin-top:10px;
+      li {
+        float: left;
+        line-height: 40px;
+        height: 40px;
+        padding: 0 11px;
+        color:#ffffff;
+        cursor: pointer;
+        &.c-nav-active {
+          border-top-left-radius: 10px;
+          border-top-right-radius: 10px;
+          background-color: #d7e7ff;
+          color:#4f91f4;
+        }
+      }
     }
     .c-navgator {
       position: absolute;

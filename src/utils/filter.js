@@ -2,7 +2,7 @@ import Vue from 'vue';
 import time from './time';
 
 Vue.filter('time', function (value, format) {
-  if (!value) return '';
+  if (!value) return ''
   let _format = format || 'yyyy-MM-dd HH:mm:ss';
   let date = new Date();
   date.setTime(value);
@@ -111,6 +111,9 @@ Vue.filter('postCode', function (value) {
       break;
     case 'SUPPORTSTAFF':
       newValue = '客服人员';
+      break;
+    case 'CM_ADMIN':
+      newValue = '后台管理员';
       break;
   }
   return newValue;

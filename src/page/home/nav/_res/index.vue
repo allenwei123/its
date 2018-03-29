@@ -56,10 +56,10 @@ import aside from '@/mock/menuList'
 
 <style scoped lang="scss">
   .content {
-    margin-top:40px;
+    margin-top:50px;
   }
   .c-container {
-    height:calc(100vh - 40px);
+    height:calc(100vh - 50px);
   }
   el-header {
     background-color: #B3C0D1;

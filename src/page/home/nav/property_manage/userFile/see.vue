@@ -21,7 +21,7 @@
         </el-table-column>
 
         <el-table-column label="认证时间"  :show-overflow-tooltip="true" align="center">
-          <template slot-scope="scope">{{ scope.row.checkInTime | time('yyyy-MM-dd HH:mm:ss') }}</template>
+          <template slot-scope="scope">{{ scope.row.auditTime | time('yyyy-MM-dd') }}</template>
         </el-table-column>
       </el-table>
     </el-dialog>

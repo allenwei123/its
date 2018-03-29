@@ -1,4 +1,4 @@
-$headerBg:#23262b;
+$headerBg:#3988ff;
 .c-header {
   .el-menu--horizontal>.el-menu-item {
     height:40px;
@@ -7,14 +7,15 @@ $headerBg:#23262b;
   }
   .el-menu--horizontal>.el-menu-item:not(.is-disabled):hover {
     background-color:$headerBg;
-    color:#fff;
+    color:#82afff;
   }
   .el-menu-item {
     padding:0 11px;
   }
 }
 .el-menu--horizontal>.el-menu-item.is-active {
-  color:#fff;
+  background-color: #ffffff;
+  color:#4f91f4;
 }
 .c-table{
   &.el-table th {
@@ -80,5 +81,15 @@ $headerBg:#23262b;
 .c-header {
   .el-select {
     width:110px;
+  }
+}
+
+.c-only {//聊天室修改 卡片
+  .el-card__header {
+    background: $headerBg;
+  }
+  .el-card__body {
+    height: 500px ;
+    padding: 15px 0 0 0 ;
   }
 }

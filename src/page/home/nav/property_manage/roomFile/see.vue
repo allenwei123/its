@@ -5,8 +5,9 @@
             <li class="c-list"><span class="c-label">房间编号:</span> <span class="c-content"> {{ data.code }} </span></li>
             <li class="c-list"><span class="c-label">房间楼层:</span> <span class="c-content"> {{ data.floorNo }} </span></li>
             <li class="c-list"><span class="c-label">楼层号:</span> <span class="c-content"> {{ data.floorCode }} </span></li>
+            <li class="c-list"><span class="c-label">面积:</span> <span class="c-content"> {{ data.area }} </span></li>
             <li class="c-list"><span class="c-label">创建时间:</span> <span class="c-content"> {{ data.createAt | time }} </span></li>
-        </ul>  
+        </ul>
     </el-dialog>
 </template>
 
