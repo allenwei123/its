@@ -25,7 +25,7 @@
           </el-form>
         </div>
         <div class="c-list">
-          <el-table :data="tableData" style="width: 100%" v-loading="loading" stripe>
+          <el-table :data="tableData" style="width: 100%" v-loading="loading" stripe border>
             <el-table-column label="序号" width="80" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
@@ -64,7 +64,7 @@
 </template>
 <script>
   export default {
-    name: 'message', 
+    name: 'message',
     data() {
       return {
         //电梯品牌
@@ -104,7 +104,7 @@
         input: '',
         q_input: null
       }
-    }, 
+    },
     methods: {
       query() {
         this.q_input = this.input;
@@ -114,7 +114,7 @@
         else {
           this.getTableList();
         }
-      }, 
+      },
       changeStatus() {
         this.query();
       },
@@ -164,7 +164,7 @@
           }
         })
       }
-    }, 
+    },
     created() {
       this.query();
     }

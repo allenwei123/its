@@ -13,6 +13,11 @@ $headerBg:#3988ff;
     padding:0 11px;
   }
 }
+.el-aside {
+  .el-submenu {
+    margin-right: -1px;
+  }
+}
 .el-menu--horizontal>.el-menu-item.is-active {
   background-color: #ffffff;
   color:#4f91f4;

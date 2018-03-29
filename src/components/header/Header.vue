@@ -14,7 +14,7 @@
           </el-dropdown>
         </span></li>
         <!-- <li> <el-button type="success" size="mini">修改密码</el-button></li> -->
-        <li><el-button type="primary" size="mini" @click="logout">退出</el-button></li>
+        <li><el-button type="danger" size="mini" @click="logout">退出</el-button></li>
       </ul>
       <!--nav 导航模块-->
       <div class="c-top_bar_area">
