@@ -36,6 +36,9 @@
         <el-table-column label="房间数量" min-width="70" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.roomNum}}</template>
         </el-table-column>
+        <el-table-column label="已录入房间数" min-width="70" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ scope.row.inputRoomNum}}</template>
+        </el-table-column>
         <el-table-column align="left" fixed="right" label="操作" width="220">
           <template slot-scope="scope">
             <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button>

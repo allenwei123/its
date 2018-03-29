@@ -36,7 +36,7 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item :labelPassword="passLabel" :label-width="formLabelWidth" prop="password" class="c-nomust">
+          <el-form-item label="密码：" :label-width="formLabelWidth" prop="password" class="c-nomust">
             <el-col :span="14">
               <el-input v-model.trim="form.password" type="password" placeholder="请输入密码"></el-input>
             </el-col>
@@ -51,8 +51,6 @@
 </template>
 
 <script>
-import scheduleList from '@/mock/scheduleList'
-
 const maleOptions = [
   { key: '0', value: '未知' },
   { key: '1', value: '男' },
@@ -64,7 +62,6 @@ export default {
     return {
       formLabelWidth: "120px",
       titleFont:'添加员工',
-      passLabel: "设置密码：",
       form: {
         employeeId: '',
         userName: "",
@@ -96,7 +93,6 @@ export default {
     if(this.add){//判断此时组件为 编辑
       this.form = this.add;
       this.titleFont = '编辑员工';
-      this.passLabel = '重置密码：';
     }
   },
   mounted() {},
