@@ -38,11 +38,14 @@
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
+              <!-- <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button> -->
+              <el-button type="primary" @click="find">查询</el-button>
+              <!-- <el-button type="success" plain @click="keySchedul">一键排班</el-button> -->
             </el-form-item>
           </el-form>
           <!-- <el-button type="primary" icon="el-icon-edit" class="c-addBtn" @click="handleCreate">新增排班</el-button> -->
-          <el-button type="primary" icon="el-icon-edit" class="c-addBtn" @click="onSubmit">新增排班</el-button>
+          <!-- <el-button type="primary" @click="find">一键排班</el-button> -->
+          <el-button type="primary" class="c-addBtn" @click="onSubmit">新增排班</el-button>
         </div>
       </div>
       
@@ -57,7 +60,6 @@
           <template slot-scope="scope">{{getTime(scope.row.workDate, 'yyyy-MM-dd')}}</template>
         </el-table-column>
         <el-table-column prop="userName" label="员工" align="center" width="150"></el-table-column>
-        <el-table-column prop="className" label="班次" align="center" width="150"></el-table-column>
         <el-table-column prop="" label="班次" width="200" align="center">
           <template slot-scope="scope">{{scope.row.className}}({{scope.row.attendTimeStr}}-{{scope.row.offTimeStr}})</template>
         </el-table-column>

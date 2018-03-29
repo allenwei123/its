@@ -56,7 +56,7 @@
           <template slot-scope="scope">{{ scope.row.postCode | postCode }}</template>
         </el-table-column>
 
-        <el-table-column label="性别" min-width="120" align="center" :show-overflow-tooltip="true">
+        <el-table-column label="性别" min-width="100" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.sex | sex }}</template>
         </el-table-column>
 
@@ -67,20 +67,21 @@
         <el-table-column label="手机号" min-width="120" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{scope.row.phone}}</template>
         </el-table-column>
-        <el-table-column v-if="show" label="创建时间" min-width="150" align="center" :show-overflow-tooltip="true" sortable>
+        <!-- <el-table-column v-if="show" label="创建时间" min-width="150" align="center" :show-overflow-tooltip="true" sortable>
           <template slot-scope="scope">{{scope.row.createAt | time('yyyy-MM-dd HH:mm')}}</template>
         </el-table-column>
         <el-table-column v-if="show" label="创建人" min-width="120" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{scope.row.creatorId}}</template>
-        </el-table-column>
-        <el-table-column label="使用状态" min-width="100" align="center" :show-overflow-tooltip="true">
+        </el-table-column> -->
+        <!-- <el-table-column label="使用状态" min-width="100" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{getStatus(scope.row.dataStatus)}}</template>
-        </el-table-column>
-        <el-table-column align="left" fixed="right" label="操作" width="220">
+        </el-table-column> -->
+        <el-table-column align="center" fixed="right" label="操作" width="220">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button>
-            <el-button v-if="scope.row.dataStatus ==0 && scope.row.postCode != 'MANAGER'" @click="handleDiabled(scope.row,'1')" type="warning" size="small">启用</el-button>
-            <el-button v-if="scope.row.dataStatus ==1 && scope.row.postCode != 'MANAGER'" @click="handleWriteoff(scope.row)" type="danger" size="small">注销</el-button>
+            <!-- <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button> -->
+            <el-button @click="editHandle(scope.row)" type="primary" size="small">编辑</el-button>
+            <!-- <el-button v-if="scope.row.dataStatus ==0 && scope.row.postCode != 'MANAGER'" @click="handleDiabled(scope.row,'1')" type="warning" size="small">启用</el-button> -->
+            <el-button v-if="scope.row.postCode != 'MANAGER'" @click="handleWriteoff(scope.row)" type="danger" size="small">注销</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -111,8 +112,8 @@
 </template>
 
 <script>
-import AddPage from "./empl_add";
-import SeePage from "./empl_see";
+import AddPage from "./add";
+import SeePage from "./see";
 import { mapGetters } from "vuex";
 
 export default {

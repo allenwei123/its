@@ -19,7 +19,7 @@ const router = new Router({
       component: App,
       children: [{
         path: 'nav',
-        redirect: '/home/nav/side',
+        redirect: '/home/nav/main',
         component: (resolve) => require(["@/page/home/_res"], resolve),
         children: [
           {
@@ -30,6 +30,10 @@ const router = new Router({
               {
                 path: 'test',
                 component: (resolve) => require(["@/page/home/nav/property_manage/_res"], resolve),
+              },
+              {
+                path: 'content',
+                component: (resolve) => require(["@/page/home/nav/content/_res"], resolve),
               },
               {
                 path: 'floorFile',
@@ -130,6 +134,9 @@ const router = new Router({
               },
               {
                 path: 'message', component: (resolve) => require(["@/page/home/nav/property_service/message/list"], resolve)
+              },
+              {
+                path: 'onlineService', component: (resolve) => require(["@/page/home/nav/property_service/online"], resolve)
               }
             ]
           },
@@ -188,7 +195,7 @@ const router = new Router({
     }
   ]
 })
-let errorList = ['/home/nav/communityIoT/record','/home/nav/propertyService/onlineService','/home/nav/propertyService/message'];//记录暂时没开发的
+let errorList = ['/home/nav/communityIoT/record','/home/nav/propertyService/message'];//记录暂时没开发的
 router.beforeEach((to, from, next) => {
   if(errorList.find((val) => { return val == to.path})) {
     alert('该功能未开发');

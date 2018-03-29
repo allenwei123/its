@@ -123,7 +123,6 @@
 </template>
 
 <script>
-  import scheduleList from '@/mock/scheduleList'
   import time from '@/utils/time.js';
   //新增故障
   import AddPage from './form';
@@ -403,7 +402,7 @@
         }else {
           delete params.faultStatus;
         }
-        let communityId = scheduleList[0].communityId;
+        let communityId = this.$store.getters.communityId;
         params['communityId'] = communityId;
         let url = `property/fault/queryFaultPage?page=${this.currentPage}&size=${this.pageSize}`;
         this.loading = true;

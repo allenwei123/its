@@ -11,7 +11,8 @@
               </el-radio-group>
             </el-form-item>
             <el-form-item v-if="isShow" label="计费单价：" prop="unitPrice" :label-width="formLabelWidth" class="c-must">
-              <el-input v-model="form.unitPrice"></el-input>
+              <!-- <el-input v-model="form.unitPrice"></el-input> -->
+              <el-input-number v-model.trim="form.unitPrice" :step="0.01" :min="0.01" @change="handleChange"></el-input-number>&nbsp;&nbsp;(元)
             </el-form-item>
             <el-form-item label="适用楼栋：" :label-width="formLabelWidth" prop="floorSer" class="c-must">
               <el-select v-model="form.floorSer" clearable placeholder="选择适用楼栋">
@@ -56,16 +57,24 @@ export default {
       current: 1 ,//1 初始 2：添加后 3：编辑后
     };
   },
-  props: ["msg","add"],
+  props: ["msg","add","projectData"],
   created() {
     if(this.add){//判断此时组件为 编辑
       // this.cityArr = [this.add.province,this.add.city,this.add.district || '' ];
       this.form = this.add;
       // this.form.cityArr = [this.add.province,this.add.city,this.add.district || '' ];
-      this.titleFont = '编辑社区档案';
+      this.titleFont = '编辑项目';
+      this.form.unitPrice = this.projectData.unitPrice/10000;
+      console.log(this.projectData.unitPrice);
+      console.log(this.projectData.type);
+      this.form.type = this.projectData.type;
+      this.form.floorSer = this.projectData.floorSer;
+      this.form.itemName = this.projectData.itemName;
+    }else{
+      this.selectCommunity();
+      this.chargeType();
     }
-    this.selectCommunity();
-    this.chargeType();
+    
   },
   mounted() {},
   methods: {
@@ -76,14 +85,24 @@ export default {
       let msg = this.add ? '编辑' : '添加';
       let uri = this.add ? '/community/edit' : '/fees/item-rule/addAll';
       let params = {};
+      let communityId = this.$store.getters.communityId;
       let propertyId = localStorage.getItem('propertyId');
-      params['communityId'] = this.$store.getters.communityId;
+      let itemName = this.form.itemName;
+      let type = this.form.type;
+      if(type != 3){  
+        let unitPrice = this.form.unitPrice.toFixed(2);
+        params['unitPrice'] = parseInt(unitPrice * 10000);
+      }else{
+        let unitPrice = 0;
+        params['unitPrice'] = unitPrice;
+      }
+      let floorSer = this.form.floorSer;
+      params['communityId'] = communityId;
       params['propertyId'] = propertyId;
-      params['itemName'] = this.form.itemName;
-      params['type'] = this.form.type;
-      params['unitPrice'] = this.form.unitPrice;
-      params['floorSer'] = this.form.floorSer;
-      console.log(params);
+      params['itemName'] = itemName;
+      params['type'] = type;     
+      params['floorSer'] = floorSer;
+      
       this.$xttp.post(uri,params)
         .then(
           res => {
@@ -103,29 +122,6 @@ export default {
           })
 
     },
-
-    postData() {
-      let msg = this.add ? '编辑' : '添加';
-      let uri = this.add ? '/community/edit' : '/fees/item-rule/addAll';
-      this.$xttp
-        .post( uri, this.form)
-        .then(res => {
-          if (res.errorCode === 0) {
-            this.$message({
-              message: msg + "项目成功",
-              type: "success"
-            });
-            this.current =  2;
-            this.handleClose();
-            this.$emit('reload');
-          }else {
-            this.$message({message:res.data.errorMsg,type:'error'});
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
     selectCommunity(num){
       let obj = { communityId:this.$store.getters.communityId };
       this.$xttp.get(`/community/building/list`,{params:obj})
@@ -134,9 +130,6 @@ export default {
             this.floorOptions = res.data;
             this.form.floorSer = this.floorOptions[0].id;
           }
-          // if(num) {
-          //   this.sendAjax(1,this.formInline.floorSer)
-          // }
         })
     },
     chargeType(){
@@ -153,7 +146,12 @@ export default {
       }
       if(item.key == 3 && this.isShow == true){
         this.isShow = false;
+        this.form.unitPrice == '0';
       }
+    },
+    handleChange(value){
+      let price = value.toFixed(2);
+      this.form.unitPrice = price * 10000;
     }
   }
 };
