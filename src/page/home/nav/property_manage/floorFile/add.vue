@@ -4,26 +4,17 @@
             <el-form-item label="楼栋名称：" :label-width="formLabelWidth" prop="name" class="c-must">
             <el-input v-model="form.name"></el-input>
             </el-form-item>
-
-            <el-form-item v-if="isShow" label="楼栋编号：" :label-width="formLabelWidth" prop="code" class="c-must">
-            <el-input v-model="form.code"></el-input>
+            <el-form-item label="楼面层数" :label-width="formLabelWidth" prop="code" class="c-must">
+            <el-input type="number" v-model="form.overGround" placeholder="从一层开始算"></el-input>
             </el-form-item>
 
-            <el-form-item label="楼面层数：" :label-width="formLabelWidth" prop="overGround" class="c-must">
-              <el-input-number v-model="form.overGround" controls-position="right" :min="1" :max="200" label="从一层算起"></el-input-number>
+            <el-form-item label="地下层数" :label-width="formLabelWidth" prop="code" class="c-must">
+              <el-input type="number" v-model="form.underGround" placeholder="从负一层开始算" ></el-input>
             </el-form-item>
 
-            <el-form-item label="地下层数：" :label-width="formLabelWidth" prop="underGround" class="c-must">
-              <el-input-number v-model="form.underGround" controls-position="right" :min="-10" :max="0" label="从负一层算起"></el-input-number>
-            </el-form-item>
-
-            <el-form-item label="房间数量：" :label-width="formLabelWidth" prop="roomNum" class="c-must">
-              <el-input-number v-model="form.roomNum" controls-position="right" :min="1" :max="200" label="请输入房间数量"></el-input-number>
-            </el-form-item>
-            
-            <el-form-item v-if="isShow" label="社区名称：" :label-width="formLabelWidth" prop="code" class="c-must">
-              <el-input v-model="form.communityIdShow" :disabled="true"></el-input>
-            </el-form-item>
+          <el-form-item label="房间数量" :label-width="formLabelWidth" prop="code" class="c-must">
+            <el-input type="number" v-model="form.roomNum" ></el-input>
+          </el-form-item>
 
             <el-form-item :label-width="formLabelWidth">
               <el-button @click="handleClose">取 消</el-button>
@@ -44,7 +35,7 @@ export default {
       titleFont: "添加楼栋档案",
       isShow: false,
       form: {
-        code: "",
+        overGround: "",
         name: "",
         overGround: '1',
         underGround: '-1',

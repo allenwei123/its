@@ -3,7 +3,8 @@
 
     <el-container class="c-container">
 
-      <el-aside class="c-aside" style="background-color: rgb(238, 241, 246)" width="auto">
+      <el-aside class="c-aside" style="background-color:#4a5064 " width="auto">
+        <!--rgb(238, 241, 246)-->
 
         <div class="c-settingMenu" @click="cn()">三</div>
 
@@ -23,9 +24,7 @@
 </template>
 
 <script>
-import obj1 from '../../../../mock/mok.json'
 import { mapGetters } from "vuex"
-import aside from '@/mock/menuList'
 
   export default {
     name: 'side',
@@ -56,15 +55,10 @@ import aside from '@/mock/menuList'
 
 <style scoped lang="scss">
   .content {
-    margin-top:40px;
+    margin-top:50px;
   }
   .c-container {
-    height:calc(100vh - 40px);
-  }
-  el-header {
-    background-color: #B3C0D1;
-    color: #333;
-    line-height: 60px;
+    height:calc(100vh - 50px);
   }
   .el-aside {
     color: #333;

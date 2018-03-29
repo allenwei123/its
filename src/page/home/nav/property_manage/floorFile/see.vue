@@ -8,7 +8,7 @@
             <li class="c-list"><span class="c-label">总层数:</span> <span class="c-content"> {{ data.overGround - data.underGround }} </span></li>
             <li class="c-list"><span class="c-label">房间数量:</span> <span class="c-content"> {{ data.roomNum }} </span></li>
             <li class="c-list"><span class="c-label">创建时间:</span> <span class="c-content"> {{ data.createAt | time }} </span></li>
-        </ul>  
+        </ul>
     </el-dialog>
 </template>
 

@@ -28,7 +28,7 @@
           </el-form>
         </div>
         <div class="c-list">
-          <el-table :data="tableData" style="width: 100%" v-loading="loading" stripe>
+          <el-table :data="tableData" style="width: 100%" v-loading="loading" stripe border>
             <el-table-column label="序号" width="80" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
@@ -120,7 +120,7 @@ import AddPage from "./add";
           { id: 2, name: "门禁档案" }
         ],
       }
-    }, 
+    },
     methods: {
       query() {
         this.q_input = this.input;
@@ -130,7 +130,7 @@ import AddPage from "./add";
         else {
           this.getTableList();
         }
-      }, 
+      },
       changeStatus() {
         this.query();
       },
@@ -166,7 +166,7 @@ import AddPage from "./add";
           }
         });
       }
-    }, 
+    },
     created() {
       this.query();
     }

@@ -18,7 +18,7 @@
         </div>
       </div>
       </div>
-      <el-table class="c-table" :data="tableData" style="width: 100%" v-loading="loading" stripe >
+      <el-table class="c-table" border :data="tableData" style="width: 100%" v-loading="loading" stripe >
         <el-table-column label="序号" width="120" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
         </el-table-column>
@@ -142,7 +142,7 @@ import time from '@/utils/time.js';
       },
       delHandle(row){
         this.visible2 = true;
-        this.delData = row; 
+        this.delData = row;
       },
       seeHandle(row){
         this.isSee = true;

@@ -16,7 +16,7 @@
           <el-button type="primary" class="c-addBtn" @click="onSubmit">新增楼栋</el-button>
         </div>
       </div>
-      
+
       <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." border highlight-current-row ref="multipleTable" style="width: 100%">
         <el-table-column label="序号" width="60" align="center">
           <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
@@ -116,7 +116,7 @@ export default {
     },
     handleCurrentChange(val) {
       if(this.currentPage !== val){
-        this.sendAjax(val); 
+        this.sendAjax(val);
       };
     },
     handleClick(row) {
@@ -131,7 +131,7 @@ export default {
     },
     delHandle(row) {
       this.visible2 = true;
-      this.delData = row; 
+      this.delData = row;
     },
     confirmDel(){
       if(this.delData.id){
@@ -176,14 +176,11 @@ export default {
           this.currentPage = res.data.currentPage;
           this.total = res.data.total;
           this.tableData.forEach(item => {
-            if (item.createAt) {
-              item.time1 = new Date(item.createAt)
-                .toISOString()
-                .split(".")[0]
-                .replace("T", " ");
+            if (item.overGround || item.underGround) {
+              item.allGound = item.overGround + item.underGround;
             }
           });
-          // this.$router.push({path:this.$route.path,query:{page: nPage }})
+          this.$router.push({path:this.$route.path,query:{page: nPage }})
         }
         this.loading = false;
       }).catch(err => {
@@ -228,7 +225,7 @@ export default {
 .fade-enter-active, .fade-leave-active {
   transition: all 0.5s ease;
 }
-       
+
 .fade-enter, .fade-leave-active {
   opacity: 0;
   transform: rotateY(180deg);
@@ -236,7 +233,7 @@ export default {
 .fade1-enter-active, .fade1-leave-active {
   transition: all 0.5s ease;
 }
-       
+
 .fade1-enter, .fade1-leave-active {
   opacity: 0;
   transform: translateX(-500px);
