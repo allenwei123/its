@@ -1,15 +1,27 @@
 <template>
       <el-dialog :title="titleFont" :visible.sync="msg" :before-close="handleClose">
         <el-form :model="form" :rules="rules" ref="ruleForm" class="demo-form-inline">
-            <el-form-item label="楼栋名称" :label-width="formLabelWidth" prop="name" class="c-must">
+            <el-form-item label="楼栋名称：" :label-width="formLabelWidth" prop="name" class="c-must">
             <el-input v-model="form.name"></el-input>
             </el-form-item>
 
-            <el-form-item label="楼栋编号" :label-width="formLabelWidth" prop="code" class="c-must">
+            <el-form-item v-if="isShow" label="楼栋编号：" :label-width="formLabelWidth" prop="code" class="c-must">
             <el-input v-model="form.code"></el-input>
             </el-form-item>
+
+            <el-form-item label="楼面层数：" :label-width="formLabelWidth" prop="overGround" class="c-must">
+              <el-input-number v-model="form.overGround" controls-position="right" :min="1" :max="200" label="从一层算起"></el-input-number>
+            </el-form-item>
+
+            <el-form-item label="地下层数：" :label-width="formLabelWidth" prop="underGround" class="c-must">
+              <el-input-number v-model="form.underGround" controls-position="right" :min="-10" :max="0" label="从负一层算起"></el-input-number>
+            </el-form-item>
+
+            <el-form-item label="房间数量：" :label-width="formLabelWidth" prop="roomNum" class="c-must">
+              <el-input-number v-model="form.roomNum" controls-position="right" :min="1" :max="200" label="请输入房间数量"></el-input-number>
+            </el-form-item>
             
-            <el-form-item label="社区名称" :label-width="formLabelWidth" prop="code" class="c-must">
+            <el-form-item v-if="isShow" label="社区名称：" :label-width="formLabelWidth" prop="code" class="c-must">
               <el-input v-model="form.communityIdShow" :disabled="true"></el-input>
             </el-form-item>
 
@@ -30,16 +42,23 @@ export default {
     return {
       formLabelWidth: "120px",
       titleFont: "添加楼栋档案",
+      isShow: false,
       form: {
         code: "",
         name: "",
+        overGround: '1',
+        underGround: '-1',
+        roomNum: '1',
         communityIdShow: this.$store.getters.communityName,
         communityId: this.$store.getters.communityId,
         communityName: this.$store.getters.communityName
       },
       rules: {
         name: [{ required: true, message: "请输入楼栋名称", trigger: "blur" }],
-        code: [{ required: true, message: "请输入楼栋编号", trigger: "blur" }]
+        code: [{ required: true, message: "请输入楼栋编号", trigger: "blur" }],
+        overGround: [{ required: true, message: "请输入楼面层数", trigger: "blur" }],
+        underGround: [{ required: true, message: "请输入地下层数", trigger: "blur" }]
+        // roomNum: [{ required: true, message: "请输入房间数量", trigger: "blur" }]
       },
       cityArr: [],
       current: 1 //1 初始 2：添加后 3：编辑后
@@ -83,7 +102,7 @@ export default {
         .then(res => {
           if (res.errorCode === 0) {
             this.$message({
-              message: msg + "社区成功",
+              message: msg + "楼栋成功",
               type: "success"
             });
             this.current = 2;

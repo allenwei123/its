@@ -17,38 +17,26 @@
         </div>
       </div>
       
-      <el-table
-        class="c-table"
-        :data="tableData"
-        v-loading="loading"
-        element-loading-text="加载中..."
-        border
-        highlight-current-row 
-        ref="multipleTable"
-        style="width: 100%">
-        <el-table-column label="序号" width="80" align="center">
+      <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." border highlight-current-row ref="multipleTable" style="width: 100%">
+        <el-table-column label="序号" width="60" align="center">
           <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
         </el-table-column>
-        <el-table-column
-          prop="name"
-          align="center"
-          label="楼栋名称">
+        <el-table-column label="楼栋名称" min-width="100" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ scope.row.name}}</template>
         </el-table-column>
-        <el-table-column
-          prop="code"
-          align="center"
-          label="楼栋编号">
+        <el-table-column label="楼面层数" min-width="60" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ scope.row.overGround}}</template>
         </el-table-column>
-        <el-table-column
-          align="center"
-          prop="time1"
-          label="创建时间">
+        <el-table-column label="地下层数" min-width="60" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ scope.row.underGround}}</template>
         </el-table-column>
-        <el-table-column
-          align="left"
-          fixed="right"
-          label="操作"
-          width="220">
+        <el-table-column label="总层数" min-width="60" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ scope.row.overGround - scope.row.underGround}}</template>
+        </el-table-column>
+        <el-table-column label="房间数量" min-width="70" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ scope.row.roomNum}}</template>
+        </el-table-column>
+        <el-table-column align="left" fixed="right" label="操作" width="220">
           <template slot-scope="scope">
             <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button>
             <el-button @click="editHandle(scope.row)" type="warning" size="small">编辑</el-button>
