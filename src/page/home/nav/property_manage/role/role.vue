@@ -4,7 +4,7 @@
         <ul class="c-navDetail clear">
           <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li>
         </ul>
-        <div class="c-search">
+        <!-- <div class="c-search">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
             <el-form-item label="角色">
               <el-input v-model="formInline.role" placeholder="关键字搜索"></el-input>
@@ -13,15 +13,15 @@
               <el-button type="primary"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
             </el-form-item>
           </el-form>
-          <!-- <el-button type="primary" class="c-addBtn" @click="onSubmit">新增角色</el-button> -->
-        </div>
+          <el-button type="primary" class="c-addBtn" @click="onSubmit">新增角色</el-button>
+        </div> -->
       </div>
       
       <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." highlight-current-row ref="multipleTable" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="200"> </el-table-column>
         <!-- <el-table-column prop="key" label="ID" align="center"  width="200"> </el-table-column> -->
         <el-table-column prop="name" label="角色" align="center"  width="240"> </el-table-column>
-        <el-table-column align="center" label="操作" width="700">
+        <el-table-column v-if="isShow" align="center" label="操作" width="700">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="handleClick(scope.row)">查看权限</el-button>
             <!-- <el-button size="mini" type="danger" v-if="scope.row.usestate==='1'" @click="handleDiabled(scope.row,'0')">禁用</el-button>
@@ -56,8 +56,8 @@
 </template>
 
 <script>
-import AddPage from "./role_add";
-import SeePage from "./role_see";
+import AddPage from "./add";
+import SeePage from "./see";
 import { mapGetters } from "vuex";
 
 export default {

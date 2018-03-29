@@ -12,7 +12,7 @@
             </el-form-item>
             <el-form-item v-if="isShow" label="计费单价：" prop="unitPrice" :label-width="formLabelWidth" class="c-must">
               <!-- <el-input v-model="form.unitPrice"></el-input> -->
-              <el-input-number v-model.trim="form.unitPrice" :step="0.01" :min="0.00" @change="handleChange"></el-input-number>
+              <el-input-number v-model.trim="form.unitPrice" :step="0.01" :min="0.01" @change="handleChange"></el-input-number>&nbsp;&nbsp;(元)
             </el-form-item>
             <el-form-item label="适用楼栋：" :label-width="formLabelWidth" prop="floorSer" class="c-must">
               <el-select v-model="form.floorSer" clearable placeholder="选择适用楼栋">
@@ -59,8 +59,6 @@ export default {
   },
   props: ["msg","add","projectData"],
   created() {
-    console.log(this.add);
-    console.log(this.projectData)
     if(this.add){//判断此时组件为 编辑
       // this.cityArr = [this.add.province,this.add.city,this.add.district || '' ];
       this.form = this.add;

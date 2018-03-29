@@ -28,7 +28,7 @@
           <template slot-scope="scope">{{ scope.row.overGround}}</template>
         </el-table-column>
         <el-table-column label="地下层数" min-width="60" align="center" :show-overflow-tooltip="true">
-          <template slot-scope="scope">{{ scope.row.underGround}}</template>
+          <template slot-scope="scope">{{0 - scope.row.underGround}}</template>
         </el-table-column>
         <el-table-column label="总层数" min-width="60" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.overGround - scope.row.underGround}}</template>

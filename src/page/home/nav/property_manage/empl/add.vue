@@ -26,7 +26,7 @@
 
           <el-form-item label="手机号码：" :label-width="formLabelWidth" prop="phone" class="c-must">
             <el-col :span="14">
-              <el-input v-model.trim="form.phone" placeholder="请输入手机号"></el-input>
+              <el-input v-model.trim="form.phone" v-bind:readOnly ="readOnly" placeholder="请输入手机号"></el-input>
             </el-col>
           </el-form-item>
 
@@ -35,10 +35,11 @@
               <el-option v-for="item in maleOptions" :key="item.key" :label="item.value" :value="item.key">{{item.value}}</el-option>
             </el-select>
           </el-form-item>
-
-          <el-form-item label="密码：" :label-width="formLabelWidth" prop="password" class="c-nomust">
-            <el-col :span="14">
-              <el-input v-model.trim="form.password" type="password" placeholder="请输入密码"></el-input>
+          
+          <el-form-item label="密码：" :label-width="formLabelWidth" prop="password" class="c-must">
+            <el-col :span="10">
+              <el-input v-model.trim="form.password" type="password" v-bind:disabled ="disabled" placeholder="请输入密码"></el-input>
+              <el-checkbox v-if="resetPass" v-model="checked" @change="changeChecked">重置密码</el-checkbox>
             </el-col>
           </el-form-item>
 
@@ -62,23 +63,30 @@ export default {
     return {
       formLabelWidth: "120px",
       titleFont:'添加员工',
+      checked: false,
+      resetPass: false,
+      disabled: false,
+      required: false,
+      readOnly: false,
+      message: '请输入密码',
       form: {
         employeeId: '',
         userName: "",
         phone: "",
         postCode: '',
         sex:'',
+        checked: true,
         password: '',
         communityId: this.$store.getters.communityId,
         communityName: this.$store.getters.communityName,
-        propertyId: localStorage.getItem('propertyId'),
-        propertyName:'和谐景苑'
+        propertyId: localStorage.getItem('propertyId')
+        // propertyName:'和谐景苑'
       },
       rules: {
         employeeId: [{required: true, message: '请输入工号', trigger: 'blur' }],
         userName: [{required: true, message: '请输入名称', trigger: 'blur' }],
         phone: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
-        password: [{required: true, message: '请输入密码', trigger: 'blur' }],
+        // password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
         sex: [{ required: true, message: '请选择性别', trigger: 'blur' }],
         postCode: [{ required: true, message: '请选择岗位', trigger: 'blur' }]
       },
@@ -92,13 +100,36 @@ export default {
     this.initPost();
     if(this.add){//判断此时组件为 编辑
       this.form = this.add;
+      console.log(this.form);
+      this.resetPass = true;
       this.titleFont = '编辑员工';
+      this.disabled = true;
+      this.required = false;
+      this.readOnly = true;
+      if(this.add.sex == 1){
+        this.form.sex = '男';
+      } if(this.add.sex == 2){
+        this.form.sex = '女'
+      } if(this.add.sex == 0 || this.add.sex == null){
+        this.form.sex = '未知'
+      }
     }
   },
   mounted() {},
   methods: {
     handleClose() {
       this.$emit("upup", this.current );
+    },
+    changeChecked(){
+      if(this.form.checked){
+        this.form.password = '';
+        this.form.checked = false;
+        this.disabled = false;
+      }else{
+        this.form.checked = true;
+        this.form.password = '';
+        this.disabled = true;
+      }
     },
     initPost(){
       let communityId = this.$store.getters.communityId

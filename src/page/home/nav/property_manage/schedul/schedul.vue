@@ -38,11 +38,14 @@
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
+              <!-- <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button> -->
+              <el-button type="primary" @click="find">查询</el-button>
+              <!-- <el-button type="success" plain @click="keySchedul">一键排班</el-button> -->
             </el-form-item>
           </el-form>
           <!-- <el-button type="primary" icon="el-icon-edit" class="c-addBtn" @click="handleCreate">新增排班</el-button> -->
-          <el-button type="primary" icon="el-icon-edit" class="c-addBtn" @click="onSubmit">新增排班</el-button>
+          <!-- <el-button type="primary" @click="find">一键排班</el-button> -->
+          <el-button type="primary" class="c-addBtn" @click="onSubmit">新增排班</el-button>
         </div>
       </div>
       
