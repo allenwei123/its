@@ -8,7 +8,7 @@
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
             <el-form-item label="">
-              <el-input placeholder="车闸名称" v-model.trim="input"></el-input>
+              <el-input placeholder="车闸" v-model.trim="input"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="query">查询</el-button>
@@ -23,10 +23,10 @@
             <el-table-column label="车闸" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{scope.row.gateName}}</template>
             </el-table-column>
-            <el-table-column label="车库名称" :show-overflow-tooltip="true" align="center">
+            <!-- <el-table-column label="车库名称" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">/</template>
-            </el-table-column>
-            <el-table-column label="车闸设备产商" width="120" :show-overflow-tooltip="true" align="center">
+            </el-table-column> -->
+            <!-- <el-table-column label="车闸设备产商" width="120" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">???</template>
             </el-table-column>
             <el-table-column label="型号" :show-overflow-tooltip="true" align="center">
@@ -34,7 +34,7 @@
             </el-table-column>
             <el-table-column label="设备编号" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">???</template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column label="运行状态" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{getStatusName(scope.row.gateStatus)}}</template>
             </el-table-column>

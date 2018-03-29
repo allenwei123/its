@@ -1,125 +1,161 @@
 <template>
-      <el-dialog :title="titleFont" :visible.sync="msg" :before-close="handleClose">
-        <el-form :model="form" :rules="rules" ref="ruleForm" class="demo-form-inline">
-            <el-form-item label="楼栋名称" :label-width="formLabelWidth" prop="name" class="c-must">
-            <el-input v-model="form.name"></el-input>
-            </el-form-item>
+  <el-dialog title="新增卡片" :visible.sync="msg" :before-close="handleClose">
+    <el-form :model="form" :rules="rules" ref="ruleForm"  label-width="120px">
+      <el-form-item label="卡号" prop="keyNo" required>
+        <el-input v-model="form.keyNo" auto-complete="off"></el-input>
+      </el-form-item>
 
-            <el-form-item label="楼栋编号" :label-width="formLabelWidth" prop="code" class="c-must">
-            <el-input v-model="form.code"></el-input>
-            </el-form-item>
-            
-            <el-form-item label="社区名称" :label-width="formLabelWidth" prop="communityId" class="c-must">
-              <el-select v-model="form.communityId" clearable>
-                <el-option
-                  v-for="item in options"
-                  :key="item.id"
-                  :value="item.id"
-                  :label="item.name">
-                </el-option>
-              </el-select>
-            </el-form-item>
+      <el-form-item label="卡类型" label-width="120px" prop="value1" required>
+        <el-select v-model="form.value1"  clearable>
+          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        </el-select>
+      </el-form-item>
 
-            <el-form-item :label-width="formLabelWidth">
-              <el-button @click="handleClose">取 消</el-button>
-              <el-button type="primary" @click="save('ruleForm')">保存</el-button>
-            </el-form-item>
-        </el-form>
-    </el-dialog>
+      <el-form-item label="角色" label-width="120px"  prop="value2" required>
+        <el-select v-model="form.value2"  clearable @change="role">
+          <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="所属员工" label-width="120px" prop="value3" required>
+        <el-select v-model="form.value3"  clearable>
+          <el-option v-for="item in options3" :key="item.userId" :label="item.userName" :value="item.userId"></el-option>
+        </el-select>
+      </el-form-item>
+     
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="handleClose">取 消</el-button>
+      <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
+    </div>    
+  </el-dialog>
 </template>
 
 <script>
-import { communityId } from "@/biz/community";
-
-export default {
-  name: "floorFileForm",
-  data() {
-    return {
-      formLabelWidth: "120px",
-      titleFont: "添加楼栋档案",
-      form: {
-        code: "",
-        name: "",
-        communityId: ""
-      },
-      rules: {
-        name: [{ required: true, message: "请输入楼栋名称", trigger: "blur" }],
-        code: [{ required: true, message: "请输入楼栋编号", trigger: "blur" }],
-        communityId: [
-          { required: true, message: "请选择社区名称", trigger: "blur" }
-        ]
-      },
-      options: [],
-      cityArr: [],
-      current: 1 //1 初始 2：添加后 3：编辑后
-    };
-  },
-  props: ["msg", "add"],
-  created() {
-    communityId().then(res => {
-      if (res.length) {
-        this.options = res;
-      }
-    });
-    if (this.add) {
-      //判断此时组件为 编辑
-      this.cityArr = [
-        this.add.province,
-        this.add.city,
-        this.add.district || ""
-      ];
-      this.form = this.add;
-      this.titleFont = "编辑楼栋档案";
-    }
-  },
-  mounted() {},
-  methods: {
-    handleClose() {
-      this.$emit("upup", this.current);
-    },
-    save(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          this.postData();
-        } else {
-          return false;
-        }
-      });
-    },
-    postData() {
-      if (this.cityArr[0]) {
-        this.form.province = this.cityArr[0];
-        this.form.city = this.cityArr[1];
-        this.form.district = this.cityArr[2];
-      }
-      let msg = this.add ? "编辑" : "添加";
-      let uri = this.add
-        ? "/community/building/edit"
-        : "/community/building/add";
-      this.$xttp
-        .post(uri, this.form)
-        .then(res => {
-          if (res.errorCode === 0) {
-            this.$message({
-              message: msg + "楼栋成功",
-              type: "success"
-            });
-            this.current = 2;
-            this.handleClose();
-          } else {
-            this.$message({ message: res.data.errorMsg, type: "error" });
+import time from "@/utils/time.js";
+    export default {
+        data() {
+          return {
+            form: {
+              value1: '',
+              value2: '',
+              value3: '',
+              keyNo: ''
+            },
+            value: '',
+            makeAt: '',
+            //卡片
+            options: [ {
+              value: '2',
+              label: '蓝牙卡'
+            }, {
+              value: '4',
+              label: 'IC卡'
+            }],
+            //角色 
+            options2: [ {
+              value: 'MANAGER',
+              label: '物业管理员'
+            }, {
+              value: 'SECURITY',
+              label: '保安'
+            } , {
+              value: 'CLEANER',
+              label: '保洁'
+            } , {
+              value: 'SERVICEMAN',
+              label: '维修工'
+            } , {
+              value: 'SUPPORTSTAFF',
+              label: '客服人员'
+            }],
+            //员工
+            options3: '',
+            rules: {
+              keyNo: [{required: true, message: '请输入卡号', trigger: 'blur'}],
+              value1: [{ required: true, message: '请选择卡类型', trigger: 'blur' }],
+              value2: [{ required: true, message: '请输入角色', trigger: 'blur' }],
+              value3: [{ required: true, message: '请选择员工', trigger: 'blur' }],
+            },
+            userToRoomId: '',    
           }
-        })
-        .catch(err => {
-          console.log(err);
-        });
+        },
+        methods: {
+          submitForm(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                  this.postData();
+                } else {
+                  return false;
+                }
+            });
+          },
+          role() {
+            let url = `user/property/${this.$store.getters.communityId}/user-list?postCode=${this.form.value2}`;
+            this.$xttp.get(url).then(res => {
+              if(res.errorCode === 0) {
+                this.loading = false;
+                this.options3 = res.data;
+              }
+            }).catch( () => {
+              this.loading = false;
+            })
+          },
+          handleClose() {
+              this.$emit('change');
+          },
+          getTime(timestamp, format) {
+              if (timestamp == null) return "/";
+              return time.timestampToFormat(timestamp, format);
+          },
+          postData() {
+            let url = `room/query-by-user`;
+            let obj = {communityId:this.$store.getters.communityId,userId:'5a82a45e9ce93e30677c3f9e'};
+            // let url = `user/property/${this.$store.getters.communityId}/user-list?postCode=${this.form.value2}`;
+            this.$xttp.post(url, obj).then(res => {
+              if(res.errorCode === 0) {
+                this.loading = false;
+                this.userToRoomId = res.data[0].id;
+
+                //获取id后再去申请卡片
+                let url = `user/card/add/${this.userToRoomId}`;
+                let obj = {
+                  "keyType": this.form.value1,
+                  "communityId": this.$store.getters.communityId,
+                  "rooms": [{
+                    "expireTime": 10,
+                    "roomId": "5aa63af1e4b090a181f4c628"
+                  }],
+                  "processTime": 10,
+                  "userId": "5aa733d4e4b0274d66f17e9c",
+                  "keyNo" : this.form.keyNo
+                }
+                console.log(obj);
+
+                this.$xttp.post(url, obj).then( res=> {
+                  if(res.errorCode === 0) {
+                  this.loading = false;
+                    console.log(res);
+                  }
+
+                }).catch( () => {
+                  this.loading = false;
+                })
+              }
+            }).catch( () => {
+              this.loading = false;
+            })
+          },
+
+        },
+        created() {
+          
+        },
+        props: ['msg'],
     }
-  }
-};
+    
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 
 </style>
-
-

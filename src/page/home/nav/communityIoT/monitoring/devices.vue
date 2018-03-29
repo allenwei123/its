@@ -74,7 +74,7 @@
         </el-pagination>
       </div>
 
-       <!-- 新增监控 -->
+      <!-- 新增监控 -->
       <transition name="fade">
         <AddPage v-if="show" :msg="show" @change=addChange></AddPage>
       </transition>
