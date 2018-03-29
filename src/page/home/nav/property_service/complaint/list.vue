@@ -1,9 +1,22 @@
 <template>
   <el-container>
     <el-main>
+      <ul class="c-navDetail clear">
+        <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li>
+      </ul>
       <div class="c-notice-container">
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
+            <el-select v-model="value1" placeholder="全部" clearable @change="changeStatus">
+              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+            <el-date-picker
+              v-model="value6"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期" clearable @change="changeStatus">
+            </el-date-picker>
             <el-form-item label="">
               <el-input placeholder="投诉人" v-model.trim="input"></el-input>
             </el-form-item>
@@ -56,12 +69,26 @@
     name: 'complaint',
     data () {
       return {
+        value6: '',
+        value1: '',
+        options: [ {
+          value: '1',
+          label: '住户投诉'
+        }, {
+          value: '2',
+          label: '员工投诉'
+        }],
         loading: false,
         input: '',
         tableData: [],
         pageSize: 10,
         total: 0,
-        currentPage: 1
+        currentPage: 1,
+        navDetailData: [
+          { id: 0, name: "物业服务" },
+          { id: 1, name: "投诉报事" },
+          { id: 2, name: "住户投诉" }
+        ],
       }
     },
     methods: {
@@ -81,6 +108,9 @@
           this.getTableList();
         }
       },
+      changeStatus() {
+        this.query();
+      },
       getTableList() {
         this.loading = true;
         let url = `property/complain/page?page=${this.currentPage}&size=${this.pageSize}`;
@@ -88,7 +118,8 @@
         params['communityId'] = this.$store.getters.communityId;
         if (this.q_input) {
           params['userName'] = this.q_input;
-        }
+        };
+        params['messageSource'] = this.value1;
         this.$xttp.post(url, params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {
@@ -129,5 +160,12 @@
 </script>
 
 <style scoped lang="scss">
+  .c-navDetail {
+    margin-bottom: 10px;
+    li {
+      float: left;
+      margin-right: 10px;
+    }
+  }
 
 </style>

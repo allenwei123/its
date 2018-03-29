@@ -36,7 +36,7 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="设置密码：" :label-width="formLabelWidth" prop="password" class="c-must">
+          <el-form-item label="密码：" :label-width="formLabelWidth" prop="password" class="c-nomust">
             <el-col :span="14">
               <el-input v-model.trim="form.password" type="password" placeholder="请输入密码"></el-input>
             </el-col>
@@ -51,8 +51,6 @@
 </template>
 
 <script>
-import scheduleList from '@/mock/scheduleList'
-
 const maleOptions = [
   { key: '0', value: '未知' },
   { key: '1', value: '男' },
@@ -68,7 +66,6 @@ export default {
         employeeId: '',
         userName: "",
         phone: "",
-        // postCode: 'SECURITY',
         postCode: '',
         sex:'',
         password: '',

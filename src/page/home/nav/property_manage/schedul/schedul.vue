@@ -57,7 +57,6 @@
           <template slot-scope="scope">{{getTime(scope.row.workDate, 'yyyy-MM-dd')}}</template>
         </el-table-column>
         <el-table-column prop="userName" label="员工" align="center" width="150"></el-table-column>
-        <el-table-column prop="className" label="班次" align="center" width="150"></el-table-column>
         <el-table-column prop="" label="班次" width="200" align="center">
           <template slot-scope="scope">{{scope.row.className}}({{scope.row.attendTimeStr}}-{{scope.row.offTimeStr}})</template>
         </el-table-column>

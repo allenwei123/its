@@ -7,7 +7,7 @@
       <div class="c-notice-container">
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
-            <el-select v-model="value1" placeholder="全部状态">
+            <el-select v-model="value1" placeholder="全部状态" clearable @change="changeStatus">
               <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
             <el-date-picker
@@ -15,7 +15,7 @@
               type="daterange"
               range-separator="至"
               start-placeholder="开始日期"
-              end-placeholder="结束日期">
+              end-placeholder="结束日期" clearable @change="changeStatus">
             </el-date-picker>
             <el-form-item label="">
               <el-input  placeholder="申报人" v-model.trim="input"></el-input>
@@ -31,10 +31,10 @@
         <!-- 表格 -->
         <div class="c-list">
           <el-table :data="tableData"  style="width: 100%" v-loading="loading" align="center">
-            <el-table-column prop="no" label="编号" width="80">
+            <el-table-column prop="no" label="编号" width="80" align="center">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column prop="faultType" label="故障类型" min-width="80" align="center">
+            <el-table-column prop="faultType" label="故障类型" min-width="180" align="center">
               <template slot-scope="scope">{{scope.row.faultType=== 1 ? '住户' : scope.row.faultType === 2 ? '公共' : '其它' }}-{{getfaultItem(scope.row.faultItem)}}</template>
             </el-table-column>
             <el-table-column prop="userName" label="申报人" width="120" align="center">
@@ -123,7 +123,6 @@
 </template>
 
 <script>
-  import scheduleList from '@/mock/scheduleList'
   import time from '@/utils/time.js';
   //新增故障
   import AddPage from './form';
@@ -213,6 +212,9 @@
       seeChange(msg) {//与查看弹窗交互
         this.see = false;
 
+      },
+      changeStatus() {
+        this.query();
       },
       // assignChange(msg) {
       //   this.showAssign = false;
@@ -400,7 +402,7 @@
         }else {
           delete params.faultStatus;
         }
-        let communityId = scheduleList[0].communityId;
+        let communityId = this.$store.getters.communityId;
         params['communityId'] = communityId;
         let url = `property/fault/queryFaultPage?page=${this.currentPage}&size=${this.pageSize}`;
         this.loading = true;

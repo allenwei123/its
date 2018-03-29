@@ -31,10 +31,9 @@
         <el-table-column label="收费项目" min-width="200" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.itemName }}</template>
         </el-table-column>
-        <el-table-column fixed="right" align="center" label="操作" width="400">
+        <el-table-column fixed="right" align="center" label="操作" width="500">
           <template slot-scope="scope">
-            <el-button v-if="scope.row.itemName == '基础管理费'" type="primary" size="mini" @click="seeHandle(scope.row)">编辑单价</el-button>
-            <el-button type="primary" size="mini" @click="editHandle(scope.row)">编辑</el-button>
+            <el-button type="primary" size="mini" @click="seeHandle(scope.row)">查看</el-button>
             <el-button @click="delHandle(scope.row)" type="danger" size="small">删除</el-button>
           </template>
         </el-table-column>
@@ -50,20 +49,24 @@
         <!-- <SeePage v-if="isSee" :msg="isSee" @upsee="upsee" :data="seeData"></SeePage> -->
         <AddPage v-if="isShow" :msg="isShow" @reload="query" @upup="change" :add.sync="projectData"></AddPage>
       </transition>
+      <transition name="see">
+        <!-- <SeePage v-if="isSee" :msg="isSee" @upsee="upsee" :data="seeData"></SeePage> -->
+        <SeePage v-if="isSee" :detail="formDetail" :msg="isSee" @upsee="upsee"></SeePage>
+      </transition>
 
-      <!-- <el-dialog title="温馨提示" :visible.sync="visible2">
+      <el-dialog title="温馨提示" :visible.sync="visible2">
         <p>请问您确定要删除这条数据吗？</p>
         <div style="text-align: right; marigin: 0">
           <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
           <el-button type="primary" size="mini" @click="confirmDel">确定</el-button>
         </div>
-      </el-dialog> -->
+      </el-dialog>
     </el-main>
   </el-container>
 </template>
 
 <script>
-// import SeePage from './see';
+import SeePage from './see';
 import AddPage from './add';
 
 import { mapGetters } from "vuex";
@@ -75,6 +78,11 @@ import time from '@/utils/time.js';
         loading: false,
         show: false,
         isShow: false,
+        isSee: false,
+        seeData: null,
+        visible2: false,
+        delData: null,
+        formDetail: {},
         navDetailData: [
           { id: 0, name: "物业管理" },
           { id: 1, name: "收费管理" },
@@ -90,7 +98,7 @@ import time from '@/utils/time.js';
     },
     computed: mapGetters(["showAside"]),
     components: {
-      // SeePage,
+      SeePage,
       AddPage
     },
     methods: {
@@ -122,9 +130,6 @@ import time from '@/utils/time.js';
         this.projectData = null;
         this.isShow = !this.isShow;
       },
-      //  upsee(msg) {  //查看弹窗交互
-      //   this.isSee = false;
-      // },
       change(msg) {
         if (msg == 1) {
           this.isShow = false;
@@ -132,6 +137,41 @@ import time from '@/utils/time.js';
           this.isShow = false;
         }
       },
+      upsee(msg) {  //查看弹窗交互
+        this.isSee = false;
+      },
+      delHandle(row){
+        this.visible2 = true;
+        this.delData = row; 
+      },
+      seeHandle(row){
+        this.isSee = true;
+        console.log(row);
+        // this.formDetail = row;
+        this.formDetail = row;
+        // console.log(this.formDetail);
+      },
+      confirmDel(){
+        if(this.delData.id) {
+          this.$xttp.get(`fees/item/delete/${this.delData.id}`)
+          .then(res => {
+            this.loading = false;
+            if(res.success){
+              this.visible2 = false;
+              this.delData = null;
+              this.$message({message:'删除成功！',type:'success'});
+              this.query();
+            }else{
+              this.visible2 = false;
+              this.delData = null;
+              // this.$message({message:'删除成功！',type:'success'});
+              this.query();
+            }
+          }).catch(()=> {
+            this.loading = false;
+          })
+        }
+      }
     },
     created() {
       this.query();
@@ -173,5 +213,14 @@ import time from '@/utils/time.js';
 .fade-enter, .fade-leave-active {
   opacity: 0;
   transform: rotateY(180deg);
+}
+
+.see-enter-active, .see-leave-active {
+  transition: all 0.5s ease;
+}
+
+.see-enter, .see-leave-active {
+  opacity: 0;
+  transform: translateX(-500px);
 }
 </style>

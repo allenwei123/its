@@ -35,6 +35,14 @@ $headerBg:#3988ff;
     }
   }
 }
+.c-nomust {//表单是否必填
+  .el-form-item__label {
+    &:before{
+      content: '*';
+      color:white;
+    }
+  }
+}
 .c-eascader {
   .el-cascader {
     width:100%;

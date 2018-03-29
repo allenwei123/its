@@ -6,11 +6,15 @@
           <el-form :inline="true" class="demo-form-inline">
             <el-form-item label="">
               <el-date-picker
-                v-model="input"
-                type="date"
-                value-format="yyyy-MM-dd"
-                placeholder="选择日期">
+                v-model="date"
+                type="month"
+                format="yyyy年MM月"
+                value-format="yyyy/MM/01"
+                placeholder="账单日期" clearable @change="changeStatus">
               </el-date-picker>
+            </el-form-item>
+            <el-form-item label="">
+              <el-input  placeholder="车牌号" v-model.trim="input"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="query">查询</el-button>
@@ -59,7 +63,8 @@
         total: 0,
         currentPage: 1,
         input: '',
-        q_input: null
+        q_input: null,
+        date: '',
       }
     },
     computed: {
@@ -77,7 +82,11 @@
         else {
           this.getTableList();
         }
-      }, getTableList() {
+      },
+      changeStatus() {
+        this.query();
+      },
+      getTableList() {
         this.loading = true;
         let url = `vehicle/inout/page?page=${this.currentPage}&size=${this.pageSize}`;
         let params = {};
@@ -109,7 +118,8 @@
         let inOutTag = parseInt(this.$route.query.inOutTag);
         return inOutTag === 1 ? item.inTime : item.outTime;
       }
-    }, created() {
+    }, 
+    created() {
       this.query();
     }
   }

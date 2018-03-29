@@ -10,15 +10,15 @@
             <el-form-item label="申报时间" label-width="120px" required>
                 <span>{{time}}</span>
             </el-form-item>
-            <el-form-item label="申报类型" label-width="120px" required>
+            <el-form-item label="故障类型" label-width="120px" required>
                 <span>{{faultType}}</span>
             </el-form-item>
-            <el-form-item label="申报地址" label-width="120px" required>
+            <el-form-item label="故障地址" label-width="120px" required>
                 <span>{{data.faultAddress}}</span>
             </el-form-item>
             <el-form-item label="故障描述" label-width="120px" required>
                 <span>{{data.faultContent}}</span>
-                <div class="c-image" v-if="uri"><img :src="uri"></div>
+                <div class="c-image" v-if="uri">图片：<img :src="uri"></div>
             </el-form-item>
             <el-form-item label="故障状态" label-width="120px" required>
                 <span>{{faultStatus}}</span>
@@ -28,7 +28,7 @@
                 <el-form-item label="维修人员" label-width="120px" required>
                     <span>{{data.repairName}}</span>
                 </el-form-item>
-                <el-form-item label="维修联系方式" label-width="120px" required>
+                <el-form-item label="联系方式" label-width="120px" required>
                     <span>{{data.repairContact}}</span>
                 </el-form-item>
                 <el-form-item label="受理时间" label-width="120px" required>
@@ -85,35 +85,35 @@ import { getUri } from '@/utils/oss';
             }
         },
         methods:{
-            // onExceed() {
-            //     this.$message('只能上传三张图片')
-            // },
-            // accept() {
-            //     this.$emit('accept');
-            // },
-            // del() {
-            //     this.$emit('del');
-            // },
             handleClose() {
                 this.$emit("upsee", false );
             },
             getTime(timestamp, format) {
                 if (timestamp == null) return '/';
                 return time.timestampToFormat(timestamp, format);
+            },
+            getData() {
+                var that = this.data;
+                this.time = this.getTime(that.playTime, 'yyyy-MM-dd HH:mm'); 
+                this.acceptTime = this.getTime(that.acceptTime, 'yyyy-MM-dd HH:mm'); 
+                this.rejectTime = this.getTime(that.rejectTime, 'yyyy-MM-dd HH:mm'); 
+                this.faultType = that.faultType == 1 ? '住户' : that.faultType == 2 ? '公共' : '其它';
+                this.faultStatus = that.faultStatus == 0 ? '已取消' : that.faultStatus == 1 ? '已提交' : 
+                that.faultStatus == 2 ? '已受理' : that.faultStatus == 3 ? '已指派' : that.faultStatus == 4 ? '已完成' : '已驳回'
+                //图片
+                // this.uri = that.faultAccessory;
+                if(that.faultAccessory[0]) {
+                    getUri(that.faultAccessory[0],(uri)=> {
+                        this.uri = uri;
+                    });
+                }else {
+                    return false;
+                }
             }
         },
         props: ["msg","data"],
         created() {
-            let that = this.data;
-            this.time = this.getTime(that.playTime, 'yyyy-MM-dd HH:mm'); 
-            this.acceptTime = this.getTime(that.acceptTime, 'yyyy-MM-dd HH:mm'); 
-            this.rejectTime = this.getTime(that.rejectTime, 'yyyy-MM-dd HH:mm'); 
-            this.faultType = that.faultType == 1 ? '住户' : that.faultType == 2 ? '公共' : '其它';
-            this.faultStatus = that.faultStatus == 0 ? '已取消' : that.faultStatus == 1 ? '已提交' : 
-            that.faultStatus == 2 ? '已受理' : that.faultStatus == 3 ? '已指派' : that.faultStatus == 4 ? '已完成' : '已驳回'
-            //图片
-            this.uri = that.faultAccessory;
-            // console.log(121,this.uri);
+            this.getData();
         }
 
     }

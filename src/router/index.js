@@ -195,8 +195,7 @@ const router = new Router({
     }
   ]
 })
-let errorList = ['/home/nav/communityIoT/record','/home/nav/side/carport','/home/nav/side/charge','/home/nav/propertyService/message'];//记录暂时没开发的
-
+let errorList = ['/home/nav/communityIoT/record','/home/nav/propertyService/message'];//记录暂时没开发的
 router.beforeEach((to, from, next) => {
   if(errorList.find((val) => { return val == to.path})) {
     alert('该功能未开发');
