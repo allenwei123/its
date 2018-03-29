@@ -2,7 +2,7 @@
       <el-dialog :title="titleFont" :visible.sync="msg" :before-close="handleClose">
         <el-form :model="form" :rules="rules" ref="ruleForm" class="demo-form-inline">
 
-            <el-form-item label="房间编号" :label-width="formLabelWidth" prop="code" class="c-must">
+            <el-form-item label="房间编号" :label-width="formLabelWidth" prop="name" class="c-must">
             <el-input v-model="form.name"></el-input>
             </el-form-item>
 

@@ -7,7 +7,7 @@
             <el-form-item v-if="show" label="用户ID：" :label-width="formLabelWidth" prop="userId" class="c-must">
               <el-input v-model="form.userId">JSON.parse(localStorage.getItem("userInfo")).id</el-input>
             </el-form-item>
-            <el-form-item label="车牌号码：" :label-width="formLabelWidth" prop="communityId" class="c-must">
+            <el-form-item label="车牌号码：" :label-width="formLabelWidth" prop="carNo" class="c-must">
               <el-col :span="12">
                 <el-input v-model="form.carNo" placeholder="请输入车牌号"></el-input>
               </el-col>
@@ -80,10 +80,6 @@ export default {
         carNo: '',
         postCode: 'SECURITY',
         empl: ''
-        // carType: '',
-        // carColor: '',
-        // drivingPermit: '',
-        // drivingPermitPicUrl: null
       },
       rules: {
         carNo: [{required: true, message: '请输入车牌号', trigger: 'blur,change' }],
@@ -126,6 +122,18 @@ export default {
         this.showInfo('车牌号码不能为空')
         return;
       }
+      
+      let regex =new RegExp('^([\u4e00-\u9fa5][a-zA-Z](([DF](?![a-zA-Z0-9]*[IO])[0-9]{4,5})|([0-9]{5}[DF])))|([冀豫云辽黑湘皖鲁苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼渝京津沪新京军空海北沈兰济南广成使领A-Z]{1}[a-zA-Z0-9]{5,6}[a-zA-Z0-9挂学警港澳]{1})$');
+
+      if(!this.form.carNo.length){
+        this.showInfo('车牌号码不能为空');
+        return;
+      }else if(!regex.test(this.form.carNo)) {
+        this.showInfo('车牌号不正确');
+        return;
+      }
+
+
       if (!this.form.postCode.length) {
         this.showInfo('请选择岗位')
         return;
@@ -176,18 +184,16 @@ export default {
       params['communityId'] = this.$store.getters.communityId;
       params['userId'] = this.form.empl;
       params['carNo'] = this.form.carNo;
-      // params['clientType'] = '1001';
-      // let clientType = '1001'; 
-      // console.log(this.form.empl);
-      console.log(params);
-      // console.log(clientType)
       let url = '/vehicle/applyCarNum/property';
-      // let url = `/vehicle/applyCarNum?clientType=${clientType}`
       console.log(url);
       this.$xttp.post(url, params).then(res => {
         this.loading = false;
         if(res.errorCode === 0) {
           this.ij = false;
+          this.$message({
+            message: "新增车辆成功",
+            type: "success"
+          });
           this.$emit('reload');
         }
       }).catch(() => {
