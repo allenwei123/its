@@ -182,8 +182,8 @@ export default {
       let communityId = this.$store.getters.communityId;
       this.$xttp.get(`/user/property/${communityId}/post-list`).then(res => {
         if(res.success) {
-          console.log(res);
           this.tableData = res.data;
+          this.total = res.data.length;
         }
       })
     },
@@ -211,20 +211,9 @@ export default {
       this.loading = true;
       this.$xttp.get("/community/page",{params:obj})
       .then(res => {
-        if (!res.errorCode) {
+        if (res.success) {
           this.tableData = res.data.records;
           this.currentPage = res.data.currentPage;
-          this.total = res.data.total;
-          this.tableData.forEach(item => {
-            let isdistrict = item.district || '';
-            item.as = item.province + item.city + isdistrict;
-            if (item.createAt) {
-              item.time1 = new Date(item.createAt)
-                .toISOString()
-                .split(".")[0]
-                .replace("T", " ");
-            }
-          });
           this.$router.push({path:this.$route.path,query:{page: nPage }})
         }
         this.loading = false;

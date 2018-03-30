@@ -9,7 +9,7 @@
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
             <el-form-item style="float: right; margin-bottom: 4px;">
-              <el-button type="primary plain" @click="take(null, $event)">周期管理</el-button>
+              <el-button type="primary plain" @click="cycleMang">周期管理</el-button>
             </el-form-item>
             <el-form-item style="float: right; margin-bottom: 4px;">
               <el-button type="success plain" @click="addProject">新增项目</el-button>
@@ -54,6 +54,10 @@
         <SeePage v-if="isSee" :detail="formDetail" :msg="isSee" @upsee="upsee"></SeePage>
       </transition>
 
+      <transition name="cycle">
+        <CyclePage v-if="isCycle" :msg="isCycle" @reload="query" @upcycle="upcycle" :data="cycleData"></CyclePage>
+      </transition>
+
       <el-dialog title="温馨提示" :visible.sync="visible2">
         <p>请问您确定要删除这条数据吗？</p>
         <div style="text-align: right; marigin: 0">
@@ -68,6 +72,7 @@
 <script>
 import SeePage from './see';
 import AddPage from './add';
+import CyclePage from './cycle';
 
 import { mapGetters } from "vuex";
 import time from '@/utils/time.js';
@@ -79,9 +84,11 @@ import time from '@/utils/time.js';
         show: false,
         isShow: false,
         isSee: false,
+        isCycle: false,
         seeData: null,
         visible2: false,
         delData: null,
+        cycleData: null,
         formDetail: {},
         navDetailData: [
           { id: 0, name: "物业管理" },
@@ -99,7 +106,8 @@ import time from '@/utils/time.js';
     computed: mapGetters(["showAside"]),
     components: {
       SeePage,
-      AddPage
+      AddPage,
+      CyclePage
     },
     methods: {
       query() {
@@ -129,6 +137,13 @@ import time from '@/utils/time.js';
       addProject() {
         this.projectData = null;
         this.isShow = !this.isShow;
+      },
+      cycleMang() {
+        this.cycleData = null,
+        this.isCycle = !this.isCycle;
+      },
+      upcycle(msg){
+        this.isCycle = false;
       },
       change(msg) {
         if (msg == 1) {
@@ -220,6 +235,15 @@ import time from '@/utils/time.js';
 }
 
 .see-enter, .see-leave-active {
+  opacity: 0;
+  transform: translateX(-500px);
+}
+
+.cycle-enter-active, .cycle-leave-active {
+  transition: all 0.5s ease;
+}
+
+.cycle-enter, .cycle-leave-active {
   opacity: 0;
   transform: translateX(-500px);
 }

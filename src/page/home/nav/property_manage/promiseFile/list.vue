@@ -154,7 +154,8 @@
         loading: false,
         total: 0, //列表总数
         seeData: null, //查看数据
-        statusList: [{id: 0, name: '未审核'}, {id: 1, name: '已通过'}, {id: -1, name: '驳回'}, {id: -2, name: '违规'}, {id: 2, name: '已注销'}, {id: 3, name: '已解绑'}], //审核状态下拉框数据
+        // statusList: [{id: 0, name: '未审核'}, {id: 1, name: '已通过'}, {id: -1, name: '驳回'}, {id: -2, name: '违规'}, {id: 2, name: '已注销'}, {id: 3, name: '已解绑'}], //审核状态下拉框数据
+        statusList: [{id: 0, name: '未审核'}, {id: 1, name: '已通过'}, {id: -1, name: '驳回'}, {id: 2, name: '已注销'}], //审核状态下拉框数据
         visible2: false,
         boolDialog: false, //控制打印窗口
         printData: null,
@@ -300,11 +301,12 @@
               this.total = res.data.total;
               this.tableData.forEach(item => {
                 if (item.checkInTime) {
-                  item.time1 = new Date(item.checkInTime)
+                  item.time1 = new Date(item.createAt)
                     .toISOString()
                     .split(".")[0]
                     .replace("T", " ");
                 }
+
                 switch (item.auditStatus) {
                   case 0:
                     item.filterStatus = "未审核";
@@ -317,6 +319,12 @@
                     break;
                   case -2:
                     item.filterStatus = "违规";
+                    break;
+                  case 2:
+                    item.filterStatus = "已注销";
+                    break;
+                  case 3:
+                    item.filterStatus = "已解绑";
                     break;
                 }
                 switch (item.relationship) {

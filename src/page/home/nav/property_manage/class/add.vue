@@ -66,7 +66,7 @@
               </el-col>
             </el-form-item>
 
-            <el-form-item label="备注：" :label-width="formLabelWidth" prop="remark">
+            <el-form-item label="备注：" :label-width="formLabelWidth" prop="remark" class="c-nomust">
               <el-col :span="14">
                 <el-input type="textarea" :rows="2" v-model.trim="form.remark" placeholder="请输入备注"></el-input>
               </el-col>
@@ -109,8 +109,8 @@ export default {
       rules: {
         name: [{required: true, message: '请输入班次', trigger: 'blur'}],
         attendTime: [{ required: true, message: '请选择起始时间', trigger: 'blur' }],
-        offTime: [{ required: true, message: '请选择结束时间', trigger: 'blur' }],
-        remark: [{ required: true, message: '请填写备注', trigger: 'blur' }]
+        offTime: [{ required: true, message: '请选择结束时间', trigger: 'blur' }]
+        // remark: [{ required: true, message: '请填写备注', trigger: 'blur' }]
       },
       postOptions: [],
       current: 1, //1 初始 2：添加后 3：编辑后

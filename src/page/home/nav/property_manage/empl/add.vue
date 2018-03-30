@@ -10,7 +10,7 @@
 
           <el-form-item label="岗位：" :label-width="formLabelWidth" prop="postCode" class="c-must">
             <el-radio-group v-model="form.postCode">
-              <el-radio :label="item.key" :value="item.name" :key="item.name" v-for="(item) in postCodeOptions">{{item.name}}</el-radio>
+              <el-radio :label="item.key" :value="item.name" v-bind:disabled="postDis" :key="item.name" v-for="(item) in postCodeOptions">{{item.name}}</el-radio>
             </el-radio-group>
           </el-form-item>
           
@@ -26,7 +26,7 @@
 
           <el-form-item label="手机号码：" :label-width="formLabelWidth" prop="phone" class="c-must">
             <el-col :span="14">
-              <el-input v-model.trim="form.phone"  placeholder="请输入手机号"></el-input>
+              <el-input v-model.trim="form.phone" v-bind:disabled="phoneDis" placeholder="请输入手机号"></el-input>
             </el-col>
           </el-form-item>
 
@@ -67,6 +67,8 @@ export default {
       checked: false,
       resetPass: false,
       dis: false,
+      phoneDis: false,
+      postDis: false,
       ck: false,
       required: false,
       message: '请输入密码',
@@ -81,7 +83,6 @@ export default {
         communityId: this.$store.getters.communityId,
         communityName: this.$store.getters.communityName,
         propertyId: localStorage.getItem('propertyId')
-        // propertyName:'和谐景苑'
       },
       rules: {
         employeeId: [{required: true, message: '请输入工号', trigger: 'blur' }],
@@ -105,6 +106,8 @@ export default {
       this.resetPass = true;
       this.titleFont = '编辑员工';
       this.dis = true;
+      this.phoneDis = true;
+      this.postDis = true;
       this.required = false;
       this.ck = false;
       if(this.add.sex == 1){

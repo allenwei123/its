@@ -218,7 +218,7 @@ export default {
           if(!res.errorCode){
             this.visible2 = false;
             this.delData = null;
-            this.$message({message:'注销成功',type:'success'});
+            this.$message({message:'车辆注销成功',type:'success'});
             // this.find();
             this.getTableList();
           }

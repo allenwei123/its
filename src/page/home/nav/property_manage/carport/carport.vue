@@ -78,13 +78,13 @@ export default {
       isSou: false,
       tableData: [{
         "id": "a03432bc03d45cc232",
-        "carportName": "和谐景苑地下车库",
-        "address": "广东省广州市海珠区和谐景苑小区332号",
+        "carportName": "和谐警苑地下车库",
+        "address": "广东省广州市海珠区和谐警苑小区332号",
         "carNum": "132",
-        "linkBuild": "和谐景苑小区A区1栋"
+        "linkBuild": "和谐警苑小区A区1栋"
       },{
         "id": "a03432bc03d45cc231",
-        "carportName": "和谐景苑地下车库B",
+        "carportName": "和谐警苑地下车库B",
         "address": "广东省广州市天河区中山大道北223号",
         "carNum": "532",
         "linkBuild": "荷花苑A区1栋"

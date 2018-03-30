@@ -6,6 +6,7 @@
               <el-date-picker
                 v-model="form.date"
                 type="date"
+                :disabled="editDate"
                 value-format="yyyy-MM-dd"
                 format="yyyy-MM-dd"
                 placeholder="请选择日期">
@@ -13,7 +14,7 @@
             </el-form-item>
 
             <el-form-item label="岗位：" prop="postCode">
-              <el-select v-model="form.postCode" @change="changePostCode()" placeholder="岗位">
+              <el-select v-model="form.postCode" @change="changePostCode()" placeholder="岗位" :disabled="disabledPost">
                 <el-option v-for="item in postOptions" :key="item.key" :label="item.name" :value="item.key">
                 </el-option>
               </el-select>
@@ -22,14 +23,15 @@
             <hr style="height:1px;border:none;border-top:1px dashed #cecece;" />
 
             <el-form-item label="员工：" prop="empl" class="c-must" style="display:block;margin-top:20px;">
-              <el-select v-model="form.empl" placeholder="请选择员工" @change="changEmpl">
+              <el-select v-model="form.empl" placeholder="请选择员工" @change="changEmpl" :disabled="disabledPost">
                 <el-option v-for="item in emplData" :key="item.userId" :label="item.userName" :value="item.userId">
                 </el-option>
               </el-select>
             </el-form-item>
             <el-form-item v-if="isSee" label="班次：" prop="class" class="c-must" style="display:block;margin-top:25px;float:left;">
               <el-radio-group v-model="form.class">
-                <el-radio @change="changeRadio" :label="item.id" :value="item.name" :key="item.name" v-for="(item) in classData" border>{{item.name}}</el-radio>
+                <el-radio @change="changeRadio" :checked="checked" :label="item.name" :key="item.name" v-for="(item) in classData" border></el-radio>
+                <!-- <el-radio @change="changeRadio" :checked="checked" :label="item.name" :value="item.id" :key="item.name" v-for="(item) in classData" border></el-radio> -->
               </el-radio-group>
             </el-form-item>
             <el-form-item v-if="isShow">
@@ -87,6 +89,10 @@ export default {
       titleFont:'新增排班',
       isSee: false,
       isShow: false,
+      checked: false,
+      disabledPost: false,
+      disabled1: false,
+      editDate: false,
       form: {
         postCode: 'SECURITY',
         date: '',
@@ -147,19 +153,22 @@ export default {
       this.$xttp.post(`/task/class/page`,params)
       .then(res => {
         if(res.success) {
+          console.log(res);
           if(res.data.total == 0){
             this.isSee = false;
           }
           else{
             this.isSee = true;
             this.classData = res.data.records;
+            console.log(res.data.records);
           }
         }
       })
     },
     changeRadio() {
       this.isShow = true;
-      let id = this.form.class;
+      let obj = this.classData.find(item => this.form.class == item.name);
+      let id = obj.id;
       this.$xttp.get(`task/class/${id}/detail`)
           .then(res => {
             if( res.success) {
@@ -249,13 +258,44 @@ export default {
     }
   },
   created() {
-    this.initPost();
-    this.initEmpl();
-    this.initClass();
+    
     if(this.add) {
       // 判定此时组件为 编辑
-      this.form = this.add;
+      let id = this.add.id;
+      // this.form = this.add;
       this.titleFont = "编辑排班";
+      let url = `/task/schedule/${id}/detail`;
+      this.$xttp.get(url).then(res => {
+        if(res.success) {
+          this.isSee = true;
+          this.isShow = true;
+          let records = res.data;
+          this.form.postCode = records.postCode;
+          this.form.empl = records.userName;
+          this.form.name = records.className;
+          this.form.offPlace = records.offPlace;
+          this.form.offTimeStr = records.offTimeStr;
+          this.form.attendTimeStr = records.attendTimeStr;
+          this.form.attendPlace = records.attendPlace;
+          this.form.task = records.task;
+          this.form.remark = records.remark;
+          console.log(this.add);
+          // this.form.class = this.add.classId;
+          this.form.class = this.add.className;
+          this.initPost();
+          this.initClass();
+          this.form.date = time.timestampToTime(records.workDate);
+          this.checked = true;
+          this.disabled1 = true;
+          this.disabledPost = true;
+          this.editDate = true;
+        }
+      })
+    }else{
+      this.initPost();
+      this.disabled1 = false;
+      this.initEmpl();
+      this.initClass();
     }
   }
 };

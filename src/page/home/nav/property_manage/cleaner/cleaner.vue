@@ -52,7 +52,8 @@
           <template slot-scope="scope">{{getTime(scope.row.createAt, 'yyyy-MM-dd hh:mm')}}</template>
         </el-table-column>
         <el-table-column label="凭证" min-width="300" align="center" :show-overflow-tooltip="true">
-          <template slot-scope="scope">{{ scope.row.url }}</template>
+          <!-- <template slot-scope="scope">{{ scope.row.url }}</template> -->
+          <template slot-scope="scope"><el-button type="text" @click="showP(scope.row.url)" size="small">{{scope.row.url}}</el-button></template>
         </el-table-column>
         <!-- <el-table-column fixed="right" align="center" label="操作" width="200">
           <template slot-scope="scope">
@@ -81,6 +82,13 @@
           <el-button type="primary" size="mini" @click="confirmDel">确定</el-button>
         </div>
       </el-dialog> -->
+      <el-dialog
+        title="凭证"
+        :visible.sync="dialogVisible"
+        width="40%"
+        :before-close="handleClose">
+        <img :src="srcP" width="100%" height="100%" />
+      </el-dialog>
     </el-main>
   </el-container>
 </template>
@@ -91,6 +99,7 @@
 
 import { mapGetters } from "vuex";
 import time from '@/utils/time.js';
+import { getUri } from '@/utils/oss.js';
   export default {
     name: 'class',
     data () {
@@ -98,10 +107,10 @@ import time from '@/utils/time.js';
         loading: false,
         show: false,
         taskType :'2',
+        dialogVisible: false,
         navDetailData: [
           { id: 0, name: "物业管理" },
-          { id: 1, name: "排班管理" },
-          { id: 2, name: "保洁考勤" }
+          { id: 1, name: "保洁考勤" }
         ],
         formInline: {
           empl: '',
@@ -214,6 +223,15 @@ import time from '@/utils/time.js';
       },
       changeEmpl(){
         this.query()
+      },
+      showP(pic) {
+        getUri(pic,uri => {
+          this.srcP = uri;
+          this.dialogVisible = true;
+        });
+      },    
+      handleClose() {
+        this.dialogVisible = false;
       }
     },
     created() {
