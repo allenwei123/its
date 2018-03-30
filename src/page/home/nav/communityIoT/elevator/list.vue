@@ -8,13 +8,13 @@
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
             <el-select v-model="value1" placeholder="品牌" clearable  @change="changeStatus">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+              <el-option v-for="item in options" :key="item.id" :label="item.brandName" :value="item.id"></el-option>
             </el-select>
             <el-select v-model="value2" placeholder="型号" clearable  @change="changeStatus">
               <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
-            <el-select v-model="value2" placeholder="全部楼栋" clearable  @change="changeStatus">
-              <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            <el-select v-model="value3" placeholder="全部楼栋" clearable  @change="changeStatus">
+              <el-option v-for="item in options2" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
             <el-form-item>
               <el-input placeholder="梯号" v-model.trim="input"></el-input>
@@ -44,9 +44,9 @@
             <el-table-column label="状态" min-width="120" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{getStatusName(scope.row.elevatorStatus)}}</template>
             </el-table-column>
-            <el-table-column label="操作" width="200" :fixed="tableData.length ? 'right' : '/'" align="left">
+            <el-table-column label="操作" width="120" :fixed="tableData.length ? 'right' : '/'" align="left">
               <template slot-scope="scope">
-                <!-- <el-button type="primary" size="mini" @click="viewFault(scope.row)">故障记录</el-button> -->
+                <!-- <el-button type="primary" size="mini" @click="viewFault(scope.row)">维修记录</el-button> -->
                 <el-button type="primary" size="mini" @click="viewRecord(scope.row)">使用记录</el-button>
               </template>
             </el-table-column>
@@ -69,35 +69,20 @@
       return {
         //电梯品牌
         value1: '',
-        options: [ {
-          value: '0',
-          label: '戈尔'
-        }, {
-          value: '1',
-          label: '格尔马'
-        }, {
-          value: '-1',
-          label: 'taiger'
-        }],
+        options: [],
         //型号
         value2: '',
-        options2: [ {
-          value: '0',
-          label: 'l'
-        }, {
-          value: '1',
-          label: 's'
-        }, {
-          value: '-1',
-          label: 'sss'
-        }],
+        options2: [],
         navDetailData: [
           { id: 0, name: "社区物联" },
           { id: 1, name: "电梯管理" },
           { id: 2, name: "电梯档案" }
         ],
+        value3:'',//楼栋
+        value4:'',//梯号
         loading: false,
         tableData: [],
+        communityId:this.$store.getters.communityId,
         pageSize: 10,
         total: 0,
         currentPage: 1,
@@ -115,6 +100,22 @@
           this.getTableList();
         }
       },
+      getBrandList(){//获取品牌列表
+        this.$xttp.get('/communityIoT/elevator/brand-list')
+          .then(res => {
+            if (res.errorCode === 0) {
+              this.options = res.data.records;
+            }
+          })
+      },
+      getFloorList() {
+        this.$xttp.get('community/building/list',{params:{communityId:this.communityId}})
+          .then(res => {
+            if(!res.errorCode) {
+              this.options2 = res.data;
+            }
+          })
+      },
       changeStatus() {
         this.query();
       },
@@ -123,11 +124,20 @@
         let url = `/communityIoT/elevator/list?page=${this.currentPage}&size=${this.pageSize}`;
         let params = {};
         // 临时 id
-        params['communityId'] = "5ab612aa1b2da567cf0d4181";
-        if (this.q_input) {
-          params['name'] = this.q_input;
+        params['communityId'] = this.communityId;
+        if(this.value1) {
+          params['brandId'] = this.value1;//品牌查询
         }
-        this.$xttp.post(url, params).then(res => {
+        if(this.value2){
+          params['elevatorId'] = this.value2;//电梯编号
+        }
+        if(this.value3) {
+          params['buildingId'] = [this.value3];//楼栋查询
+        }
+        if(this.input) {
+          params['name'] = this.input;//梯号
+        }
+         this.$xttp.post(url, params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {
             this.tableData = res.data.records;
@@ -146,10 +156,10 @@
         };
         return names[status];
       },
-      // 查看故障记录
+      // 查看维修记录
       viewFault(item) {
         this.$router.push({
-          path: 'elevatorFault',
+          path: 'repair',
           query: {
             id: item.id
           }
@@ -167,6 +177,8 @@
     },
     created() {
       this.query();
+      this.getBrandList();
+      this.getFloorList();
     }
   }
 </script>

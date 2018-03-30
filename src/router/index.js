@@ -151,6 +151,10 @@ const router = new Router({
                 component: (resolve) => require(["@/page/home/nav/communityIoT/elevator/list"], resolve)
               },
               {
+                path: 'repair',
+                component: (resolve) => require(["@/page/home/nav/communityIoT/elevator/repair"], resolve)
+              },
+              {
                 path: 'elevatorFault',
                 component: (resolve) => require(["@/page/home/nav/communityIoT/elevator/fault"], resolve)
               },

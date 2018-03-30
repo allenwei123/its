@@ -185,7 +185,7 @@ export default {
       params['userId'] = this.form.empl;
       params['carNo'] = this.form.carNo;
       let url = '/vehicle/applyCarNum/property';
-      console.log(url);
+
       this.$xttp.post(url, params).then(res => {
         this.loading = false;
         if(res.errorCode === 0) {

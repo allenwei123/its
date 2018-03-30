@@ -51,8 +51,11 @@
         <el-table-column label="考勤时间" min-width="200" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{getTime(scope.row.createAt, 'yyyy-MM-dd hh:mm')}}</template>
         </el-table-column>
-        <el-table-column label="凭证" min-width="300" align="center" :show-overflow-tooltip="true">
+        <!-- <el-table-column label="凭证" min-width="300" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.url }}</template>
+        </el-table-column> -->
+        <el-table-column label="凭证" min-width="300" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope"><el-button type="text" size="small" @click="showP(scope.row.url)">{{scope.row.url}}</el-button></template>
         </el-table-column>
         <!-- <el-table-column fixed="right" align="center" label="操作" width="200">
           <template slot-scope="scope">
@@ -81,6 +84,13 @@
           <el-button type="primary" size="mini" @click="confirmDel">确定</el-button>
         </div>
       </el-dialog> -->
+      <el-dialog
+        title="凭证"
+        :visible.sync="dialogVisible"
+        width="40%"
+        :before-close="handleClose">
+        <img :src="srcP" width="100%" height="100%" />
+      </el-dialog>
     </el-main>
   </el-container>
 </template>
@@ -90,135 +100,158 @@
 // import AddPage from './add';
 
 import { mapGetters } from "vuex";
-import time from '@/utils/time.js';
-  export default {
-    name: 'class',
-    data () {
-      return {
-        loading: false,
-        show: false,
-        taskType :'1',
-        navDetailData: [
-          { id: 0, name: "物业管理" },
-          { id: 1, name: "排班管理" },
-          { id: 2, name: "保安考勤" }
-        ],
-        formInline: {
-          empl: '',
-          rangeDate: '',
-          // startDate: '',
-          // endDate: ''
-          start:'',
-          end:''
-        },
-        pickerOptions: {
-          shortcuts: [{
-          text: '最近一周',
-          onClick(picker) {
+import {getUri} from "@/utils/oss.js";
+import time from "@/utils/time.js";
+export default {
+  name: "class",
+  data() {
+    return {
+      loading: false,
+      show: false,
+      taskType: "1",
+      dialogVisible: false,
+      srcP: "",
+      navDetailData: [{ id: 0, name: "物业管理" }, { id: 1, name: "保安考勤" }],
+      formInline: {
+        empl: "",
+        rangeDate: "",
+        // startDate: '',
+        // endDate: ''
+        start: "",
+        end: ""
+      },
+      pickerOptions: {
+        shortcuts: [
+          {
+            text: "最近一周",
+            onClick(picker) {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', [start, end]);
-          }
-          }, {
-          text: '最近一个月',
-          onClick(picker) {
+              picker.$emit("pick", [start, end]);
+            }
+          },
+          {
+            text: "最近一个月",
+            onClick(picker) {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit('pick', [start, end]);
-          }
-          }, {
-          text: '最近三个月',
-          onClick(picker) {
+              picker.$emit("pick", [start, end]);
+            }
+          },
+          {
+            text: "最近三个月",
+            onClick(picker) {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-              picker.$emit('pick', [start, end]);
+              picker.$emit("pick", [start, end]);
+            }
           }
-          }]
-        },
-        postCode:'SECURITY',
-        emplData: [],
-        tableData: [],
-        pageSize: 10,
-        total: 0,
-        currentPage: 1,
-        input: '',
-        q_input: null
+        ]
+      },
+      postCode: "SECURITY",
+      emplData: [],
+      tableData: [],
+      pageSize: 10,
+      total: 0,
+      currentPage: 1,
+      input: "",
+      q_input: null
+    };
+  },
+  computed: mapGetters(["showAside"]),
+  components: {
+    // SeePage,
+    // AddPage
+  },
+  methods: {
+    query() {
+      if (this.currentPage !== 1) {
+        this.currentPage = 1;
+      } else {
+        this.getTableList();
       }
     },
-    computed: mapGetters(["showAside"]),
-    components: {
-      // SeePage,
-      // AddPage
-    },
-    methods: {
-      query() {
-        if (this.currentPage !== 1) {
-          this.currentPage = 1;
-        }
-        else {
-          this.getTableList();
-        }
-      },
-      getTableList() {
-        this.loading = true;
-        let params = {};
-        params.communityId = this.$store.getters.communityId;
-        params.taskType = this.taskType;
-        if(this.formInline.empl){
-          params.userName = this.formInline.empl;
-        } else {
-          delete params.userName;
-        }
+    getTableList() {
+      this.loading = true;
+      let params = {};
+      params.communityId = this.$store.getters.communityId;
+      params.taskType = this.taskType;
+      if (this.formInline.empl) {
+        params.userName = this.formInline.empl;
+      } else {
+        delete params.userName;
+      }
 
-        if(this.formInline.rangeDate == '' || this.formInline.rangeDate == null || this.formInline.rangeDate == 'undefined'){
-          params.startDate = time.dateFormat(new Date(),'yyyy-MM-01')
-          params.endDate = time.dateFormat(new Date(),'yyyy-MM-30')
-        } else {
-          params.startDate = (this.formInline.rangeDate)[0];
-          params.endDate = (this.formInline.rangeDate)[1]
-        }
+      if (
+        this.formInline.rangeDate == "" ||
+        this.formInline.rangeDate == null ||
+        this.formInline.rangeDate == "undefined"
+      ) {
+        params.startDate = time.dateFormat(new Date(), "yyyy-MM-01");
+        params.endDate = time.dateFormat(new Date(), "yyyy-MM-30");
+      } else {
+        params.startDate = this.formInline.rangeDate[0];
+        params.endDate = this.formInline.rangeDate[1];
+      }
 
-        let url = `/task/record/page?page=${this.currentPage}&size=${this.pageSize}`;
-        this.$xttp.post(url, params).then(res => {
+      let url = `/task/record/page?page=${this.currentPage}&size=${
+        this.pageSize
+      }`;
+      this.$xttp
+        .post(url, params)
+        .then(res => {
           this.loading = false;
           if (res.success) {
             this.tableData = res.data.records;
             this.total = res.data.total;
           }
-        }).catch(() => {
+        })
+        .catch(() => {
           this.loading = false;
-        })
-      },
-
-      initEmpl() {
-        let communityId = this.$store.getters.communityId
-        let postCode = this.postCode
-        this.$xttp.get(`/user/property/${communityId}/user-list`,{params:{postCode:postCode}})
-        .then(res => {
-          if(!res.errorCode) {
-            this.emplData = res.data  
-          }
-        })
-      },
-      getTime(timestamp, format) {
-        if (timestamp == null) return '/';
-        return time.timestampToFormat(timestamp, format);
-      },
-      changRangeDate(){
-        this.query();
-      },
-      changeEmpl(){
-        this.query()
-      }
+        });
     },
-    created() {
-      this.initEmpl()
+
+    initEmpl() {
+      let communityId = this.$store.getters.communityId;
+      let postCode = this.postCode;
+      this.$xttp
+        .get(`/user/property/${communityId}/user-list`, {
+          params: { postCode: postCode }
+        })
+        .then(res => {
+          if (!res.errorCode) {
+            this.emplData = res.data;
+          }
+        });
+    },
+    getTime(timestamp, format) {
+      if (timestamp == null) return "/";
+      return time.timestampToFormat(timestamp, format);
+    },
+    changRangeDate() {
       this.query();
+    },
+    changeEmpl() {
+      this.query();
+    },
+    showP(pic) {
+      getUri(pic,uri => {
+        this.srcP = uri;
+        this.dialogVisible = true;
+      });
+    },
+    handleClose() {
+      this.dialogVisible = false;
     }
+  },
+  created() {
+    this.initEmpl();
+    this.query();
   }
+};
 </script>
 
 <style scoped lang="scss">
@@ -248,11 +281,13 @@ import time from '@/utils/time.js';
   }
 }
 // 切换动画
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: all 0.5s ease;
 }
 
-.fade-enter, .fade-leave-active {
+.fade-enter,
+.fade-leave-active {
   opacity: 0;
   transform: rotateY(180deg);
 }
