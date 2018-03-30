@@ -72,17 +72,17 @@
         <template slot-scope="scope">{{ scope.row.filterStatus }}</template>
       </el-table-column>
 
-      <el-table-column label="审核人员" width="200" :show-overflow-tooltip="true" align="center">
+      <!-- <el-table-column label="审核人员" width="200" :show-overflow-tooltip="true" align="center">
         <template slot-scope="scope">{{ scope.row.auditor }}</template>
       </el-table-column>
 
       <el-table-column label="审核时间" width="200" :show-overflow-tooltip="true" align="center">
         <template slot-scope="scope">{{ scope.row.auditTime | time('yyyy-MM-dd HH:mm:ss') }}</template>
-      </el-table-column>
+      </el-table-column> -->
 
-      <el-table-column align="center" fixed="right" label="操作" width="200">
+      <el-table-column align="center" fixed="right" label="操作" width="250">
         <template slot-scope="scope">
-          <el-button @click="printHandle(scope.row)" v-if="scope.row.auditStatus == 1" type="primary" size="small">
+          <el-button @click="printHandle(scope.row)" type="primary" size="small">
             认证详情
           </el-button>
           <el-button @click="handle(scope.row,1)" v-if="scope.row.auditStatus == 0" type="success" size="small">审核
@@ -161,7 +161,9 @@
 
         visible3: false,
         pass: false,
-        refuse: false
+        refuse: false,
+        auditData:null,
+        num:''
       };
     },
     computed: mapGetters(["showAside"]),
@@ -191,22 +193,21 @@
           //1 审核  2 驳回
           status = num == 1 ? 1 : -1;
           msg = num == 1 ? '审核' : '驳回';
-          let id = row.id;
 
           if(num == 1){
             this.visible3 = true;
             this.pass = true;
             this.refuse = false;
-            this.id = id;
-            this.status = 1;
+            this.auditData = row;
+            this.num = num;
           }
 
           if (num == 2){
             this.visible3 = true;
             this.pass = false;
             this.refuse = true;
-            this.id = id;
-            this.status = -1;
+            this.auditData = row;
+            this.num = num;
           }
         } else if (num == 3) {
           this.visible2 = true;
@@ -218,14 +219,20 @@
         this.boolDialog = false;
       },
       confirmPR() {
+        console.log(this.auditData);
+        console.log(this.auditData.id);
+        console.log(this.num)
         this.$xttp
-        .post(`/user/property/audit`, {id: row.id, auditStatus: status})
+        .post(`/user/property/audit`, {id: this.auditData.id, auditStatus: this.num})
         .then(res => {
           if (!res.errorCode) {
             this.$message({
-              message: `温馨提示，该次${msg}成功！`,
+              message: '温馨提示：认证成功!',
               type: "success"
             });
+            this.visible3 = false;
+            this.auditData = null;
+            this.num = '';
             this.find();
           }
         });
@@ -255,7 +262,7 @@
           .then(res => {
             if(!res.errorCode){
               this.floorOptions = res.data;
-              this.formInline.floorSer = this.floorOptions[0].id;
+              // this.formInline.floorSer = this.floorOptions[0].id;
             }
             if(num) {
               this.sendAjax(1,this.formInline.floorSer)

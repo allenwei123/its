@@ -26,7 +26,7 @@
 
           <el-form-item label="手机号码：" :label-width="formLabelWidth" prop="phone" class="c-must">
             <el-col :span="14">
-              <el-input v-model.trim="form.phone" v-bind:readOnly ="readOnly" placeholder="请输入手机号"></el-input>
+              <el-input v-model.trim="form.phone"  placeholder="请输入手机号"></el-input>
             </el-col>
           </el-form-item>
 
@@ -38,8 +38,8 @@
           
           <el-form-item label="密码：" :label-width="formLabelWidth" prop="password" class="c-must">
             <el-col :span="10">
-              <el-input v-model.trim="form.password" type="password" v-bind:disabled ="disabled" placeholder="请输入密码"></el-input>
-              <el-checkbox v-if="resetPass" v-model="checked" @change="changeChecked">重置密码</el-checkbox>
+              <el-input v-model.trim="form.password" type="password" v-bind:disabled ="dis" placeholder="请输入密码"></el-input>
+              <el-checkbox v-if="resetPass" v-bind:checked="ck" v-model="checked" @change="changeChecked">重置密码</el-checkbox>
             </el-col>
           </el-form-item>
 
@@ -52,6 +52,7 @@
 </template>
 
 <script>
+import fun from "@/utils/fun.js";
 const maleOptions = [
   { key: '0', value: '未知' },
   { key: '1', value: '男' },
@@ -65,9 +66,9 @@ export default {
       titleFont:'添加员工',
       checked: false,
       resetPass: false,
-      disabled: false,
+      dis: false,
+      ck: false,
       required: false,
-      readOnly: false,
       message: '请输入密码',
       form: {
         employeeId: '',
@@ -85,7 +86,7 @@ export default {
       rules: {
         employeeId: [{required: true, message: '请输入工号', trigger: 'blur' }],
         userName: [{required: true, message: '请输入名称', trigger: 'blur' }],
-        phone: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
+        phone: [{ required: true, message: '请输入正确号码', trigger: 'blur', pattern: /^1[34578]\d{9}$/}],
         // password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
         sex: [{ required: true, message: '请选择性别', trigger: 'blur' }],
         postCode: [{ required: true, message: '请选择岗位', trigger: 'blur' }]
@@ -103,9 +104,9 @@ export default {
       console.log(this.form);
       this.resetPass = true;
       this.titleFont = '编辑员工';
-      this.disabled = true;
+      this.dis = true;
       this.required = false;
-      this.readOnly = true;
+      this.ck = false;
       if(this.add.sex == 1){
         this.form.sex = '男';
       } if(this.add.sex == 2){
@@ -121,14 +122,14 @@ export default {
       this.$emit("upup", this.current );
     },
     changeChecked(){
-      if(this.form.checked){
+      if(this.ck){
         this.form.password = '';
-        this.form.checked = false;
-        this.disabled = false;
+        this.ck = false;
+        this.dis = true;
       }else{
-        this.form.checked = true;
+        this.ck = true;
         this.form.password = '';
-        this.disabled = true;
+        this.dis = false;
       }
     },
     initPost(){

@@ -119,10 +119,6 @@ export default {
   },
   props: ["msg","add"],
   created() {
-    // if(this.add){//判断此时组件为 编辑
-    //   this.form = this.add;
-    //   this.titleFont = '编辑员工';
-    // }
     this.initRole()
     if(this.add){  //判断此时组件为编辑
     this.form = this.add;

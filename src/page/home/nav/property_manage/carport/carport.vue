@@ -11,13 +11,13 @@
           <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
         </el-table-column>
         <el-table-column v-if="show" align="center" prop="id" label=""></el-table-column>
-        <el-table-column label="车库名称" width="250" align="center" :show-overflow-tooltip="true">
+        <el-table-column label="车库名称" width="200" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.carportName}}</template>
         </el-table-column>
-        <el-table-column label="车位数量" width="200" align="center" :show-overflow-tooltip="true">
+        <el-table-column label="车位数量" width="80" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope"><a href="">{{ scope.row.carNum}}</a></template>
         </el-table-column>
-        <el-table-column label="具体地址" width="250" align="center" :show-overflow-tooltip="true">
+        <el-table-column label="具体地址" width="300" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.address}}</template>
         </el-table-column>
         <el-table-column label="关联楼栋" width="200" align="center" :show-overflow-tooltip="true">
@@ -65,7 +65,7 @@
 
 <script>
 // import AddPage from "./add";
-// import SeePage from "./see";
+import SeePage from "./see";
 import { mapGetters } from "vuex";
 import time from '@/utils/time.js';
 
@@ -120,7 +120,7 @@ export default {
   computed: mapGetters(["showAside"]),
   components: {
     //   AddPage,
-    //   SeePage
+      SeePage
   },
   methods: {
     handleClick(row) {
