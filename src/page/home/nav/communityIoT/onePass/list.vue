@@ -72,8 +72,8 @@
       <div class="c-block">
         <el-pagination
           @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-size="10"
+          :current-page.sync="currentPage"
+          :page-size="pageSize"
           layout="total, prev, pager, next, jumper"
           :total="total">
         </el-pagination>
@@ -192,9 +192,9 @@ export default {
         delete obj.keyType ;
       }
       obj['keyNo'] = this.input;
-      console.log('obj',obj);
       this.loading = true;
-      this.$xttp.post(`/user/card/get/list`,obj)
+      let url = `user/card/get/list?page=${this.currentPage}&size=${this.pageSize}`;
+      this.$xttp.post(url,obj)
       .then(res => {
         if (!res.errorCode) {
           console.log('res',res);
