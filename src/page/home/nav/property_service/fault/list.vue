@@ -406,6 +406,12 @@
         params['communityId'] = communityId;
         let url = `property/fault/queryFaultPage?page=${this.currentPage}&size=${this.pageSize}`;
         this.loading = true;
+        if(this.value6) {
+          let a = new Date(this.value6[0]);
+          let b = new Date(this.value6[1]);
+          params['playTimeBegin'] = a.getFullYear() + '-' +(a.getMonth() < 9 ? '0': '')  + (a.getMonth() + 1) + '-' + (a.getDate() < 9 ? '0': '') + a.getDate();
+          params['playTimeEnd'] = b.getFullYear() + '-' +(b.getMonth() < 9 ? '0': '')  + (b.getMonth() + 1) + '-' + (b.getDate() < 9 ? '0': '') + b.getDate();
+        }
         console.log(params);
         this.$xttp.post(url, params).then(res => {
           if (res.errorCode === 0) {

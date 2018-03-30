@@ -34,7 +34,7 @@
               <el-button type="primary" @click="takeAll">全部生效</el-button>
             </el-form-item>
             <el-form-item style="float: right">
-              <el-button type="primary">一键催交</el-button>
+              <el-button type="primary" @click="callAll">一键催交</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -132,6 +132,16 @@
           </div>
       </el-dialog>
 
+      <!-- 一键催交 -->
+      <el-dialog title="温馨提示" :visible.sync="visible3">
+          <p class="p-center">一键催交</p>
+          <p>是否提醒物业管理费超期未缴账单相关业主尽快缴费！</p>
+          <div style="text-align: right; margin: 0">
+            <el-button size="mini" type="text" @click="visible3 = false">取消</el-button>
+            <el-button type="primary" size="mini" @click="confirmCall">确定</el-button>
+          </div>
+      </el-dialog>
+
     </el-main>
   </el-container>
 </template>
@@ -186,6 +196,7 @@ export default {
       //楼栋查询
       value2: '',
       options2: '',
+      visible3: false,
     };
   },
   methods: {
@@ -225,6 +236,29 @@ export default {
     },
     editChange() {
       this.show = false;
+    },
+    //一键催交
+    callAll() {
+      this.visible3 = true;
+    },
+    confirmCall() {
+      this.visible3 = false;
+      this.pushAll();
+    },
+    pushAll() {
+      let url = `fees/property-bill/${this.$store.getters.communityId}/push-all-overdue-bill`;
+      this.$xttp.get(url).then(res => {
+        if(res.errorCode === 0){
+          this.loading = false;
+          this.$message({
+            message: '一键催交成功',
+            type: 'success'
+          });
+        }
+      }).catch(() => {
+        this.loading = false;
+        this.$message.error('失败');
+      })    
     },
     //全部生效
     takeAll() {

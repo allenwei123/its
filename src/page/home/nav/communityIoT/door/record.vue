@@ -98,6 +98,7 @@
           params['startDate'] = a.getFullYear() + '-' +(a.getMonth() < 9 ? '0': '')  + (a.getMonth() + 1) + '-' + (a.getDate() < 9 ? '0': '') + a.getDate();
           params['endDate'] = b.getFullYear() + '-' +(b.getMonth() < 9 ? '0': '')  + (b.getMonth() + 1) + '-' + (b.getDate() < 9 ? '0': '') + b.getDate();
         }
+        params['userName'] = this.q_input;
         // params['deviceId'] = this.$route.query.deviceId;
         // if (this.q_input) {
         //   params['time'] = this.q_input;
