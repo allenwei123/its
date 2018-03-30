@@ -8,13 +8,13 @@
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
             <el-select v-model="value1" placeholder="品牌" clearable  @change="changeStatus">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+              <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
             <el-select v-model="value2" placeholder="型号" clearable  @change="changeStatus">
               <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
-            <el-select v-model="value2" placeholder="全部楼栋" clearable  @change="changeStatus">
-              <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            <el-select v-model="value3" placeholder="全部楼栋" clearable  @change="changeStatus">
+              <el-option v-for="item in options3" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
             <el-form-item label="">
               <el-input placeholder="门禁" v-model.trim="input"></el-input>
@@ -23,7 +23,7 @@
               <el-button type="primary" @click="query">查询</el-button>
             </el-form-item>
             <el-form-item style="float: right">
-              <el-button type="primary" @click="add">新增门禁</el-button>
+              <!-- <el-button type="primary" @click="add">新增门禁</el-button> -->
             </el-form-item>
           </el-form>
         </div>
@@ -39,16 +39,16 @@
               <template slot-scope="scope">{{scope.row.buildingName}}</template>
             </el-table-column>
             <el-table-column label="厂商" :show-overflow-tooltip="true" align="center">
-              <template slot-scope="scope">{{scope.row.id}}</template>
+              <template slot-scope="scope">{{ scope.row.brand }}</template>
             </el-table-column>
             <el-table-column label="型号" :show-overflow-tooltip="true" align="center">
-              <template slot-scope="scope">{{communityName}}</template>
+              <template slot-scope="scope">{{ scope.row.deviceType }}</template>
             </el-table-column>
             <el-table-column label="设备编号" :show-overflow-tooltip="true" align="center">
-              <template slot-scope="scope">{{communityName}}</template>
+              <template slot-scope="scope">{{ scope.row.deviceCode }}</template>
             </el-table-column>
             <el-table-column label="运行状态" :show-overflow-tooltip="true" align="center">
-              <template slot-scope="scope">{{communityName}}</template>
+              <template slot-scope="scope">{{ onlineStatus(scope.row.onlineStatus) }}</template>
             </el-table-column>
             <el-table-column label="操作" width="120" fixed="right" align="left">
               <template slot-scope="scope">
@@ -84,6 +84,7 @@ import AddPage from "./add";
         show: false,
         loading: false,
         communityName: this.$store.getters.communityName,
+        communityId:this.$store.getters.communityId,
         tableData: [],
         pageSize: 10,
         total: 0,
@@ -92,33 +93,26 @@ import AddPage from "./add";
         q_input: null,
         //电梯品牌
         value1: '',
-        options: [ {
-          value: '0',
-          label: '戈尔'
-        }, {
-          value: '1',
-          label: '格尔马'
-        }, {
-          value: '-1',
-          label: 'taiger'
+        options: [{
+          id:1,
+          name:'米立'
+        },{
+          id:2,
+          name:'康途'
+        },{
+          id:3,
+          name:'金博'
         }],
         //型号
         value2: '',
-        options2: [ {
-          value: '0',
-          label: 'l'
-        }, {
-          value: '1',
-          label: 's'
-        }, {
-          value: '-1',
-          label: 'sss'
-        }],
+        options2: [],
        navDetailData: [
           { id: 0, name: "社区物联" },
           { id: 1, name: "门禁管理" },
           { id: 2, name: "门禁档案" }
         ],
+        options3: [],
+        value3:'',
       }
     },
     methods: {
@@ -130,6 +124,14 @@ import AddPage from "./add";
         else {
           this.getTableList();
         }
+      },
+      getFloorList() {//获取社区对应的楼栋
+        this.$xttp.get('community/building/list',{params:{communityId:this.communityId}})
+          .then(res => {
+            if(!res.errorCode) {
+              this.options3 = res.data;
+            }
+          })
       },
       changeStatus() {
         this.query();
@@ -144,7 +146,16 @@ import AddPage from "./add";
         this.loading = true;
         let url = `communityIoT/record/door/list?page=${this.currentPage}&size=${this.pageSize}`;
         let params = {};
-        params['communityId'] = this.$store.getters.communityId;
+        params['communityId'] = this.communityId;
+        if(this.value1) {
+          params['brandNo'] = this.value1;//品牌查询
+        }
+        if(this.value2){
+          params['elevatorId'] = this.value2;//电梯编号
+        }
+        if(this.value3) {
+          params['buildingId'] = this.value3;//楼栋查询
+        }
         if (this.q_input) {
           params['deviceName'] = this.q_input;
         }
@@ -158,6 +169,11 @@ import AddPage from "./add";
           this.loading = false;
         })
       },
+      onlineStatus(value){
+        if(value) {
+          return value== 1? '离线' : '在线'
+        }
+      },
       view(item) {
         this.$router.push({
           path: '/home/nav/communityIoT/doorRecord',
@@ -169,6 +185,7 @@ import AddPage from "./add";
     },
     created() {
       this.query();
+      this.getFloorList();
     }
   }
 </script>

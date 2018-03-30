@@ -15,7 +15,7 @@
               </el-date-picker>
             </el-form-item>
             <el-form-item label="">
-              <el-input  placeholder="用户姓名" v-model.trim="input"></el-input>
+              <el-input  placeholder="维修工单号" v-model.trim="input"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="query">查询</el-button>
@@ -27,18 +27,27 @@
             <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column label="用户姓名" :show-overflow-tooltip="true">
+            <el-table-column label="维修工单号" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.userName}}</template>
             </el-table-column>
             <!-- 暂无 -->
-            <el-table-column label="身份" :show-overflow-tooltip="true">
+            <el-table-column label="梯号" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.userName}}</template>
             </el-table-column>
-            <el-table-column label="使用时间" :show-overflow-tooltip="true">
+            <el-table-column label="故障时间" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.time | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
-            <el-table-column label="使用方式" :show-overflow-tooltip="true">
-              <template slot-scope="scope">{{getuseStyle(scope.row.useStyle)}}</template>
+            <el-table-column label="故障描述" :show-overflow-tooltip="true">
+              <template slot-scope="scope">{{ scope.row.useStyle }}</template>
+            </el-table-column>
+            <el-table-column label="维修状态" :show-overflow-tooltip="true">
+              <template slot-scope="scope">{{ scope.row.useStyle }}</template>
+            </el-table-column>
+            <el-table-column label="维修人员" :show-overflow-tooltip="true">
+              <template slot-scope="name">{{ scope.row.useStyle }}</template>
+            </el-table-column>
+            <el-table-column label="维修时间" :show-overflow-tooltip="true">
+              <template slot-scope="scope">{{ scope.row.useStyle }}</template>
             </el-table-column>
           </el-table>
         </div>
@@ -53,7 +62,6 @@
   </el-container>
 </template>
 <script>
-import { time as itmeFormatter } from "@/utils/time"
   export default {
     data() {
       return {
@@ -67,7 +75,6 @@ import { time as itmeFormatter } from "@/utils/time"
         q_input: null,
         // 头部的标题
         deviceName: '',
-        a:''
       }
     },
      methods: {
@@ -83,28 +90,14 @@ import { time as itmeFormatter } from "@/utils/time"
       changeStatus() {
         this.query();
       },
-      getuseStyle(status) {
-        let names = {
-          '1': '蓝牙',
-          '2': '远程'
-        };
-        return names[status];
-      },
       getTableList() {
         this.loading = true;
-        let url = `sys/elevator-record/page?page=${this.currentPage}&size=${this.pageSize}`;
+        let url = `/communityIoT/elevator/repair/list`;
         let params = {};
-        params['communityId'] = this.$store.getters.communityId;
-        // params['deviceId'] = this.$route.query.id; 
-
-        if(this.value6) {
-          let a = new Date(this.value6[0]);
-          let b = new Date(this.value6[1]);
-          params['startDate'] = a.getFullYear() + '-' +(a.getMonth() < 9 ? '0': '')  + (a.getMonth() + 1) + '-' + (a.getDate() < 9 ? '0': '') + a.getDate();
-          params['endDate'] = b.getFullYear() + '-' +(b.getMonth() < 9 ? '0': '')  + (b.getMonth() + 1) + '-' + (b.getDate() < 9 ? '0': '') + b.getDate();
-        }
+        params['communityId'] = '5ab612aa1b2da567cf0d4181';//临时id
+        params['elevatorId'] = this.$route.query.id;
         if (this.q_input) {
-          params['name'] = this.q_input;
+          // params['name'] = this.q_input;
         }
         this.$xttp.post(url, params).then(res => {
           this.loading = false;

@@ -7,7 +7,7 @@
       <div class="c-notice-container">
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
-            <el-form-item>
+            <el-form-item  width="80">
               <el-select v-model="value1" placeholder="全部状态" clearable @change="changeStatus">
                 <el-option v-for="temp in options" :key="temp.value" :label="temp.label" :value="temp.value"></el-option>
               </el-select>
@@ -21,6 +21,9 @@
                 placeholder="账单日期" clearable @change="changeStatus">
               </el-date-picker>
             </el-form-item>
+            <el-select v-model="value2" placeholder="全部楼栋" clearable @change="changeStatus">
+              <el-option v-for="item in options2" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            </el-select>
             <el-form-item label="">
               <el-input  placeholder="房号" v-model.trim="input"></el-input>
             </el-form-item>
@@ -28,7 +31,7 @@
               <el-button type="primary" @click="query">查询</el-button>
             </el-form-item>
             <el-form-item style="float: right">
-              <el-button type="primary" @click="take(null, $event)">全部生效</el-button>
+              <el-button type="primary" @click="takeAll">全部生效</el-button>
             </el-form-item>
             <el-form-item style="float: right">
               <el-button type="primary">一键催交</el-button>
@@ -71,19 +74,19 @@
                 <!-- 账单状态 未生效-->
                 <template v-if="scope.row.billStatus === -1">
                   <!-- @click="edit(scope.row)" 暂无接口 -->
-                  <el-button type="primary" size="mini">编辑</el-button>
+                  <el-button type="primary" size="mini" @click="edit(scope.row)">编辑</el-button>
                   <el-button type="warning" size="mini" @click="take(scope.row, $event)">生效</el-button>
                 </template>
 
                 <!-- 账单状态 待缴费-->
                 <template v-if="scope.row.billStatus === 0 ">
-                  <el-button type="warning" size="mini" >提醒缴费</el-button>
+                  <el-button type="warning" size="mini" @click="take(scope.row, $event)">提醒缴费</el-button>
                   <el-button type="primary" size="mini" @click="take(scope.row, $event)">确认缴费</el-button>
                 </template>
 
                 <!-- 账单状态 已超期-->
                 <template v-if="scope.row.billStatus === 2 ">
-                  <el-button type="warning" size="mini">催缴</el-button>
+                  <el-button type="warning" size="mini" @click="take(scope.row, $event)">催缴</el-button>
                   <el-button type="primary" size="mini"  @click="take(scope.row, $event)">确认缴费</el-button>
                 </template>
 
@@ -116,6 +119,16 @@
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="visible1 = false">取消</el-button>
             <el-button type="primary" size="mini" @click="confirm">确定</el-button>
+          </div>
+      </el-dialog>
+
+      <!-- 全部生效 -->
+      <el-dialog title="温馨提示" :visible.sync="visible2">
+          <p class="p-center">全部生效</p>
+          <p>生效后账单将发送给对应业主，且不可再次修改，是否立即生效？</p>
+          <div style="text-align: right; margin: 0">
+            <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
+            <el-button type="primary" size="mini" @click="confirmAll">确定</el-button>
           </div>
       </el-dialog>
 
@@ -168,17 +181,22 @@ export default {
       confirmData: '',
       text:'',
       warn: '',
+      //全部生效
+      visible2: false,
+      //楼栋查询
+      value2: '',
+      options2: '',
     };
   },
   methods: {
     getTableList(val) {
-      this.postData(val, this.date, this.value1);
+      this.postData(val, this.date, this.value1, this.input, this.value2);
     },
     query() {
       if (this.currentPage !== 1) {
         this.currentPage = 1;
       } else {
-        this.postData(null, this.date, this.value1);
+        this.postData(null, this.date, this.value1, this.input, this.value2);
       }
     },
     changeStatus() {
@@ -200,13 +218,41 @@ export default {
       this.see = false;
     },
     edit(row) {
-      //编辑账单时 5.3.7.	物业新增子账单接口
+      //5.3.4.	根据物业账单获取物业账单（包括子账单）
       this.show = true;
       this.editData = row;
 
     },
     editChange() {
       this.show = false;
+    },
+    //全部生效
+    takeAll() {
+      this.visible2 = true;
+    },
+    confirmAll() {
+      this.visible2 = false;
+      this.publishAll();
+    },
+    publishAll() {
+      let url = `fees/property-bill/publishAll`;
+      let params = {};
+      let communityId = this.$store.getters.communityId;
+      params.communityId = communityId;
+      params.propertyId = '5a82adee9ce976452b7001ee';
+      // console.log('params', params);
+      this.$xttp.post(url, params).then(res => {
+        if(res.errorCode === 0){
+          this.loading = false;
+          this.$message({
+            message: '全部生效成功',
+            type: 'success'
+          });
+        }
+      }).catch(() => {
+        this.loading = false;
+        this.$message.error('失败');
+      })    
     },
     // 账单状态
     take(row, e) {
@@ -217,16 +263,13 @@ export default {
           this.warn = "生效后账单将发送给对应业主，且不可再次修改，是否立即生效？";
           break;
         case '提醒缴费':
-          this.warn = "是否提醒A区1栋0302业主尽快缴纳本期物业管理费？";
+          this.warn = "是否提醒业主尽快缴纳本期物业管理费？";
           break;
         case '催缴':
-          this.warn = "是否提醒A区1栋0302业主2018年2月物业管理费超期未缴，必须尽快缴纳！";
+          this.warn = "是否提醒业主物业管理费超期未缴，必须尽快缴纳！";
           break;
         case '确认缴费':
-          this.warn = "是否确定A区1栋0302业主已经缴纳本期物业管理费？";
-          break;
-        case '全部生效':
-          this.warn = "生效后账单将发送给对应业主，且不可再次修改，是否立即生效？";
+          this.warn = "是否确定业主已经缴纳本期物业管理费？";
           break;
         case '一键催交':
           this.warn = "是否提醒2018年2月物业管理费超期未缴账单相关业主尽快缴费";
@@ -236,10 +279,6 @@ export default {
     },
     confirm(confirmData) {
       this.visible1 = false;
-      this.$message({
-        message: '操作成功',
-        type: 'success'
-      });
       switch (this.text) {
         case '生效':
           this.confirmData.billStatus = 0;
@@ -253,9 +292,6 @@ export default {
         case '确认缴费':
           this.confirmData.billStatus = 1;
           break;
-        case '全部生效':
-          // this.confirmData.billStatus = 0;
-          break;
         case '一键催交':
            this.confirmData.billStatus = 0;
           break;
@@ -268,29 +304,13 @@ export default {
           var url = `fees/property-bill/${row.id}/publish`;
           break;
         case '提醒缴费':
-          // this.confirmData.billStatus = 0;
+          var url = `fees/property-bill/${row.id}/push-unPay-bill`;
           break;
         case '催缴':
-          // this.confirmData.billStatus = 0;
+          var url = `fees/property-bill/${row.id}/push-overdue-bill`;
           break;
         case '确认缴费':
           var url = `fees/property-bill/${row.id}/payment`;
-          break;
-        case '全部生效':
-          var url = `fees/property-bill/publishAll`;
-          let params = {};
-          let communityId = this.$store.getters.communityId;
-          params.communityId = communityId;
-          params.propertyId = '5a82adee9ce976452b7001ee';
-          console.log('params', params);
-          this.$xttp.post(url, params).then(res => {
-            if(res.errorCode === 0){
-              this.loading = false;
-            }
-          }).catch(() => {
-            this.loading = false;
-            this.$message.error('失败');
-          })
           break;
         case '一键催交':
           //  this.confirmData.billStatus = 0;
@@ -300,6 +320,10 @@ export default {
       this.$xttp.get(url).then(res => {
           if(res.errorCode === 0){
             this.loading = false;
+            this.$message({
+            message: `${this.text}成功`,
+            type: 'success'
+          });
           }
         }).catch(() => {
           this.loading = false;
@@ -324,7 +348,7 @@ export default {
       };
       return names[status];
     },
-    postData(page, makeBillAt, billStatusSet) {
+    postData(page, makeBillAt, billStatusSet, roomNo, buildingId) {
       let nPage = page || this.$route.query.page || 1;
       let params = { page: nPage };
       if (makeBillAt) {
@@ -341,6 +365,8 @@ export default {
       };
       let communityId = this.$store.getters.communityId;
       params.communityId = communityId;
+      params['roomNo'] = this.input;
+      params['buildingId'] = this.value2;
       console.log(33,params);
       let url = `fees/property-bill/page?page=${this.currentPage}&size=${this.pageSize}`;
       this.loading = true;
@@ -366,10 +392,23 @@ export default {
     getTime(timestamp, format) {
       if (timestamp == null) return "/";
       return time.timestampToFormat(timestamp, format);
-    }
+    },
+    build() {
+      let url = `community/building/page?communityId=${this.$store.getters.communityId}`;
+      this.$xttp.get(url).then(res => {
+        if(res.errorCode === 0) {
+          this.loading = false;
+          this.options2 = res.data.records;
+          console.log('build', res);
+        }
+      }).catch( () => {
+        this.loading = false;
+      })
+    },
   },
   created() {
     this.query();
+    this.build();
   }
 };
 </script>

@@ -6,12 +6,10 @@
           <el-form :inline="true" class="demo-form-inline">
             <el-form-item label="">
               <el-form-item label="">
-              <el-date-picker
-                v-model="date"
-                type="daterange"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期" clearable @change="changeStatus">
+               <el-date-picker
+                v-model="value1"
+                type="date"
+                placeholder="选择日期" clearable  @change="changeStatus">
               </el-date-picker>
             </el-form-item>
             </el-form-item>
@@ -32,17 +30,17 @@
               <template slot-scope="scope">{{scope.row.carNo}}</template>
             </el-table-column>
             <el-table-column label="出入闸类型" :show-overflow-tooltip="true" align="center">
-              <template slot-scope="scope">{{gateTypeName}}</template>
+              <template slot-scope="scope">{{getType(gateTypeName)}}</template>
             </el-table-column>
             <el-table-column label="通过时间" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{getTime(scope.row) | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
-            <el-table-column label="车闸名称" :show-overflow-tooltip="true" align="center">
+            <!-- <el-table-column label="车闸名称" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{$route.query.gateName}}</template>
-            </el-table-column>
-            <el-table-column label="车辆类型" :show-overflow-tooltip="true" align="center">
+            </el-table-column> -->
+            <!-- <el-table-column label="车辆类型" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{getChargeTypeName(scope.row.chargeType)}}</template>
-            </el-table-column>
+            </el-table-column> -->
           </el-table>
         </div>
         <div class="c-pagination">
@@ -67,12 +65,15 @@
         input: '',
         q_input: null,
         date: '',
+        value1: '',
+        // inOutTag: '',
       }
     },
     computed: {
       gateTypeName() {
         let inOutTag = parseInt(this.$route.query.inOutTag);
-        return inOutTag === 1 ? '入闸' : '出闸';
+        // return inOutTag === 1 ? '入闸' : '出闸';
+        return inOutTag;
       }
     },
     methods: {
@@ -90,13 +91,17 @@
       },
       getTableList() {
         this.loading = true;
+        console.log(this.gateTypeName);
         let url = `vehicle/inout/page?page=${this.currentPage}&size=${this.pageSize}`;
         let params = {};
-        params['gateNO'] = this.$route.query.gateNO;
-        params['inOutTag'] = this.$route.query.inOutTag;
         if (this.q_input) {
-          params['inOutDate'] = this.q_input;
+          params['carNo'] = this.q_input;
+        };
+        if (this.value1) {
+          params['inOutDate'] = this.value1;
         }
+        params['inOutTag'] = this.gateTypeName;
+        console.log(params);
         this.$xttp.post(url, params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {
@@ -106,6 +111,13 @@
         }).catch(() => {
           this.loading = false;
         })
+      },
+      getType(type) {
+        let names = {
+          '1': '入闸',
+          '2': '出闸',
+        };
+        return names[type];
       },
       getChargeTypeName(type) {
         let names = {
