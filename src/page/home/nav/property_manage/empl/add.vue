@@ -154,7 +154,7 @@ export default {
     },
     postData() {
       let msg = this.add ? '编辑' : '添加';
-      let uri = this.add ? '/community/edit' : '/user/property/create-user';
+      let uri = this.add ? '/user/property/update-user' : '/user/property/create-user';
       this.$xttp
         .post( uri, this.form)
         .then(res => {

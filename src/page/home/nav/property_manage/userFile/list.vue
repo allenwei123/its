@@ -31,8 +31,8 @@
           <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
         </el-table-column>
 
-        <el-table-column label="昵称"  :show-overflow-tooltip="true" align="center">
-          <template slot-scope="scope">{{ scope.row.nickName }}</template>
+        <el-table-column label="姓名"  :show-overflow-tooltip="true" align="center">
+          <template slot-scope="scope">{{ scope.row.name }}</template>
         </el-table-column>
 
         <el-table-column label="手机号"  :show-overflow-tooltip="true" align="center">

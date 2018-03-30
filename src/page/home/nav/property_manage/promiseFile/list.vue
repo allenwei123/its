@@ -179,14 +179,14 @@
       },
       printHandle(row) {
         //打印
-        if (row.auditStatus == 1) {
+        // if (row.auditStatus == 1) {
           this.$xttp.get(`/user/${row.id}/contract-info`).then(res => {
             if (!res.errorCode) {
               this.boolDialog = true;
               this.printData = res.data;
             }
           });
-        }
+        // }
       },
       handle(row, num) {
         let status, msg;

@@ -18,9 +18,9 @@
       </div>
       
       <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." highlight-current-row ref="multipleTable" style="width: 100%">
-        <el-table-column label="序号" type="index" align="center" width="200"> </el-table-column>
+        <el-table-column label="序号" type="index" align="center" min-width="25%"> </el-table-column>
         <!-- <el-table-column prop="key" label="ID" align="center"  width="200"> </el-table-column> -->
-        <el-table-column prop="name" label="角色" align="center"  width="900"> </el-table-column>
+        <el-table-column prop="name" label="角色" align="center"  min-width="75%"> </el-table-column>
         <el-table-column v-if="isShow" align="center" label="操作" width="700">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="handleClick(scope.row)">查看权限</el-button>
