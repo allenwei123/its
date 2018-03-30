@@ -106,6 +106,8 @@
           params['callerName'] = this.q_input;
         }
         params['receiveStatus'] = this.status;
+        let communityId = this.$store.getters.communityId;
+        params.communityId = communityId;
         this.$xttp.post(url, params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {
