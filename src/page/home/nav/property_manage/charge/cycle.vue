@@ -82,25 +82,34 @@ export default {
         this.$xttp.post("/property/parameter/page",params).then(res => {
             if (res.success){
                 // console.log(res.data)
-                this.form.payCycle = res.data.records[0].value;
-                this.form.payCycleId = res.data.records[0].id;
-                this.form.billDateId = res.data.records[1].id;
-                this.form.billDate = res.data.records[1].value;
+                // this.form.payCycle = res.data.records[0].value;
+                // this.form.payCycleId = res.data.records[0].id;
+                // this.form.billDateId = res.data.records[1].id;
+                // this.form.billDate = res.data.records[1].value;
+              let  a = res.data.records[0].value;
+              let  b = res.data.records[0].id;
+              let  c = res.data.records[1].id;
+              let  d = res.data.records[1].value;
+                let bb = [];
+                bb.push(b);
+                bb.push(c);
+                let cc = [];
+                cc.push(a);
+                cc.push(d);
+                let key = ['id','value'];
                 
-                var params = [{"id" : "' + this.form.payCycle + '"}];
-                console.log(params);
-                
-                // this.params = '[{'+"id:"+'+'+"this.form.payCycleId+",value:"+'+this.form.payCycle+'},{id:'+this.form.billDateId+',value:'+ this.form.billDate +'}]';
-                // console.log(this.params);
-                // console.log(JSON.stringify(this.params));
-
+                this.params = bb.map(function(item,index){
+                    let obj = {};
+                    obj[key[0]] = bb[index];
+                    obj[key[1]] = cc[index];
+                    return obj;
+                });
                 this.loading = false;
             }
         })
     },
     save() {
         let uri = '/property/parameter/multi-edit';
-        console.log(this.params)
         this.$xttp.post(uri,this.params)
         .then(
           res => {
