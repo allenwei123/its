@@ -167,8 +167,11 @@ export default {
     },
     changeRadio() {
       this.isShow = true;
+
       let obj = this.classData.find(item => this.form.class == item.name);
       let id = obj.id;
+
+      console.log(id);
       this.$xttp.get(`task/class/${id}/detail`)
           .then(res => {
             if( res.success) {
@@ -197,7 +200,8 @@ export default {
     },
     postData() {
       let employeeId = this.form.empl;
-      let classId = this.form.class;
+      // let employeeId = this.form.empl;
+      // let classId = this.form.class;
       let postCode = this.form.postCode;
       let workDate = this.form.date;
       let userId = this.form.empl;
@@ -213,7 +217,7 @@ export default {
 
       let params = {};
       params['employeeId'] = employeeId;
-      params['classId'] = classId;
+      // params['classId'] = classId;
       params['className'] = className;
       params['postCode'] = postCode;
       params['workDate'] = workDate;
@@ -226,6 +230,8 @@ export default {
       params['offTimeStr'] = offTimeStr;
       params['offPlace'] = offPlace;
       params['task'] = task;
+      console.log(params);
+      // return;
           
       let msg = this.add ? "编辑" : "添加";
       let uri = this.add
@@ -279,8 +285,6 @@ export default {
           this.form.attendPlace = records.attendPlace;
           this.form.task = records.task;
           this.form.remark = records.remark;
-          console.log(this.add);
-          // this.form.class = this.add.classId;
           this.form.class = this.add.className;
           this.initPost();
           this.initClass();
