@@ -56,6 +56,7 @@
     data() {
       return {
         value6: '',
+        communityId:this.$store.getters.communityId,
         loading: false,
         tableData: [],
         pageSize: 10,
@@ -90,7 +91,13 @@
         this.loading = true;
         let url = `sys/door-record/page?page=${this.currentPage}&size=${this.pageSize}`;
         let params = {};
-        params['communityId'] = this.$store.getters.communityId;
+        params['communityId'] = this.communityId;
+        if(this.value6) {
+          let a = new Date(this.value6[0]);
+          let b = new Date(this.value6[1]);
+          params['startDate'] = a.getFullYear() + '-' +(a.getMonth() < 9 ? '0': '')  + (a.getMonth() + 1) + '-' + (a.getDate() < 9 ? '0': '') + a.getDate();
+          params['endDate'] = b.getFullYear() + '-' +(b.getMonth() < 9 ? '0': '')  + (b.getMonth() + 1) + '-' + (b.getDate() < 9 ? '0': '') + b.getDate();
+        }
         // params['deviceId'] = this.$route.query.deviceId;
         // if (this.q_input) {
         //   params['time'] = this.q_input;

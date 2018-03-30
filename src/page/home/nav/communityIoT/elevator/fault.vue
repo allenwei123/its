@@ -79,9 +79,9 @@
         }
       }, getTableList() {
         this.loading = true;
-        let url = `communityIoT/elevator/fault/list?page=${this.currentPage}&size=${this.pageSize}`;
+        let url = `communityIoT/elevator/repair/list`;
         let params = {};
-        params['elevatorId'] = this.$route.query.id;
+        params['elevatorId'] = this.$route.query.id;//j
         if (this.q_input) {
           params['name'] = this.q_input;
         }
