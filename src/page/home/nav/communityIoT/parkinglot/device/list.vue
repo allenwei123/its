@@ -35,9 +35,9 @@
             <el-table-column label="设备编号" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">???</template>
             </el-table-column> -->
-            <el-table-column label="运行状态" :show-overflow-tooltip="true" align="center">
+            <!-- <el-table-column label="运行状态" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{getStatusName(scope.row.gateStatus)}}</template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column label="操作" width="150" fixed="right" align="left">
               <template slot-scope="scope">
                 <el-button type="primary" size="mini" @click="viewRecord(scope.row)">进出记录</el-button>

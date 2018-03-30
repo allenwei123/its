@@ -50,7 +50,7 @@
             </tr>
             <tr>
               <td>缴纳方式</td>
-              <td colspan="4" style="text-align: right">{{propertyBill.paymentMethod}}</td>
+              <td colspan="4" style="text-align: right">{{payBillStatus(propertyBill.receiveWay)}}</td>
             </tr>
             <tr v-if="pay==='已缴费'">
               <td>缴纳时间</td>
@@ -89,6 +89,13 @@ import time from "@/utils/time.js";
         window.print();
         window.location.reload();
         return false;
+      },
+      payBillStatus(status) {
+        let names = {
+          "1": "线上收费",
+          "2": '人工收费'
+        };
+        return names[status];
       },
       // 账单状态
       getBillStatusName(status) {

@@ -12,7 +12,7 @@
                </el-select>
              </el-form-item>
             <el-form-item label="">
-              <el-input v-model="input" placeholder="卡号/用户"></el-input>
+              <el-input v-model="input" placeholder="卡号"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
@@ -40,11 +40,11 @@
 
         <!-- <el-table-column label="身份" :show-overflow-tooltip="true" align="center">
           <template slot-scope="scope">{{scope.row.phone }}</template>
-        </el-table-column>
+        </el-table-column> -->
 
         <el-table-column label="手机号码" :show-overflow-tooltip="true" align="center">
           <template slot-scope="scope">{{scope.row.phone }}</template>
-        </el-table-column> -->
+        </el-table-column>
 
         <el-table-column label="住房信息" :show-overflow-tooltip="true" align="center"  width="200">
           <template slot-scope="scope">{{scope.row.roomName }}</template>
@@ -58,9 +58,9 @@
           <template slot-scope="scope">{{scope.row.endDate | time }}</template>
         </el-table-column> -->
 
-        <el-table-column label="状态" :show-overflow-tooltip="true" align="center">
+        <!-- <el-table-column label="状态" :show-overflow-tooltip="true" align="center">
           <template slot-scope="scope">{{ getdataStatus(scope.row.dataStatus) }}</template>
-        </el-table-column>
+        </el-table-column> -->
       
         <!-- <el-table-column label="操作" width="80" fixed="right" align="left">
           <template slot-scope="scope">
@@ -80,7 +80,7 @@
       </div>
       <!-- 新增卡片 -->
       <transition name="fade1">
-        <AddPage v-if="show" :msg="show" @change=addChange></AddPage>
+        <AddPage v-if="show" :msg="show" @change=addChange @addSuccess="handleCurrentChange"></AddPage>
       </transition>
 
       <transition name="fade">
@@ -131,9 +131,8 @@ export default {
       this.show= true;
     },
     handleCurrentChange(val) {
-      if(this.currentPage !== val ) {
-        this.sendAjax(val);
-      }
+      console.log(val)
+      this.sendAjax(val, this.formInline.keyType, this.input);
     },
     getdataStatus(status) {
       let names = {
@@ -171,7 +170,12 @@ export default {
       this.see = false;
     },
     find(){
-      this.sendAjax(1, this.formInline.keyType);
+      if (this.currentPage !== 1) {
+        this.currentPage = 1;
+      } else {
+        this.sendAjax(null, this.formInline.keyType, this.input);
+      }
+      // this.sendAjax(1, this.formInline.keyType);
     },
     changeStatus() {
       this.find();
@@ -179,21 +183,23 @@ export default {
     addChange() {
       this.show = false;
     },
-    sendAjax(page,keyType) {
+    sendAjax(page, keyType, keyNo) {
       let nPage = page || this.$route.query.page || 1;
-      let obj = {page:nPage,communityId:this.$store.getters.communityId,userId:'5a82a45e9ce93e30677c3f9e'}
+      let obj = {page:nPage,communityId:this.$store.getters.communityId}
       if(keyType){
         obj.keyType = this.formInline.keyType;
       }else {
         delete obj.keyType ;
       }
+      obj['keyNo'] = this.input;
+      console.log('obj',obj);
       this.loading = true;
-      this.$xttp.post("/user/card/get/list",obj)
+      this.$xttp.post(`/user/card/get/list`,obj)
       .then(res => {
         if (!res.errorCode) {
-          console.log(res);
+          console.log('res',res);
           this.tableData = res.data.records;
-          this.currentPage = res.data.currentPage;
+          // this.currentPage = res.data.currentPage;
           this.total = res.data.total;
           this.tableData.forEach(item => {
             if (item.startDate) {
@@ -209,7 +215,7 @@ export default {
                 .replace("T", " ");
             }
           });
-          this.$router.push({path:this.$route.path,query:{page: nPage }})
+          // this.$router.push({path:this.$route.path,query:{page: nPage }})
         }
         this.loading = false;
       }).catch(err => {
@@ -218,8 +224,7 @@ export default {
     }
   },
   created() {
-    // this.sendAjax();
-    this.sendAjax(1);
+    this.find();
   },
   mounted() {}
 };
