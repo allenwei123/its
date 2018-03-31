@@ -193,17 +193,46 @@
       }
     },
     methods: {
-      getTableList(val) {
-        this.postData(val, this.input, this.value1);
+      // getTableList(val) {
+      //   this.postData(val, this.input, this.value1);
+      // },
+      getTableList(pages) {
+        let params = {};
+        params['userName'] = this.input;
+        console.log(params.userName)
+
+        params['communityId'] = this.$store.getters.communityId;
+        params['faultStatus'] = this.value1;
+        let url = `property/fault/queryFaultPage?page=${pages}&size=${this.pageSize}`;
+        this.loading = true;
+        if(this.value6) {
+          let a = new Date(this.value6[0]);
+          let b = new Date(this.value6[1]);
+          params['playTimeBegin'] = a.getFullYear() + '-' +(a.getMonth() < 9 ? '0': '')  + (a.getMonth() + 1) + '-' + (a.getDate() < 9 ? '0': '') + a.getDate();
+          params['playTimeEnd'] = b.getFullYear() + '-' +(b.getMonth() < 9 ? '0': '')  + (b.getMonth() + 1) + '-' + (b.getDate() < 9 ? '0': '') + b.getDate();
+        }
+        console.log(params);
+        this.$xttp.post(url, params).then(res => {
+          if (res.errorCode === 0) {
+            this.tableData = res.data.records;
+            // this.currentPage = res.data.currentPage;
+            this.total = res.data.total;
+            this.loading = false;
+            // this.$router.push({path:this.$route.path,query:{page: nPage }})
+          }
+        }).catch(() => {
+          this.loading = false;
+        })
+
       },
       query() {
-        console.log(this.value1);
         if (this.currentPage !== 1) {
           this.currentPage = 1;
         }
         else {
           //value1 故障状态查询
-          this.postData(null, this.input, this.value1);
+          // this.postData(null, this.input, this.value1);
+          this.getTableList(1);
         }
       },
       addChange(msg) {
@@ -432,7 +461,8 @@
     },
     created() {
       this.workMan();
-      this.query();
+      // this.query();
+      this.getTableList(1);
     }
   }
 </script>

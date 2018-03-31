@@ -171,7 +171,6 @@ export default {
       let obj = this.classData.find(item => this.form.class == item.name);
       let id = obj.id;
 
-      console.log(id);
       this.$xttp.get(`task/class/${id}/detail`)
           .then(res => {
             if( res.success) {

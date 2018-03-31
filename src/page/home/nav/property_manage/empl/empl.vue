@@ -100,9 +100,9 @@
       <transition name="fade">
         <SeePage v-if="see" :msg="see" @upsee="seeChange"  :data="seeData"></SeePage>
       </transition>
-      <transition name="edit">
+      <!-- <transition name="edit">
         <AddPage v-if="isEdit" :msg="isEdit" @reload="getTableList" @upup="editChange" :add.sync="Edit"></AddPage>
-      </transition>
+      </transition> -->
 
       <el-dialog title="温馨提示" :visible.sync="visible2">
           <p>请问您是否确定注销员工吗？</p>
@@ -117,7 +117,7 @@
 <script>
 import AddPage from "./add";
 import SeePage from "./see";
-import EditPage from "./edit";
+// import EditPage from "./edit";
 import { mapGetters } from "vuex";
 
 export default {

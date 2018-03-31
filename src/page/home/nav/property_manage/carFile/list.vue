@@ -79,7 +79,6 @@
 import AddPage from "./add";
 import SeePage from "./see";
 import { mapGetters } from "vuex";
-import {communityId as getCommunityList} from '@/biz/community';
 import time from '@/utils/time.js';
 
 export default {
