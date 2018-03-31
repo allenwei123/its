@@ -14,16 +14,16 @@
         <el-table-column label="车库名称" width="200" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.carportName}}</template>
         </el-table-column>
-        <el-table-column label="车位数量" width="80" align="center" :show-overflow-tooltip="true">
+        <el-table-column label="车位数量" width="150" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope"><a href="">{{ scope.row.carNum}}</a></template>
         </el-table-column>
-        <el-table-column label="具体地址" width="300" align="center" :show-overflow-tooltip="true">
+        <el-table-column label="具体地址" width="350" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.address}}</template>
         </el-table-column>
-        <el-table-column label="关联楼栋" width="200" align="center" :show-overflow-tooltip="true">
+        <el-table-column label="关联楼栋" width="250" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope"><a href="">{{ scope.row.linkBuild}}</a></template>
         </el-table-column>
-        <el-table-column align="center" fixed="right" label="操作" width="240">
+        <el-table-column align="center" fixed="right" label="操作" width="250">
           <template slot-scope="scope">
             <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button>
           </template>

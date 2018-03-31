@@ -191,7 +191,7 @@ export default {
         this.formInline.rangeDate == "undefined"
       ) {
         params.startDate = time.dateFormat(new Date(), "yyyy-MM-01");
-        params.endDate = time.dateFormat(new Date(), "yyyy-MM-30");
+        params.endDate = time.dateFormat(new Date(), "yyyy-MM-31");
       } else {
         params.startDate = this.formInline.rangeDate[0];
         params.endDate = this.formInline.rangeDate[1];

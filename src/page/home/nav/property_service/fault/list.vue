@@ -416,7 +416,7 @@
         this.$xttp.post(url, params).then(res => {
           if (res.errorCode === 0) {
             this.tableData = res.data.records;
-            this.currentPage = res.data.currentPage;
+            // this.currentPage = res.data.currentPage;
             this.total = res.data.total;
             this.loading = false;
             this.$router.push({path:this.$route.path,query:{page: nPage }})

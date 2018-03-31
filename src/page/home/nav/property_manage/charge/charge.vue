@@ -31,7 +31,7 @@
         <el-table-column label="收费项目" min-width="200" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.itemName }}</template>
         </el-table-column>
-        <el-table-column fixed="right" align="center" label="操作" width="500">
+        <el-table-column fixed="right" align="left" label="操作" width="500">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="seeHandle(scope.row)">查看</el-button>
             <el-button @click="delHandle(scope.row)" type="danger" size="small">删除</el-button>
