@@ -66,7 +66,7 @@
         <el-table-column label="岗位" min-width="120" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.postCode | postCode}}</template>
         </el-table-column>
-        <el-table-column fixed="right" label="操作" align="left" width="180">
+        <el-table-column fixed="right" label="操作" align="center" width="180">
           <template slot-scope="scope">
             <!-- <el-button type="primary" size="mini" @click="handleClick(scope.row)">查看</el-button> -->
             <el-button type="warning" size="mini" @click="editHandle(scope.row)">编辑</el-button>
