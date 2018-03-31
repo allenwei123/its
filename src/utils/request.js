@@ -45,7 +45,8 @@ service.interceptors.response.use(
 
     return res.data || res;
   }, error => {
-    Message({message:'链接错误,请检查管理员',type:'error'})
+    console.log(error)
+    Message({message:'链接错误,请联系管理员',type:'error'})
     return Promise.reject(error)
   }
 )
