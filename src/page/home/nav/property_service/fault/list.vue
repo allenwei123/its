@@ -298,9 +298,11 @@
           repairName: this.value,
           // repairContact: assignData.repairContact
         }
+        console.log(params);
         this.$xttp.post(url, params).then(res => {
           if(res.errorCode === 0) {
             this.loading = false;
+            console.log('res', res);
           }
         }).catch( () => {
           this.loading = false;
