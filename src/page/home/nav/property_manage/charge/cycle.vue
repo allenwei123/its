@@ -47,6 +47,7 @@ export default {
       formLabelWidth: "120px",
       titleFont:'周期管理',
       isShow: false,
+      params:[],
       form: {
         chargeStandard: '按月收费',
         payCycle: '',
@@ -80,40 +81,41 @@ export default {
         this.loading = true;
         this.$xttp.post("/property/parameter/page",params).then(res => {
             if (res.success){
-                this.form.payCycle = res.data.records[0].value;
-                this.form.billDate = res.data.records[1].value;
+                // console.log(res.data)
+                // this.form.payCycle = res.data.records[0].value;
+                // this.form.payCycleId = res.data.records[0].id;
+                // this.form.billDateId = res.data.records[1].id;
+                // this.form.billDate = res.data.records[1].value;
+              let  a = res.data.records[0].value;
+              let  b = res.data.records[0].id;
+              let  c = res.data.records[1].id;
+              let  d = res.data.records[1].value;
+                let bb = [];
+                bb.push(b);
+                bb.push(c);
+                let cc = [];
+                cc.push(a);
+                cc.push(d);
+                let key = ['id','value'];
+                
+                this.params = bb.map(function(item,index){
+                    let obj = {};
+                    obj[key[0]] = bb[index];
+                    obj[key[1]] = cc[index];
+                    return obj;
+                });
                 this.loading = false;
             }
         })
     },
     save() {
-      let msg = this.add ? '编辑' : '添加';
-      let uri = this.add ? '/community/edit' : '/fees/item-rule/addAll';
-      let params = {};
-      let communityId = this.$store.getters.communityId;
-      let propertyId = localStorage.getItem('propertyId');
-      let itemName = this.form.itemName;
-      let type = this.form.type;
-      if(type != 3){  
-        let unitPrice = this.form.unitPrice.toFixed(2);
-        params['unitPrice'] = parseInt(unitPrice * 10000);
-      }else{
-        let unitPrice = 0;
-        params['unitPrice'] = unitPrice;
-      }
-      let floorSer = this.form.floorSer;
-      params['communityId'] = communityId;
-      params['propertyId'] = propertyId;
-      params['itemName'] = itemName;
-      params['type'] = type;     
-      params['floorSer'] = floorSer;
-      
-      this.$xttp.post(uri,params)
+        let uri = '/property/parameter/multi-edit';
+        this.$xttp.post(uri,this.params)
         .then(
           res => {
             if(res.success){
               this.$message({
-                message: msg + "项目成功",
+                message: "收费周期参数配置成功",
                 type: "success"
               });
               this.current =  2;
@@ -125,7 +127,6 @@ export default {
           }).catch(err =>{
             console.log(err);
           })
-
     },
     selectCommunity(num){
       let obj = { communityId:this.$store.getters.communityId };

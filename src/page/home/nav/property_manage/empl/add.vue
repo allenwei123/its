@@ -1,6 +1,6 @@
 <template>
       <el-dialog :title="titleFont" :visible.sync="msg" :before-close="handleClose">
-        <el-form :model="form" :rules="rules" ref="ruleForm" class="demo-form-inline">
+        <el-form :model="form" ref="ruleForm" class="demo-form-inline">
 
           <el-form-item label="工号：" :label-width="formLabelWidth" prop="employeeId" class="c-must">
             <el-col :span="14">
@@ -32,9 +32,18 @@
 
           <el-form-item label="性别：" :label-width="formLabelWidth" prop="sex" class="c-must">
             <el-select v-model="form.sex" value-key="key" placeholder="请选择">
-              <el-option v-for="item in maleOptions" :key="item.key" :label="item.value" :value="item.key">{{item.value}}</el-option>
+              <el-option v-for="item in maleOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
+
+          <!-- <el-select v-model="value" placeholder="请选择">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select> -->
           
           <el-form-item label="密码：" :label-width="formLabelWidth" prop="password" class="c-must">
             <el-col :span="10">
@@ -45,7 +54,8 @@
 
           <el-form-item :label-width="formLabelWidth">
             <el-button @click="handleClose">取 消</el-button>
-            <el-button type="primary" @click="save('ruleForm')">保存</el-button>
+            <!-- <el-button type="primary" @click="save('ruleForm')">保存</el-button> -->
+            <el-button type="primary" @click="save()">保存</el-button>
           </el-form-item>
         </el-form>
     </el-dialog>
@@ -54,9 +64,9 @@
 <script>
 import fun from "@/utils/fun.js";
 const maleOptions = [
-  { key: '0', value: '未知' },
-  { key: '1', value: '男' },
-  { key: '2', value: '女' }
+  { value: '0', label: '未知' },
+  { value: '1', label: '男' },
+  { value: '2', label: '女' }
 ];
 export default {
   name: "EmplAdd",
@@ -124,6 +134,12 @@ export default {
     handleClose() {
       this.$emit("upup", this.current );
     },
+    showInfo(text) {
+      this.$message({
+        message: text,
+        type: "warning"
+      });
+    },
     changeChecked(){
       if(this.ck){
         this.form.password = '';
@@ -143,18 +159,65 @@ export default {
         }
       })
     },
-    save(formName) {
-      this.$refs[formName].validate((valid) => {
-          if (valid) {
-            this.postData();
-          } else {
-            return false;
-          }
-        });
+    save() {
+      if(this.form.employeeId == ''){
+        this.showInfo('请输入工号');
+        return;
+      }
+      if(this.form.userName == ''){
+        this.showInfo('请输入名称');
+        return;
+      }
+      if(this.form.phone == ''){
+        this.showInfo('请输入正确号码');
+        return;
+      }else{
+        if(!(/^1[34578]\d{9}$/.test(this.form.phone))){
+          this.showInfo('请输入正确号码');
+          return;
+        }
+      }
+      if(this.form.postCode == ''){
+        this.showInfo('请选择岗位');
+        return;
+      }
+      if(this.form.sex == '男'){
+        this.form.sex = '1';
+      } 
+      if(this.form.sex == '女'){
+        this.form.sex = '2';
+      }
+      if(this.form.sex == '未知'){
+        this.form.sex = '0';
+      } 
+      // if(this.form.sex == ''){
+      //   this.showInfo('请选择性别');
+      //   return;
+      // }else{
+      //   if(this.form.sex == '男'){
+      //     this.form.sex = 1;
+      //   }
+      //   if(this.form.sex == '女'){
+      //     this.form.sex == 2;
+      //   }
+      //   if(this.form.sex == '未知'){
+      //     this.form.sex = 0;
+      //   }
+      // }
+      console.log(this.form.sex+"sssss");
+      this.postData();
+      // this.$refs[formName].validate((valid) => {
+      //     if (valid) {
+      //       this.postData();
+      //     } else {
+      //       return false;
+      //     }
+      //   });
     },
     postData() {
       let msg = this.add ? '编辑' : '添加';
-      let uri = this.add ? '/community/edit' : '/user/property/create-user';
+      let uri = this.add ? '/user/property/update-user' : '/user/property/create-user';
+      console.log(this.form)
       this.$xttp
         .post( uri, this.form)
         .then(res => {

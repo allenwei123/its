@@ -80,7 +80,7 @@
         <template slot-scope="scope">{{ scope.row.auditTime | time('yyyy-MM-dd HH:mm:ss') }}</template>
       </el-table-column> -->
 
-      <el-table-column align="center" fixed="right" label="操作" width="250">
+      <el-table-column align="left" fixed="right" label="操作" width="250">
         <template slot-scope="scope">
           <el-button @click="printHandle(scope.row)" type="primary" size="small">
             认证详情
@@ -179,14 +179,14 @@
       },
       printHandle(row) {
         //打印
-        if (row.auditStatus == 1) {
+        // if (row.auditStatus == 1) {
           this.$xttp.get(`/user/${row.id}/contract-info`).then(res => {
             if (!res.errorCode) {
               this.boolDialog = true;
               this.printData = res.data;
             }
           });
-        }
+        // }
       },
       handle(row, num) {
         let status, msg;

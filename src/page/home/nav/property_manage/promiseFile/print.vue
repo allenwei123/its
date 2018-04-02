@@ -56,7 +56,7 @@
                 <li class="c-td">住房面积</li>
                 <li class="c-td">{{ data.userToRoom.area }}</li>
                 <li class="c-td">政治面貌</li>
-                <li class="c-td">{{ data.userToRoom.politicsStatus }}</li>
+                <li class="c-td">{{ data.userToRoom.politicsStatus | politicsStatus }}</li>
               </ul>
             </li>
             <li>
@@ -108,7 +108,7 @@
               <li>
                 <ul class="c-dp-fx c-tr" v-for="item in data.inhabitantList" :key="item.id">
                   <li class="c-td c-ta-center">{{ item.name }}</li>
-                  <li class="c-td c-ta-center">{{ item.sex }}</li>
+                  <li class="c-td c-ta-center">{{ item.sex | sex }}</li>
                   <li class="c-td c-ta-center">{{ item.birthday }}</li>
                   <li class="c-td c-ta-center">{{ item.filterRelationship }}</li>
                   <li class="c-td c-ta-center c-flex-200">{{ item.identityCard }}</li>

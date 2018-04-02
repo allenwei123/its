@@ -76,7 +76,7 @@
         <!-- <el-table-column label="使用状态" min-width="100" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{getStatus(scope.row.dataStatus)}}</template>
         </el-table-column> -->
-        <el-table-column align="center" fixed="right" label="操作" width="220">
+        <el-table-column align="left" fixed="right" label="操作" width="220">
           <template slot-scope="scope">
             <!-- <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button> -->
             <el-button @click="editHandle(scope.row)" type="primary" size="small">编辑</el-button>
@@ -100,6 +100,9 @@
       <transition name="fade">
         <SeePage v-if="see" :msg="see" @upsee="seeChange"  :data="seeData"></SeePage>
       </transition>
+      <!-- <transition name="edit">
+        <AddPage v-if="isEdit" :msg="isEdit" @reload="getTableList" @upup="editChange" :add.sync="Edit"></AddPage>
+      </transition> -->
 
       <el-dialog title="温馨提示" :visible.sync="visible2">
           <p>请问您是否确定注销员工吗？</p>
@@ -114,6 +117,7 @@
 <script>
 import AddPage from "./add";
 import SeePage from "./see";
+// import EditPage from "./edit";
 import { mapGetters } from "vuex";
 
 export default {

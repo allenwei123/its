@@ -45,7 +45,7 @@
               <template slot-scope="scope">{{scope.row.url}}</template>
             </el-table-column>
             <el-table-column label="状态" min-width="100" align="center" :show-overflow-tooltip="true">
-              <template slot-scope="scope">{{scope.row.releaseStatus === 1 ? '有效' : '失效'}}</template>
+              <template slot-scope="scope">{{scope.row.releaseStatus === 1 ? '已使用' : scope.row.releaseStatus === -1 ? '已过期': '未使用' }}</template>
             </el-table-column>
             <el-table-column label="使用时间" min-width="160" align="center" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.updateAt | time('yyyy-MM-dd HH:mm')}}</template>
@@ -94,23 +94,25 @@
           this.currentPage = 1;
         }
         else {
-          this.getTableList();
+          this.getTableList(1);
         }
       },
-      getTableList() {
+      getTableList(pages) {
         this.loading = true;
-        let url = `property/rpass/page?page=${this.currentPage}&size=${this.pageSize}`;
+        let url = `property/rpass/page?page=${pages}&size=${this.pageSize}`;
         let params = {};
         params['communityId'] = this.$store.getters.communityId;
         if (this.q_input) {
           params['userName'] = this.q_input;
         }
         params['releaseStatus'] = this.releaseStatus;
+        
         this.$xttp.post(url, params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {
             this.tableData = res.data.records;
             this.total = res.data.total;
+            this.loading = false;
           }
         }).catch(() => {
           this.loading = false;
@@ -121,7 +123,8 @@
       }
     },
     created() {
-      this.query();
+      // this.getListData(1);
+      this.getTableList(1);
     }
   }
 </script>

@@ -1,6 +1,6 @@
 <template>
       <el-dialog :title="titleFont" :visible.sync="msg" :before-close="handleClose">
-        <el-form :model="form" :rules="rules" ref="ruleForm" class="demo-form-inline">
+        <el-form :model="form" ref="ruleForm" class="demo-form-inline">
             <el-form-item label="楼栋名称：" :label-width="formLabelWidth" prop="name" class="c-must">
             <el-input v-model="form.name"></el-input>
             </el-form-item>
@@ -37,20 +37,20 @@ export default {
       form: {
         overGround: "",
         name: "",
-        overGround: '1',
-        underGround: '-1',
-        roomNum: '1',
+        overGround: '',
+        underGround: '',
+        roomNum: '',
         communityIdShow: this.$store.getters.communityName,
         communityId: this.$store.getters.communityId,
         communityName: this.$store.getters.communityName
       },
-      rules: {
-        name: [{ required: true, message: "请输入楼栋名称", trigger: "blur" }],
-        code: [{ required: true, message: "请输入楼栋编号", trigger: "blur" }],
-        overGround: [{ required: true, message: "请输入楼面层数", trigger: "blur" }],
-        underGround: [{ required: true, message: "请输入地下层数", trigger: "blur" }]
-        // roomNum: [{ required: true, message: "请输入房间数量", trigger: "blur" }]
-      },
+      // rules: {
+      //   name: [{ required: true, message: "请输入楼栋名称", trigger: "blur" }],
+      //   code: [{ required: true, message: "请输入楼栋编号", trigger: "blur" }],
+      //   overGround: [{ required: true, message: "请输入楼面层数", trigger: "blur" }],
+      //   underGround: [{ required: true, message: "请输入地下层数", trigger: "blur" }]
+      //   // roomNum: [{ required: true, message: "请输入房间数量", trigger: "blur" }]
+      // },
       cityArr: [],
       current: 1 //1 初始 2：添加后 3：编辑后
     };
@@ -70,13 +70,36 @@ export default {
       this.$emit("upup", this.current);
     },
     save(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          this.postData();
-        } else {
-          return false;
-        }
-      });
+      // this.$message({message:'请输入楼栋名称',type:'warning'});
+      if(this.form.name.length == 0){
+        this.$message({message:'请输入楼栋名称',type:'warning'});
+        return;
+      }
+      if(this.form.overGround.length == 0){
+        this.$message({message:'请输入楼面层数',type:'warning'});
+        return;
+      }
+      console.log(this.form.underGround)
+      if(this.form.underGround.length == 0){
+        this.$message({message:'请输入地下层数',type:'warning'});
+        return;
+      }
+      // else{
+      //   this.form.underGround = 0 - this.form.underGround;
+      // }
+      if(this.form.roomNum.length == 0){
+        this.$message({message:'请输入房间数量',type:'warning'});
+        return;
+      }
+      this.postData();
+
+      // this.$refs[formName].validate(valid => {
+      //   if (valid) {
+      //     this.postData();
+      //   } else {
+      //     return false;
+      //   }
+      // });
     },
     postData() {
       if (this.cityArr[0]) {

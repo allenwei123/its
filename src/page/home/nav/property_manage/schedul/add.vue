@@ -23,6 +23,10 @@
             <hr style="height:1px;border:none;border-top:1px dashed #cecece;" />
 
             <el-form-item label="员工：" prop="empl" class="c-must" style="display:block;margin-top:20px;">
+              <!-- <el-select v-model="form.empl" placeholder="请选择员工" @change="changEmpl" :disabled="disabledPost">
+                <el-option v-for="(item , indexs) in emplData" :key="item.userId" :label="item.userName" :value="indexs">
+                </el-option>
+              </el-select> -->
               <el-select v-model="form.empl" placeholder="请选择员工" @change="changEmpl" :disabled="disabledPost">
                 <el-option v-for="item in emplData" :key="item.userId" :label="item.userName" :value="item.userId">
                 </el-option>
@@ -103,7 +107,8 @@ export default {
         offTimeStr: '',
         task:'',
         attendPlace: '',
-        offPlace: ''
+        offPlace: '',
+        A:''
       },
       rules: {
         empl: [{ required: true, message: "请选中员工", trigger: "blur" }],
@@ -115,13 +120,14 @@ export default {
       current: 1 //1 初始 2：添加后 3：编辑后
     };
   },
-  props: ["msg","add"],
+  props: ["msg","add",'edit'],
   mounted() {},
   methods: {
     handleClose() {
       this.$emit("upup", this.current );
     },
     changEmpl(value){
+      console.log(value)
       this.form.empl = value;
     },
     initPost(){
@@ -138,7 +144,9 @@ export default {
       this.$xttp.get(`/user/property/${communityId}/user-list`,{params:{postCode:postCode}})
           .then(res => {
             if(res.success) {
+              console.log(res.data)
               this.emplData = res.data
+             
               
             }
           })
@@ -149,7 +157,6 @@ export default {
       let params = {};
       params['communityId'] = communityId;
       params['postCode'] = postCode;
-
       this.$xttp.post(`/task/class/page`,params)
       .then(res => {
         if(res.success) {
@@ -167,11 +174,8 @@ export default {
     },
     changeRadio() {
       this.isShow = true;
-
       let obj = this.classData.find(item => this.form.class == item.name);
       let id = obj.id;
-
-      console.log(id);
       this.$xttp.get(`task/class/${id}/detail`)
           .then(res => {
             if( res.success) {
@@ -199,24 +203,21 @@ export default {
       this.postData();
     },
     postData() {
-      let employeeId = this.form.empl;
       // let employeeId = this.form.empl;
-      // let classId = this.form.class;
       let postCode = this.form.postCode;
       let workDate = this.form.date;
       let userId = this.form.empl;
+      // let userId = this.form.userId;
       let communityId = this.$store.getters.communityId;
       let propertyId = localStorage.getItem('propertyId');
       let className = this.form.name;
-
       let attendTimeStr = this.form.attendTimeStr;
       let attendPlace = this.form.attendPlace;
       let offTimeStr = this.form.offTimeStr;
       let offPlace = this.form.offPlace;
       let task = this.form.task;
-
       let params = {};
-      params['employeeId'] = employeeId;
+      // params['employeeId'] = employeeId;
       // params['classId'] = classId;
       params['className'] = className;
       params['postCode'] = postCode;
@@ -225,14 +226,13 @@ export default {
       params['communityId'] = communityId;
       params['propertyId'] = propertyId;
       params['attendTimeStr'] = attendTimeStr;
-
       params['attendPlace'] = attendPlace;
       params['offTimeStr'] = offTimeStr;
       params['offPlace'] = offPlace;
       params['task'] = task;
       console.log(params);
       // return;
-          
+      
       let msg = this.add ? "编辑" : "添加";
       let uri = this.add
         ? "/task/schedule/edit"
@@ -276,8 +276,30 @@ export default {
           this.isSee = true;
           this.isShow = true;
           let records = res.data;
+        // this.emplData.value=res.data.userName
+        // this.emplData.values=res.data.userId;
+          // console.log(this.emplData)
           this.form.postCode = records.postCode;
+          if(records.postCode == 'CLEANER'){
+            this.form.postCode = '保洁'
+          } 
+          if(records.postCode == 'SECURITY'){
+            this.form.postCode = '保安'
+          }
+          if(records.postCode == 'MANAGER'){
+            this.form.postCode = '物业管理员'
+          } 
+          if(records.postCode == 'SERVICEMAN'){
+            this.form.postCode = '维修工'
+          }
+          if(records.postCode == 'SUPPORTSTAFF'){
+            this.form.postCode = '客服人员'
+          }
+          this.initEmpl();
+          console.log(this.emplData);
           this.form.empl = records.userName;
+          this.form.emplId = records.userId;
+          // this.form.userId = records.userId;
           this.form.name = records.className;
           this.form.offPlace = records.offPlace;
           this.form.offTimeStr = records.offTimeStr;
@@ -286,8 +308,9 @@ export default {
           this.form.task = records.task;
           this.form.remark = records.remark;
           this.form.class = this.add.className;
-          this.initPost();
-          this.initClass();
+          // this.initPost();
+          // this.initClass();
+          
           this.form.date = time.timestampToTime(records.workDate);
           this.checked = true;
           this.disabled1 = true;
@@ -313,17 +336,14 @@ export default {
   display: inline-block;
   margin-top: 20px;
 }
-
 .el-input{
   width: 200px;
 }
 .el-radio-group{
-
 }
 .el-radio.is-bordered+.el-radio.is-bordered{
   margin-right: 10px;
 }
-
 .el-radio.is-bordered{
   height: 40px;
 }
@@ -334,5 +354,3 @@ export default {
 }
   
 </style>
-
-

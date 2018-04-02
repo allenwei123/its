@@ -40,7 +40,7 @@
         <el-table-column label="备注信息" align="center" width="200" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.remark }}</template>
         </el-table-column>
-        <el-table-column fixed="right" align="center" label="操作" width="200">
+        <el-table-column fixed="right" align="left" label="操作" width="200">
           <template slot-scope="scope">
             <!-- <el-button type="primary" size="mini" @click="seeHandle(scope.row)">查看</el-button> -->
             <!-- <el-button type="primary" size="mini" @click="editHandle(scope.row)">编辑</el-button> -->

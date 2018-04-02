@@ -105,21 +105,29 @@
           this.currentPage = 1;
         }
         else {
-          this.getTableList();
+          this.getTableList(1);
         }
       },
       changeStatus() {
         this.query();
       },
-      getTableList() {
+      getTableList(pages) {
         this.loading = true;
-        let url = `property/complain/page?page=${this.currentPage}&size=${this.pageSize}`;
+        let url = `property/complain/page?page=${pages}&size=${this.pageSize}`;
         let params = {};
         params['communityId'] = this.$store.getters.communityId;
         if (this.q_input) {
           params['userName'] = this.q_input;
         };
         params['messageSource'] = this.value1;
+
+        if(this.value6) {
+          let a = new Date(this.value6[0]);
+          let b = new Date(this.value6[1]);
+          params['startAt'] = a.getFullYear() + '-' +(a.getMonth() < 9 ? '0': '')  + (a.getMonth() + 1) + '-' + (a.getDate() < 9 ? '0': '') + a.getDate();
+          params['endAt'] = b.getFullYear() + '-' +(b.getMonth() < 9 ? '0': '')  + (b.getMonth() + 1) + '-' + (b.getDate() < 9 ? '0': '') + b.getDate();
+        }
+        console.log(params);
         this.$xttp.post(url, params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {

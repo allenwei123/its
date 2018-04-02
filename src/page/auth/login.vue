@@ -42,8 +42,8 @@
     name: 'login',
     data() {
       return {
-        phone: '15918729264',
-        pwd: '123456',
+        phone: '',
+        pwd: '',
         dialogVisible: false,
         options:[] ,//社区列表
         // value: null ,//当前 社区
@@ -72,7 +72,6 @@
             //获取用户对应的社区id列表
             this.$xttp.get(`community/${userId}/queryByUserId`)
               .then(res => {
-                console.log(res);
                 if(!res.errorCode) {
                   res.data.forEach(item => {
                     let obj = {
