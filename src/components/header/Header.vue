@@ -20,12 +20,6 @@
       <div class="c-top_bar_area">
         <ul class="c-top-nav">
           <li v-for="(item,index) in items" :key="item.name" v-bind:class="{'c-nav-active':activeIndex == index}" @click="navClick(item,index)" >{{ item.name}}</li>
-          <!--<li class="c-nav-active">物业管理</li>-->
-          <!--<li>物业服务</li>-->
-          <!--<li>社区物联</li>-->
-          <!--<li>商圈管理</li>-->
-          <!--<li>系统管理</li>-->
-          <!--<li>统计分析</li>-->
         </ul>
       </div>
     </div>
@@ -43,7 +37,7 @@ import { mapGetters } from "vuex";
           {name: '物业管理', src: '/home/nav/side'},
           {name: '物业服务', src: '/home/nav/propertyService'},
           {name: '社区物联', src: '/home/nav/communityIoT'},
-          {name: '商圈管理', src: ''},
+          {name: '商圈管理', src: '/home/nav/businessManage'},
           {name: '系统管理', src: ''},
           {name: '统计分析', src: ''},
         ],

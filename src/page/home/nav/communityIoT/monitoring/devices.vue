@@ -166,7 +166,7 @@ export default {
       }else {
           this.sendAjax(null,this.input);
       }
-        
+
     },
     changeStatus() {
       this.find();
@@ -194,7 +194,6 @@ export default {
         }else {
           delete params.name;
         }
-        console.log(params);
       this.loading = true;
       this.$xttp.post("communityIoT/camera/page",params)
       .then(res => {

@@ -20,9 +20,6 @@ function a() {
   }
   return arr;
 };
-// let mock = '111001111011101110011111110111110101110'; //后台返回的数据
-// let sh = mock.split('');// 切割
-// const b = a(aside,sh);//模拟返回数据处理
 
 export default {
     state: {
@@ -79,6 +76,7 @@ export default {
           http.get(`/sys/menu/${state.communityId}/getByOuterKey`)
             .then(res => {
               let menuList =res.data?a(aside,res.data.spread.split('')) : null;
+              console.log(menuList)
               commit('UPDATEDASIDEDATA', menuList);
               resolve({msg:'success'})
             }).catch(err => {

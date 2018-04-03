@@ -3,12 +3,11 @@
 
     <el-container class="c-container">
 
-      <el-aside class="c-aside" style="background-color:#4a5064 " width="auto">
-        <!--rgb(238, 241, 246)-->
+      <el-aside class="c-aside" style="background-color:#ffffff " width="auto">
 
         <div class="c-settingMenu" @click="cn()">三</div>
-
-        <el-menu width="200px" v-if="asideData.length" :collapse="isCollapse" background-color="#4a5064" text-color="#fff" :default-active="$route.path" active-text-color="#409EFF">
+<!-- bg 4a5064   -->
+        <el-menu width="200px" v-if="asideData.length" :collapse="isCollapse" background-color="#ffffff" text-color="#000" :default-active="$route.path" active-text-color="#409EFF">
           <el-submenu  v-for="(itemNemu,index) in asideData" :index="itemNemu.id" v-bind:key="index">
             <template slot="title"><i class="iconfont icon-wuyeguanli">&nbsp;</i><span slot="title" class="c-aside-title">{{ itemNemu.name }}</span></template>
             <el-menu-item class="test" v-for="(itemGroup) in itemNemu.menuItem" v-bind:key="itemGroup.link" v-if="itemGroup.show == '1'" :index="itemGroup.link" @click="alink(itemGroup)">{{ itemGroup.title  }}</el-menu-item>
@@ -17,7 +16,9 @@
         </el-menu>
 
       </el-aside>
+
       <router-view/>
+
 
     </el-container>
   </div>
@@ -58,28 +59,27 @@ import { mapGetters } from "vuex"
     margin-top:50px;
   }
   .c-container {
+    background-color: #efefef;
     height:calc(100vh - 50px);
   }
   .el-aside {
     color: #333;
   }
-  .dh {
-    color:red;
-  }
   .c-settingMenu {
     height:41px;
-    background-color: #4a5064;
-    color:#aeb9c2;
+    background-color: #ffffff;
+    color:#000;
     line-height: 35px;
     text-align: center;
     cursor: pointer;
     margin-right: 1px;
-    border-bottom: .2px solid #312525;
+    border-bottom: .2px solid #efefef;
   }
   .c-aside{
     /*width:220px !important;*/
   }
   .c-aside-title {
-    color:#909399;
+    color:#000;
+    font-weight: 800;
   }
 </style>
