@@ -60,7 +60,7 @@
       </el-pagination>
     </div>
     <transition name="fade1">
-      <!-- <AddPage v-if="isShow" :msg="isShow" @upup="change" :add.sync="notice"></AddPage> -->
+      <AddPage v-if="isShow" :msg="isShow" @upup="change" :add.sync="notice"></AddPage>
     </transition>
     <transition name="fade">
       <!--<SeePage v-if="see" :msg="see" @upsee="seeChange"  :data="seeData"></SeePage>-->
@@ -76,7 +76,7 @@
 </template>
 
 <script>
-//   import AddPage  from './add';
+  import AddPage  from './add';
   export default {
     name: "merchantList",
     data() {
@@ -104,7 +104,7 @@
       };
     },
     components: {
-    //   AddPage
+      AddPage
       // SeePage
     },
     methods: {

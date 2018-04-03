@@ -112,7 +112,6 @@ export default {
     this.initPost();
     if(this.add){//判断此时组件为 编辑
       this.form = this.add;
-      console.log(this.form);
       this.resetPass = true;
       this.titleFont = '编辑员工';
       this.dis = true;
