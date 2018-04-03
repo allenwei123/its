@@ -134,12 +134,11 @@
           this.currentPage = 1;
         }
         else {
-          this.getTableList(1);
+          this.getTableList();
         }
       },
       changeStatus() {
-        // this.query();
-        this.getTableList(1);
+        this.getTableList();
       },
       // 获取通知类型名称
       getNoticeTypeName(type) {
@@ -251,15 +250,14 @@
           this.loading = false;
         });
       },
-      getTableList(pages) {
+      getTableList() {
         this.loading = true;
-        let url = `property/notice/page?page=${pages}&size=${this.pageSize}`;
+        let url = `property/notice/page?page=${this.currentPage}&size=${this.pageSize}`;
         let params = {};
         params['communityId'] = this.$store.getters.communityId;
-        // if (this.q_input) {
-        //   params['title'] = this.q_input;
-        // }
-        params['publishStatus'] = this.value1;
+        if(this.value1){
+          params['publishStatus'] = this.value1;
+        }
         if(this.value6) {
           let a = new Date(this.value6[0]);
           let b = new Date(this.value6[1]);
@@ -279,8 +277,7 @@
       }
     },
     created() {
-      // this.query();
-      this.getTableList(1);
+      this.query();
     }
   }
 </script>

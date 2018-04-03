@@ -146,7 +146,7 @@ export default {
       this.form.body = this.detail.body;
       if (this.detail.thumbnailUrl) {
         getUri(this.detail.thumbnailUrl,(uri) => {
-          this.fileList2.push({name:'附件',url:uri});
+          // this.fileList2.push({name:'附件',url:uri});
         });
       }
     }

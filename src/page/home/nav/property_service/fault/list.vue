@@ -110,8 +110,8 @@
 
       <el-dialog title="温馨提示" :visible.sync="visible1">
           <span>指派员工 :</span>
-          <el-select v-model="value" placeholder="请选择维修人员">
-            <el-option v-for="item in repairData" :key="item.userId" :label="item.userName" :value="item.userName"></el-option>
+          <el-select v-model="value" placeholder="请选择维修人员" clearable>
+            <el-option v-for="item in repairData" :key="item.userId" :label="item.userName" :value="item.userId"></el-option>
           </el-select>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="visible1 = false">取消</el-button>
@@ -130,6 +130,7 @@
   import SeePage from "./see";
   //分配人员
   // import AssignPage from "./assign.vue";
+  
   export default {
     name: 'fault',
     components: {
@@ -193,46 +194,13 @@
       }
     },
     methods: {
-      // getTableList(val) {
-      //   this.postData(val, this.input, this.value1);
-      // },
-      getTableList(pages) {
-        let params = {};
-        params['userName'] = this.input;
-        console.log(params.userName)
-
-        params['communityId'] = this.$store.getters.communityId;
-        params['faultStatus'] = this.value1;
-        let url = `property/fault/queryFaultPage?page=${pages}&size=${this.pageSize}`;
-        this.loading = true;
-        if(this.value6) {
-          let a = new Date(this.value6[0]);
-          let b = new Date(this.value6[1]);
-          params['playTimeBegin'] = a.getFullYear() + '-' +(a.getMonth() < 9 ? '0': '')  + (a.getMonth() + 1) + '-' + (a.getDate() < 9 ? '0': '') + a.getDate();
-          params['playTimeEnd'] = b.getFullYear() + '-' +(b.getMonth() < 9 ? '0': '')  + (b.getMonth() + 1) + '-' + (b.getDate() < 9 ? '0': '') + b.getDate();
-        }
-        console.log(params);
-        this.$xttp.post(url, params).then(res => {
-          if (res.errorCode === 0) {
-            this.tableData = res.data.records;
-            // this.currentPage = res.data.currentPage;
-            this.total = res.data.total;
-            this.loading = false;
-            // this.$router.push({path:this.$route.path,query:{page: nPage }})
-          }
-        }).catch(() => {
-          this.loading = false;
-        })
-
-      },
       query() {
+        this.q_input = this.input;
         if (this.currentPage !== 1) {
           this.currentPage = 1;
         }
         else {
-          //value1 故障状态查询
-          // this.postData(null, this.input, this.value1);
-          this.getTableList(1);
+          this.getTableList();
         }
       },
       addChange(msg) {
@@ -244,6 +212,8 @@
       },
       changeStatus() {
         this.query();
+        //超过时间范围 显示无数据
+        this.tableData= [];
       },
       // assignChange(msg) {
       //   this.showAssign = false;
@@ -272,7 +242,6 @@
       },
       handleClick(row) {
         //查看详情弹起 并传数据给see组件
-        // console.log(33,row.id);
         //查看报修单详细
         let url = `property/fault/${row.id}/detail`;
         this.$xttp.get(url).then(res => {
@@ -311,27 +280,23 @@
           return false;
         }
         this.visible1 = false;
-        this.$message({
-          message: '分派成功',
-          type: 'success'
-        });
         this.assignData.faultStatus = 3;
         this.assign(this.assignData);
       },
       //分配人员
       assign(assignData) {
         let url = `property/fault/allocation`;
-        let params = {
-          id: assignData.id,
-          // repairId: assignData.repairId,
-          repairName: this.value,
-          // repairContact: assignData.repairContact
-        }
-        console.log(params);
+        let params = {};
+        params['id'] = this.assignData.id;
+        params['repairId'] = this.value;
         this.$xttp.post(url, params).then(res => {
           if(res.errorCode === 0) {
-            this.loading = false;
             console.log('res', res);
+            this.loading = false;
+             this.$message({
+              message: '分派成功',
+              type: 'success'
+            });
           }
         }).catch( () => {
           this.loading = false;
@@ -418,20 +383,15 @@
       add() {
         this.addSee = true;
       },
-      postData(page, userName, faultStatus) {
-        let nPage = page || this.$route.query.page || 1;
-        let params = {page:nPage}
-        if(userName){
-          //输入的搜索字添加params中
-          params.userName = this.input;
-        }else {
-          delete params.userName;
-        };
-        if(faultStatus){
-          //输入的搜索字添加params中
-          params.faultStatus = this.value1;
-        }else {
-          delete params.faultStatus;
+      getTableList() {
+        let params = {};
+        //输入的搜索字添加params中
+        if(this.q_input){
+          params['userName'] = this.q_input;
+        }
+        //输入的搜索字添加params中
+        if(this.value1){
+          params['faultStatus'] = this.value1;
         }
         let communityId = this.$store.getters.communityId;
         params['communityId'] = communityId;
@@ -443,11 +403,10 @@
           params['playTimeBegin'] = a.getFullYear() + '-' +(a.getMonth() < 9 ? '0': '')  + (a.getMonth() + 1) + '-' + (a.getDate() < 9 ? '0': '') + a.getDate();
           params['playTimeEnd'] = b.getFullYear() + '-' +(b.getMonth() < 9 ? '0': '')  + (b.getMonth() + 1) + '-' + (b.getDate() < 9 ? '0': '') + b.getDate();
         }
-        console.log(params);
+        // console.log(params);
         this.$xttp.post(url, params).then(res => {
           if (res.errorCode === 0) {
             this.tableData = res.data.records;
-            // this.currentPage = res.data.currentPage;
             this.total = res.data.total;
             this.loading = false;
             this.$router.push({path:this.$route.path,query:{page: nPage }})
@@ -463,8 +422,7 @@
     },
     created() {
       this.workMan();
-      // this.query();
-      this.getTableList(1);
+      this.query();
     }
   }
 </script>

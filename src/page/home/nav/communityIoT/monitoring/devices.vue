@@ -196,7 +196,7 @@ export default {
         }
         console.log(params);
       this.loading = true;
-      this.$xttp.post("/communityIoT/camera/auth/page",params)
+      this.$xttp.post("communityIoT/camera/page",params)
       .then(res => {
         if (!res.errorCode) {
           this.tableData = res.data.records;

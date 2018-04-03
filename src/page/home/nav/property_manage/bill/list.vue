@@ -181,6 +181,7 @@ export default {
       total: 0,
       currentPage: 1,
       input: "",
+      q_input: null,
       see: false,
       seeData: null,
       // 编辑账单
@@ -200,14 +201,13 @@ export default {
     };
   },
   methods: {
-    getTableList(val) {
-      this.postData(val, this.date, this.value1, this.input, this.value2);
-    },
     query() {
+      this.q_input = this.input;
       if (this.currentPage !== 1) {
         this.currentPage = 1;
-      } else {
-        this.postData(null, this.date, this.value1, this.input, this.value2);
+      }
+      else {
+        this.getTableList();
       }
     },
     changeStatus() {
@@ -382,27 +382,25 @@ export default {
       };
       return names[status];
     },
-    postData(page, makeBillAt, billStatusSet, roomNo, buildingId) {
-      let nPage = page || this.$route.query.page || 1;
-      let params = { page: nPage };
-      if (makeBillAt) {
-        //输入的搜索字添加params中
-        params.makeBillAt = this.date;
-      } else {
-        delete params.makeBillAt;
-      };
-      if (billStatusSet) {
-        //输入的搜索字添加params中
-        params.billStatusSet = [this.value1];
-      } else {
-        delete params.billStatusSet;
-      };
+    getTableList() {
+      let url = `fees/property-bill/page?page=${this.currentPage}&size=${this.pageSize}`;
+      let params = {};
       let communityId = this.$store.getters.communityId;
       params.communityId = communityId;
-      params['roomNo'] = this.input;
-      params['buildingId'] = this.value2;
-      console.log(33,params);
-      let url = `fees/property-bill/page?page=${this.currentPage}&size=${this.pageSize}`;
+      //输入的搜索字添加params中
+      if(this.date){
+        params['makeBillAt'] = this.date;
+      }
+      // //输入的搜索字添加params中
+      if(this.value1){
+        params['billStatusSet'] = [this.value1];
+      }
+      if(this.q_input){
+        params['roomNo'] = this.q_input;
+      }
+      if(this.value2){
+        params['buildingId'] = this.value2;
+      }
       this.loading = true;
       this.$xttp
         .post(url, params)
