@@ -110,7 +110,7 @@ export default {
       show: false,
       taskType: "1",
       dialogVisible: false,
-      srcP: "",
+      srcP: '',
       navDetailData: [{ id: 0, name: "物业管理" }, { id: 1, name: "保安考勤" }],
       formInline: {
         empl: "",
@@ -245,6 +245,7 @@ export default {
     },
     handleClose() {
       this.dialogVisible = false;
+      this.srcP = '';
     }
   },
   created() {

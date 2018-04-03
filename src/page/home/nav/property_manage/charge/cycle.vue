@@ -50,8 +50,8 @@ export default {
       params:[],
       form: {
         chargeStandard: '按月收费',
-        payCycle: '',
-        billDate: ''
+        payCycle: '30',
+        billDate: '26'
       },
       rules: {
         itemName: [{required: true, message: '请输入项目名称', trigger: 'blur'}],
@@ -59,7 +59,7 @@ export default {
         unitPrice: [{required: true, message: '请输入单价', trigger: 'blur'}]
       },
       chargeStandardOptions:[{id:1,name:'按月收费'}],
-      paySycleOptions:[{id:1,name:'30'},{id:2,name:'45'},{id:3,name:'60'},{id:4,name:'90'}]
+      paySycleOptions:[{id:30,name:'30'},{id:45,name:'45'},{id:60,name:'60'},{id:90,name:'90'}]
     };
   },
   props: ["msg","add","projectData"],
@@ -75,40 +75,63 @@ export default {
         let communityId = this.$store.getters.communityId;
         let params = {};
         params['communityId'] = communityId;
-        // let url = '/property/parameter/page';
-        console.log(params);
-
         this.loading = true;
         this.$xttp.post("/property/parameter/page",params).then(res => {
             if (res.success){
-                // console.log(res.data)
-                // this.form.payCycle = res.data.records[0].value;
-                // this.form.payCycleId = res.data.records[0].id;
-                // this.form.billDateId = res.data.records[1].id;
-                // this.form.billDate = res.data.records[1].value;
-              let  a = res.data.records[0].value;
-              let  b = res.data.records[0].id;
-              let  c = res.data.records[1].id;
-              let  d = res.data.records[1].value;
-                let bb = [];
-                bb.push(b);
-                bb.push(c);
-                let cc = [];
-                cc.push(a);
-                cc.push(d);
-                let key = ['id','value'];
+                this.form.payCycle = res.data.records[0].value;
+                this.form.payCycleId = res.data.records[0].id;
+                this.form.billDateId = res.data.records[1].id;
+                this.form.billDate = res.data.records[1].value;
+              //   console.log(res.data.records)
+              // let  a = res.data.records[0].value;
+              // let  b = res.data.records[0].id;
+              // let  c = res.data.records[1].id;
+              // let  d = res.data.records[1].value;
+              // console.log(a);
+              // console.log(b);
+              // console.log(c);
+              // console.log(d);
+              //   let bb = [];
+              //   bb.push(b);
+              //   bb.push(c);
+              //   let cc = [];
+              //   cc.push(a);
+              //   cc.push(d);
+              //   let key = ['id','value'];
                 
-                this.params = bb.map(function(item,index){
-                    let obj = {};
-                    obj[key[0]] = bb[index];
-                    obj[key[1]] = cc[index];
-                    return obj;
-                });
-                this.loading = false;
+              //   this.params = bb.map(function(item,index){
+              //       let obj = {};
+              //       obj[key[0]] = bb[index];
+              //       obj[key[1]] = cc[index];
+              //       return obj;
+              //   });
+              //   this.loading = false;
             }
         })
     },
     save() {
+
+        let params = {};
+
+        let  a = this.form.payCycle;
+        let  b = this.form.payCycleId;
+        let  c = this.form.billDateId;
+        let  d = this.form.billDate;
+
+        let bb = [];
+        bb.push(b);
+        bb.push(c);
+        let cc = [];
+        cc.push(a);
+        cc.push(d);
+        let key = ['id','value'];
+        
+        this.params = bb.map(function(item,index){
+            let obj = {};
+            obj[key[0]] = bb[index];
+            obj[key[1]] = cc[index];
+            return obj;
+        });
         let uri = '/property/parameter/multi-edit';
         this.$xttp.post(uri,this.params)
         .then(

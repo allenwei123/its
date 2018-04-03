@@ -1,8 +1,17 @@
 <template>
     <el-dialog title="查看详情" :visible.sync="msg" :before-close="handleClose">
         <el-form ref="ruleForm" :model="form" class="demo-form-inline">
+            <el-form-item v-if="isShow" label="项目ID：" :label-width="formLabelWidth" prop="feeItemId" class="c-must">
+              <el-input v-model="form.feeItemId"></el-input>
+            </el-form-item>
             <el-form-item label="项目名称：" :label-width="formLabelWidth" prop="itemName" class="c-must">
-              <el-input v-model="form.itemName"></el-input>
+                <el-row :gutter="20">
+                    <el-col :span="12"><el-input v-model.trim="form.itemName"></el-input></el-col>
+                    <el-col :span="6"><el-button type="primary" plain @click="editProject">修改项目名称</el-button></el-col>
+                </el-row>
+              <!-- <el-input v-model="form.itemName"></el-input> -->
+              <!-- <el-col :span="12"></el-col>
+              <el-col :span="12"></el-col> -->
             </el-form-item>
             <!-- <el-form-item label="计费规则：" :label-width="formLabelWidth" prop="itemName" class="c-must">
               <el-input v-model="form.type"></el-input>
@@ -36,6 +45,7 @@ export default {
         formLabelWidth: "120px",
         isShow: false,
         form:{
+            feeItemId: '',
             itemName: ''
         },
         status:'',
@@ -60,10 +70,18 @@ export default {
       handleClose() {
         this.$emit("upsee", false );
       },
+      showInfo(text,type){
+        this.$message({
+            message: text,
+            type: type
+        })
+      },
       getTableList() {
         let feeItemId = this.detail.id;
         let communityId = this.$store.getters.communityId;
         this.form.itemName = this.detail.itemName;
+        this.form.feeItemId = feeItemId;
+        
         this.loading = true;
         let url = `/fees/rule/${communityId}/page?page=${this.currentPage}&size=${this.pageSize}&feeItemId=${feeItemId}`
         this.$xttp.get(url).then(res => {
@@ -103,6 +121,29 @@ export default {
             //     message: '取消修改价格'
             // });       
         });
+      },
+      editProject(){
+        let projectName = this.form.itemName;
+        let projectId = this.form.feeItemId;
+        let params = {};
+        
+        if(projectName == '' || projectName.length == 0){
+            this.showInfo('项目名称不能为空','warning');
+            return;
+        }
+        params['id'] = projectId;
+        params['itemName'] = projectName;
+        let url = `fees/item/edit/${projectId}`;
+        this.$xttp.post(url,params).then(res => {
+            this.loading = false;
+            if(res.success){
+                this.form.itemName = res.data.itemName;
+                this.$emit('reload');
+                this.showInfo('修改项目名称成功','success');
+            }
+        }).catch(() => {
+            this.loading = fasle;
+        })
       }
   }
 }

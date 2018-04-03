@@ -133,6 +133,7 @@ export default {
   methods: {
     handleClose() {
       this.$emit("upup", this.current );
+      this.$emit('reload');
     },
     showInfo(text) {
       this.$message({
@@ -190,21 +191,6 @@ export default {
       if(this.form.sex == '未知'){
         this.form.sex = '0';
       } 
-      // if(this.form.sex == ''){
-      //   this.showInfo('请选择性别');
-      //   return;
-      // }else{
-      //   if(this.form.sex == '男'){
-      //     this.form.sex = 1;
-      //   }
-      //   if(this.form.sex == '女'){
-      //     this.form.sex == 2;
-      //   }
-      //   if(this.form.sex == '未知'){
-      //     this.form.sex = 0;
-      //   }
-      // }
-      console.log(this.form.sex+"sssss");
       this.postData();
       // this.$refs[formName].validate((valid) => {
       //     if (valid) {

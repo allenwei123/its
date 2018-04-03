@@ -6,16 +6,6 @@
         </ul>
         <div class="c-search">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
-            <!-- <el-form-item label="账单日期">
-              <el-date-picker
-                v-model="formInline.date"
-                type="date"
-                value-format="yyyy-MM-dd"
-                format="yyyy-MM-dd"
-                @change="changeDate"
-                placeholder="账单日期">
-              </el-date-picker>
-            </el-form-item> -->
             <el-form-item label="时间：">
               <el-date-picker
                 v-model="formInline.rangeDate"
@@ -43,14 +33,11 @@
               <!-- <el-button type="success" plain @click="keySchedul">一键排班</el-button> -->
             </el-form-item>
           </el-form>
-          <!-- <el-button type="primary" icon="el-icon-edit" class="c-addBtn" @click="handleCreate">新增排班</el-button> -->
-          <!-- <el-button type="primary" @click="find">一键排班</el-button> -->
           <el-button type="primary" class="c-addBtn" @click="onSubmit">新增排班</el-button>
         </div>
       </div>
       
       <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." border highlight-current-row ref="multipleTable" style="width: 100%">
-        <!-- <el-table-column label="序号" type="index" align="center"  width="60">{{(currentPage-1) * pageSize + scope.$index + 1}}</el-table-column> -->
         <el-table-column label="序号" width="80" align="center">
           <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
         </el-table-column>
@@ -73,15 +60,6 @@
           </template>
         </el-table-column>
       </el-table>
-      <!-- <div class="c-block">
-        <el-pagination
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-size="30"
-          layout="total, prev, pager, next, jumper"
-          :total="total">
-        </el-pagination>
-      </div> -->
       <div class="c-block">
         <el-pagination
           @current-change="handleCurrentChange"
@@ -91,19 +69,13 @@
           :total="total">
         </el-pagination>
       </div>
-      <!-- <transition name="fade1">
-        <AddPage v-if="isShow" :msg="isShow" @upup="change" :add.sync="notice"></AddPage>
-      </transition>
-      <transition name="fade">
-        <SeePage v-if="see" :msg="see" @upsee="seeChange"  :data="seeData"></SeePage>
-      </transition>
-      <transition name="fade2">
-        <EditPage v-if="editShow" :msg="editShow" @upedit="editChange" :editData="editData"></EditPage>
-      </transition> -->
-      <transition name="fade1">
+      <transition name="show">
         <AddPage v-if="isShow" :msg="isShow" @upup="change" @reload="sendAjax" :add.sync="notice"></AddPage>
       </transition>
-      <transition name="fade">
+      <transition name="edit">
+        <EditPage v-if="isEdit" :msg="isEdit" @upedit="editChange" @reload="sendAjax" :edit.sync="editData"></EditPage>
+      </transition>
+      <transition name="see">
         <SeePage v-if="see" :msg="see" @upsee="seeChange"  :data="seeData"></SeePage>
       </transition>
 
@@ -120,6 +92,7 @@
 <script>
 import AddPage from "./add";
 import SeePage from "./see";
+import EditPage from './edit';
 import { mapGetters } from "vuex";
 import time from '@/utils/time.js';
 
@@ -172,18 +145,25 @@ export default {
       pageSize:10,
       currentPage: 1,
       loading: false,
+      //添加
       isShow: false, //控制添加页面弹出
       notice:null,//编辑传送的值
+      //查看
       see:false,//控制查看组件弹出
       seeData:null,//查看数据
+      //删除
       visible2:false,//控制删除框
-      delData:null
+      delData:null,
+      // 修改
+      isEdit: false,
+      editData: null
     };
   },
   computed: mapGetters(["showAside"]),
   components: {
     AddPage,
-    SeePage
+    SeePage,
+    EditPage
   },
   methods: {
     onSubmit() {//添加按钮
@@ -207,14 +187,16 @@ export default {
     },
     editHandle(row) {
       //编辑
-      this.isShow = true;
-      this.notice = row;
-      console.log(this.notice);
+      this.isEdit = true;
+      this.editData = row;
+      // this.isShow = true;
+      // this.notice = row;
     },
     change(msg) {//与添加弹窗交互
       if(msg == 1) {
         this.isShow = false;
-      }else if(msg == 2 || msg == 3) {
+      }
+      else if(msg == 2 || msg == 3) {
         // this.sendAjax();
         this.isShow = false;
       }
@@ -222,8 +204,8 @@ export default {
     seeChange(msg) {//与查看弹窗交互
       this.see = false;
     },
-    editChange(msg) {
-      this.editShow = false;
+    editChange(msg){
+      this.isEdit = false;
     },
     changeDate() {
       this.sendAjax();
@@ -238,20 +220,7 @@ export default {
       this.visible2 = true;
       this.delData = row; 
     },
-    handleDiabled(row, usestate){
-      this.$message({
-        message: '启用成功',
-        type: 'success'
-      })
-      row.usestate = usestate
-    },
-    handleAbled(row, usestate){
-      this.$message({
-        message: '禁用成功',
-        type: 'success'
-      })
-      row.usestate = usestate
-    },
+
     changeRangeDate() {
       this.sendAjax();
     },
@@ -343,19 +312,27 @@ export default {
   }
 }
 // 切换动画
-.fade-enter-active, .fade-leave-active {
+.see-enter-active, .see-leave-active {
   transition: all 0.5s ease;
 }
        
-.fade-enter, .fade-leave-active {
+.see-enter, .see-leave-active {
   opacity: 0;
   transform: rotateY(180deg);
 }
-.fade1-enter-active, .fade1-leave-active {
+.edit-enter-active, .edit-leave-active {
   transition: all 0.5s ease;
 }
        
-.fade1-enter, .fade1-leave-active {
+.edit-enter, .edit-leave-active {
+  opacity: 0;
+  transform: rotateY(180deg);
+}
+.show-enter-active, .show-leave-active {
+  transition: all 0.5s ease;
+}
+       
+.show-enter, .show-leave-active {
   opacity: 0;
   transform: translateX(-500px);
 }

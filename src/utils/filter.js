@@ -56,7 +56,9 @@ Vue.filter('politicsStatus', function (value) {
 });
 
 Vue.filter('sex', function (value) {
-  if (!value) return '';
+  if (!value){
+    return '未知';
+  }
   let newValue = '';
   switch (value) {
     case 0:
