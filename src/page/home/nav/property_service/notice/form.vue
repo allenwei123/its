@@ -99,10 +99,8 @@ export default {
         this.showInfo("公告内容不能为空");
         return;
       }
-      
 
       let files = this.$refs.upload.uploadFiles;
-      console.log(33,files.length);
       if (files.length) {
         ossUpload(files[0].raw, key => {
           this.form.thumbnailUrl = key;

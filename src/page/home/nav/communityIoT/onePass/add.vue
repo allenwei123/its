@@ -2,7 +2,7 @@
   <el-dialog title="新增卡片" :visible.sync="msg" :before-close="handleClose">
     <el-form :model="form" :rules="rules" ref="ruleForm"  label-width="120px">
       <el-form-item label="卡号" prop="keyNo" required>
-        <el-input v-model="form.keyNo" auto-complete="off"></el-input>
+        <el-input v-model="form.keyNo" auto-complete="off" placeholder="请输入12位卡号"></el-input>
       </el-form-item>
 
       <el-form-item label="卡类型" label-width="120px" prop="value1" required>
@@ -110,27 +110,34 @@ import time from "@/utils/time.js";
           },
           postData() {
             let url = `room/query-by-user`;
-            let obj = {communityId:this.$store.getters.communityId,userId:'5a82a45e9ce93e30677c3f9e'};
+            let obj = {communityId:this.$store.getters.communityId,userId:'5aa733d4e4b0274d66f17e9c'};
             // let url = `user/property/${this.$store.getters.communityId}/user-list?postCode=${this.form.value2}`;
             this.$xttp.post(url, obj).then(res => {
               if(res.errorCode === 0) {
                 this.loading = false;
                 this.userToRoomId = res.data[0].id;
-
+                
                 //获取id后再去申请卡片 卡片控制12位
                 let url = `user/card/add/${this.userToRoomId}`;
                 let obj = {
                   "keyType": this.form.value1,
                   "communityId": this.$store.getters.communityId,
                   "rooms": [{
-                    "expireTime": 2147483648,
+                    "expireTime": 3000,
                     "roomId": "5aa63af1e4b090a181f4c628"
                   }],
-                  "processTime": 2147483648,
+                  "processTime": 214748368,
                   "userId": "5aa733d4e4b0274d66f17e9c",
                   "keyNo" : this.form.keyNo
                 }
-                console.log(obj);
+                if(obj.keyNo.length !== 12){
+                  this.$message({
+                    message: "请输入12位卡号",
+                    type: "warning"
+                  });
+                  return;
+                }
+                console.log(obj.keyNo.length);
                 this.$xttp.post(url, obj).then( res=> {
                   if (res.errorCode === 0) {
                     this.$message({
