@@ -330,7 +330,7 @@ const arr = [
             id: '4-1-2',
             title:'轮播图管理',
             show: 1,
-            link:'/home/nav/businessManage/carousel'
+            link:'/home/nav/businessManage/slideShow'
           }
         ]
       },
