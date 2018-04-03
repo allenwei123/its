@@ -168,10 +168,6 @@ export default {
       else {
         this.getTableList();
       }
-<<<<<<< HEAD
-=======
-
->>>>>>> 88f57b53dba9061fd50aedd1c3645ead7f3f2833
     },
     changeStatus() {
       this.query();
@@ -208,17 +204,10 @@ export default {
       //监控设备名称
       if(name){
           //输入的搜索字添加params中
-<<<<<<< HEAD
         params['name'] = this.input;
       }else {
         delete params.name;
       }
-=======
-          params['name'] = this.input;
-        }else {
-          delete params.name;
-        }
->>>>>>> 88f57b53dba9061fd50aedd1c3645ead7f3f2833
       this.loading = true;
       this.$xttp.post(url, params)
       .then(res => {
