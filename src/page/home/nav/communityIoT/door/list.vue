@@ -178,7 +178,7 @@ import AddPage from "./add";
         this.$router.push({
           path: '/home/nav/communityIoT/doorRecord',
           query: {
-            deviceId: item.id
+            deviceId: item.doorId || ''
           }
         });
       }

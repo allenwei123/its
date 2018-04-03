@@ -27,18 +27,6 @@ const arr = [
             link:'/home/nav/side/roomFile',
             show: 1
           },
-          // {
-          //   id:'1-1-4',
-          //   title:'车库档案',
-          //   link:'/home/nav/side/garageport',
-          //   show: 1
-          // },
-          // {
-          //   id:'1-1-5',
-          //   title:'车位档案',
-          //   link:'/home/nav/side/carport',
-          //   show: 1
-          // },
           {
             id: '1-1-4',
             title: '住户档案',
@@ -318,6 +306,45 @@ const arr = [
           //   link:'/home/nav/communityIoT/userRecord',
           //   show: 1
           // }
+        ]
+      }
+    ]
+  },
+  {
+    id:'4',
+    name:'商圈管理',
+    show: 1,
+    group: [
+      {
+        id:'4-1',
+        name:'周边商圈',
+        show: 1,
+        menuItem:[
+          {
+            id: '4-1-1',
+            title:'商家管理',
+            show: 1,
+            link:'/home/nav/businessManage/merchant'
+          },
+          {
+            id: '4-1-2',
+            title:'轮播图管理',
+            show: 1,
+            link:'/home/nav/businessManage/carousel'
+          }
+        ]
+      },
+      {
+        id:'4-2',
+        name:'便民服务',
+        show: 1,
+        menuItem:[
+          {
+            id: '4-2-1',
+            title:'便民服务',
+            show: 1,
+            link:'/home/nav/businessManage/amenity'
+          }
         ]
       }
     ]

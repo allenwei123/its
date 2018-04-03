@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-main>
-      <div>{{deviceName}}</div>
+      <div style="margin-bottom: 5px;"> <b>{{deviceName || '门禁'}}：</b>使用记录</div>
       <div class="c-rpass-container">
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
@@ -79,7 +79,7 @@
       },
       changeStatus() {
         this.query();
-      }, 
+      },
       getuseStyle(status) {
         let names = {
           '1': '蓝牙',
@@ -99,10 +99,11 @@
           params['endDate'] = b.getFullYear() + '-' +(b.getMonth() < 9 ? '0': '')  + (b.getMonth() + 1) + '-' + (b.getDate() < 9 ? '0': '') + b.getDate();
         }
         params['userName'] = this.q_input;
-        // params['deviceId'] = this.$route.query.deviceId;
-        // if (this.q_input) {
-        //   params['time'] = this.q_input;
-        // }
+        params['deviceId'] = this.$route.query.deviceId;
+        if (this.q_input) {
+          params['deviceId'] = this.q_input;
+        }
+
         this.$xttp.post(url, params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {
@@ -113,7 +114,7 @@
           this.loading = false;
         })
       }
-    }, 
+    },
     created() {
       this.query();
     }
