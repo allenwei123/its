@@ -76,11 +76,10 @@
         <!-- <el-table-column label="使用状态" min-width="100" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{getStatus(scope.row.dataStatus)}}</template>
         </el-table-column> -->
-        <el-table-column align="left" fixed="right" label="操作" width="220">
+        <el-table-column align="left" fixed="right" label="操作" width="250">
           <template slot-scope="scope">
-            <!-- <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button> -->
+            <el-button @click="powerHandle(scope.row)" type="primary" size="small">职权管理</el-button>
             <el-button @click="editHandle(scope.row)" type="primary" size="small">编辑</el-button>
-            <!-- <el-button v-if="scope.row.dataStatus ==0 && scope.row.postCode != 'MANAGER'" @click="handleDiabled(scope.row,'1')" type="warning" size="small">启用</el-button> -->
             <el-button v-if="scope.row.postCode != 'MANAGER'" @click="handleWriteoff(scope.row)" type="danger" size="small">注销</el-button>
           </template>
         </el-table-column>
@@ -100,9 +99,9 @@
       <transition name="fade">
         <SeePage v-if="see" :msg="see" @upsee="seeChange"  :data="seeData"></SeePage>
       </transition>
-      <!-- <transition name="edit">
-        <AddPage v-if="isEdit" :msg="isEdit" @reload="getTableList" @upup="editChange" :add.sync="Edit"></AddPage>
-      </transition> -->
+      <transition name="power">
+        <PowerPage v-if="ispower" :msg="ispower" @reload="getTableList" @uppower="powerChange" :power.sync="powerData"></PowerPage>
+      </transition>
 
       <el-dialog title="温馨提示" :visible.sync="visible2">
           <p>请问您是否确定注销员工吗？</p>
@@ -117,7 +116,7 @@
 <script>
 import AddPage from "./add";
 import SeePage from "./see";
-// import EditPage from "./edit";
+import PowerPage from "./power";
 import { mapGetters } from "vuex";
 
 export default {
@@ -141,13 +140,17 @@ export default {
       see:false,//控制查看组件弹出
       seeData:null,//查看数据
       visible2:false,//控制注销框
-      delData:null
+      delData:null,
+      ispower: false,
+      powerData: null
+      
     };
   },
   computed: mapGetters(["showAside"]),
   components: {
     AddPage,
-    SeePage
+    SeePage,
+    PowerPage
   },
   methods: {
     onSubmit() {//添加按钮
@@ -175,6 +178,13 @@ export default {
     seeChange(msg) {//与查看弹窗交互
       this.see = false;
     },
+    powerChange(msg){
+      this.ispower = false;
+    },
+    powerHandle(row){
+      this.ispower = true;
+      this.powerData = row;
+    },
     getPost(code) {
       let codes = {
         'MANAGER': '物业管理员',
@@ -195,13 +205,6 @@ export default {
     delHandle(row) {
       this.visible2 = true;
       this.delData = row; 
-    },
-    handleDiabled(row, usestate){
-      this.$message({
-        message: '启用成功',
-        type: 'success'
-      })
-      row.usestate = usestate
     },
     handleWriteoff(row){
       this.visible2 = true;

@@ -66,6 +66,7 @@
           phone: this.phone,
           pwd: this.pwd
         }).then((res) => {
+          console.log("ccc")
           this.$store.dispatch('changeToken', res.data);
           if (res.errorCode === 0) {
             const userId = res.data.id;
@@ -90,6 +91,7 @@
           this.pwd = '';
           loadingInstance.close();
         }).catch(() => {
+          console.log("aaaa")
           loadingInstance.close();
         });
       },

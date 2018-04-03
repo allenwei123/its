@@ -154,7 +154,8 @@ import { getUri } from '@/utils/oss.js';
         total: 0,
         currentPage: 1,
         input: '',
-        q_input: null
+        q_input: null,
+        srcP: ''
       }
     },
     computed: mapGetters(["showAside"]),
@@ -232,6 +233,7 @@ import { getUri } from '@/utils/oss.js';
       },    
       handleClose() {
         this.dialogVisible = false;
+        this.srcP = '';
       }
     },
     created() {
@@ -266,6 +268,9 @@ import { getUri } from '@/utils/oss.js';
     right: 0px;
     top: 0px;
   }
+}
+.el-dialog__close{
+   color: #ffffff;
 }
 // 切换动画
 .fade-enter-active, .fade-leave-active {

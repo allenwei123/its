@@ -34,13 +34,13 @@
           <template slot-scope="scope">{{ scope.row.postCode | postCode}}</template>
         </el-table-column>
         <el-table-column prop="name" label="班次" align="center"  width="150"> </el-table-column>
-        <el-table-column label="值班时间" min-width="320" align="center" :show-overflow-tooltip="true">
+        <el-table-column label="值班时间" min-width="200" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{scope.row.attendTime}}~{{scope.row.offTime}}</template>
         </el-table-column>
-        <el-table-column label="备注信息" align="center" width="200" :show-overflow-tooltip="true">
+        <el-table-column label="备注信息" align="center" width="250" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.remark }}</template>
         </el-table-column>
-        <el-table-column fixed="right" align="left" label="操作" width="200">
+        <el-table-column fixed="right" align="center" label="操作" width="200">
           <template slot-scope="scope">
             <!-- <el-button type="primary" size="mini" @click="seeHandle(scope.row)">查看</el-button> -->
             <!-- <el-button type="primary" size="mini" @click="editHandle(scope.row)">编辑</el-button> -->
