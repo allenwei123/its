@@ -23,11 +23,11 @@
         </el-table-column>
         <el-table-column v-if="show" align="center" prop="id" label=""></el-table-column>
         <el-table-column v-if="show" align="center" prop="userId" label=""></el-table-column>
-        <el-table-column align="center" prop="carNo" label="车牌号" width="200"></el-table-column>
-        <el-table-column label="车库信息" width="350" align="center" :show-overflow-tooltip="true">
+        <el-table-column align="center" prop="carNo" label="车牌号" width="300"></el-table-column>
+        <el-table-column label="车库信息" width="450" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.parkingName}}</template>
         </el-table-column>
-        <el-table-column label="所属住户" width="200" align="center" :show-overflow-tooltip="true">
+        <el-table-column label="所属住户" width="250" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope"><a href="">{{ scope.row.userName}}</a></template>
         </el-table-column>
         <el-table-column align="center" prop="auditStatus" label="审核状态" :formatter="auditStatusFilter" width="120"></el-table-column>

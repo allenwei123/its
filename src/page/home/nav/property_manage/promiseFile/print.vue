@@ -28,9 +28,9 @@
             <li>
               <ul class="c-dp-fx c-tr">
                 <li class="c-td">电话</li>
-                <li class="c-td c-fx-2">{{ data.userToRoom.phone }}</li>
+                <li class="c-td c-fx-2">{{ data.userToRoom.contractPhone }}</li>
                 <li class="c-td">固话</li>
-                <li class="c-td c-fx-2">{{ data.userToRoom.telPhone }}</li>
+                <li class="c-td c-fx-2">{{ data.userToRoom.telPhone  }}</li>
               </ul>
             </li>
             <li>
@@ -89,7 +89,7 @@
             </li>
           </ul>
         </div>
-        <p>入住时间：</p>
+        <p>入住时间： {{ data.userToRoom.checkInTime | time }}</p>
         <h3 class="c-ta-center">常住人口（包括业主本人）登记</h3>
         <div class="c-table">
           <div class="c-dp-fl c-fx-column">
@@ -133,7 +133,7 @@ export default {
   name: "print",
   data() {
     return {
-      titleFont: "打印内容",
+      titleFont: "认证详情",
       isShow:this.msg
     };
   },

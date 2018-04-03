@@ -21,7 +21,7 @@
               <el-input-number v-model="form.floorNo" :min="-5" :max="100" label="选择所在楼层"></el-input-number>
             </el-form-item>
           <el-form-item label="住房面积" prop="area" :label-width="formLabelWidth">
-            <el-input v-model="form.area"></el-input>
+            <el-input type="number" v-model="form.area"></el-input>
           </el-form-item>
 
             <el-form-item :label-width="formLabelWidth">

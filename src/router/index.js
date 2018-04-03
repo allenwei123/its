@@ -191,7 +191,24 @@ const router = new Router({
                 component: (resolve) => require(["@/page/home/nav/communityIoT/onePass/list"], resolve)
               },
             ]
-          }, {
+          },
+          //商圈管理
+          {
+            path: 'businessManage',
+            redirect: 'businessManage/merchant',
+            component: (resolve) => require(["@/page/home/nav/_res"], resolve),
+            children: [
+              {
+                path: 'merchant',
+                component: (resolve) => require(["@/page/home/nav/businessManage/merchant"], resolve)
+              },
+              {
+                path: 'amenity',
+                component: (resolve) => require(["@/page/home/nav/businessManage/amenity/list"], resolve)
+              },
+            ]
+          },
+          {
             path: 'main',
             component: (resolve) => require(["@/page/home/nav/main"], resolve)
           }]

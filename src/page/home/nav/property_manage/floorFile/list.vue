@@ -19,7 +19,7 @@
 
       <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." border highlight-current-row ref="multipleTable" style="width: 100%">
         <el-table-column label="序号" width="60" align="center">
-          <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
+          <template slot-scope="scope">{{( currentPage-1) * pageSize + scope.$index + 1}}</template>
         </el-table-column>
         <el-table-column label="楼栋名称" min-width="100" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.name}}</template>
@@ -190,6 +190,9 @@ export default {
   },
   created() {
     this.sendAjax();
+    this.$on('upup',(res)=> {
+      console.log(res)
+    })
   },
   mounted() {}
 };

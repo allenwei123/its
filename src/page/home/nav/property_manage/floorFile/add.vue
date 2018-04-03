@@ -79,7 +79,6 @@ export default {
         this.$message({message:'请输入楼面层数',type:'warning'});
         return;
       }
-      console.log(this.form.underGround)
       if(this.form.underGround.length == 0){
         this.$message({message:'请输入地下层数',type:'warning'});
         return;

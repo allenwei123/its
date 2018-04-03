@@ -96,6 +96,15 @@ $headerBg:#3988ff;
     width:110px;
   }
 }
+.c-container {//修改整体样式
+  .el-container,.el-main {
+    background-color: #ffffff;
+    margin:10px;
+  }
+}
+.el-table__fixed-right::before, .el-table__fixed::before {
+  background-color: transparent;
+}
 
 .c-only {//聊天室修改 卡片
   .el-card__header {

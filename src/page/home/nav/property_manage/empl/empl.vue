@@ -76,7 +76,7 @@
         <!-- <el-table-column label="使用状态" min-width="100" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{getStatus(scope.row.dataStatus)}}</template>
         </el-table-column> -->
-        <el-table-column align="left" fixed="right" label="操作" width="220">
+        <el-table-column align="left" fixed="right" label="操作" width="250">
           <template slot-scope="scope">
             <el-button @click="powerHandle(scope.row)" type="primary" size="small">职权管理</el-button>
             <el-button @click="editHandle(scope.row)" type="primary" size="small">编辑</el-button>

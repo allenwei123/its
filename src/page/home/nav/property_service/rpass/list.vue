@@ -22,7 +22,7 @@
           </el-form>
         </div>
         <div class="c-list">
-          <el-table :data="tableData" style="width: 100%" v-loading="loading" stripe>
+          <el-table :data="tableData" style="width: 100%" v-loading="loading" border stripe>
             <el-table-column label="序号" width="80" align="center" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
@@ -106,7 +106,7 @@
           params['userName'] = this.q_input;
         }
         params['releaseStatus'] = this.releaseStatus;
-        
+
         this.$xttp.post(url, params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {

@@ -101,10 +101,11 @@ import { getUri } from '@/utils/oss';
                 this.faultStatus = that.faultStatus == 0 ? '已取消' : that.faultStatus == 1 ? '已提交' : 
                 that.faultStatus == 2 ? '已受理' : that.faultStatus == 3 ? '已指派' : that.faultStatus == 4 ? '已完成' : '已驳回'
                 //图片
-                // this.uri = that.faultAccessory;
-                if(that.faultAccessory[0]) {
-                    getUri(that.faultAccessory[0],(uri)=> {
-                        this.uri = uri;
+                if(that.faultAccessory) {
+                    that.faultAccessory.forEach(element => {
+                        getUri(element,(uri)=> {
+                            this.uri = uri;
+                        });
                     });
                 }else {
                     return false;

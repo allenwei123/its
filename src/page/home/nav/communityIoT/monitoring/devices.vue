@@ -12,14 +12,14 @@
             <el-select v-model="value2" placeholder="型号" clearable  @change="changeStatus">
               <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
-            <el-select v-model="value2" placeholder="全部楼栋" clearable  @change="changeStatus">
-              <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            <el-select v-model="value3" placeholder="全部楼栋" clearable @change="changeStatus">
+              <el-option v-for="item in options3" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
             <el-form-item label="查找">
               <el-input v-model="input" placeholder="监控设备名称"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
+              <el-button type="primary" @click="query"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
             </el-form-item>
             <el-form-item style="float: right">
               <el-button type="primary" @click="add">新增监控</el-button>
@@ -66,7 +66,7 @@
 
       <div class="c-block">
         <el-pagination
-          @current-change="handleCurrentChange"
+          @current-change="getTableList"
           :current-page="currentPage"
           :page-size="10"
           layout="total, prev, pager, next, jumper"
@@ -124,18 +124,18 @@ export default {
         { id: 2, name: "设备监控" }
       ],
       input: '',
+      q_input: '',
       currentPage: 1,
       loading: false,
       isShow: false, //控制添加页面弹出
       total: 0,//列表总数
       delData:null,
-      pageSize: 10
+      pageSize: 10,
+      value3: '',
+      options3: '',
     };
   },
   methods: {
-    handleCurrentChange(val) {
-      this.sendAjax(val);
-    },
     getPublishStatusName(status) {
         let names = {
           '0': '未运行',
@@ -160,16 +160,17 @@ export default {
     seeChange(msg) {//与查看弹窗交互
       this.see = false;
     },
-    find(){
-      if(this.currentPage !== 1) {
-          this.currentPage = 1;
-      }else {
-          this.sendAjax(null,this.input);
+    query() {
+      this.q_input = this.input;
+      if (this.currentPage !== 1) {
+        this.currentPage = 1;
       }
-        
+      else {
+        this.getTableList();
+      }
     },
     changeStatus() {
-      this.find();
+      this.query();
     },
     confirmDel(){
       if(this.delData.id){
@@ -179,24 +180,36 @@ export default {
             this.visible2 = false;
             this.delData = null;
             this.$message({message:res.data,type:'success'});
-            this.find();
+            this.query();
           }
         })
       }
     },
-    sendAjax(page,name) {
-      let nPage = page || this.$route.query.page || 1;
-      let params = {page:nPage, communityId: this.$store.getters.communityId };
+    build() {
+      let url = `community/building/page?communityId=${this.$store.getters.communityId}`;
+      this.$xttp.get(url).then(res => {
+        if(res.errorCode === 0) {
+          this.loading = false;
+          this.options3 = res.data.records;
+        }
+      }).catch( () => {
+        this.loading = false;
+      })
+    },
+    getTableList() {
+      let url = `communityIoT/camera/page?page=${this.currentPage}&size=${this.pageSize}`;
+      let params = {};
+      let communityId = this.$store.getters.communityId;
+      params.communityId = communityId;
       //监控设备名称
       if(name){
           //输入的搜索字添加params中
-          params['name'] = this.input;
-        }else {
-          delete params.name;
-        }
-        console.log(params);
+        params['name'] = this.input;
+      }else {
+        delete params.name;
+      }
       this.loading = true;
-      this.$xttp.post("/communityIoT/camera/auth/page",params)
+      this.$xttp.post(url, params)
       .then(res => {
         if (!res.errorCode) {
           this.tableData = res.data.records;
@@ -211,10 +224,10 @@ export default {
     }
   },
   created() {
-     this.sendAjax();
+     this.query();
+     this.build();
   },
-  mounted() {
-  }
+ 
 };
 </script>
 
