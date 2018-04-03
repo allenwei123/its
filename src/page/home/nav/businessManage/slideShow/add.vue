@@ -1,26 +1,7 @@
 <template>
-  <el-dialog title="新增公告" :visible.sync="formVisible">
+  <el-dialog title="新增轮播图" :visible.sync="formVisible">
     <el-form :model="form" label-width="120px">
-      <el-form-item label="公告标题" label-width="120px" required>
-        <el-input v-model.trim="form.title"></el-input>
-      </el-form-item>
-      <el-form-item label="公告类型" required>
-        <el-select v-model="form.type" placeholder="请选择公告类型">
-          <el-option label="公告" value="1"></el-option>
-          <el-option label="新闻" value="2"></el-option>
-          <el-option label="活动" value="3"></el-option>
-          <el-option label="提醒" value="4"></el-option>
-          <el-option label="其他" value="99"></el-option>
-        </el-select>
-      </el-form-item>
-      <!--<el-form-item label="发布对象" required>-->
-        <!--<el-select v-model="form.obj" placeholder="发布对象">-->
-          <!--<el-option label="全部" value=""></el-option>-->
-          <!--<el-option label="住户" value="1"></el-option>-->
-          <!--<el-option label="员工" value="2"></el-option>-->
-        <!--</el-select>-->
-      <!--</el-form-item>-->
-      <el-form-item label="配图" required>
+      <el-form-item label="轮播图" required>
         <template>
           <el-upload
             ref="upload"
@@ -35,16 +16,32 @@
           </el-upload>
         </template>
       </el-form-item>
-      <el-form-item label="公告内容" required>
-        <el-input type="textarea" v-model.trim="form.body" :rows="5"></el-input>
+
+      <el-form-item label="所属社区" label-width="120px" required>
+        <el-input v-model.trim="form.title"></el-input>
       </el-form-item>
 
+      <el-form-item label="播放顺序" required>
+        <el-select v-model="form.client" placeholder="请选择客户端类型">
+          <el-option label="住户端" value="1000"></el-option>
+          <el-option label="物业端" value="1001"></el-option>
+          <el-option label="WEB后台" value="1002"></el-option>
+        </el-select>
+      </el-form-item>
+  
+      <el-form-item label="跳转类型" label-width="120px" required>
+        <el-radio v-model="radio" label="1">商家</el-radio>
+        <el-radio v-model="radio" label="2">第三方</el-radio>
+      </el-form-item>
+
+      <el-form-item label="关联社区" label-width="120px" required>
+        <el-input v-model.trim="form.href"></el-input>
+      </el-form-item>
+     
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="closeForm">取消</el-button>
-      <!--<el-button type="primary" @click="preview">预览</el-button>-->
       <el-button type="primary" @click="save">保存</el-button>
-      <!--<el-button type="primary" @click="publish">发布</el-button>-->
     </div>
   </el-dialog>
 </template>
@@ -59,12 +56,12 @@ export default {
       file: null,
       form: {
         title: "",
-        type: "1",
-        obj: "",
-        body: "",
-        thumbnailUrl: null
+        client: "1000",
+        href: "",
+        materialUrl: null
       },
-      fileList2: []
+      fileList2: [],
+      radio: '1',
     };
   },
   watch: {
@@ -95,44 +92,40 @@ export default {
         this.showInfo("公告标题不能为空");
         return;
       }
-      if (!this.form.body.length) {
+      if (!this.form.href.length) {
         this.showInfo("公告内容不能为空");
         return;
       }
-      
 
       let files = this.$refs.upload.uploadFiles;
-      console.log(33,files.length);
+
       if (files.length) {
         ossUpload(files[0].raw, key => {
-          this.form.thumbnailUrl = key;
+          this.form.materialUrl = key;
           this.submitForm();
         });
-      } else if (files.length === 0) {
-        this.showInfo("图片内容不能为空");
-        return;
       } else {
         this.submitForm();
       }
-      
     },
     submitForm() {
       this.loading = true;
       let params = {};
-      params["noticeType"] = this.form.type;
-      params["communityId"] = this.$store.getters.communityId;
+      params["client"] = this.form.client;
+    //   params["communityId"] = this.$store.getters.communityId;
       params["title"] = this.form.title;
-      params["body"] = this.form.body;
-      if (this.form.thumbnailUrl) {
-        params["thumbnailUrl"] = this.form.thumbnailUrl;
+      params["href"] = this.form.href;
+      if (this.form.materialUrl) {
+        params["materialUrl"] = this.form.materialUrl;
       }
-      let url = "property/notice/add";
+      let url = "sys/slide/add";
       if (this.isModify) {
-        url = "property/notice/edit";
+        url = "sys/slide/edit";
         params["id"] = this.detail.id;
       }
       this.$xttp.post(url, params).then(res => {
         this.loading = false;
+        console.log(res);
         if (res.errorCode === 0) {
           this.formVisible = false;
           this.$emit('saveSuccess');
@@ -146,17 +139,15 @@ export default {
   created() {
     if (this.isModify) {
       this.form.title = this.detail.title;
-      this.form.type = this.detail.noticeType.toString();
-      this.form.thumbnailUrl = this.detail.thumbnailUrl;
-      this.form.body = this.detail.body;
-      if (this.detail.thumbnailUrl) {
-        getUri(this.detail.thumbnailUrl,(uri) => {
-          // this.fileList2.push({name:'附件',url:uri});
+      this.form.client = this.detail.client.toString();
+      this.form.materialUrl = this.detail.materialUrl;
+      this.form.href = this.detail.href;
+      if (this.detail.materialUrl) {
+        getUri(this.detail.materialUrl,(uri) => {
+          this.fileList2.push({url:uri});
         });
       }
     }
-
-    console.log(this.fileList2);
   }
 };
 </script>

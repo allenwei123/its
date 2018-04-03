@@ -202,6 +202,10 @@ const router = new Router({
                 path: 'merchant',
                 component: (resolve) => require(["@/page/home/nav/businessManage/merchant"], resolve)
               },
+              {
+                path: 'slideShow',
+                component: (resolve) => require(["@/page/home/nav/businessManage/slideShow/index"], resolve)
+              },
             ]
           },
           {
