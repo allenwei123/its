@@ -143,6 +143,7 @@ export default {
     initCommunity(){
         this.$xttp.get('/community/page').then(res =>{
             if(res.success){
+                console.log(res.data.records);
                 this.communityOption = res.data.records;
             }
         })
@@ -189,6 +190,7 @@ export default {
     postData() {
       let msg = this.add ? '编辑' : '添加';
       let uri = this.add ? '/user/property/update-user' : '/user/property/create-user';
+      console.log(this.form)
       this.$xttp
         .post( uri, this.form)
         .then(res => {

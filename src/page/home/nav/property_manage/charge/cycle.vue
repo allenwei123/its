@@ -75,6 +75,7 @@ export default {
         let communityId = this.$store.getters.communityId;
         let params = {};
         params['communityId'] = communityId;
+        params['type'] = 1;
         this.loading = true;
         this.$xttp.post("/property/parameter/page",params).then(res => {
             if (res.success){

@@ -220,9 +220,6 @@
         this.boolDialog = false;
       },
       confirmPR() {
-        console.log(this.auditData);
-        console.log(this.auditData.id);
-        console.log(this.num)
         this.$xttp
         .post(`/user/property/audit`, {id: this.auditData.id, auditStatus: this.num})
         .then(res => {
@@ -285,12 +282,19 @@
       },
       sendAjax(page, name) {
         let nPage = page || this.$route.query.page || 1;
+        if(this.formInline.floorSer == ''){
+          this.formInline.floorSer = null;
+        }
+        if(this.formInline.value == ''){
+          this.formInline.value = null;
+        }
         let obj = {page: nPage, relationship: 1, communityId: this.$store.getters.communityId ,buildingId:this.formInline.floorSer,auditStatus:this.formInline.value,name:this.formInline.name};
         if (name) {
           obj.name = this.formInline.name;
         } else {
           delete obj.name;
         }
+        
         this.loading = true;
         this.$xttp
           .get(`/user/${obj.communityId}/getByCommunityId`, {params: obj})
