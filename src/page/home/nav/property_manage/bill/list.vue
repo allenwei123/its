@@ -282,6 +282,31 @@ export default {
             message: '全部生效成功',
             type: 'success'
           });
+
+          let url = `fees/property-bill/page?page=${this.currentPage}&size=${this.pageSize}`;
+          let params = {};
+          let communityId = this.$store.getters.communityId;
+          params.communityId = communityId;
+          this.$xttp
+          .post(url, params)
+          .then(res => {
+            this.loading = false;
+            if (res.errorCode === 0) {
+              this.loading = false;
+              // console.log('res', res.data.records);
+              this.tableData = res.data.records;
+              this.tableData.filter( item => {
+                if(item.billStatus === -1){
+                 return item.billStatus === 0;
+                }
+              })
+              this.total = res.data.total;
+            }
+          })
+          .catch(() => {
+            this.loading = false;
+          });
+          
         }
       }).catch(() => {
         this.loading = false;
