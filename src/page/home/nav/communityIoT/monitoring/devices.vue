@@ -15,7 +15,7 @@
             <el-select v-model="value3" placeholder="全部楼栋" clearable @change="changeStatus">
               <el-option v-for="item in options3" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
-            <el-form-item label="查找">
+            <el-form-item>
               <el-input v-model="input" placeholder="监控设备名称"></el-input>
             </el-form-item>
             <el-form-item>

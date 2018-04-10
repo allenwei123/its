@@ -34,6 +34,7 @@
         <el-table-column fixed="right" align="center" label="操作" width="500">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="seeHandle(scope.row)">查看</el-button>
+            <el-button type="warning" size="mini" @click="editHandle(scope.row)">编辑</el-button>
             <el-button @click="delHandle(scope.row)" type="danger" size="small">删除</el-button>
           </template>
         </el-table-column>
@@ -45,10 +46,11 @@
         </el-pagination>
       </div>
 
-      <transition name="fade">
+      <transition name="add">
         <!-- <SeePage v-if="isSee" :msg="isSee" @upsee="upsee" :data="seeData"></SeePage> -->
         <AddPage v-if="isShow" :msg="isShow" @reload="query" @upup="change" :add.sync="projectData"></AddPage>
       </transition>
+
       <transition name="see">
         <!-- <SeePage v-if="isSee" :msg="isSee" @upsee="upsee" :data="seeData"></SeePage> -->
         <SeePage v-if="isSee" :detail="formDetail" @reload="query" :msg="isSee" @upsee="upsee"></SeePage>
@@ -161,10 +163,7 @@ import time from '@/utils/time.js';
       },
       seeHandle(row){
         this.isSee = true;
-        console.log(row);
-        // this.formDetail = row;
         this.formDetail = row;
-        // console.log(this.formDetail);
       },
       confirmDel(){
         if(this.delData.id) {
@@ -179,14 +178,33 @@ import time from '@/utils/time.js';
             }else{
               this.visible2 = false;
               this.delData = null;
-              // this.$message({message:'删除成功！',type:'success'});
               this.query();
             }
           }).catch(()=> {
             this.loading = false;
           })
         }
-      }
+      },
+      editHandle(row){     
+        let Id = row.id;  
+        let url = `/fees/item/edit/${Id}`;
+        this.$prompt('请输入收费项目名称', '修改收费项目', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+          }).then(({ value }) => {
+              let itemName = value;
+              this.$xttp.post(url,{itemName:itemName}).then(res => {
+                  if(res.success){
+                      this.getTableList();
+                  }
+              })
+        }).catch(() => {
+            this.$message({
+                type: 'info',
+                message: '修改收费项目失败'
+            });       
+        });
+      },
     },
     created() {
       this.query();
@@ -221,11 +239,11 @@ import time from '@/utils/time.js';
   }
 }
 // 切换动画
-.fade-enter-active, .fade-leave-active {
+.add-enter-active, .add-leave-active {
   transition: all 0.5s ease;
 }
 
-.fade-enter, .fade-leave-active {
+.add-enter, .add-leave-active {
   opacity: 0;
   transform: rotateY(180deg);
 }

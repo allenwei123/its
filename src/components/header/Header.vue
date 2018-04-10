@@ -70,6 +70,7 @@ import { mapGetters } from "vuex";
       },
       logout() {
         this.$router.push('/auth/logout');
+        // this.$router.push('/auth/login');
       },
       handleCommand(command) {
         this.$store.dispatch('addCommunityId',command);

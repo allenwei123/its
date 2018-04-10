@@ -19,7 +19,10 @@
       this.$xttp.get('user/signOut').then((res) => {
         // this.$store.dispatch('changeToken', null);
         // loadingInstance.close();
-        this.$router.push('/auth/login');
+        if(res.success){
+          this.$router.push('/auth/login');
+        }
+        
       }).catch(() => {
         loadingInstance.close();
       });

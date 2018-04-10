@@ -94,14 +94,6 @@ export default {
         communityName: this.$store.getters.communityName,
         propertyId: localStorage.getItem('propertyId')
       },
-      rules: {
-        employeeId: [{required: true, message: '请输入工号', trigger: 'blur' }],
-        userName: [{required: true, message: '请输入名称', trigger: 'blur' }],
-        phone: [{ required: true, message: '请输入正确号码', trigger: 'blur', pattern: /^1[34578]\d{9}$/}],
-        password: [{ required: true, message: '请输入密码', trigger: 'blur',minlength:8, pattern:'/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,12}$/' }],
-        sex: [{ required: true, message: '请选择性别', trigger: 'blur' }],
-        postCode: [{ required: true, message: '请选择岗位', trigger: 'blur' }]
-      },
       postCodeOptions: [],
       maleOptions: maleOptions,
       current: 1 //1 初始 2：添加后 3：编辑后
@@ -164,12 +156,16 @@ export default {
         this.showInfo('请输入工号');
         return;
       }
+      if(this.form.postCode == ''){
+        this.showInfo('请选择岗位');
+        return;
+      }
       if(this.form.userName == ''){
-        this.showInfo('请输入名称');
+        this.showInfo('请输入姓名');
         return;
       }
       if(this.form.phone == ''){
-        this.showInfo('请输入正确号码');
+        this.showInfo('请输入号码');
         return;
       }else{
         if(!(/^1[34578]\d{9}$/.test(this.form.phone))){
@@ -177,30 +173,30 @@ export default {
           return;
         }
       }
-      if(this.form.postCode == ''){
-        this.showInfo('请选择岗位');
+      if(this.form.sex == ''){
+        this.showInfo('请选择性别');
         return;
+      }else{
+        if(this.form.sex == '男'){
+          this.form.sex = '1';
+        } 
+        if(this.form.sex == '女'){
+          this.form.sex = '2';
+        }
+        if(this.form.sex == '未知'){
+          this.form.sex = '0';
+        } 
       }
-      if(this.form.sex == '男'){
-        this.form.sex = '1';
-      } 
-      if(this.form.sex == '女'){
-        this.form.sex = '2';
+      if(this.form.phone == ''){
+        this.showInfo('请输入密码');
+        return;
+      }else{
+        if(!(/^([a-zA-Z0-9]{8,})$/.test(this.form.password))){
+          this.showInfo('密码8位数以上的数字或字母组合');
+          return;
+        }
       }
-      if(this.form.sex == '未知'){
-        this.form.sex = '0';
-      } 
-      console.log(this.form);
-      return;
       this.postData();
-      // this.$refs[formName].validate((valid) => {
-      //     if (valid) {
-      //       this.postData();
-      //     } else {
-      //       return false;
-      //     }
-      //   });
-      
     },
     postData() {
       let msg = this.add ? '编辑' : '添加';

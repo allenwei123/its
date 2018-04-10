@@ -1,6 +1,9 @@
 <template>
   <el-container>
     <el-main>
+      <ul class="c-navDetail clear">
+        <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li>
+      </ul>
       <div>{{deviceName}}</div>
       <div class="c-rpass-container">
         <div class="c-searchbar">
@@ -32,7 +35,7 @@
             </el-table-column>
             <!-- 暂无 -->
             <el-table-column label="身份" :show-overflow-tooltip="true">
-              <template slot-scope="scope">{{scope.row.userName}}</template>
+              <template slot-scope="scope">{{getUserStatus(scope.row.userStatus)}}</template>
             </el-table-column>
             <el-table-column label="使用时间" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.time | time('yyyy-MM-dd HH:mm')}}</template>
@@ -67,7 +70,13 @@ import { time as itmeFormatter } from "@/utils/time"
         q_input: null,
         // 头部的标题
         deviceName: '',
-        a:''
+        a:'',
+        navDetailData: [
+          { id: 0, name: "社区物联" },
+          { id: 1, name: "电梯管理" },
+          { id: 2, name: "电梯档案" },
+          { id: 3, name: "使用记录" }
+        ],
       }
     },
      methods: {
@@ -75,9 +84,10 @@ import { time as itmeFormatter } from "@/utils/time"
         this.q_input = this.input;
         if (this.currentPage !== 1) {
           this.currentPage = 1;
+          // this.getTableList();
         }
         else {
-          this.getTableList();
+          this.getTableList(1);
         }
       },
       changeStatus() {
@@ -90,9 +100,16 @@ import { time as itmeFormatter } from "@/utils/time"
         };
         return names[status];
       },
-      getTableList() {
+      getUserStatus(value){
+        let names = {
+          '1':'住户',
+          '2':'物业'
+        };
+        return names[value];
+      },
+      getTableList(pages) {
         this.loading = true;
-        let url = `sys/elevator-record/page?page=${this.currentPage}&size=${this.pageSize}`;
+        let url = `sys/elevator-record/page?page=${pages}&size=${this.pageSize}`;
         let params = {};
         params['communityId'] = this.$store.getters.communityId;
         // params['deviceId'] = this.$route.query.id; 
@@ -104,13 +121,14 @@ import { time as itmeFormatter } from "@/utils/time"
           params['endDate'] = b.getFullYear() + '-' +(b.getMonth() < 9 ? '0': '')  + (b.getMonth() + 1) + '-' + (b.getDate() < 9 ? '0': '') + b.getDate();
         }
         if (this.q_input) {
-          params['name'] = this.q_input;
+          params['userName'] = this.q_input;
         }
         this.$xttp.post(url, params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {
             this.tableData = res.data.records;
             this.total = res.data.total;
+            // this.currentPage = res.data.currentPage;
           }
         }).catch(() => {
           this.loading = false;
@@ -118,8 +136,17 @@ import { time as itmeFormatter } from "@/utils/time"
       }
     }, 
     created() {
-      this.query();
+      // this.query();
+      this.getTableList(1);
     }
   }
 </script>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.c-navDetail {
+    margin-bottom: 10px;
+    li {
+      float: left;
+      margin-right: 10px;
+    }
+  }
+</style>

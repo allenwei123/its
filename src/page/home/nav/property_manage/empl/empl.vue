@@ -78,8 +78,8 @@
         </el-table-column> -->
         <el-table-column align="left" fixed="right" label="操作" width="250">
           <template slot-scope="scope">
-            <el-button @click="powerHandle(scope.row)" type="primary" size="small">职权管理</el-button>
-            <el-button @click="editHandle(scope.row)" type="primary" size="small">编辑</el-button>
+            <el-button @click="powerHandle(scope.row)" type="success" size="small">职权管理</el-button>
+            <el-button @click="editHandle(scope.row)" type="warning" size="small">编辑</el-button>
             <el-button v-if="scope.row.postCode != 'MANAGER'" @click="handleWriteoff(scope.row)" type="danger" size="small">注销</el-button>
           </template>
         </el-table-column>
@@ -234,7 +234,6 @@ export default {
       this.$xttp.get(`/user/property/${communityId}/post-list`).then(res => {
         if(!res.errorCode) {
           this.postOptions = res.data;
-          console.log(res.data);
         }
       })
     },

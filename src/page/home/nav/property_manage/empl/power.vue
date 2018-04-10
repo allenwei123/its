@@ -4,12 +4,12 @@
             <h3>职权范围：</h3>
           <el-form-item style="margin-top:20px;">
             <el-checkbox-group v-for="(items) in form.buildLists" :key="items.id" v-model="form.checkList">
-              <el-col :span="6"><el-checkbox :label="items.code">{{items.name}}</el-checkbox></el-col>
+              <el-col :span="6"><el-checkbox :label="items.id">{{items.name}}</el-checkbox></el-col>
             </el-checkbox-group>
           </el-form-item>
           <el-form-item style="text-align:center">
             <el-button @click="handleClose">取 消</el-button>
-            <el-button type="primary" @click="save()">保存</el-button>
+            <el-button type="primary" @click="save()">授权</el-button>
           </el-form-item>
         </el-form>
     </el-dialog>
@@ -26,6 +26,7 @@ export default {
       titleFont:'职权管理',
       form: {
           buildLists:[],
+          userToPropertyId: '',
           checkList:[]
       }
     };
@@ -33,6 +34,7 @@ export default {
   props: ["msg","add","power"],
   created() {
     this.getInit();
+    this.form.userToPropertyId = this.power.id;
   },
   mounted() {},
   methods: {
@@ -50,38 +52,34 @@ export default {
         let communityId = this.$store.getters.communityId;
 
         this.$xttp.get('community/building/list',{communityId:communityId}).then(res => {
-            if(res.success){
-                console.log(res.data);
-                // console.log(res);
-                this.form.buildLists = res.data;
-            }
+          if(res.success){
+            this.form.buildLists = res.data;
+          }
         })
     },
     save() {
-        console.log(this.form.checkList);
-    },
-    postData() {
-      let msg = this.add ? '编辑' : '添加';
-      let uri = this.add ? '/user/property/update-user' : '/user/property/create-user';
-      console.log(this.form)
-      this.$xttp
-        .post( uri, this.form)
-        .then(res => {
-          if (res.errorCode === 0) {
-            this.$message({
-              message: msg + "员工成功",
-              type: "success"
-            });
-            this.current =  2;
-            this.handleClose();
-            this.$emit('reload');
-          }else {
-            this.$message({message:res.errorMsg,type:'error'});
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      let communityId = this.$store.getters.communityId;
+      let userToPropertyId = this.form.userToPropertyId;
+      let districtIds = ["5acc6e1de4b0bfa7f9927715"];
+      let obj = {communityId:communityId};
+      let params = Object.assign(obj,{userToPropertyId:userToPropertyId},{districtIds:districtIds});
+
+      let url = 'user/property/add-district';
+      this.$xttp.post(url,params).then(res => {
+        if(res.success){
+          this.$message({
+            message: "赋权成功",
+            type: "success"
+          });
+          this.current =  2;
+          this.handleClose();
+          this.$emit('reload');
+        }else {
+          this.$message({message:res.errorMsg,type:'error'});
+        }
+      }).catch(err => {
+        console.log(err);
+      });
     }
   }
 };

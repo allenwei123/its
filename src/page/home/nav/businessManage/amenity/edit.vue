@@ -23,6 +23,7 @@
                 accept="image/*"
                 :on-exceed="onExceed"
                 :file-list="fileList2"
+                :on-remove="handleRemove"
                 list-type="picture-card">
                 <i class="el-icon-plus"></i>
               </el-upload>
@@ -66,7 +67,7 @@ import { send as ossUpload, getUri } from "@/utils/oss";
 import fun from "@/utils/fun.js";
 
 export default {
-  name: "EmplAdd",
+  name: "amenityEdit",
   data() {
     return {
       formLabelWidth: "120px",
@@ -90,15 +91,12 @@ export default {
   },
   props: ["msg","add"],
   created() {
-    // this.initPost();
     this.initCommunity();
-    console.log(this.add);
     this.form.id = this.add.id;
     this.form.name = this.add.name;
     this.form.serviceType = this.add.serviceType.toString();
     this.form.communityId = this.add.communityId;
     this.form.serviceWay = this.add.serviceWay.toString();
-    console.log(this.form.serviceWay)
     if(this.add.serviceWay == 1){
       this.isSee = true;
       this.form.contact = this.add.contact;
@@ -115,6 +113,7 @@ export default {
           this.fileList2.push({url:uri});
         });
         this.form.icon = this.add.icon;
+        // this.add.icon = '';
       }
     }
   },
@@ -131,21 +130,26 @@ export default {
       });
     },
     changeServiceType(){
-        let serviceWay = this.form.serviceWay;
-        if(serviceWay == 1){
-            if(this.isShow == true){
-                this.isShow = false;
-                this.isSee = true;
-            }
-        }
-        if(serviceWay == 2){
-            this.isSee = false;
-            this.isShow = true;
+      let serviceWay = this.form.serviceWay;
+      if(serviceWay == 1){
+          if(this.isShow == true){
+              this.isShow = false;
+              this.isSee = true;
+          }
+      }
+      if(serviceWay == 2){
+          this.isSee = false;
+          this.isShow = true;
 
-        }
+      }
     },
     onExceed() {
       this.$message("只能上传一张图片");
+    },
+    handleRemove(){
+      if(this.form.icon){
+        this.form.icon = '';
+      }
     },
     initCommunity(){
       this.$xttp.get('/community/page').then(res =>{
@@ -180,18 +184,15 @@ export default {
           return;
         }
       }
-
       let files = this.$refs.upload.uploadFiles;
       if(files.length){
-        if(this.add.icon != this.form.icon){
+        if(this.add.icon == this.form.icon && this.add.icon != ''){
           this.form.icon = this.add.icon;
           this.submitForm();
         }else{
           ossUpload(files[0].raw, key => {
             this.add.icon = '';
-            this.form.icon = '';
             this.form.icon = key;
-            this.add.icon = key;
             this.submitForm();
           });
         }
@@ -222,7 +223,6 @@ export default {
       this.$xttp.post(url, params)
           .then(res => {
             if(res.success){
-              console.log(res);
               this.handleClose();
               this.$message({
                 message: "编辑服务成功",

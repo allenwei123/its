@@ -10,9 +10,9 @@
             <el-select v-model="value1" placeholder="品牌" clearable  @change="changeStatus">
               <el-option v-for="item in options" :key="item.id" :label="item.brandName" :value="item.id"></el-option>
             </el-select>
-            <el-select v-model="value2" placeholder="型号" clearable  @change="changeStatus">
+            <!-- <el-select v-model="value2" placeholder="型号" clearable  @change="changeStatus">
               <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value"></el-option>
-            </el-select>
+            </el-select> -->
             <el-select v-model="value3" placeholder="全部楼栋" clearable  @change="changeStatus">
               <el-option v-for="item in options2" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
@@ -38,9 +38,9 @@
             <el-table-column label="品牌" min-width="220" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{scope.row.brandName}}</template>
             </el-table-column>
-            <el-table-column label="电梯类型" min-width="120" :show-overflow-tooltip="true" align="center">
+            <!-- <el-table-column label="电梯类型" min-width="120" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{scope.row.elevatorTypeName}}</template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column label="状态" min-width="120" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{getStatusName(scope.row.elevatorStatus)}}</template>
             </el-table-column>

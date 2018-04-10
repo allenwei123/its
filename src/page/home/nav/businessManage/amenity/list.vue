@@ -27,8 +27,11 @@
       <el-table-column v-if="isSee" label="社区ID" min-width="100" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope"><el-button type="text">{{ scope.row.communityId }}</el-button></template>
       </el-table-column>
-      <el-table-column label="便民服务" min-width="200" align="center" :show-overflow-tooltip="true">
+      <!-- <el-table-column label="便民服务" min-width="200" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope"><el-button type="text">{{ scope.row.icon }}</el-button></template>
+      </el-table-column> -->
+      <el-table-column label="便民服务" min-width="200" align="center" :show-overflow-tooltip="true">
+        <template slot-scope="scope"><el-button type="text"><img width="60px" height="60px" :src="uri"></el-button></template>
       </el-table-column>
       <el-table-column label="服务名称" min-width="200" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">{{ scope.row.name }}</template>
@@ -94,6 +97,7 @@
 
 <script>
 import time from '@/utils/time.js';
+import { send as ossUpload, getUri } from "@/utils/oss";
 import AddPage  from './add';
 import EditPage from './edit';
 import SeePage from './see';
@@ -106,6 +110,7 @@ import SeePage from './see';
         isSee: false,
         isEdit: false,
         tableData: [],
+        uri: '',
         navDetailData: [
           { id: 0, name: "商圈管理" },
           { id: 1, name: "便民服务" },
@@ -196,20 +201,53 @@ import SeePage from './see';
       },
       sendAjax(page) {
         let nPage = page || this.$route.query.page || 1;
-        let obj = {page:nPage,communityId:this.$store.getters.communityId};
-        // let obj = {page:nPage};
+        let obj = {};
         if(this.formInline.name){
           obj.name = this.formInline.name;
         }else {
           delete obj.name ;
         }
         this.loading = true;
-        this.$xttp.post("/biz/convenience/page",{params:obj})
+        let url = `/biz/convenience/page?page=${nPage}`;
+        this.$xttp.post(url,obj)
           .then(res => {
             if (!res.errorCode) {
               this.tableData = res.data.records;
               this.currentPage = res.data.currentPage;
               this.total = res.data.total;
+              console.log(this.tableData);
+              for( var p in this.tableData){
+                getUri(this.tableData[p].icon,(uri)=>{
+                  this.uri = uri;
+                })(10)
+              }
+              this.tableData.forEach(item => {
+                if (item.icon) {
+                  item.allGound = item.overGround + item.underGround;
+                  getUri(item.icon,(uri)=>{
+                    this.uri = uri;
+                  })
+                }
+              });
+              // $.each(this.tableData, function(obj){
+              //   getUri(this.tableData.icon,(uri)=>{
+              //     this.uri = uri;
+              //   })
+              // })
+
+              // this.tableData.forEach(item =>{
+              //   console.log(item);
+              //   getUri(item.icon,(uri)=>{
+              //     this.uri = uri;
+              //   })
+                // let t = item.icon;
+                // console.log(t);
+                // if(item.icon) {
+                //   getUri(row.icon,(uri)=> {
+                //     this.uri = uri;
+                //   });
+                // }
+              // });
               // this.tableData.forEach(item => {
               //   let a = item.serviceType;
               //   for (var key in a){
@@ -227,9 +265,6 @@ import SeePage from './see';
     },
     created() {
       this.sendAjax();
-      this.$on('upup',(res)=> {
-        console.log(res)
-      })
     },
     mounted() {}
   };
