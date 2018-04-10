@@ -32,10 +32,19 @@
         <el-table-column label="序号" width="80" align="center">
           <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
         </el-table-column>
-        <el-table-column prop="name" align="center" label="房号"></el-table-column>
+        <!-- <el-table-column prop="name" align="center" label="房号"></el-table-column> -->
+        <el-table-column label="房号" min-width="200" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ scope.row.name }}</template>
+        </el-table-column>
         <!-- <el-table-column prop="buildingId" align="center" label="所属楼栋"></el-table-column> -->
-        <el-table-column prop="floorNo" align="center" label="所在楼层"></el-table-column>
-        <el-table-column prop="area" align="center" label="房间面积(P)"></el-table-column>
+        <!-- <el-table-column prop="floorNo" align="center" label="所在楼层"></el-table-column> -->
+        <el-table-column label="所在楼层" min-width="100" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ scope.row.floorNo }}</template>
+        </el-table-column>
+        <el-table-column label="房间面积(P)" min-width="200" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ (scope.row.area / 100).toFixed(2) }}</template>
+        </el-table-column>
+        <!-- <el-table-column prop="area" align="center" label="房间面积(P)"></el-table-column> -->
         <el-table-column align="left" fixed="right" label="操作" width="220">
           <template slot-scope="scope">
             <!-- <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button> -->
@@ -161,7 +170,12 @@ export default {
             this.delData = null;
             this.$message({message:res.data,type:'success'});
             this.find();
+          }else{
+            this.visible2 = false;
+            this.delData = null;
           }
+        }).catch(err =>{
+          console.log(err);
         })
       }
     },

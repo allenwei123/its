@@ -1,6 +1,6 @@
 <template>
       <el-dialog :title="titleFont" :visible.sync="msg" :before-close="handleClose">
-        <el-form :model="form" :rules="rules" ref="ruleForm" class="demo-form-inline">
+        <el-form :model="form" ref="ruleForm" class="demo-form-inline">
             <el-form-item v-if="show" label="社区ID:" :label-width="formLabelWidth" prop="communityId" class="c-must">
               <el-input v-model="form.communityId"></el-input>
             </el-form-item>
@@ -25,15 +25,6 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item label="出勤地点：" :label-width="formLabelWidth" prop="attendPlace">
-              <el-col :span="14">
-                <el-input v-model.trim="form.attendPlace" placeholder="请输入出勤地点"></el-input>
-              </el-col>
-            </el-form-item>
-
-            <!-- <el-form-item label="出勤地点：" :label-width="formLabelWidth" prop="attendPlace">
-              <el-input v-model="form.attendPlace"></el-input>
-            </el-form-item> -->
             <el-form-item label="出勤时间：" :label-width="formLabelWidth" class="c-must">
               <el-time-select placeholder="出勤时间" v-model="form.attendTime"
                 :picker-options="{
@@ -44,9 +35,9 @@
               </el-time-select>
             </el-form-item>
 
-            <el-form-item label="退勤地点：" :label-width="formLabelWidth" prop="offPlace">
+            <el-form-item label="出勤地点：" :label-width="formLabelWidth" prop="attendPlace">
               <el-col :span="14">
-                <el-input v-model.trim="form.offPlace" placeholder="请输入退勤地点"></el-input>
+                <el-input v-model.trim="form.attendPlace" placeholder="请输入出勤地点"></el-input>
               </el-col>
             </el-form-item>
 
@@ -58,6 +49,16 @@
                   end: '24:00'
                 }">
               </el-time-select>
+            </el-form-item>
+
+            <!-- <el-form-item label="出勤地点：" :label-width="formLabelWidth" prop="attendPlace">
+              <el-input v-model="form.attendPlace"></el-input>
+            </el-form-item> -->
+
+            <el-form-item label="退勤地点：" :label-width="formLabelWidth" prop="offPlace">
+              <el-col :span="14">
+                <el-input v-model.trim="form.offPlace" placeholder="请输入退勤地点"></el-input>
+              </el-col>
             </el-form-item>
 
             <el-form-item label="任务：" :label-width="formLabelWidth" prop="task">
@@ -74,7 +75,7 @@
 
             <el-form-item :label-width="formLabelWidth">
               <el-button @click="handleClose">取 消</el-button>
-              <el-button type="primary" @click="save('ruleForm')">保存</el-button>
+              <el-button type="primary" @click="save()">保存</el-button>
             </el-form-item>
         </el-form>
     </el-dialog>
@@ -106,12 +107,6 @@ export default {
         communityId: this.$store.getters.communityId,
         propertyId : localStorage.getItem('propertyId')
       },
-      rules: {
-        name: [{required: true, message: '请输入班次', trigger: 'blur'}],
-        attendTime: [{ required: true, message: '请选择起始时间', trigger: 'blur' }],
-        offTime: [{ required: true, message: '请选择结束时间', trigger: 'blur' }]
-        // remark: [{ required: true, message: '请填写备注', trigger: 'blur' }]
-      },
       postOptions: [],
       current: 1, //1 初始 2：添加后 3：编辑后
       typeOptions: typeOptions
@@ -130,14 +125,38 @@ export default {
     handleClose() {
       this.$emit("upup", this.current );
     },
-    save(formName) {
-      this.$refs[formName].validate((valid) => {
-          if (valid) {
-            this.postData();
-          } else {
-            return false;
-          }
-        });
+     showInfo(text) {
+      this.$message({
+        message: text,
+        type: "warning"
+      });
+    },
+    save() {
+      if(this.form.name == ''){
+        this.showInfo('请输入班次');
+        return;
+      }
+      if(this.form.postCode == ''){
+        this.showInfo('请选择岗位');
+        return;
+      }
+      if(this.form.attendTime == ''){
+        this.showInfo('请选择出勤时间');
+        return;
+      }
+      if(this.form.offTime == ''){
+        this.showInfo('请选择退勤时间');
+        return;
+      }
+      this.postData();
+
+      // this.$refs[formName].validate((valid) => {
+      //     if (valid) {
+      //       this.postData();
+      //     } else {
+      //       return false;
+      //     }
+      //   });
     },
     find(){
       var postCode = this.formInline.role;

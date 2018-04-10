@@ -142,7 +142,12 @@ export default {
             this.delData = null;
             this.$message({message:res.data,type:'success'});
             this.find();
+          }else{
+            this.visible2 = false;
+            this.delData = null;
           }
+        }).catch(err =>{
+          console.log(err);
         })
       }
     },

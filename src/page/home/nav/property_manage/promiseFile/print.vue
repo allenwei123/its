@@ -54,7 +54,7 @@
                 <li class="c-td">入户时间</li>
                 <li class="c-td c-fx-2">{{ data.userToRoom.checkInTime }}</li>
                 <li class="c-td">住房面积</li>
-                <li class="c-td">{{ data.userToRoom.area }}</li>
+                <li class="c-td">{{ data.userToRoom.area / 100 }}</li>
                 <li class="c-td">政治面貌</li>
                 <li class="c-td">{{ data.userToRoom.politicsStatus | politicsStatus }}</li>
               </ul>
