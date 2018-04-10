@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="新增公告" :visible.sync="formVisible">
+  <el-dialog :title="text" :visible.sync="formVisible">
     <el-form :model="form" label-width="120px">
       <el-form-item label="公告标题" label-width="120px" required>
         <el-input v-model.trim="form.title"></el-input>
@@ -64,6 +64,7 @@ export default {
         body: "",
         thumbnailUrl: null
       },
+      text: '新增公告',
       fileList2: []
     };
   },
@@ -143,13 +144,14 @@ export default {
   props: ["visible", "detail", "isModify"],
   created() {
     if (this.isModify) {
+      this.text = "修改公告";
       this.form.title = this.detail.title;
       this.form.type = this.detail.noticeType.toString();
       this.form.thumbnailUrl = this.detail.thumbnailUrl;
       this.form.body = this.detail.body;
       if (this.detail.thumbnailUrl) {
         getUri(this.detail.thumbnailUrl,(uri) => {
-          // this.fileList2.push({name:'附件',url:uri});
+          this.fileList2.push({url:uri});
         });
       }
     }

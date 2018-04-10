@@ -5,7 +5,7 @@
         <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li>
       </ul>
       <div class="c-notice-container">
-        <div class="c-searchbar">
+        <div class="c-search">
           <el-form :inline="true" class="demo-form-inline">
             <el-select v-model="value1" placeholder="全部状态" clearable @change="changeStatus">
               <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -24,7 +24,7 @@
               <el-button type="primary" @click="query">查询</el-button>
             </el-form-item>
             <el-form-item style="float: right">
-              <el-button type="primary" @click="addNotice">新增公告</el-button>
+              <el-button type="primary" class="c-addBtn" @click="addNotice">新增公告</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -39,17 +39,14 @@
             <el-table-column label="类型" min-width="60" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{getNoticeTypeName(scope.row.noticeType)}}</template>
             </el-table-column>
-            <!--<el-table-column label="发布对象" width="100">-->
-              <!--<template slot-scope="scope">???</template>-->
-            <!--</el-table-column>-->
             <el-table-column label="状态" min-width="100" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{getPublishStatusName(scope.row.publishStatus)}}</template>
             </el-table-column>
             <el-table-column label="最后操作人员" min-width="150" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{scope.row.editorName}}</template>
             </el-table-column>
-            <el-table-column label="最后操作时间" min-width="160" :show-overflow-tooltip="true" align="center">
-              <template slot-scope="scope">{{scope.row.updateAt | time('yyyy-MM-dd HH:mm')}}</template>
+            <el-table-column label="发布时间" min-width="160" :show-overflow-tooltip="true" align="center">
+              <template slot-scope="scope">{{scope.row.publishAt | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
             <el-table-column label="操作" width="300" :fixed="tableData.length ? 'right' : '/'" align="left">
               <template slot-scope="scope">
@@ -138,7 +135,8 @@
         }
       },
       changeStatus() {
-        this.getTableList();
+        this.query();
+        this.tableData = [];
       },
       // 获取通知类型名称
       getNoticeTypeName(type) {
@@ -288,6 +286,23 @@
     li {
       float: left;
       margin-right: 10px;
+    }
+  }
+
+  .c-body {
+    width: 90%;
+    &.c-maxWidth {
+      max-width: calc(100vw - 200px);
+    }
+  }
+
+  .c-search {
+    position: relative;
+    width: 100%;
+    .c-addBtn {
+      position: absolute;
+      right: 0px;
+      top: 0px;
     }
   }
 

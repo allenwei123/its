@@ -5,7 +5,7 @@
         <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li>
       </ul>
       <div class="c-notice-container">
-        <div class="c-searchbar">
+        <div class="c-search">
           <el-form :inline="true" class="demo-form-inline">
             <el-form-item  width="80">
               <el-select v-model="value1" placeholder="全部状态" clearable @change="changeStatus">
@@ -31,10 +31,10 @@
               <el-button type="primary" @click="query">查询</el-button>
             </el-form-item>
             <el-form-item style="float: right">
-              <el-button type="primary" @click="takeAll">全部生效</el-button>
+              <el-button type="primary" class="c-addBtn" @click="takeAll">全部生效</el-button>
             </el-form-item>
             <el-form-item style="float: right">
-              <el-button type="primary" @click="callAll">一键催交</el-button>
+              <el-button type="primary" class="c-addBtn1" @click="callAll">一键催交</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -109,7 +109,7 @@
 
       <!-- 编辑账单 -->
       <transition name="fade">
-        <EditPage v-if="show" :msg="show" @change="editChange" :data="editData"></EditPage>
+        <EditPage v-if="show" :msg="show" @change="editChange" :data="editData" @edit="editSuccess"></EditPage>
       </transition>
 
       <!-- 生效 -->
@@ -236,6 +236,10 @@ export default {
     },
     editChange() {
       this.show = false;
+    },
+    editSuccess() {
+      this.show = false;
+      this.getTableList();
     },
     //一键催交
     callAll() {
@@ -471,6 +475,29 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
+    .c-body {
+      width: 90%;
+      &.c-maxWidth {
+        max-width: calc(100vw - 200px);
+      }
+    }
+
+    .c-search {
+      position: relative;
+      width: 100%;
+      .c-addBtn {
+        position: absolute;
+        right: 0px;
+        top: 0px;
+      }
+
+      .c-addBtn1 {
+        position: absolute;
+        right: 110px;
+        top: 0px;
+      }
+    }
     .c-navDetail {
       margin-bottom: 10px;
       li {

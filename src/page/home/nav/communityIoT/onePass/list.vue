@@ -131,7 +131,7 @@ export default {
       this.show= true;
     },
     handleCurrentChange(val) {
-      console.log(val)
+      // console.log(val)
       this.sendAjax(val, this.formInline.keyType, this.input);
     },
     getdataStatus(status) {

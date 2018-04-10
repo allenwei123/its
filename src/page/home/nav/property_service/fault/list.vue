@@ -5,7 +5,7 @@
         <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li>
       </ul>
       <div class="c-notice-container">
-        <div class="c-searchbar">
+        <div class="c-search">
           <el-form :inline="true" class="demo-form-inline">
             <el-select v-model="value1" placeholder="全部状态" clearable @change="changeStatus">
               <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -24,7 +24,7 @@
               <el-button type="primary" @click="query">查询</el-button>
             </el-form-item>
             <el-form-item style="float: right">
-              <el-button type="primary" @click="add">新增故障</el-button>
+              <el-button type="primary" class="c-addBtn" @click="add">新增故障</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -428,6 +428,22 @@
 </script>
 
 <style scoped lang="scss">
+  .c-body {
+    width: 90%;
+    &.c-maxWidth {
+      max-width: calc(100vw - 200px);
+    }
+  }
+
+  .c-search {
+    position: relative;
+    width: 100%;
+    .c-addBtn {
+      position: absolute;
+      right: 0px;
+      top: 0px;
+    }
+  }
   // 切换动画
   .fade-enter-active, .fade-leave-active {
     transition: all 0.5s ease;

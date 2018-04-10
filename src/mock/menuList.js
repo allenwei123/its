@@ -264,7 +264,7 @@ const arr = [
         menuItem:[
           {
             id:'3-3-1',
-            title:'设备监控',
+            title:'监控档案',
             link:'/home/nav/communityIoT/monitoringD',
             show: 1
           },

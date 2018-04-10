@@ -36,9 +36,9 @@
           <!-- <template slot-scope="scope">{{ scope.row.keyNo }}</template> -->
         </el-table-column>
 
-        <el-table-column label="所属楼栋" :show-overflow-tooltip="true" align="center" prop="buildingId">
-          <!-- <template slot-scope="scope">{{scope.row.startTime | time }}</template> -->
-        </el-table-column>
+        <!-- <el-table-column label="所属楼栋" :show-overflow-tooltip="true" align="center" prop="buildingId">
+          <template slot-scope="scope">{{scope.row.startTime | time }}</template>
+        </el-table-column> -->
 
         <el-table-column label="设备厂商" :show-overflow-tooltip="true" align="center" prop="brand">
           <!-- <template slot-scope="scope">{{ scope.row.startTime | time }}</template> -->
@@ -121,7 +121,7 @@ export default {
       navDetailData: [
         { id: 1, name: "社区物联" },
         { id: 0, name: "监控管理" },
-        { id: 2, name: "设备监控" }
+        { id: 2, name: "监控档案" }
       ],
       input: '',
       q_input: '',

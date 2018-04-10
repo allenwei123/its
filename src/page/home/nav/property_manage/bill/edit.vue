@@ -15,22 +15,20 @@
       </el-form-item>
 
       <el-form-item :label="item.feeItemName"  v-if="item.type !==3 " label-width="120px" v-for="(item, idx) in options" :key="idx" required>
-        <span class="fee1">{{(item.currentFee/10000).toFixed(2)}}</span>
+        <span class="fee1">{{(item.currentFee/10000).toFixed(2) + "元"}}</span>
         <span class="fee2">{{(item.unitPrice/10000).toFixed(2)+ "元" + "/平方"}}</span>
       </el-form-item>
 
       <el-form-item :label="item.feeItemName"  v-if="item.type ===3 " label-width="120px" v-for="(item, idx) in options" :key="idx" required>
-        <!-- <span class="fee1">{{(item.currentFee/10000).toFixed(2)}}</span>
-        <span class="fee2">{{(item.unitPrice/10000).toFixed(2)+ "元" + "/平方"}}</span> -->
-        <el-input auto-complete="off">{{(item.currentFee/10000).toFixed(2)}}</el-input>
-        <el-input auto-complete="off">{{(item.unitPrice/10000).toFixed(2)+ "元" + "/平方"}}</el-input>
+        <el-input placeholder="收费项目" auto-complete="off">{{(item.currentFee/10000).toFixed(2) + "元"}}</el-input>
+        <el-input placeholder="收费金额" v-model="fees" auto-complete="off">{{(item.unitPrice/10000).toFixed(2)+ "元" + "/平方"}}</el-input>
       </el-form-item>
 
-      <el-form-item label="账单总额" label-width="120px" prop="contact" required>
-        <span>{{(totalPrice/10000).toFixed(2)}}</span>
+      <el-form-item label="账单总额" label-width="120px" required>
+        <span>{{( (totalPrice/10000).toFixed(3)*1 + fees*1 ) + "元"}}</span>
       </el-form-item>
       
-      <el-form-item label="备注" prop="faultContent">
+      <el-form-item label="备注" >
         <el-input type="textarea"  :rows="5"></el-input>
       </el-form-item> 
 
@@ -52,6 +50,7 @@ import time from "@/utils/time.js";
                 area: '',
                 totalPrice: '',
                 options: '',
+                fees: '',
             }
         },
         methods: {
@@ -59,7 +58,7 @@ import time from "@/utils/time.js";
                 this.$emit('change');
             },
             submitForm() {
-                
+                this.$emit('edit');                    
             },
             getTime(timestamp, format) {
                 if (timestamp == null) return "/";
@@ -96,6 +95,7 @@ import time from "@/utils/time.js";
             this.makeAt = this.getTime(this.data.makeAt, 'yyyy-MM-dd HH:mm');
             this.postData();
             this.roomArea();
+            console.log(22, this)
         },
         props: ['msg', 'data'],
     }
