@@ -167,6 +167,9 @@ export default {
       }, {
         value: '-1',
         label: '待生效'
+      }, {
+        value: '2',
+        label: '已超期'
       }],
       navDetailData: [
         { id: 0, name: "物业管理" },

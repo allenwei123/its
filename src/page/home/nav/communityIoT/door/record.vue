@@ -74,7 +74,7 @@
           this.currentPage = 1;
         }
         else {
-          this.getTableList();
+          this.getTableList(1);
         }
       },
       changeStatus() {
@@ -87,23 +87,21 @@
         };
         return names[status];
       },
-      getTableList() {
+      getTableList(pages) {
         this.loading = true;
-        let url = `sys/door-record/page?page=${this.currentPage}&size=${this.pageSize}`;
+        let url = `sys/door-record/page?page=${pages}&size=${this.pageSize}`;
         let params = {};
         params['communityId'] = this.communityId;
         if(this.value6) {
           let a = new Date(this.value6[0]);
           let b = new Date(this.value6[1]);
-          params['startDate'] = a.getFullYear() + '-' +(a.getMonth() < 9 ? '0': '')  + (a.getMonth() + 1) + '-' + (a.getDate() < 9 ? '0': '') + a.getDate();
-          params['endDate'] = b.getFullYear() + '-' +(b.getMonth() < 9 ? '0': '')  + (b.getMonth() + 1) + '-' + (b.getDate() < 9 ? '0': '') + b.getDate();
+          params['startDate'] = a.getFullYear() + '-' +(a.getMonth() < 10 ? '0': '')  + (a.getMonth() + 1) + '-' + (a.getDate() < 10 ? '0': '') + a.getDate();
+          params['endDate'] = b.getFullYear() + '-' +(b.getMonth() < 10 ? '0': '')  + (b.getMonth() + 1) + '-' + (b.getDate() < 10 ? '0': '') + b.getDate();
         }
-        params['userName'] = this.q_input;
         params['deviceId'] = this.$route.query.deviceId;
         if (this.q_input) {
-          params['deviceId'] = this.q_input;
+          params['userName'] = this.q_input;
         }
-
         this.$xttp.post(url, params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {
