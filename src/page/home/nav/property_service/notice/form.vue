@@ -1,9 +1,5 @@
 <template>
-<<<<<<< HEAD
   <el-dialog :title="text" :visible.sync="formVisible">
-=======
-  <el-dialog :title="titleName" :visible.sync="formVisible">
->>>>>>> 8b1ea5b6a8285dd20f960747fb459ae223f3cf19
     <el-form :model="form" label-width="120px">
       <el-form-item label="公告标题" label-width="120px" required>
         <el-input v-model.trim="form.title"></el-input>
@@ -149,11 +145,7 @@ export default {
   props: ["visible", "detail", "isModify"],
   created() {
     if (this.isModify) {
-<<<<<<< HEAD
       this.text = "修改公告";
-=======
-      this.titleName = '编辑公告';
->>>>>>> 8b1ea5b6a8285dd20f960747fb459ae223f3cf19
       this.form.title = this.detail.title;
       this.form.type = this.detail.noticeType.toString();
       this.form.thumbnailUrl = this.detail.thumbnailUrl;
