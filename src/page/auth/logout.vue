@@ -27,7 +27,6 @@
           // this.loading = false;
           this.$router.push('/auth/login');
         }
-        
       }).catch(() => {
         loadingInstance.close();
       });

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import App from '../App'
-import store from '@/store';
+import store from '@/store'
 
 Vue.use(Router)
 
@@ -9,7 +9,7 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      redirect: '/auth/login'
+      redirect: '/home'
     },
     { path: '/auth/login', name: 'login', component: (resolve) => require(["@/page/auth/login"], resolve) },
     { path: '/auth/logout', component: (resolve) => require(["@/page/auth/logout"], resolve) },
@@ -210,6 +210,13 @@ const router = new Router({
                 path: 'slideShow',
                 component: (resolve) => require(["@/page/home/nav/businessManage/slideShow/index"], resolve)
               },
+              { path: 'recommend',
+                component: (resolve) => require(["@/page/home/nav/businessManage/merchant/recommend"], resolve)
+              },
+              {
+                path: 'coupon',
+                component: (resolve) => require(["@/page/home/nav/businessManage/merchant/coupon"], resolve)
+              }
             ]
           },
           {
@@ -219,14 +226,31 @@ const router = new Router({
       },]
     }
   ]
-})
+});
+let currentNav = '';
 let errorList = ['/home/nav/communityIoT/record','/home/nav/propertyService/message'];//记录暂时没开发的
 router.beforeEach((to, from, next) => {
+  let arr = ['main','side','propertyService','communityIoT','businessManage'];
+  if(to.path.split('/')[3] && currentNav !== to.path.split('/')[3]){
+    let currentIndex = arr.findIndex(item => item == to.path.split('/')[3]);
+    currentNav = to.path.split('/')[3];
+    store.dispatch('changeAsideData',currentIndex );
+    store.dispatch('updatedNavIndex',currentIndex );
+  }
+  let isLogin = function () {
+    return localStorage.getItem('userInfo');
+  }
   if(errorList.find((val) => { return val == to.path})) {
     alert('该功能未开发');
     next(false);
-  }else {
-    next();
+  }else if(to.path === '/auth/login' && !isLogin()){//跳转到登陆页
+    return next();
+  }else{
+    if(!isLogin()) {//判断是否登陆
+      return  next('/auth/login')
+    }else {
+      next();
+    }
   }
 
   // if(to.path == a)

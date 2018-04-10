@@ -39,14 +39,17 @@
             <el-table-column label="类型" min-width="60" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{getNoticeTypeName(scope.row.noticeType)}}</template>
             </el-table-column>
+            <el-table-column label="发布对象" width="100">
+              <template slot-scope="scope">{{ scope.row.editorName }}</template>
+            </el-table-column>
             <el-table-column label="状态" min-width="100" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{getPublishStatusName(scope.row.publishStatus)}}</template>
             </el-table-column>
-            <el-table-column label="最后操作人员" min-width="150" :show-overflow-tooltip="true" align="center">
-              <template slot-scope="scope">{{scope.row.editorName}}</template>
-            </el-table-column>
+            <!--<el-table-column label="最后操作人员" min-width="150" :show-overflow-tooltip="true" align="center">-->
+              <!--<template slot-scope="scope">{{scope.row.editorName}}</template>-->
+            <!--</el-table-column>-->
             <el-table-column label="发布时间" min-width="160" :show-overflow-tooltip="true" align="center">
-              <template slot-scope="scope">{{scope.row.publishAt | time('yyyy-MM-dd HH:mm')}}</template>
+              <template slot-scope="scope">{{scope.row.updateAt | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
             <el-table-column label="操作" width="300" :fixed="tableData.length ? 'right' : '/'" align="left">
               <template slot-scope="scope">
@@ -260,9 +263,8 @@
           let a = new Date(this.value6[0]);
           let b = new Date(this.value6[1]);
           params['startAt'] = a.getFullYear() + '-' +(a.getMonth() < 10 ? '0': '')  + (a.getMonth() + 1) + '-' + (a.getDate() < 10 ? '0': '') + a.getDate();
-          params['endAt'] = b.getFullYear() + '-' +(b.getMonth() <  10 ? '0': '')  + (b.getMonth() + 1) + '-' + (b.getDate() < 10 ? '0': '') + b.getDate();
+          params['endAt'] = b.getFullYear() + '-' +(b.getMonth() < 10 ? '0': '')  + (b.getMonth() + 1) + '-' + (b.getDate() < 10 ? '0': '') + b.getDate();
         }
-        console.log(params);
         this.$xttp.post(url, params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {

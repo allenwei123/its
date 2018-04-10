@@ -42,7 +42,7 @@
     name: 'login',
     data() {
       return {
-        phone: '',
+        phone:localStorage.getItem('userInfo') ? localStorage.getItem('userInfo').phone : '',
         pwd: '',
         dialogVisible: false,
         options:[] ,//社区列表

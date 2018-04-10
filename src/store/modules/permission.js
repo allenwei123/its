@@ -4,8 +4,8 @@ export default {
     userInfo: localStorage["userInfo"] ? JSON.parse(localStorage["userInfo"]) : null,
   },
   mutations: {
-    CHANGE_Token: (state, newToken) => {
-      state.userInfo = newToken
+    CHANGE_Token: (state, userInfo) => {
+      state.userInfo = userInfo
     }
   },
   actions: {

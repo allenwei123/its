@@ -21,7 +21,8 @@ const getters = {
     return c ? c.name : '';
   },
   communityList: state => state.data.communityList ,//当前用户社区列表
-}
+  navIndex: state => state.data.navIndex,//当前头部导航的下标
+};
 export default new Vuex.Store({
   modules: {
     permission,

@@ -26,7 +26,6 @@ service.interceptors.request.use(config => {
   if (store.getters.uid) {
     config.headers['BIT-UID'] = store.getters.uid
   }
-
   return config
 }, error => {
   Promise.reject(error)

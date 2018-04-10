@@ -25,7 +25,9 @@
       Header,
       Content
     },
-    created() { }
+    created() {
+      this.$store.dispatch('updatedAsideData');
+    }
   }
 </script>
 
