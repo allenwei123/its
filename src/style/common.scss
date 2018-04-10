@@ -70,6 +70,13 @@ html{
   background-color: red;
 }
 
+.el-dialog__headerbtn .el-dialog__close {
+    color: #ffffff;
+}
+.el-dialog__headerbtn .el-dialog__close:hover{
+    color: #000000;
+}
+
 //ali淘宝图标库
 @font-face {font-family: "iconfont";
   src: url('./assets/fonts/iconfont.eot?t=1520053662023'); /* IE9*/

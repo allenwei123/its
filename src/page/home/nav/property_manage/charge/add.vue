@@ -12,10 +12,11 @@
             </el-form-item>
             <el-form-item v-if="isShow" label="计费单价：" prop="unitPrice" :label-width="formLabelWidth" class="c-must">
               <!-- <el-input v-model="form.unitPrice"></el-input> -->
-              <el-input-number v-model.trim="form.unitPrice" :step="0.01" :min="0.01" @change="handleChange"></el-input-number>&nbsp;&nbsp;(元)
+              <!-- <el-input-number v-model.trim="form.unitPrice" :step="0.01" :min="0.01" @change="handleChange"></el-input-number>&nbsp;&nbsp;(元) -->
+              <el-input-number v-model.trim="form.unitPrice" :step="0.01" :min="0.01"></el-input-number>&nbsp;&nbsp;(元)
             </el-form-item>
             <el-form-item label="适用楼栋：" :label-width="formLabelWidth" prop="floorSer" class="c-must">
-              <el-select v-model="form.floorSer" clearable placeholder="选择适用楼栋">
+              <el-select v-model="form.floorSer" disabled="disabled" clearable placeholder="适用所有楼栋">
                 <el-option
                   v-for="item in floorOptions"
                   :key="item.id"
@@ -40,7 +41,8 @@ export default {
     return {
       formLabelWidth: "120px",
       titleFont:'新增项目',
-      isShow: false,
+      isShow: true,
+      disabled: true,
       form: {
         unitPrice: '0',
         itemName: '',
@@ -128,7 +130,7 @@ export default {
         .then(res => {
           if(res.success){
             this.floorOptions = res.data;
-            this.form.floorSer = this.floorOptions[0].id;
+            // this.form.floorSer = this.floorOptions[0].id;
           }
         })
     },
@@ -137,6 +139,7 @@ export default {
       this.$xttp.get(url).then(res => {
         if(res.success){
           this.chargeTypesOptions = res.data.ruleTypes;
+          this.form.type = this.chargeTypesOptions[0].key;
         }
       })
     },

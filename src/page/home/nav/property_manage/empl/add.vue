@@ -98,7 +98,7 @@ export default {
         employeeId: [{required: true, message: '请输入工号', trigger: 'blur' }],
         userName: [{required: true, message: '请输入名称', trigger: 'blur' }],
         phone: [{ required: true, message: '请输入正确号码', trigger: 'blur', pattern: /^1[34578]\d{9}$/}],
-        // password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+        password: [{ required: true, message: '请输入密码', trigger: 'blur',minlength:8, pattern:'/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,12}$/' }],
         sex: [{ required: true, message: '请选择性别', trigger: 'blur' }],
         postCode: [{ required: true, message: '请选择岗位', trigger: 'blur' }]
       },
@@ -190,6 +190,8 @@ export default {
       if(this.form.sex == '未知'){
         this.form.sex = '0';
       } 
+      console.log(this.form);
+      return;
       this.postData();
       // this.$refs[formName].validate((valid) => {
       //     if (valid) {
@@ -198,6 +200,7 @@ export default {
       //       return false;
       //     }
       //   });
+      
     },
     postData() {
       let msg = this.add ? '编辑' : '添加';

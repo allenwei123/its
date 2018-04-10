@@ -18,12 +18,13 @@
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-select v-model="formInline.value" clearable placeholder="请选择状态" @change="changeStatus">
+            <el-select v-model="formInline.value" placeholder="请选择状态" @change="changeStatus">
               <el-option
                 v-for="item in statusList"
                 :key="item.id"
                 :label="item.name"
-                :value="item.id">
+                :value="item.id"
+                >
               </el-option>
             </el-select>
           </el-form-item>
@@ -155,7 +156,7 @@
         total: 0, //列表总数
         seeData: null, //查看数据
         // statusList: [{id: 0, name: '未审核'}, {id: 1, name: '已通过'}, {id: -1, name: '驳回'}, {id: -2, name: '违规'}, {id: 2, name: '已注销'}, {id: 3, name: '已解绑'}], //审核状态下拉框数据
-        statusList: [{id: 0, name: '未审核'}, {id: 1, name: '已通过'}, {id: -1, name: '驳回'}, {id: 2, name: '已注销'}], //审核状态下拉框数据
+        statusList: [{id: null, name: '未审核'}, {id: 1, name: '已通过'}, {id: -1, name: '驳回'}, {id: 2, name: '已注销'}], //审核状态下拉框数据
         visible2: false,
         boolDialog: false, //控制打印窗口
         printData: null,
@@ -282,13 +283,20 @@
       },
       sendAjax(page, name) {
         let nPage = page || this.$route.query.page || 1;
+        let status = '';
         if(this.formInline.floorSer == ''){
           this.formInline.floorSer = null;
         }
         if(this.formInline.value == ''){
           this.formInline.value = null;
         }
-        let obj = {page: nPage, relationship: 1, communityId: this.$store.getters.communityId ,buildingId:this.formInline.floorSer,auditStatus:this.formInline.value,name:this.formInline.name};
+        if(this.formInline.value == null){
+          status = 0;
+        }else{
+          status = this.formInline.value
+        }
+
+        let obj = {page: nPage, relationship: 1, communityId: this.$store.getters.communityId ,buildingId:this.formInline.floorSer,auditStatus:status,name:this.formInline.name};
         if (name) {
           obj.name = this.formInline.name;
         } else {
@@ -303,6 +311,10 @@
               this.tableData = res.data.records;
               this.currentPage = res.data.currentPage;
               this.total = res.data.total;
+              if(this.obj.auditStatus == 0){
+                this.formInline.value = '未认证';
+              }
+              
               this.tableData.forEach(item => {
                 if (item.checkInTime) {
                   item.time1 = new Date(item.createAt)

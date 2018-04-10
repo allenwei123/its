@@ -1,22 +1,21 @@
 <template>
       <el-dialog :title="titleFont" :visible.sync="msg" :before-close="handleClose">
         <el-form :model="form" ref="ruleForm" class="demo-form-inline">
-
-          <el-form-item label="服务名称：" :label-width="formLabelWidth" prop="seviceName" class="c-must">
+          <el-form-item label="服务名称：" :label-width="formLabelWidth" prop="name" class="c-must">
             <el-col :span="14">
-              <el-input v-model.trim="form.seviceName" placeholder="请输入服务名称"></el-input>
+              <el-input v-model.trim="form.name" placeholder="请输入服务名称"></el-input>
             </el-col>
           </el-form-item>
-
-          <el-form-item label="分类：" :label-width="formLabelWidth" prop="type" class="c-must">
-            <el-select v-model="form.type" value-key="key" placeholder="请选择">
-              <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          <el-form-item label="服务类型：" :label-width="formLabelWidth" prop="serviceType" class="c-must">
+            <el-select v-model="form.serviceType" value-key="key" placeholder="请选择">
+              <el-option label="本地商店" value="1">本地商店</el-option>
+              <el-option label="外来连接" value="2">外来连接</el-option>
             </el-select>
           </el-form-item>
 
-          <el-form-item  :label-width="formLabelWidth" label="配图：" required>
+          <el-form-item  :label-width="formLabelWidth" label="图片：" required>
             <template>
-            <el-upload
+              <el-upload
                 ref="upload"
                 action=""
                 :auto-upload="false"
@@ -26,40 +25,36 @@
                 :file-list="fileList2"
                 list-type="picture-card">
                 <i class="el-icon-plus"></i>
-            </el-upload>
+              </el-upload>
             </template>
           </el-form-item>
 
-          <el-form-item label="所属社区：" :label-width="formLabelWidth" prop="community" class="c-must">
-            <el-select v-model="form.community" value-key="key" placeholder="请选择">
+          <el-form-item label="所属社区：" :label-width="formLabelWidth" prop="communityId" class="c-must">
+            <el-select v-model="form.communityId" value-key="key" placeholder="请选择">
               <el-option v-for="item in communityOption" :key="item.id" :label="item.name" :value="item.id">{{item.name}}</el-option>
             </el-select>
           </el-form-item>
 
-          <el-form-item label="服务类型：" :label-width="formLabelWidth" prop="seviceType" class="c-must">
-              <el-radio-group v-model="form.seviceType" @change="changeServiceType">
-                <el-radio label="1">热线服务</el-radio>
-                <el-radio label="2">在线服务</el-radio>
-              </el-radio-group>  
+          <el-form-item label="服务方式：" :label-width="formLabelWidth" prop="serviceWay" class="c-must">
+              <!-- <el-radio-group  @change="changeServiceType"> -->
+                <el-radio v-model="form.serviceWay" label="1" @change="changeServiceType">热线服务</el-radio>
+                <el-radio v-model="form.serviceWay" label="2" @change="changeServiceType">在线服务</el-radio>
+              <!-- </el-radio-group>   -->
           </el-form-item>
 
-          <el-form-item v-if="isSee" label="服务热线：" :label-width="formLabelWidth" prop="serviceTel" class="c-must">
+          <el-form-item v-if="isSee" label="服务热线：" :label-width="formLabelWidth" prop="contact" class="c-must">
             <el-col :span="14">
-              <el-input v-model.trim="form.serviceTel" placeholder="请输入服务热线"></el-input>
+              <el-input v-model.trim="form.contact" placeholder="请输入服务热线"></el-input>
             </el-col>
           </el-form-item>
 
-          <el-form-item v-if="isShow" label="服务链接：" :label-width="formLabelWidth" prop="serviceLink" class="c-must">
+          <el-form-item v-if="isShow" label="服务链接：" :label-width="formLabelWidth" prop="url" class="c-must">
             <el-col :span="14">
-              <el-input v-model.trim="form.serviceLink" placeholder="请输入服务链接"></el-input>
+              <el-input v-model.trim="form.url" placeholder="请输入服务链接"></el-input>
             </el-col>
           </el-form-item>
-
-          
-
           <el-form-item style="text-align:center">
             <el-button @click="handleClose">取 消</el-button>
-            <!-- <el-button type="primary" @click="save('ruleForm')">保存</el-button> -->
             <el-button type="primary" @click="save()">保存</el-button>
           </el-form-item>
         </el-form>
@@ -69,40 +64,27 @@
 <script>
 import { send as ossUpload, getUri } from "@/utils/oss";
 import fun from "@/utils/fun.js";
-const typeOptions = [
-  { value: '0', label: '生活服务' },
-  { value: '1', label: '家政服务' }
-];
+
 export default {
   name: "EmplAdd",
   data() {
     return {
       formLabelWidth: "120px",
-      titleFont:'新增服务',
+      titleFont:'编辑服务',
       isShow: false,
       isSee: true,
       file: null,
       fileList2: [],
       communityOption: [],
       form: {
-        seviceName: '',
-        seviceType: '1',
-        type:'',
-        community: '',
-        serviceTel: '',
-        serviceLink: '',
-        thumbnailUrl: null
+        name: '',
+        serviceType: '1',
+        serviceWay:'1',
+        communityId: '',
+        contact: '',
+        url: '',
+        icon: ''
       },
-      rules: {
-        employeeId: [{required: true, message: '请输入工号', trigger: 'blur' }],
-        userName: [{required: true, message: '请输入名称', trigger: 'blur' }],
-        phone: [{ required: true, message: '请输入正确号码', trigger: 'blur', pattern: /^1[34578]\d{9}$/}],
-        // password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
-        sex: [{ required: true, message: '请选择性别', trigger: 'blur' }],
-        postCode: [{ required: true, message: '请选择岗位', trigger: 'blur' }]
-      },
-      postCodeOptions: [],
-      typeOptions: typeOptions,
       current: 1 //1 初始 2：添加后 3：编辑后
     };
   },
@@ -110,11 +92,36 @@ export default {
   created() {
     // this.initPost();
     this.initCommunity();
+    console.log(this.add);
+    this.form.id = this.add.id;
+    this.form.name = this.add.name;
+    this.form.serviceType = this.add.serviceType.toString();
+    this.form.communityId = this.add.communityId;
+    this.form.serviceWay = this.add.serviceWay.toString();
+    console.log(this.form.serviceWay)
+    if(this.add.serviceWay == 1){
+      this.isSee = true;
+      this.form.contact = this.add.contact;
+      this.isShow = false;
+    }
+    if(this.add.serviceWay == 2){
+      this.isSee = false;
+      this.form.url = this.add.url;
+      this.isShow = true;
+    }
+    if(this.add.icon) {
+      if (this.add.icon) {
+        getUri(this.add.icon,(uri) => {
+          this.fileList2.push({url:uri});
+        });
+        this.form.icon = this.add.icon;
+      }
+    }
   },
   mounted() {},
   methods: {
     handleClose() {
-      this.$emit("upup", this.current );
+      this.$emit("upedit", this.current );
       this.$emit('reload');
     },
     showInfo(text) {
@@ -124,14 +131,14 @@ export default {
       });
     },
     changeServiceType(){
-        let seviceType = this.form.seviceType;
-        if(seviceType == 1){
+        let serviceWay = this.form.serviceWay;
+        if(serviceWay == 1){
             if(this.isShow == true){
                 this.isShow = false;
                 this.isSee = true;
             }
         }
-        if(seviceType == 2){
+        if(serviceWay == 2){
             this.isSee = false;
             this.isShow = true;
 
@@ -141,74 +148,94 @@ export default {
       this.$message("只能上传一张图片");
     },
     initCommunity(){
-        this.$xttp.get('/community/page').then(res =>{
-            if(res.success){
-                console.log(res.data.records);
-                this.communityOption = res.data.records;
-            }
-        })
+      this.$xttp.get('/community/page').then(res =>{
+        if(res.success){
+            this.communityOption = res.data.records;
+        }
+      })
     },
     save() {
-      if(this.form.employeeId == ''){
-        this.showInfo('请输入工号');
+      if(this.form.name == ''){
+        this.showInfo('请输入服务名称');
         return;
       }
-      if(this.form.userName == ''){
-        this.showInfo('请输入名称');
+      if(this.form.serviceType == ''){
+        this.showInfo('请选择服务类型');
         return;
       }
-      if(this.form.phone == ''){
-        this.showInfo('请输入正确号码');
+      if(this.form.communityId == ''){
+        this.showInfo('请选择社区');
         return;
-      }else{
-        if(!(/^1[34578]\d{9}$/.test(this.form.phone))){
-          this.showInfo('请输入正确号码');
+      }
+
+      if(this.form.serviceWay == 1){
+        if(this.form.contact == ''){
+          this.showInfo('请填写服务热线');
+          return;
+        }
+      }
+      if(this.form.serviceWay == 2) {
+        if(this.form.url == ''){
+          this.showInfo('请填写外部链接');
           return;
         }
       }
 
       let files = this.$refs.upload.uploadFiles;
-
-      if (files.length) {
-        ossUpload(files[0].raw, key => {
-          this.form.thumbnailUrl = key;
+      if(files.length){
+        if(this.add.icon != this.form.icon){
+          this.form.icon = this.add.icon;
           this.submitForm();
-        });
-      } else {
-        this.submitForm();
+        }else{
+          ossUpload(files[0].raw, key => {
+            this.add.icon = '';
+            this.form.icon = '';
+            this.form.icon = key;
+            this.add.icon = key;
+            this.submitForm();
+          });
+        }
+      }else{
+        this.showInfo("图片内容不能为空");
+        this.form.icon = '';
+        this.add.icon = '';
+        return;
       }
-
-      this.postData();
-      // this.$refs[formName].validate((valid) => {
-      //     if (valid) {
-      //       this.postData();
-      //     } else {
-      //       return false;
-      //     }
-      //   });
     },
-    postData() {
-      let msg = this.add ? '编辑' : '添加';
-      let uri = this.add ? '/user/property/update-user' : '/user/property/create-user';
-      console.log(this.form)
-      this.$xttp
-        .post( uri, this.form)
-        .then(res => {
-          if (res.errorCode === 0) {
-            this.$message({
-              message: msg + "员工成功",
-              type: "success"
-            });
-            this.current =  2;
-            this.handleClose();
-            this.$emit('reload');
-          }else {
-            this.$message({message:res.errorMsg,type:'error'});
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
+    submitForm(){
+      this.loading = true;
+      let params = {};
+      params['id'] = this.form.id;
+      params['name'] = this.form.name;
+      params['communityId'] = this.form.community;
+      params['serviceType'] = this.form.serviceType;
+      params['communityId'] = this.form.communityId;
+      params['serviceWay'] = this.form.serviceWay;
+      params['icon'] = this.form.icon;
+      if(this.form.serviceWay == 1){
+        params['contact'] = this.form.contact;
+      }
+      if(this.form.serviceWay == 2){
+        params['url'] = this.form.url;
+      }
+      let url = 'biz/convenience/edit';
+      this.$xttp.post(url, params)
+          .then(res => {
+            if(res.success){
+              console.log(res);
+              this.handleClose();
+              this.$message({
+                message: "编辑服务成功",
+                type: "success"
+              });
+              this.$emit('reload');
+            }else {
+              this.$message({message:res.errorMsg,type:'error'});
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          })
     }
   }
 };

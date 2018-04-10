@@ -130,7 +130,7 @@ export default {
     },
     sendAjax(page, contractPhone) {
       let nPage = page || this.$route.query.page || 1;
-      let obj = { page: nPage ,communityId:this.$store.getters.communityId};
+      let obj = { page: nPage ,communityId:this.$store.getters.communityId,auditStatus:1};
       if (contractPhone) {
         obj.contractPhone = this.formInline.contractPhone;
       } else {

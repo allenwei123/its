@@ -234,6 +234,7 @@ export default {
       this.$xttp.get(`/user/property/${communityId}/post-list`).then(res => {
         if(!res.errorCode) {
           this.postOptions = res.data;
+          console.log(res.data);
         }
       })
     },

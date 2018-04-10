@@ -203,6 +203,10 @@ const router = new Router({
                 component: (resolve) => require(["@/page/home/nav/businessManage/merchant"], resolve)
               },
               {
+                path: 'amenity',
+                component: (resolve) => require(["@/page/home/nav/businessManage/amenity/list"], resolve)
+              },
+              {
                 path: 'slideShow',
                 component: (resolve) => require(["@/page/home/nav/businessManage/slideShow/index"], resolve)
               },
