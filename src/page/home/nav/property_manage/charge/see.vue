@@ -108,7 +108,7 @@ export default {
             inputPattern: /^[+|-]?\d*\.?\d*$/,
             inputErrorMessage: '请输入数字类型',
             }).then(({ value }) => {
-                let unitPrice = value * 1000;
+                let unitPrice = value * 10000;
                 console.log(unitPrice);
                 this.$xttp.get(url,{params:{unitPrice:unitPrice}}).then(res => {
                     if(res.success){

@@ -13,7 +13,7 @@
             <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
           </el-form-item>
         </el-form>
-        <el-button type="primary" class="c-addBtn" @click="onSubmit">新增优惠券</el-button>
+        <el-button type="primary" class="c-addBtn" @click="onSubmit">新增服务</el-button>
       </div>
     </div>
 
@@ -21,26 +21,40 @@
       <el-table-column label="序号" width="60" align="center">
         <template slot-scope="scope">{{( currentPage-1) * pageSize + scope.$index + 1}}</template>
       </el-table-column>
-      <el-table-column label="便民服务" min-width="100" align="center" :show-overflow-tooltip="true">
-        <template slot-scope="scope">{{ scope.row.name}}</template>
+      <el-table-column v-if="isSee" label="ID" min-width="100" align="center" :show-overflow-tooltip="true">
+        <template slot-scope="scope"><el-button type="text">{{ scope.row.id }}</el-button></template>
       </el-table-column>
-      <el-table-column label="服务名称" min-width="60" align="center" :show-overflow-tooltip="true">
-        <template slot-scope="scope">{{ scope.row.overGround}}</template>
+      <el-table-column v-if="isSee" label="社区ID" min-width="100" align="center" :show-overflow-tooltip="true">
+        <template slot-scope="scope"><el-button type="text">{{ scope.row.communityId }}</el-button></template>
       </el-table-column>
-      <el-table-column label="分类" min-width="60" align="center" :show-overflow-tooltip="true">
-        <template slot-scope="scope">{{0 - scope.row.underGround}}</template>
+      <el-table-column label="便民服务" min-width="200" align="center" :show-overflow-tooltip="true">
+        <template slot-scope="scope"><el-button type="text">{{ scope.row.icon }}</el-button></template>
       </el-table-column>
-      <el-table-column label="所属社区" min-width="60" align="center" :show-overflow-tooltip="true">
-        <template slot-scope="scope">{{ scope.row.overGround - scope.row.underGround}}</template>
+      <el-table-column label="服务名称" min-width="200" align="center" :show-overflow-tooltip="true">
+        <template slot-scope="scope">{{ scope.row.name }}</template>
       </el-table-column>
-      <el-table-column label="服务类型" min-width="70" align="center" :show-overflow-tooltip="true">
-        <template slot-scope="scope">{{ scope.row.roomNum}}</template>
+      <el-table-column label="服务类型" min-width="200" align="center" :show-overflow-tooltip="true">
+        <template slot-scope="scope">{{ scope.row.serviceType | serviceType }}</template>
       </el-table-column>
-      <el-table-column label="热线电话" min-width="70" align="center" :show-overflow-tooltip="true">
-        <template slot-scope="scope">{{ scope.row.inputRoomNum}}</template>
+      <el-table-column label="所属社区" min-width="200" align="center" :show-overflow-tooltip="true">
+        <template slot-scope="scope">{{ scope.row.communityName }}</template>
       </el-table-column>
-      <el-table-column label="链接地址" min-width="70" align="center" :show-overflow-tooltip="true">
-        <template slot-scope="scope"><el-button type="text">{{ scope.row.inputRoomNum }}</el-button></template>
+      <el-table-column label="服务方式" min-width="200" align="center" :show-overflow-tooltip="true">
+        <template slot-scope="scope">{{ scope.row.serviceWay | serviceWay }}</template>
+      </el-table-column>
+      <el-table-column label="创建时间" min-width="200" align="center" :show-overflow-tooltip="true">
+        <template slot-scope="scope">{{ scope.row.createAt | time('yyyy-MM-dd HH:mm:ss') }}</template>
+      </el-table-column>
+      <!-- <el-table-column prop="st" align="center" label="服务类型"></el-table-column>
+      <el-table-column prop="hotTel" align="center" label="热线电话"></el-table-column> -->
+      <el-table-column label="热线电话" min-width="200" align="center" :show-overflow-tooltip="true">
+        <template slot-scope="scope">{{ scope.row.contact}}</template>
+      </el-table-column>
+      <el-table-column label="外部链接" min-width="200" align="center" :show-overflow-tooltip="true">
+        <template slot-scope="scope"><el-button type="text">{{ scope.row.url }}</el-button></template>
+      </el-table-column>
+      <el-table-column label="修改时间" min-width="200" align="center" :show-overflow-tooltip="true">
+        <template slot-scope="scope">{{ scope.row.updateAt | time('yyyy-MM-dd HH:mm:ss') }}</template>
       </el-table-column>
       <el-table-column align="center" fixed="right" label="操作" width="220">
         <template slot-scope="scope">
@@ -59,11 +73,14 @@
         :total="total">
       </el-pagination>
     </div>
-    <transition name="fade1">
-      <AddPage v-if="isShow" :msg="isShow" @upup="change" :add.sync="notice"></AddPage>
+    <transition name="add">
+      <AddPage v-if="isShow" :msg="isShow" @upup="change" @reload="find(1)" :add.sync="notice"></AddPage>
+    </transition>
+    <transition name="edit">
+      <EditPage v-if="isEdit" :msg="isEdit" @upedit="editChange" @reload="find(1)" :add.sync="notice"></EditPage>
     </transition>
     <transition name="fade">
-      <!--<SeePage v-if="see" :msg="see" @upsee="seeChange"  :data="seeData"></SeePage>-->
+      <SeePage v-if="see" :msg="see" @upsee="seeChange"  :data="seeData"></SeePage>
     </transition>
     <el-dialog title="温馨提示" :visible.sync="visible2">
       <p>请问您是否确定删除这条数据吗？</p>
@@ -76,12 +93,18 @@
 </template>
 
 <script>
-  import AddPage  from './add';
+import time from '@/utils/time.js';
+import AddPage  from './add';
+import EditPage from './edit';
+import SeePage from './see';
+
   export default {
     name: "merchantList",
     data() {
       return {
         isSou: false,
+        isSee: false,
+        isEdit: false,
         tableData: [],
         navDetailData: [
           { id: 0, name: "商圈管理" },
@@ -104,8 +127,9 @@
       };
     },
     components: {
-      AddPage
-      // SeePage
+      AddPage,
+      EditPage,
+      SeePage
     },
     methods: {
       onSubmit() {//添加按钮
@@ -124,7 +148,7 @@
       },
       editHandle(row) {
         //编辑
-        this.isShow = true;
+        this.isEdit = true;
         this.notice = row;
       },
       delHandle(row) {
@@ -152,32 +176,47 @@
           this.isShow = false;
         }
       },
+      editChange(msg){
+        this.isEdit = false;
+      },
       seeChange(msg) {//与查看弹窗交互
         this.see = false;
       },
       find(){
         this.sendAjax(1);
       },
+      serviceType(row,column) {
+        let st = row[column.property]
+        if(st === 1){
+          return '本地商店';
+        }
+        if(st === 2){
+          return '外来连接'
+        }
+      },
       sendAjax(page) {
         let nPage = page || this.$route.query.page || 1;
         let obj = {page:nPage,communityId:this.$store.getters.communityId};
+        // let obj = {page:nPage};
         if(this.formInline.name){
           obj.name = this.formInline.name;
         }else {
           delete obj.name ;
         }
         this.loading = true;
-        this.$xttp.get("/community/building/page",{params:obj})
+        this.$xttp.post("/biz/convenience/page",{params:obj})
           .then(res => {
             if (!res.errorCode) {
               this.tableData = res.data.records;
               this.currentPage = res.data.currentPage;
               this.total = res.data.total;
-              this.tableData.forEach(item => {
-                if (item.overGround || item.underGround) {
-                  item.allGound = item.overGround + item.underGround;
-                }
-              });
+              // this.tableData.forEach(item => {
+              //   let a = item.serviceType;
+              //   for (var key in a){
+              //     item.st = key;
+              //     item.hotTel = a[key];
+              //   }
+              // });
               this.$router.push({path:this.$route.path,query:{page: nPage }})
             }
             this.loading = false;
@@ -232,11 +271,20 @@
     opacity: 0;
     transform: rotateY(180deg);
   }
-  .fade1-enter-active, .fade1-leave-active {
+  .add-enter-active, .add-leave-active {
     transition: all 0.5s ease;
   }
 
-  .fade1-enter, .fade1-leave-active {
+  .add-enter, .add-leave-active {
+    opacity: 0;
+    transform: translateX(-500px);
+  }
+
+  .edit-enter-active, .edit-leave-active {
+    transition: all 0.5s ease;
+  }
+
+  .edit-enter, .edit-leave-active {
     opacity: 0;
     transform: translateX(-500px);
   }

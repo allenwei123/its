@@ -4,7 +4,7 @@
             <h3>职权范围：</h3>
           <el-form-item style="margin-top:20px;">
             <el-checkbox-group v-for="(items) in form.buildLists" :key="items.id" v-model="form.checkList">
-              <el-col :span="8"><el-checkbox :label="items.code">{{items.name}}</el-checkbox></el-col>
+              <el-col :span="6"><el-checkbox :label="items.code">{{items.name}}</el-checkbox></el-col>
             </el-checkbox-group>
           </el-form-item>
           <el-form-item style="text-align:center">

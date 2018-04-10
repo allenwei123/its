@@ -50,7 +50,7 @@ export default {
   data() {
     return {
       formLabelWidth: "120px",
-      titleFont:'添加员工',
+      titleFont:'添加角色',
       form: {
         name: "",
         phone: "",

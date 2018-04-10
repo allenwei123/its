@@ -44,9 +44,9 @@ export default {
         this.$emit("upsee", false );
       },
       getListData() {
-        let obj = { id: this.data.id };
+        let obj = {userId: this.data.userId, communityId: this.$store.getters.communityId };
         this.$xttp
-          .post(`/user/property/getEntirePeaple`, obj )
+          .post('/room/query-by-user',obj)
           .then(res => {
             if(!res.errorCode) {
               this.tableData = res.data;

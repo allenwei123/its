@@ -26,43 +26,43 @@
             <el-table-column v-if="isShow" label="社区ID" width="80" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.communityId}}</template>
             </el-table-column>
-            <el-table-column label="标题" min-width="180" :show-overflow-tooltip="true">
+            <el-table-column label="标题" min-width="250" align="center" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.title}}</template>
             </el-table-column>
-            <el-table-column label="类型" min-width="100" :show-overflow-tooltip="true">
+            <el-table-column label="类型" min-width="200" align="center" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{clientFilter(scope.row.client)}}</template>
             </el-table-column>
-            <el-table-column label="素材链接" min-width="120" :show-overflow-tooltip="true">
-              <template slot-scope="scope"><a v-bind:href="'{{scope.row.materialUrl}}'">{{scope.row.materialUrl}}</a></template>
+            <el-table-column label="素材链接" min-width="300" align="center" :show-overflow-tooltip="true">
+              <template slot-scope="scope"><el-button type="text">{{scope.row.materialUrl}}</el-button></template>
             </el-table-column>
-            <el-table-column label="标签" min-width="100" :show-overflow-tooltip="true">
+            <el-table-column label="标签" min-width="200" align="center" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.tags}}</template>
             </el-table-column>
-            <el-table-column label="跳转链接" min-width="100" :show-overflow-tooltip="true">
-              <template slot-scope="scope">{{scope.row.href}}</template>
+            <el-table-column label="跳转链接" min-width="300" align="center" :show-overflow-tooltip="true">
+              <template slot-scope="scope"><el-button type="text">{{scope.row.href}}</el-button></template>
             </el-table-column>
-            <el-table-column label="开始时间" min-width="160" :show-overflow-tooltip="true">
+            <el-table-column label="开始时间" min-width="200" align="center" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.beginAt | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
-            <el-table-column label="结束时间" min-width="160" :show-overflow-tooltip="true">
+            <el-table-column label="结束时间" min-width="200" align="center" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.deadline | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
-            <el-table-column label="发布状态" min-width="100" :show-overflow-tooltip="true">
+            <el-table-column label="发布状态" min-width="160" align="center" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{getPublishedName(scope.row.published)}}</template>
             </el-table-column>
-            <el-table-column label="发布时间" min-width="160" :show-overflow-tooltip="true">
+            <el-table-column label="发布时间" min-width="200" align="center" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.publishAt | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
-            <el-table-column label="创建时间" min-width="160" :show-overflow-tooltip="true">
+            <el-table-column label="创建时间" min-width="200" align="center" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.createAt | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
-            <el-table-column label="修改时间" min-width="160" :show-overflow-tooltip="true">
+            <el-table-column label="修改时间" min-width="200" align="center" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.updateAt | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
-            <el-table-column label="数据状态" min-width="160" :show-overflow-tooltip="true">
+            <el-table-column label="数据状态" min-width="200" align="center" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{dataStatusFilter(scope.row.dataStatus)}}</template>
             </el-table-column>
-            <el-table-column label="操作" width="300" :fixed="tableData.length ? 'right' : '/'">
+            <el-table-column label="操作" width="300" align="center" :fixed="tableData.length ? 'right' : '/'">
               <template slot-scope="scope">
                 <el-button type="primary" size="mini" @click="preview(scope.row)">预览</el-button>
                 <template v-if="scope.row.published === 1">

@@ -133,7 +133,35 @@ Vue.filter('dataStatus',function (value) {
       break;
   }
   return newValue;
-})
+});
+
+Vue.filter('serviceType',function (value){
+  if (!value) return '';
+  let newValue = '';
+  switch (value) {
+    case 1:
+      newValue = '本地商店';
+      break;
+    case 2:
+      newValue = '外来链接';
+      break;
+  }
+  return newValue;
+});
+
+Vue.filter('serviceWay',function(value){
+  if (!value) return '';
+  let newValue = '';
+  switch (value) {
+    case 1:
+      newValue = '热线服务';
+      break;
+    case 2:
+      newValue = '在线服务';
+      break;
+  }
+  return newValue;
+});
 
 Vue.filter('digitUppercase', function (n) {
   let i;
