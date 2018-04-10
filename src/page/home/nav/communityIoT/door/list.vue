@@ -5,7 +5,7 @@
         <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li>
       </ul>
       <div class="c-rpass-container">
-        <div class="c-searchbar">
+        <div class="c-search">
           <el-form :inline="true" class="demo-form-inline">
             <el-select v-model="value1" placeholder="品牌" clearable  @change="changeStatus">
               <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id"></el-option>
@@ -23,7 +23,7 @@
               <el-button type="primary" @click="query">查询</el-button>
             </el-form-item>
             <el-form-item style="float: right">
-              <!-- <el-button type="primary" @click="add">新增门禁</el-button> -->
+              <el-button type="primary" class="c-addBtn" @click="add">新增门禁</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -67,7 +67,7 @@
 
       <!-- 新增门禁 -->
       <transition name="fade">
-        <AddPage v-if="show" :msg="show" @change=addChange></AddPage>
+        <AddPage v-if="show" :msg="show" @change=addChange @addSuccess="query"></AddPage>
       </transition>
 
     </el-main>
@@ -122,7 +122,7 @@ import AddPage from "./add";
           this.currentPage = 1;
         }
         else {
-          this.getTableList();
+          this.getTableList(1);
         }
       },
       getFloorList() {//获取社区对应的楼栋
@@ -142,9 +142,9 @@ import AddPage from "./add";
       addChange() {
         this.show = false;
       },
-      getTableList() {
+      getTableList(pages) {
         this.loading = true;
-        let url = `communityIoT/record/door/list?page=${this.currentPage}&size=${this.pageSize}`;
+        let url = `communityIoT/record/door/list?page=${pages}&size=${this.pageSize}`;
         let params = {};
         params['communityId'] = this.communityId;
         if(this.value1) {
@@ -157,7 +157,7 @@ import AddPage from "./add";
           params['buildingId'] = this.value3;//楼栋查询
         }
         if (this.q_input) {
-          params['deviceName'] = this.q_input;
+          params['name'] = this.q_input;
         }
         this.$xttp.post(url, params).then(res => {
           this.loading = false;
@@ -175,10 +175,11 @@ import AddPage from "./add";
         }
       },
       view(item) {
+        console.log(item);
         this.$router.push({
           path: '/home/nav/communityIoT/doorRecord',
           query: {
-            deviceId: item.doorId || ''
+            deviceId: item.deviceId || '' // deviceId = item.id
           }
         });
       }
@@ -195,6 +196,23 @@ import AddPage from "./add";
     li {
       float: left;
       margin-right: 10px;
+    }
+  }
+
+  .c-body {
+    width: 90%;
+    &.c-maxWidth {
+      max-width: calc(100vw - 200px);
+    }
+  }
+
+  .c-search {
+    position: relative;
+    width: 100%;
+    .c-addBtn {
+      position: absolute;
+      right: 0px;
+      top: 0px;
     }
   }
 
