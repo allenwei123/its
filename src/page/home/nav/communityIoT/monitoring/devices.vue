@@ -36,9 +36,9 @@
           <!-- <template slot-scope="scope">{{ scope.row.keyNo }}</template> -->
         </el-table-column>
 
-        <el-table-column label="所属楼栋" :show-overflow-tooltip="true" align="center" prop="buildingId">
-          <!-- <template slot-scope="scope">{{scope.row.startTime | time }}</template> -->
-        </el-table-column>
+        <!-- <el-table-column label="所属楼栋" :show-overflow-tooltip="true" align="center" prop="buildingId">
+          <template slot-scope="scope">{{scope.row.startTime | time }}</template>
+        </el-table-column> -->
 
         <el-table-column label="设备厂商" :show-overflow-tooltip="true" align="center" prop="brand">
           <!-- <template slot-scope="scope">{{ scope.row.startTime | time }}</template> -->
@@ -67,8 +67,8 @@
       <div class="c-block">
         <el-pagination
           @current-change="getTableList"
-          :current-page="currentPage"
-          :page-size="10"
+          :current-page.sync="currentPage"
+          :page-size="pageSize"
           layout="total, prev, pager, next, jumper"
           :total="total">
         </el-pagination>
@@ -121,7 +121,7 @@ export default {
       navDetailData: [
         { id: 1, name: "社区物联" },
         { id: 0, name: "监控管理" },
-        { id: 2, name: "设备监控" }
+        { id: 2, name: "监控档案" }
       ],
       input: '',
       q_input: '',
@@ -166,7 +166,7 @@ export default {
         this.currentPage = 1;
       }
       else {
-        this.getTableList();
+        this.getTableList(1);
       }
     },
     changeStatus() {
@@ -196,8 +196,8 @@ export default {
         this.loading = false;
       })
     },
-    getTableList() {
-      let url = `communityIoT/camera/page?page=${this.currentPage}&size=${this.pageSize}`;
+    getTableList(pages) {
+      let url = `communityIoT/camera/page?page=${pages}&size=${this.pageSize}`;
       let params = {};
       let communityId = this.$store.getters.communityId;
       params.communityId = communityId;

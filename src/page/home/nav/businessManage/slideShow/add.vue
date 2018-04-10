@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="新增轮播图" :visible.sync="formVisible">
+  <el-dialog :title="title" :visible.sync="formVisible">
     <el-form :model="form" label-width="120px">
       <el-form-item label="轮播图" required>
         <template>
@@ -17,21 +17,25 @@
         </template>
       </el-form-item>
 
-      <el-form-item label="所属社区" label-width="120px" required>
-        <el-input v-model.trim="form.title"></el-input>
+      <el-form-item label="所属社区" label-width="120px" prop="value3" required>
+        <el-select v-model="form.value3"  clearable>
+          <el-option v-for="item in communityList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+        </el-select>
       </el-form-item>
 
       <el-form-item label="播放顺序" required>
-        <el-select v-model="form.client" placeholder="请选择客户端类型">
-          <el-option label="住户端" value="1000"></el-option>
-          <el-option label="物业端" value="1001"></el-option>
-          <el-option label="WEB后台" value="1002"></el-option>
+        <el-select v-model="form.label" placeholder="请选择播放顺序" clearable>
+          <el-option label="1" value="1"></el-option>
+          <el-option label="2" value="2"></el-option>
+          <el-option label="3" value="3"></el-option>
         </el-select>
       </el-form-item>
   
       <el-form-item label="跳转类型" label-width="120px" required>
-        <el-radio v-model="radio" label="1">商家</el-radio>
-        <el-radio v-model="radio" label="2">第三方</el-radio>
+        <el-radio-group v-model="radio">
+          <el-radio  :label="1">商家</el-radio>
+          <el-radio  :label="2">第三方</el-radio>
+        </el-radio-group>
       </el-form-item>
 
       <el-form-item label="关联社区" label-width="120px" required>
@@ -51,17 +55,20 @@ import { send as ossUpload, getUri } from "@/utils/oss";
 export default {
   data() {
     return {
-      formVisible: this.visible,
+      formVisible: true,
       communityList: [],
       file: null,
       form: {
         title: "",
         client: "1000",
         href: "",
-        materialUrl: null
+        materialUrl: null,
+        value3: '',
       },
       fileList2: [],
-      radio: '1',
+      radio: 1,
+      title: '新增轮播图',
+      communityList: '',
     };
   },
   watch: {
@@ -82,50 +89,72 @@ export default {
     closeForm() {
       this.formVisible = false;
     },
-    preview() {},
-    up() {},
     onExceed() {
       this.$message("只能上传一张图片");
     },
+
+    community() {
+      this.loading = true;
+      let url = `community/page`;
+      this.$xttp.get(url).then( res => {
+        if(!res.errorCode) {
+          this.loading = false;
+          this.communityList = res.data.records;
+        }
+      }).catch( () => {
+        this.loading = false;
+      })
+    },
+
     save() {
-      if (!this.form.title.length) {
-        this.showInfo("公告标题不能为空");
+      if (!this.form.label) {
+        this.showInfo("播放顺序不能为空");
+        return;
+      }
+      if (!this.form.value3) {
+        this.showInfo("请选择社区");
+        return;
+      }
+      if (!this.radio) {
+        this.showInfo("跳转类型不能为空");
         return;
       }
       if (!this.form.href.length) {
-        this.showInfo("公告内容不能为空");
+        this.showInfo("关联社区不能为空");
         return;
       }
 
       let files = this.$refs.upload.uploadFiles;
-
       if (files.length) {
         ossUpload(files[0].raw, key => {
           this.form.materialUrl = key;
           this.submitForm();
         });
+      } else if (files.length === 0) {
+        this.showInfo("请上传图片");
+        return;
       } else {
         this.submitForm();
       }
+     
     },
     submitForm() {
       this.loading = true;
       let params = {};
-      params["client"] = this.form.client;
-    //   params["communityId"] = this.$store.getters.communityId;
-      params["title"] = this.form.title;
+      params["rank"] = this.form.label;
+      params["communityId"] = this.form.value3;
+      params["gotoType"] = this.radio;
       params["href"] = this.form.href;
-      if (this.form.materialUrl) {
-        params["materialUrl"] = this.form.materialUrl;
-      }
-      let url = "sys/slide/add";
+      params['title'] = this.title;
+      params["photo"] =this.form.materialUrl;
+      let url = "biz/slide/add";
       if (this.isModify) {
-        url = "sys/slide/edit";
+        url = "biz/slide/edit";
         params["id"] = this.detail.id;
       }
       this.$xttp.post(url, params).then(res => {
         this.loading = false;
-        console.log(res);
+        console.log(params);
         if (res.errorCode === 0) {
           this.formVisible = false;
           this.$emit('saveSuccess');
@@ -137,14 +166,17 @@ export default {
   },
   props: ["visible", "detail", "isModify"],
   created() {
+    this.community();
     if (this.isModify) {
-      this.form.title = this.detail.title;
-      this.form.client = this.detail.client.toString();
-      this.form.materialUrl = this.detail.materialUrl;
-      this.form.href = this.detail.href;
-      if (this.detail.materialUrl) {
-        getUri(this.detail.materialUrl,(uri) => {
-          this.fileList2.push({url:uri});
+      this.title = "修改轮播图";
+      this.form.value3 = this.detail.communityName;
+      // this.form.label = this.detail.rank;
+      this.form.href = this.detail.communityName;
+      this.radio = this.detail.gotoType;
+      console.log(this.radio)
+      if (this.detail.photo) {
+        getUri(this.detail.photo,(uri) => {
+          this.fileList2.unshift({url:uri});
         });
       }
     }
@@ -159,3 +191,4 @@ export default {
   line-height: 100px;
 }
 </style>
+

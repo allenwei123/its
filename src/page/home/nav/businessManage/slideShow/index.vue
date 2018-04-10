@@ -23,27 +23,30 @@
             <el-table-column label="序号" width="60" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
+            <el-table-column label="轮播图" min-width="300" :show-overflow-tooltip="true" align="center">
+              <template slot-scope="scope"><img :src="uri"></template>
+            </el-table-column>
             <el-table-column label="关联社区" min-width="180" :show-overflow-tooltip="true" align="center">
-              <template slot-scope="scope">{{scope.row.title}}</template>
+              <template slot-scope="scope">{{scope.row.communityName}}</template>
             </el-table-column>
             <el-table-column label="播放顺序" min-width="100" :show-overflow-tooltip="true" align="center">
-              <template slot-scope="scope">{{clientFilter(scope.row.client)}}</template>
+              <template slot-scope="scope">{{scope.row.rank}}</template>
             </el-table-column>
             <el-table-column label="跳转类型" min-width="120" :show-overflow-tooltip="true" align="center">
-              <template slot-scope="scope"><a v-bind:href="'{{scope.row.materialUrl}}'">{{scope.row.materialUrl}}</a></template>
+              <template slot-scope="scope">{{gotoType(scope.row.gotoType)}}</template>
             </el-table-column>
             <el-table-column label="关联商家" min-width="100" :show-overflow-tooltip="true" align="center">
-              <template slot-scope="scope">{{scope.row.tags}}</template>
+              <template slot-scope="scope">{{scope.row.shopName}}</template>
             </el-table-column>
             <el-table-column label="链接地址" min-width="100" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{scope.row.href}}</template>
             </el-table-column>
             <el-table-column label="状态" min-width="160" :show-overflow-tooltip="true" align="center">
-              <template slot-scope="scope">{{scope.row.beginAt | time('yyyy-MM-dd HH:mm')}}</template>
+              <template slot-scope="scope">{{getPublishStatusName(scope.row.published)}}</template>
             </el-table-column>
             <el-table-column label="操作" width="300" :fixed="tableData.length ? 'right' : '/'" align="left">
               <template slot-scope="scope">
-                <el-button type="primary" size="mini" @click="preview(scope.row)">预览</el-button>
+                <!-- <el-button type="primary" size="mini" @click="preview(scope.row)">预览</el-button> -->
                 <template v-if="scope.row.published === 1">
                   <el-button type="primary" size="mini" v-if="scope.row.published === 0" @click="push(scope.row)">推送</el-button>
                   <el-button type="primary" size="mini" @click="revoke(scope.row)">撤销</el-button>
@@ -51,7 +54,7 @@
 
                 <template v-if="scope.row.published !== 1">
                   <el-button type="primary" size="mini" @click="publish(scope.row)">发布</el-button>
-                  <!-- <el-button type="primary" size="mini" @click="modify(scope.row)">修改</el-button> -->
+                  <el-button type="primary" size="mini" @click="modify(scope.row)">编辑</el-button>
                   <el-button type="danger" size="mini" @click="del(scope.row)">删除</el-button>
                 </template>
               </template>
@@ -60,26 +63,28 @@
         </div>
         <div class="c-pagination">
           <el-pagination
-            layout="total, prev, pager, next, jumper" @current-change="getTableList"
+            layout="total, prev, pager, next, jumper" @current-change="handlegetTableList"
             :total="total" :page-size="pageSize" :current-page.sync="currentPage">
           </el-pagination>
         </div>
       </div>
 
-      <NoticeForm :detail="formDetail" :isModify="formIsModify" :visible.sync="formVisible" v-if="formVisible" @saveSuccess="getTableList"></NoticeForm>
-      <NoticePreview :visible.sync="previewVisible" v-if="previewVisible" :noticeInfo="previewNoticeInfo"></NoticePreview>
+      <NoticeForm :detail="formDetail" :isModify="formIsModify" :visible.sync="formVisible" v-if="formVisible" @saveSuccess="saveSuccess"></NoticeForm>
+      <!-- <NoticePreview :visible.sync="previewVisible" v-if="previewVisible" :noticeInfo="previewNoticeInfo"></NoticePreview> -->
     </el-main>
   </el-container>
 </template>
 
 <script>
   import NoticeForm from './add';
-  import NoticePreview from './preview';
+  // import NoticePreview from './preview';
+  import { getUri } from '@/utils/oss';
+
   export default {
     name: 'slideShow',
     components: {
       NoticeForm,
-      NoticePreview
+      // NoticePreview
     },
     data () {
       return {
@@ -100,31 +105,30 @@
         previewVisible: false,
         previewNoticeInfo: null,
         input: '',
-        q_input: null
+        q_input: null,
+        uri: '',
+        // 当前页
+        temp: '',
       }
     },
     methods: {
+      handlegetTableList(val) {
+        this.temp = val;
+        this.getTableList(this.temp);
+      },
       query() {
         this.q_input = this.input;
         if (this.currentPage !== 1) {
           this.currentPage = 1;
         }
         else {
-          this.getTableList();
+          this.getTableList(1);
         }
       },
-      clientFilter(type) {
+      gotoType(type) {
           let names = {
-              '1000': '住户端',
-              '1001': '物业端',
-              '1002': 'WEB后台'
-          };
-          return names[type];
-      },
-      getPublishedName(type) {
-          let names = {
-              '1': '已发布',
-              '0': '未发布'
+              '1': '本地商店',
+              '2': '外来链接',
           };
           return names[type];
       },
@@ -158,8 +162,7 @@
       publish(item) {
         this.loading = true;
         let slideId = item.id;
-        let url = `sys/slide/${slideId}/publish`;
-        // let url = `property/notice/${slideId}/publish`;
+        let url = `biz/slide/${slideId}/publish`;
         this.$xttp.get(url).then((res) => {
           this.loading = false;
           if (res.errorCode === 0) {
@@ -177,10 +180,10 @@
           type: 'warning'
         }).then(() => {
           this.loading = true;
-          this.$xttp.get(`sys/slide/${item.id}/delete`).then(res => {
+          this.$xttp.get(`biz/slide/${item.id}/delete`).then(res => {
             this.loading = false;
             if (res.errorCode === 0) {
-              this.getTableList();
+              this.getTableList(this.temp);
             }
           }).catch(() => {
             this.loading = false;
@@ -192,6 +195,13 @@
         this.formIsModify = true;
         this.formDetail = item;
         this.formVisible = true;
+      },
+      saveSuccess() {
+        this.$message({
+          message: '新增成功',
+          type: 'success'
+        });
+        this.getTableList(this.temp);
       },
       addNotice() {
         this.formIsModify = false;
@@ -215,7 +225,7 @@
           this.$xttp.get(`property/notice/${item.id}/push`).then(res => {
             this.loading = false;
             if (res.errorCode === 0) {
-              this.getTableList();
+              this.getTableList(this.temp);
             }
           }).catch(() => {
             this.loading = false;
@@ -224,45 +234,43 @@
       },
       // 撤销
       revoke(item) {
-        // let newItem = this.deepCopy(item);
-        // newItem.publishStatus = -1;
         this.loading = true;
         let id = item.id;
-        // sys/slide/{id}/retract
-
-        this.$xttp.get(`sys/slide/${id}/retract`).then(res => {
+        this.$xttp.get(`biz/slide/${id}/revoke`).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {
-            // this.tableData = this.tableData.map(it => {
-            //   if (it === item) {
-            //     it = res.data;
-            //   }
-            //   return it;
-            // });
-            this.getTableList();
+            this.getTableList(this.temp);
+            item.published = -1;
           }
         }).catch(() => {
           this.loading = false;
         });
       },
-      getTableList() {
+      getTableList(pages) {
         this.loading = true;
-        let url = `/sys/slide/page?page=${this.currentPage}&size=${this.pageSize}`;
+        let url = `biz/slide/page?page=${pages}&size=${this.pageSize}`;
         let params = {};
-        // params['communityId'] = this.$store.getters.communityId;
+        params['communityId'] = this.$store.getters.communityId;
         if (this.q_input) {
-          params['title'] = this.q_input;
+          params['shopName'] = this.q_input;
         }
         this.$xttp.post(url,params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {
             this.tableData = res.data.records;
+            this.tableData.forEach(element => {
+              getUri(element.photo,(uri)=> {
+                  this.uri = uri;
+              });
+            });
             this.total = res.data.total;
           }
         }).catch(() => {
           this.loading = false;
         })
-      }
+      },
+
+      
     },
     created() {
       this.query();
@@ -272,12 +280,12 @@
 
 <style scoped lang="scss">
     .c-navDetail {
-        margin-bottom: 10px;
-        li {
-            float: left;
-            margin-right: 10px;
-            cursor: pointer;
-        }
+      margin-bottom: 10px;
+      li {
+          float: left;
+          margin-right: 10px;
+          cursor: pointer;
+      }
     }
 
 </style>

@@ -76,7 +76,7 @@ export default {
           http.get(`/sys/menu/${state.communityId}/getByOuterKey`)
             .then(res => {
               let menuList =res.data?a(aside,res.data.spread.split('')) : null;
-              console.log(menuList)
+              // console.log(menuList)
               commit('UPDATEDASIDEDATA', menuList);
               resolve({msg:'success'})
             }).catch(err => {

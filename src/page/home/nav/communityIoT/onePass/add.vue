@@ -118,17 +118,14 @@ import time from "@/utils/time.js";
                 this.userToRoomId = res.data[0].id;
                 
                 //获取id后再去申请卡片 卡片控制12位
-                let url = `user/card/add/${this.userToRoomId}`;
+                let url = `user/card/add`;
                 let obj = {
                   "keyType": this.form.value1,
-                  "communityId": this.$store.getters.communityId,
-                  "rooms": [{
-                    "expireTime": 3000,
-                    "roomId": "5aa63af1e4b090a181f4c628"
-                  }],
+                  // 和谐警苑
+                  "rooms": ["5a82b08ab06c97e0cd6c1182"],
                   "processTime": 214748368,
-                  "userId": "5aa733d4e4b0274d66f17e9c",
-                  "keyNo" : this.form.keyNo
+                  "keyNo" : this.form.keyNo,
+                  "useraTimes": 0,
                 }
                 if(obj.keyNo.length !== 12){
                   this.$message({
@@ -137,7 +134,7 @@ import time from "@/utils/time.js";
                   });
                   return;
                 }
-                console.log(obj.keyNo.length);
+                // console.log(obj.keyNo.length);
                 this.$xttp.post(url, obj).then( res=> {
                   if (res.errorCode === 0) {
                     this.$message({

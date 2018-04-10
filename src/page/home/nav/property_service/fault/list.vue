@@ -5,7 +5,7 @@
         <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li>
       </ul>
       <div class="c-notice-container">
-        <div class="c-searchbar">
+        <div class="c-search">
           <el-form :inline="true" class="demo-form-inline">
             <el-select v-model="value1" placeholder="全部状态" clearable @change="changeStatus">
               <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -24,7 +24,7 @@
               <el-button type="primary" @click="query">查询</el-button>
             </el-form-item>
             <el-form-item style="float: right">
-              <el-button type="primary" @click="add">新增故障</el-button>
+              <el-button type="primary" class="c-addBtn" @click="add">新增故障</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -81,7 +81,7 @@
       </div>
       <!-- 增加故障 -->
       <transition name = "fade1">
-        <AddPage v-if="addSee" :msg="addSee" @upsee="addChange" @addSuccess="getTableList"></AddPage>
+        <AddPage v-if="addSee" :msg="addSee" @upsee="addChange" @addSuccess="query"></AddPage>
       </transition>
       <!-- 查看详情 -->
       <transition name="fade">
@@ -200,7 +200,7 @@
           this.currentPage = 1;
         }
         else {
-          this.getTableList();
+          this.getTableList(1);
         }
       },
       addChange(msg) {
@@ -383,7 +383,7 @@
       add() {
         this.addSee = true;
       },
-      getTableList() {
+      getTableList(pages) {
         let params = {};
         //输入的搜索字添加params中
         if(this.q_input){
@@ -395,13 +395,13 @@
         }
         let communityId = this.$store.getters.communityId;
         params['communityId'] = communityId;
-        let url = `property/fault/queryFaultPage?page=${this.currentPage}&size=${this.pageSize}`;
+        let url = `property/fault/queryFaultPage?page=${pages}&size=${this.pageSize}`;
         this.loading = true;
         if(this.value6) {
           let a = new Date(this.value6[0]);
           let b = new Date(this.value6[1]);
-          params['playTimeBegin'] = a.getFullYear() + '-' +(a.getMonth() < 9 ? '0': '')  + (a.getMonth() + 1) + '-' + (a.getDate() < 9 ? '0': '') + a.getDate();
-          params['playTimeEnd'] = b.getFullYear() + '-' +(b.getMonth() < 9 ? '0': '')  + (b.getMonth() + 1) + '-' + (b.getDate() < 9 ? '0': '') + b.getDate();
+          params['playTimeBegin'] = a.getFullYear() + '-' +(a.getMonth() < 10 ? '0': '')  + (a.getMonth() + 1) + '-' + (a.getDate() < 10 ? '0': '') + a.getDate();
+          params['playTimeEnd'] = b.getFullYear() + '-' +(b.getMonth() <  10 ? '0': '')  + (b.getMonth() + 1) + '-' + (b.getDate() < 10 ? '0': '') + b.getDate();
         }
         // console.log(params);
         this.$xttp.post(url, params).then(res => {
@@ -422,12 +422,28 @@
     },
     created() {
       this.workMan();
-      this.query();
+      this.getTableList(1);
     }
   }
 </script>
 
 <style scoped lang="scss">
+  .c-body {
+    width: 90%;
+    &.c-maxWidth {
+      max-width: calc(100vw - 200px);
+    }
+  }
+
+  .c-search {
+    position: relative;
+    width: 100%;
+    .c-addBtn {
+      position: absolute;
+      right: 0px;
+      top: 0px;
+    }
+  }
   // 切换动画
   .fade-enter-active, .fade-leave-active {
     transition: all 0.5s ease;

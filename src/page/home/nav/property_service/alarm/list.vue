@@ -95,12 +95,12 @@
           this.currentPage = 1;
         }
         else {
-          this.getTableList();
+          this.getTableList(1);
         }
       },
-      getTableList() {
+      getTableList(pages) {
         this.loading = true;
-        let url = `property/alarm/getAlarm?page=${this.currentPage}&size=${this.pageSize}`;
+        let url = `property/alarm/getAlarm?page=${pages}&size=${this.pageSize}`;
         let params = {};
         if (this.q_input && this.q_input.length) {
           params['callerName'] = this.q_input;
@@ -123,7 +123,7 @@
       }
     },
     created() {
-      this.query();
+      this.getTableList(1);
     }
   }
 </script>

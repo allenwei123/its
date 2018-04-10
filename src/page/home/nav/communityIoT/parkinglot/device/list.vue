@@ -80,12 +80,12 @@
           this.currentPage = 1;
         }
         else {
-          this.getTableList();
+          this.getTableList(1);
         }
       },
-      getTableList() {
+      getTableList(pages) {
         this.loading = true;
-        let url = `vehicle/car-gate/page`;
+        let url = `vehicle/car-gate/page?page=${pages}&size=${this.pageSize}`;
         let params = {};
         if (this.q_input) {
           params['gateName'] = this.q_input;

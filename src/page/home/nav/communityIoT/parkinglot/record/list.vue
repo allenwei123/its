@@ -83,16 +83,16 @@
           this.currentPage = 1;
         }
         else {
-          this.getTableList();
+          this.getTableList(1);
         }
       },
       changeStatus() {
         this.query();
       },
-      getTableList() {
+      getTableList(pages) {
         this.loading = true;
         console.log(this.gateTypeName);
-        let url = `vehicle/inout/page?page=${this.currentPage}&size=${this.pageSize}`;
+        let url = `vehicle/inout/page?page=${pages}&size=${this.pageSize}`;
         let params = {};
         if (this.q_input) {
           params['carNo'] = this.q_input;
