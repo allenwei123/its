@@ -31,7 +31,7 @@
         <template slot-scope="scope"><el-button type="text">{{ scope.row.icon }}</el-button></template>
       </el-table-column> -->
       <el-table-column label="便民服务" min-width="200" align="center" :show-overflow-tooltip="true">
-        <template slot-scope="scope"><el-button type="text"><img width="60px" height="60px" :src="uri"></el-button></template>
+        <template slot-scope="scope"><el-button type="text"><img width="60px" height="60px" :src="scope.row.url"></el-button></template>
       </el-table-column>
       <el-table-column label="服务名称" min-width="200" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">{{ scope.row.name }}</template>
@@ -216,45 +216,11 @@ import SeePage from './see';
               this.currentPage = res.data.currentPage;
               this.total = res.data.total;
               console.log(this.tableData);
-              for( var p in this.tableData){
-                getUri(this.tableData[p].icon,(uri)=>{
-                  this.uri = uri;
-                })(10)
-              }
-              this.tableData.forEach(item => {
-                if (item.icon) {
-                  item.allGound = item.overGround + item.underGround;
-                  getUri(item.icon,(uri)=>{
-                    this.uri = uri;
+              this.tableData.forEach(function(item) {
+                getUri(item.icon,key => {
+                      item.url = key;
                   })
-                }
-              });
-              // $.each(this.tableData, function(obj){
-              //   getUri(this.tableData.icon,(uri)=>{
-              //     this.uri = uri;
-              //   })
-              // })
-
-              // this.tableData.forEach(item =>{
-              //   console.log(item);
-              //   getUri(item.icon,(uri)=>{
-              //     this.uri = uri;
-              //   })
-                // let t = item.icon;
-                // console.log(t);
-                // if(item.icon) {
-                //   getUri(row.icon,(uri)=> {
-                //     this.uri = uri;
-                //   });
-                // }
-              // });
-              // this.tableData.forEach(item => {
-              //   let a = item.serviceType;
-              //   for (var key in a){
-              //     item.st = key;
-              //     item.hotTel = a[key];
-              //   }
-              // });
+              })
               this.$router.push({path:this.$route.path,query:{page: nPage }})
             }
             this.loading = false;
