@@ -67,8 +67,8 @@
       <div class="c-block">
         <el-pagination
           @current-change="getTableList"
-          :current-page="currentPage"
-          :page-size="10"
+          :current-page.sync="currentPage"
+          :page-size="pageSize"
           layout="total, prev, pager, next, jumper"
           :total="total">
         </el-pagination>
@@ -166,7 +166,7 @@ export default {
         this.currentPage = 1;
       }
       else {
-        this.getTableList();
+        this.getTableList(1);
       }
     },
     changeStatus() {
@@ -196,8 +196,8 @@ export default {
         this.loading = false;
       })
     },
-    getTableList() {
-      let url = `communityIoT/camera/page?page=${this.currentPage}&size=${this.pageSize}`;
+    getTableList(pages) {
+      let url = `communityIoT/camera/page?page=${pages}&size=${this.pageSize}`;
       let params = {};
       let communityId = this.$store.getters.communityId;
       params.communityId = communityId;

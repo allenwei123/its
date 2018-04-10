@@ -110,6 +110,7 @@
       },
       changeStatus() {
         this.query();
+        this.tableData=[];
       },
       getTableList(pages) {
         this.loading = true;
@@ -124,8 +125,8 @@
         if(this.value6) {
           let a = new Date(this.value6[0]);
           let b = new Date(this.value6[1]);
-          params['startAt'] = a.getFullYear() + '-' +(a.getMonth() < 9 ? '0': '')  + (a.getMonth() + 1) + '-' + (a.getDate() < 9 ? '0': '') + a.getDate();
-          params['endAt'] = b.getFullYear() + '-' +(b.getMonth() < 9 ? '0': '')  + (b.getMonth() + 1) + '-' + (b.getDate() < 9 ? '0': '') + b.getDate();
+          params['startAt'] = a.getFullYear() + '-' +(a.getMonth() < 10 ? '0': '')  + (a.getMonth() + 1) + '-' + (a.getDate() < 10 ? '0': '') + a.getDate();
+          params['endAt'] = b.getFullYear() + '-' +(b.getMonth() < 10 ? '0': '')  + (b.getMonth() + 1) + '-' + (b.getDate() < 10 ? '0': '') + b.getDate();
         }
         console.log(params);
         this.$xttp.post(url, params).then(res => {
@@ -149,7 +150,7 @@
           this.$xttp.get(url).then((res) => {
             this.loading = false;
             if (res.errorCode === 0) {
-              this.getTableList();
+              this.getTableList(1);
             }
           }).catch(() => {
             this.loading = false;

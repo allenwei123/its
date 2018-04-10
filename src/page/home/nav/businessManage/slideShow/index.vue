@@ -36,7 +36,7 @@
               <template slot-scope="scope">{{gotoType(scope.row.gotoType)}}</template>
             </el-table-column>
             <el-table-column label="关联商家" min-width="100" :show-overflow-tooltip="true" align="center">
-              <template slot-scope="scope">{{scope.row.tags}}</template>
+              <template slot-scope="scope">{{scope.row.shopName}}</template>
             </el-table-column>
             <el-table-column label="链接地址" min-width="100" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{scope.row.href}}</template>
@@ -63,13 +63,13 @@
         </div>
         <div class="c-pagination">
           <el-pagination
-            layout="total, prev, pager, next, jumper" @current-change="getTableList"
+            layout="total, prev, pager, next, jumper" @current-change="handlegetTableList"
             :total="total" :page-size="pageSize" :current-page.sync="currentPage">
           </el-pagination>
         </div>
       </div>
 
-      <NoticeForm :detail="formDetail" :isModify="formIsModify" :visible.sync="formVisible" v-if="formVisible" @saveSuccess="getTableList"></NoticeForm>
+      <NoticeForm :detail="formDetail" :isModify="formIsModify" :visible.sync="formVisible" v-if="formVisible" @saveSuccess="saveSuccess"></NoticeForm>
       <!-- <NoticePreview :visible.sync="previewVisible" v-if="previewVisible" :noticeInfo="previewNoticeInfo"></NoticePreview> -->
     </el-main>
   </el-container>
@@ -107,16 +107,22 @@
         input: '',
         q_input: null,
         uri: '',
+        // 当前页
+        temp: '',
       }
     },
     methods: {
+      handlegetTableList(val) {
+        this.temp = val;
+        this.getTableList(this.temp);
+      },
       query() {
         this.q_input = this.input;
         if (this.currentPage !== 1) {
           this.currentPage = 1;
         }
         else {
-          this.getTableList();
+          this.getTableList(1);
         }
       },
       gotoType(type) {
@@ -177,7 +183,7 @@
           this.$xttp.get(`biz/slide/${item.id}/delete`).then(res => {
             this.loading = false;
             if (res.errorCode === 0) {
-              this.getTableList();
+              this.getTableList(this.temp);
             }
           }).catch(() => {
             this.loading = false;
@@ -189,6 +195,13 @@
         this.formIsModify = true;
         this.formDetail = item;
         this.formVisible = true;
+      },
+      saveSuccess() {
+        this.$message({
+          message: '新增成功',
+          type: 'success'
+        });
+        this.getTableList(this.temp);
       },
       addNotice() {
         this.formIsModify = false;
@@ -212,7 +225,7 @@
           this.$xttp.get(`property/notice/${item.id}/push`).then(res => {
             this.loading = false;
             if (res.errorCode === 0) {
-              this.getTableList();
+              this.getTableList(this.temp);
             }
           }).catch(() => {
             this.loading = false;
@@ -226,30 +239,28 @@
         this.$xttp.get(`biz/slide/${id}/revoke`).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {
-            this.getTableList();
+            this.getTableList(this.temp);
             item.published = -1;
           }
         }).catch(() => {
           this.loading = false;
         });
       },
-      getTableList() {
+      getTableList(pages) {
         this.loading = true;
-        let url = `biz/slide/page?page=${this.currentPage}&size=${this.pageSize}`;
+        let url = `biz/slide/page?page=${pages}&size=${this.pageSize}`;
         let params = {};
         params['communityId'] = this.$store.getters.communityId;
         if (this.q_input) {
-          params['title'] = this.q_input;
+          params['shopName'] = this.q_input;
         }
         this.$xttp.post(url,params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {
             this.tableData = res.data.records;
-            console.log(this.tableData);
             this.tableData.forEach(element => {
               getUri(element.photo,(uri)=> {
                   this.uri = uri;
-                  // console.log(this.uri);
               });
             });
             this.total = res.data.total;
@@ -269,12 +280,12 @@
 
 <style scoped lang="scss">
     .c-navDetail {
-        margin-bottom: 10px;
-        li {
-            float: left;
-            margin-right: 10px;
-            cursor: pointer;
-        }
+      margin-bottom: 10px;
+      li {
+          float: left;
+          margin-right: 10px;
+          cursor: pointer;
+      }
     }
 
 </style>

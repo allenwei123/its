@@ -15,7 +15,7 @@
               <el-input v-model="input" placeholder="卡号"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
+              <el-button type="primary" @click="query"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
             </el-form-item>
           </el-form>
           <el-button type="primary" class="c-addBtn" @click="onSubmit">新增卡片</el-button>
@@ -71,7 +71,7 @@
       
       <div class="c-block">
         <el-pagination
-          @current-change="handleCurrentChange"
+          @current-change="getTableList"
           :current-page.sync="currentPage"
           :page-size="pageSize"
           layout="total, prev, pager, next, jumper"
@@ -80,7 +80,7 @@
       </div>
       <!-- 新增卡片 -->
       <transition name="fade1">
-        <AddPage v-if="show" :msg="show" @change=addChange @addSuccess="handleCurrentChange"></AddPage>
+        <AddPage v-if="show" :msg="show" @change=addChange @addSuccess="query"></AddPage>
       </transition>
 
       <transition name="fade">
@@ -118,6 +118,7 @@ export default {
       seeData:null,//查看数据
       visible2:false,
       delData:null,
+      q_input: null,
       input: '',
       show:false,
     };
@@ -130,9 +131,14 @@ export default {
     onSubmit() {
       this.show= true;
     },
-    handleCurrentChange(val) {
-      // console.log(val)
-      this.sendAjax(val, this.formInline.keyType, this.input);
+    query() {
+      this.q_input = this.input;
+      if (this.currentPage !== 1) {
+        this.currentPage = 1;
+      }
+      else {
+        this.getTableList(1);
+      }
     },
     getdataStatus(status) {
       let names = {
@@ -154,7 +160,7 @@ export default {
             this.visible2 = false;
             this.delData = null;
             this.$message({message:res.data,type:'success'});
-            this.find();
+            this.query();
           }
         })
       }
@@ -169,37 +175,30 @@ export default {
     seeChange(msg) {//与查看弹窗交互
       this.see = false;
     },
-    find(){
-      if (this.currentPage !== 1) {
-        this.currentPage = 1;
-      } else {
-        this.sendAjax(null, this.formInline.keyType, this.input);
-      }
-      // this.sendAjax(1, this.formInline.keyType);
-    },
     changeStatus() {
-      this.find();
+      this.query();
     },
     addChange() {
       this.show = false;
     },
-    sendAjax(page, keyType, keyNo) {
-      let nPage = page || this.$route.query.page || 1;
-      let obj = {page:nPage,communityId:this.$store.getters.communityId}
-      if(keyType){
-        obj.keyType = this.formInline.keyType;
+    getTableList(pages) {
+      let params = {};
+      params['communityId'] = this.$store.getters.communityId;
+      if(this.formInline.keyType){
+        params['keyType'] = this.formInline.keyType;
       }else {
-        delete obj.keyType ;
+        delete params.keyType ;
       }
-      obj['keyNo'] = this.input;
+      if(this.q_input){
+        params['keyNo'] = this.q_input;
+      }
       this.loading = true;
-      let url = `user/card/get/list?page=${this.currentPage}&size=${this.pageSize}`;
-      this.$xttp.post(url,obj)
+      let url = `user/card/get/list?page=${pages}&size=${this.pageSize}`;
+      this.$xttp.post(url,params)
       .then(res => {
         if (!res.errorCode) {
           console.log('res',res);
           this.tableData = res.data.records;
-          // this.currentPage = res.data.currentPage;
           this.total = res.data.total;
           this.tableData.forEach(item => {
             if (item.startDate) {
@@ -224,9 +223,8 @@ export default {
     }
   },
   created() {
-    this.find();
+    this.query();
   },
-  mounted() {}
 };
 </script>
 

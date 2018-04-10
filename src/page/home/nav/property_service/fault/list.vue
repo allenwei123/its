@@ -81,7 +81,7 @@
       </div>
       <!-- 增加故障 -->
       <transition name = "fade1">
-        <AddPage v-if="addSee" :msg="addSee" @upsee="addChange" @addSuccess="getTableList"></AddPage>
+        <AddPage v-if="addSee" :msg="addSee" @upsee="addChange" @addSuccess="query"></AddPage>
       </transition>
       <!-- 查看详情 -->
       <transition name="fade">
@@ -200,7 +200,7 @@
           this.currentPage = 1;
         }
         else {
-          this.getTableList();
+          this.getTableList(1);
         }
       },
       addChange(msg) {
@@ -383,7 +383,7 @@
       add() {
         this.addSee = true;
       },
-      getTableList() {
+      getTableList(pages) {
         let params = {};
         //输入的搜索字添加params中
         if(this.q_input){
@@ -395,13 +395,13 @@
         }
         let communityId = this.$store.getters.communityId;
         params['communityId'] = communityId;
-        let url = `property/fault/queryFaultPage?page=${this.currentPage}&size=${this.pageSize}`;
+        let url = `property/fault/queryFaultPage?page=${pages}&size=${this.pageSize}`;
         this.loading = true;
         if(this.value6) {
           let a = new Date(this.value6[0]);
           let b = new Date(this.value6[1]);
-          params['playTimeBegin'] = a.getFullYear() + '-' +(a.getMonth() < 9 ? '0': '')  + (a.getMonth() + 1) + '-' + (a.getDate() < 9 ? '0': '') + a.getDate();
-          params['playTimeEnd'] = b.getFullYear() + '-' +(b.getMonth() < 9 ? '0': '')  + (b.getMonth() + 1) + '-' + (b.getDate() < 9 ? '0': '') + b.getDate();
+          params['playTimeBegin'] = a.getFullYear() + '-' +(a.getMonth() < 10 ? '0': '')  + (a.getMonth() + 1) + '-' + (a.getDate() < 10 ? '0': '') + a.getDate();
+          params['playTimeEnd'] = b.getFullYear() + '-' +(b.getMonth() <  10 ? '0': '')  + (b.getMonth() + 1) + '-' + (b.getDate() < 10 ? '0': '') + b.getDate();
         }
         // console.log(params);
         this.$xttp.post(url, params).then(res => {
@@ -422,7 +422,7 @@
     },
     created() {
       this.workMan();
-      this.query();
+      this.getTableList(1);
     }
   }
 </script>

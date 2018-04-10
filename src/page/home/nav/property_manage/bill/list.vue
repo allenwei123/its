@@ -207,7 +207,7 @@ export default {
         this.currentPage = 1;
       }
       else {
-        this.getTableList();
+        this.getTableList(1);
       }
     },
     changeStatus() {
@@ -239,7 +239,7 @@ export default {
     },
     editSuccess() {
       this.show = false;
-      this.getTableList();
+      this.getTableList(1);
     },
     //一键催交
     callAll() {
@@ -411,8 +411,8 @@ export default {
       };
       return names[status];
     },
-    getTableList() {
-      let url = `fees/property-bill/page?page=${this.currentPage}&size=${this.pageSize}`;
+    getTableList(pages) {
+      let url = `fees/property-bill/page?page=${pages}&size=${this.pageSize}`;
       let params = {};
       let communityId = this.$store.getters.communityId;
       params.communityId = communityId;
@@ -468,7 +468,7 @@ export default {
     },
   },
   created() {
-    this.query();
+    this.getTableList(1);
     this.build();
   }
 };

@@ -24,7 +24,7 @@
       </el-form-item>
 
       <el-form-item label="播放顺序" required>
-        <el-select v-model="form.label" placeholder="请选择播放顺序">
+        <el-select v-model="form.label" placeholder="请选择播放顺序" clearable>
           <el-option label="1" value="1"></el-option>
           <el-option label="2" value="2"></el-option>
           <el-option label="3" value="3"></el-option>
@@ -32,8 +32,10 @@
       </el-form-item>
   
       <el-form-item label="跳转类型" label-width="120px" required>
-        <el-radio v-model="radio" label="1">商家</el-radio>
-        <el-radio v-model="radio" label="2">第三方</el-radio>
+        <el-radio-group v-model="radio">
+          <el-radio  :label="1">商家</el-radio>
+          <el-radio  :label="2">第三方</el-radio>
+        </el-radio-group>
       </el-form-item>
 
       <el-form-item label="关联社区" label-width="120px" required>
@@ -64,7 +66,7 @@ export default {
         value3: '',
       },
       fileList2: [],
-      radio: '1',
+      radio: 1,
       title: '新增轮播图',
       communityList: '',
     };
@@ -155,7 +157,6 @@ export default {
         console.log(params);
         if (res.errorCode === 0) {
           this.formVisible = false;
-          
           this.$emit('saveSuccess');
         }
       }).catch(() => {
@@ -167,12 +168,15 @@ export default {
   created() {
     this.community();
     if (this.isModify) {
-      this.form.title = this.detail.title;
-      this.form.materialUrl = this.detail.materialUrl;
-      this.form.href = this.detail.href;
-      if (this.detail.materialUrl) {
-        getUri(this.detail.materialUrl,(uri) => {
-          // this.fileList2.push({url:uri});
+      this.title = "修改轮播图";
+      this.form.value3 = this.detail.communityName;
+      // this.form.label = this.detail.rank;
+      this.form.href = this.detail.communityName;
+      this.radio = this.detail.gotoType;
+      console.log(this.radio)
+      if (this.detail.photo) {
+        getUri(this.detail.photo,(uri) => {
+          this.fileList2.unshift({url:uri});
         });
       }
     }
@@ -187,3 +191,4 @@ export default {
   line-height: 100px;
 }
 </style>
+
