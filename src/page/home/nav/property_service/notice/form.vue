@@ -54,7 +54,6 @@ import { send as ossUpload, getUri } from "@/utils/oss";
 export default {
   data() {
     return {
-      titleName: '新增公告',
       formVisible: this.visible,
       communityList: [],
       file: null,
