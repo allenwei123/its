@@ -38,8 +38,8 @@ import { mapGetters } from "vuex";
           {name: '物业服务', src: '/home/nav/propertyService'},
           {name: '社区物联', src: '/home/nav/communityIoT'},
           {name: '商圈管理', src: '/home/nav/businessManage'},
-          {name: '系统管理', src: ''},
-          {name: '统计分析', src: ''},
+//          {name: '系统管理', src: '/'},
+          {name: '数据统计', src: '/home/nav/summary'},
         ],
         currentUser:'',
       }
@@ -71,8 +71,6 @@ import { mapGetters } from "vuex";
         });
       },
       navClick(item) {
-//          console.log(this.navIndex)
-//        this.navIndex = index;
         this.$router.push({path:item.src});
       }
     },

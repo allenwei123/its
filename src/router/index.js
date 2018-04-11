@@ -220,6 +220,17 @@ const router = new Router({
             ]
           },
           {
+            path: 'summary',
+            redirect: 'summary/baseInfo',
+            component: (resolve) => require(["@/page/home/nav/_res"], resolve),
+            children: [
+              {
+                path: 'baseInfo',
+                component: (resolve) => require(["@/page/home/nav/summary/baseInfo"], resolve)
+              }
+            ]
+          },
+          {
             path: 'main',
             component: (resolve) => require(["@/page/home/nav/main"], resolve)
           }]
@@ -230,7 +241,7 @@ const router = new Router({
 let currentNav = '';
 let errorList = ['/home/nav/communityIoT/record','/home/nav/propertyService/message'];//记录暂时没开发的
 router.beforeEach((to, from, next) => {
-  let arr = ['main','side','propertyService','communityIoT','businessManage'];
+  let arr = ['main','side','propertyService','communityIoT','businessManage','summary'];
   if(to.path.split('/')[3] && currentNav !== to.path.split('/')[3]){
     let currentIndex = arr.findIndex(item => item == to.path.split('/')[3]);
     currentNav = to.path.split('/')[3];

@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="新增优惠券" :visible.sync="msg" :before-close="handleClose" class="c-uploadDialog">
+  <el-dialog :title="titleFont" :visible.sync="msg" :before-close="handleClose" class="c-uploadDialog">
     <el-form :model="data" label-width="120px" ref="ruleForm" :rules="rules" class="c-myForm">
 
       <el-row  :gutter="10">
@@ -10,7 +10,7 @@
             </el-form-item>
 
             <el-form-item prop="maxPrice" label="优惠金额">
-              <el-input auto-complete="false" v-model="data.maxPrice" size="small"></el-input>
+              <el-input auto-complete="false" type="number" min="1" v-model="data.maxPrice" size="small"></el-input>
             </el-form-item>
           </el-row>
         </el-col>
@@ -29,7 +29,7 @@
       </el-row>
 
       <el-form-item label="发行数量" prop="amount" >
-        <el-input type="number" v-model="data.amount" size="small"></el-input>
+        <el-input type="number" min="1" v-model="data.amount" size="small"></el-input>
       </el-form-item >
 
       <el-form-item label="有效期限" prop="validityBeginAt" >
@@ -89,6 +89,7 @@
     name: "merchantForm",
     data() {
       return {
+        titleFont: this.edata ? '编辑优惠券':'增加优惠券',
         autoUpload:false,
         data: {},
         fileList:[],//展示图片列表
@@ -130,6 +131,7 @@
         }
       },
       sendAjax() {
+        if(!this.data.maxPrice || !this.data.amount) return;
         let msg = this.edata ? '编辑' :'添加';
         let postUrl = this.edata ? '/biz/coupon/edit' :'/biz/coupon/add';
         this.data.shopId = this.shopId;

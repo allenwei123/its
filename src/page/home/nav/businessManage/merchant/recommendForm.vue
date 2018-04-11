@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="新增商品" :visible.sync="msg" :before-close="handleClose" class="c-uploadDialog">
+  <el-dialog :title="titleFont" :visible.sync="msg" :before-close="handleClose" class="c-uploadDialog">
     <el-form :model="data" label-width="120px" ref="ruleForm" :rules="rules" class="c-myForm">
 
       <el-form-item prop="picture" label="商品图片" >
@@ -32,6 +32,7 @@
     data() {
       return {
         autoUpload: false,
+        titleFont: this.edata ? '编辑商品':'增加商品',
         data: {
           name: '',
         },
@@ -91,7 +92,6 @@
       },
       httpRequest(file) {
         this.uploadFiles.push(file.file);
-        console.log(this.fileList)
       },
       removeFile(file) {
          this.uploadFiles.splice(0,1);

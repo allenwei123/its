@@ -2,23 +2,24 @@
   <el-main>
     <div>
       <ul class="c-navDetail clear">
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-          <el-breadcrumb-item  v-for="(nav, index) in navDetailData" :to="nav.router"  :key="index">{{ nav.name }}</el-breadcrumb-item>
-        </el-breadcrumb>
+        <!--<el-breadcrumb separator-class="el-icon-arrow-right">-->
+          <!--<el-breadcrumb-item  v-for="(nav, index) in navDetailData" :to="nav.router"  :key="index">{{ nav.name }}</el-breadcrumb-item>-->
+        <!--</el-breadcrumb>-->
+          <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li>
       </ul>
       <div class="c-search">
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
 
-          <el-form-item>
-            <el-select v-model="formInline.status" @change="selStatus" placeholder="全部状态">
-              <el-option
-                v-for="item in statusList"
-                :key="item.id"
-                :value="item.id"
-                :label="item.name">
-              </el-option>
-            </el-select>
-          </el-form-item>
+          <!--<el-form-item>-->
+            <!--<el-select v-model="formInline.status" @change="selStatus" placeholder="全部状态">-->
+              <!--<el-option-->
+                <!--v-for="item in statusList"-->
+                <!--:key="item.id"-->
+                <!--:value="item.id"-->
+                <!--:label="item.name">-->
+              <!--</el-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
 
           <el-form-item>
             <el-input v-model="formInline.name" placeholder="优惠券名称" clearable></el-input>
@@ -70,11 +71,11 @@
         <template slot-scope="scope">{{ scope.row.useNum || '无' }}</template>
       </el-table-column>
 
-      <el-table-column align="center" fixed="right" label="操作" width="150">
+      <el-table-column align="center" fixed="right" label="操作" width="220">
         <template slot-scope="scope">
           <el-button @click="editHandle(scope.row)" type="warning" size="small">编辑</el-button>
           <el-button @click="delHandle(scope.row)" type="danger" size="small" v-if="scope.row.validStatus == 0">删除</el-button>
-          <el-button @click="validHandle(scope.row)" type="danger" size="small" v-if="scope.row.validStatus == 1">撤下</el-button>
+          <el-button @click="validHandle(scope.row)" type="danger" size="small">{{ isIssue ? '发布' : '撤下' }}</el-button>
         </template>
       </el-table-column>
 
@@ -190,6 +191,7 @@
               if(!res.errorCode){
                 this.visible3 = false;
                 this.ValidId = null;
+                this.isIssue = !this.isIssue;
                 this.$message({message: msg + '优惠券成功',type:'success'});
                 this.find();
               }

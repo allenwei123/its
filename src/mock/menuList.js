@@ -348,6 +348,26 @@ const arr = [
         ]
       }
     ]
+  },
+  {
+    id:'5',
+    name:'数据统计',
+    show: 1,
+    group: [
+      {
+        id:'5-1',
+        name:'统计信息',
+        show: 1,
+        menuItem:[
+          {
+            id: '5-1-1',
+            title:'基础信息统计',
+            show: 1,
+            link:'/home/nav/summary/baseInfo'
+          }
+        ]
+      },
+    ]
   }
 ]
 export default arr;

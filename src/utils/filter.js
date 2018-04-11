@@ -239,7 +239,6 @@ Vue.filter('relationship', function (value) {
  * 优惠券状态
  * **/
 Vue.filter('validStatus', function (value) {
-  if (!value) return '';
   let newValue = '';
   switch (value) {
     case 0:

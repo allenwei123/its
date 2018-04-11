@@ -1,12 +1,12 @@
 <template>
-  <el-dialog title="新增商家" :visible.sync="msg" :before-close="handleClose" class="c-maxbody">
+  <el-dialog :title="titleFont" :visible.sync="msg" :before-close="handleClose" class="c-maxbody">
     <el-form :model="data" label-width="120px" ref="ruleForm" :rules="rules" class="c-myForm">
 
       <el-form-item prop="name" label="店名">
         <el-input auto-complete="false" v-model="data.name" size="small"></el-input>
       </el-form-item>
 
-      <el-form-item label="店标" required>
+      <el-form-item label="店标">
         <el-upload
           class="avatar-uploader"
           action=""
@@ -18,7 +18,7 @@
         ><i class="el-icon-plus avatar-uploader-icon"></i></el-upload>
       </el-form-item>
 
-      <el-form-item label="图片" required>
+      <el-form-item label="图片">
         <el-upload
           class="avatar-uploader"
           action=""
@@ -70,7 +70,7 @@
       </el-form-item>
 
       <el-form-item label="联系号码" prop="telPhone">
-        <el-input type="number" v-model="data.telPhone" size="small"></el-input>
+        <el-input type="number" v-model="data.telPhone" min="1" size="small"></el-input>
       </el-form-item>
 
       <el-form-item label="所在地区" prop="ThreeAddress">
@@ -105,7 +105,6 @@
         <el-select
         v-model="data.communityIds"
         multiple
-        style="margin-left: 20px;"
         placeholder="请选择">
         <el-option
           v-for="item in communityIdsList"
@@ -142,6 +141,7 @@
       return {
         autoUpload: false,
         time: null,
+        titleFont: this.edata ? '编辑商家':'增加商家',
         data: {
           type: null,
           tag: [],
@@ -188,7 +188,7 @@
         this.data.ThreeAddress = [this.edata.province, this.edata.city, this.edata.district || null];
         this.data.picture = this.data.picture ?this.data.picture : [];
         let arr = [this.edata.logo,...(this.edata.picture || [])];
-        if(arr.length){
+        if(arr.length){//获取oss文件url
             arr.forEach((item,index) => {
                 if(!item)return;
               getUri(item, (uri) => {
@@ -252,12 +252,11 @@
           .then(res => {
             if (!res.errorCode) {
               this.communityIdsList = res.data;
-              console.log(this.data.communityIds)
             }
           })
       },
       sendAjax(){
-//        if (this.data.tag.length > 3)return;
+        if (!this.data.name || !this.data.type  || !this.data.telPhone || !this.data.address )return;
         let msg = this.edata ? '编辑' : '添加';
         let postUrl = this.edata ? '/biz/shop/edit' : '/biz/shop/add';
         this.$xttp.post(postUrl, this.data)
@@ -268,12 +267,14 @@
                 type: "success"
               });
               this.$emit("upList", 2);
-              this.$emit('reload');
             }
           })
       },
       removeFile(file) {
         this.uploadFile.splice(0, 1);
+        if(this.edata) {
+          this.data.logo = null;
+        }
       },
       removeFile1(file) {
         let index = this.uploadFile_pic.findIndex(item => item.uid == file.uid);
