@@ -43,7 +43,7 @@ export default {
       titleFont:'添加房间档案',
       isShow: false,
       form: {
-        code: "",
+        name: "",
         communityIdShow: toName(this.$store.getters.communityList,this.$store.getters.communityId),
         communityId: this.$store.getters.communityId,
         buildingId: "",
@@ -51,7 +51,7 @@ export default {
         area:''
       },
       rules: {
-        code: [{ required: true, message: "请输入房间编号", trigger: "blur" }],
+        name: [{ required: true, message: "请输入房间编号", trigger: "blur" }],
         buildingId: [{ required: true, message: "请输入楼栋名称", trigger: "blur" }],
         floorNo: [{ required: true, message: "请输入楼层", trigger: "blur" }],
         area:[{ required: true, message: "请输入面积", trigger: "blur" }]
@@ -65,8 +65,10 @@ export default {
     this.selectCommunity();
     if(this.add){//判断此时组件为 编辑
       this.form = this.add;
+      console.log(this.add);
       this.titleFont = '编辑房间档案';
       this.form.communityIdShow = this.$store.getters.communityName
+      this.form.area = (this.add.area/100).toFixed(2);
     }
   },
   mounted() {},
@@ -95,8 +97,28 @@ export default {
     postData() {
       let msg = this.add ? '编辑' : '添加';
       let uri = this.add ? '/community/room/edit' : '/community/room/add';
+      // if(this.add){
+      //   let id = this.add.id;
+      // }
+      let name = this.form.name;
+      let communityId = this.form.communityId;
+      let buildingId = this.form.buildingId;
+      let floorNo = this.form.floorNo;
+      let area = this.form.area; 
+      let communityIdShow = this.form.communityIdShow;
+
+      let params = {};
+      if(this.add){
+        params['id'] = this.add.id;
+      }
+      params['name'] = name;
+      params['communityId'] = communityId;
+      params['communityIdShow'] = communityIdShow;
+      params['buildingId'] = buildingId;
+      params['floorNo'] = floorNo;
+      params['area'] = area * 100;
       this.$xttp
-        .post( uri, this.form)
+        .post( uri, params)
         .then(res => {
           if (res.errorCode === 0) {
             this.$message({

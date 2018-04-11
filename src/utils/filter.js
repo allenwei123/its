@@ -235,3 +235,19 @@ Vue.filter('relationship', function (value) {
   return newValue;
 });
 
+/**
+ * 优惠券状态
+ * **/
+Vue.filter('validStatus', function (value) {
+  if (!value) return '';
+  let newValue = '';
+  switch (value) {
+    case 0:
+      newValue = '无效';
+      break;
+    case 1:
+      newValue = '有效';
+      break;
+  }
+  return newValue;
+});

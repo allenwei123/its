@@ -19,7 +19,7 @@
       <!--nav 导航模块-->
       <div class="c-top_bar_area">
         <ul class="c-top-nav">
-          <li v-for="(item,index) in items" :key="item.name" v-bind:class="{'c-nav-active':activeIndex == index}" @click="navClick(item,index)" >{{ item.name}}</li>
+          <li v-for="(item,index) in items" :key="item.name" v-bind:class="{'c-nav-active':navIndex == index}" @click="navClick(item,index)" >{{ item.name}}</li>
         </ul>
       </div>
     </div>
@@ -41,33 +41,15 @@ import { mapGetters } from "vuex";
           {name: '系统管理', src: ''},
           {name: '统计分析', src: ''},
         ],
-        activeIndex: '0',
         currentUser:'',
       }
     },
-    computed:mapGetters(['communityList','communityId']),
+    computed:mapGetters(['communityList','communityId','navIndex']),
     mounted() {
       this.changeIdToName(this.communityId);
     },
-    created() {
-      let arr = ['main','side','propertyService','communityIoT'];
-      let currentIndex = arr.indexOf(this.$route.path.split('/')[3])>= 0 ? arr.indexOf(this.$route.path.split('/')[3]) : 0;
-      this.activeIndex = currentIndex.toString();
-      if(this.activeIndex) {
-        this.$store.dispatch('updatedAsideData')
-          .then(res => {
-            if(res.msg) {
-              this.$store.dispatch('changeAsideData',this.activeIndex - 1);
-            }
-          })
-      }
-    },
+    created() {},
     methods: {
-      handleSelect(index) {
-        if(index){
-          this.$store.dispatch('changeAsideData',index - 1);
-        }
-      },
       logout() {
         this.$router.push('/auth/logout');
         // this.$router.push('/auth/login');
@@ -88,12 +70,10 @@ import { mapGetters } from "vuex";
           if(item.id == id) this.currentUser = item.name;
         });
       },
-      navClick(item,index) {
-        this.activeIndex = index;
+      navClick(item) {
+//          console.log(this.navIndex)
+//        this.navIndex = index;
         this.$router.push({path:item.src});
-        if(index){
-          this.$store.dispatch('changeAsideData',index - 1);
-        }
       }
     },
   }

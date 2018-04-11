@@ -1,4 +1,3 @@
-import obj1 from '@/mock/mok.json'
 import aside from '@/mock/menuList';
 import http from '@/utils/request';
 
@@ -26,11 +25,12 @@ export default {
       asideData: aside[0].group,
       allAside:[],
       communityId: localStorage["communityId"] ,
-      communityList: localStorage["communityList"] ? JSON.parse(localStorage["communityList"]) : null
+      communityList: localStorage["communityList"] ? JSON.parse(localStorage["communityList"]) : null,
+      navIndex: 0,
     },
     mutations: {
       CHANGE_ASIDEDATA: (state, newValue) => {
-        state.asideData = newValue
+        state.asideData = newValue;
       },
       ADDCOMMUNITYID: (state, newValue) => {
         state.communityId = newValue;
@@ -45,12 +45,17 @@ export default {
         }else {
           state.asideData = [];
         }
+      },
+      NAVINDEX: (state, newValue ) => {
+        state.navIndex = newValue;
       }
     },
     actions: {
       changeAsideData({commit,state}, value) {
-        if(value > -1){
-          commit('CHANGE_ASIDEDATA',state.allAside[value].group)
+        if(value > 0){
+          if(state.allAside.length){
+            commit('CHANGE_ASIDEDATA',state.allAside[value - 1].group);
+          }
         }
       },
       addCommunityId({ commit }, value) {
@@ -76,13 +81,18 @@ export default {
           http.get(`/sys/menu/${state.communityId}/getByOuterKey`)
             .then(res => {
               let menuList =res.data?a(aside,res.data.spread.split('')) : null;
-              // console.log(menuList)
               commit('UPDATEDASIDEDATA', menuList);
+              if(state.navIndex !== 0){
+                commit('CHANGE_ASIDEDATA',state.allAside[state.navIndex - 1].group);
+              }
               resolve({msg:'success'})
             }).catch(err => {
               reject(err)
             })
         } )
+      },
+      updatedNavIndex( { commit ,state } ,value) {
+        commit('NAVINDEX',value);
       }
     }
   }

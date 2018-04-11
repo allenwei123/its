@@ -187,7 +187,7 @@ export default {
           this.form.sex = '0';
         } 
       }
-      if(this.form.phone == ''){
+      if(this.form.password == ''){
         this.showInfo('请输入密码');
         return;
       }else{
@@ -201,7 +201,6 @@ export default {
     postData() {
       let msg = this.add ? '编辑' : '添加';
       let uri = this.add ? '/user/property/update-user' : '/user/property/create-user';
-      console.log(this.form)
       this.$xttp
         .post( uri, this.form)
         .then(res => {

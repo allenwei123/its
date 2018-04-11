@@ -78,12 +78,22 @@ $headerBg:#3988ff;
   .el-input {
     width:150px;
   }
+  .c-cities {
+    .el-input{
+      width:200px;
+    }
+  }
 }
 //设置dialog大小
 .c-bigDialog {
   .el-dialog {
     margin-top: 5vh !important;
     width:90%;
+  }
+}
+.c-maxbody {
+  .el-dialog {
+    width: 70%;
   }
 }
 //设置侧边栏方向
