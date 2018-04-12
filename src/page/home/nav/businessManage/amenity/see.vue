@@ -28,13 +28,6 @@ export default {
   },
   props: ["msg","data"],
   created(){
-      console.log(this.data.icon);
-    //   if(this.data.icon) {
-    //       getUri(this.data.icon,(uri)=> {
-    //           console.log(uri);
-    //         this.uri = uri;
-    //       });
-    //   }
     if(this.data.icon) {
           getUri(this.uri,(uri)=> {
             this.uri = uri;

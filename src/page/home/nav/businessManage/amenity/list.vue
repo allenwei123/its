@@ -2,12 +2,21 @@
   <el-main>
     <div>
       <ul class="c-navDetail clear">
-        <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li>
+        <el-breadcrumb separator-class="el-icon-arrow-right">
+          <el-breadcrumb-item v-for="(nav, index) in navDetailData" :to="nav.router" :key="index">{{ nav.name }}
+          </el-breadcrumb-item>
+        </el-breadcrumb>
+        <!-- <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li> -->
       </ul>
+      <!-- <el-breadcrumb separator-class="el-icon-arrow-right">
+        <el-breadcrumb-item>商圈管理</el-breadcrumb-item>
+        <el-breadcrumb-item>便民服务</el-breadcrumb-item>
+        <el-breadcrumb-item>便民服务</el-breadcrumb-item>
+      </el-breadcrumb> -->
       <div class="c-search">
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
           <el-form-item>
-            <el-input v-model="formInline.name" placeholder="商户名称"></el-input>
+            <el-input v-model="formInline.name" placeholder="服务名称" style="width:200px;"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
@@ -31,7 +40,7 @@
         <template slot-scope="scope"><el-button type="text">{{ scope.row.icon }}</el-button></template>
       </el-table-column> -->
       <el-table-column label="便民服务" min-width="200" align="center" :show-overflow-tooltip="true">
-        <template slot-scope="scope"><el-button type="text"><img width="60px" height="60px" :src="scope.row.url"></el-button></template>
+        <template slot-scope="scope"><el-button type="text"><img width="60px" height="60px" :src="scope.row.uri"></el-button></template>
       </el-table-column>
       <el-table-column label="服务名称" min-width="200" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">{{ scope.row.name }}</template>
@@ -112,8 +121,8 @@ import SeePage from './see';
         tableData: [],
         uri: '',
         navDetailData: [
-          { id: 0, name: "商圈管理" },
-          { id: 1, name: "便民服务" },
+          { id: 0, name: "商圈管理", router: '/home/nav/businessManage/merchant'},
+          { id: 1, name: "便民服务", router: '/home/nav/businessManage/amenity' },
           { id: 2, name: "便民服务" }
         ],
         formInline: {
@@ -218,7 +227,7 @@ import SeePage from './see';
               console.log(this.tableData);
               this.tableData.forEach(function(item) {
                 getUri(item.icon,key => {
-                      item.url = key;
+                      item.uri = key;
                   })
               })
               this.$router.push({path:this.$route.path,query:{page: nPage }})
@@ -250,6 +259,11 @@ import SeePage from './see';
           margin-right: 10px;
           cursor: pointer;
     }
+  }
+
+  .el-breadcrumb{
+    margin-bottom: 20px;
+    font-size: 16px;
   }
   .c-block {
     margin-top: 15px;

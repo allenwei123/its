@@ -2,7 +2,11 @@
     <el-main>
       <div>
         <ul class="c-navDetail clear">
-          <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li>
+          <el-breadcrumb separator-class="el-icon-arrow-right">
+            <el-breadcrumb-item v-for="(nav, index) in navDetailData" :to="nav.router" :key="index">{{ nav.name }}
+            </el-breadcrumb-item>
+          </el-breadcrumb>
+          <!-- <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li> -->
         </ul>
         <div class="c-search">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
@@ -306,6 +310,11 @@ export default {
     right: 0px;
     top: 0px;
   }
+}
+
+.el-breadcrumb{
+  margin-bottom: 20px;
+  font-size: 16px;
 }
 // 切换动画
 .fade-enter-active, .fade-leave-active {

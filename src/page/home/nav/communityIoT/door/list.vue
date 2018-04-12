@@ -175,7 +175,6 @@ import AddPage from "./add";
         }
       },
       view(item) {
-        console.log(item);
         this.$router.push({
           path: '/home/nav/communityIoT/doorRecord',
           query: {

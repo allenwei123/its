@@ -1,8 +1,13 @@
 <template>
-  <el-container>
+  <!-- <el-container> -->
     <el-main>
+      <div>
       <ul class="c-navDetail clear">
-        <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li>
+        <el-breadcrumb separator-class="el-icon-arrow-right">
+          <el-breadcrumb-item v-for="(nav, index) in navDetailData" :to="nav.router" :key="index">{{ nav.name }}
+          </el-breadcrumb-item>
+        </el-breadcrumb>
+        <!-- <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li> -->
       </ul>
       <div class="c-notice-container">
         <div class="c-searchbar">
@@ -40,10 +45,10 @@
             <el-table-column label="跳转类型" min-width="120" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{gotoType(scope.row.gotoType)}}</template>
             </el-table-column>
-            <el-table-column label="关联商家" min-width="100" :show-overflow-tooltip="true" align="center">
+            <el-table-column label="关联商家" min-width="180" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{scope.row.shopName}}</template>
             </el-table-column>
-            <el-table-column label="链接地址" min-width="100" :show-overflow-tooltip="true" align="center">
+            <el-table-column label="链接地址" min-width="200" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{scope.row.href}}</template>
             </el-table-column>
             <el-table-column label="状态" min-width="160" :show-overflow-tooltip="true" align="center">
@@ -76,8 +81,9 @@
 
       <NoticeForm :detail="formDetail" :isModify="formIsModify" :visible.sync="formVisible" v-if="formVisible" @saveSuccess="saveSuccess"></NoticeForm>
       <!-- <NoticePreview :visible.sync="previewVisible" v-if="previewVisible" :noticeInfo="previewNoticeInfo"></NoticePreview> -->
+    </div>
     </el-main>
-  </el-container>
+  <!-- </el-container> -->
 </template>
 
 <script>
@@ -94,9 +100,9 @@
     data () {
       return {
         navDetailData: [
-          { id: 0, name: "商圈管理" },
-          { id: 1, name: "周边商圈" },
-          { id: 2, name: "轮播图管理" }
+          { id: 0, name: "商圈管理" , router: '/home/nav/businessManage/merchant'},
+          { id: 1, name: "周边商圈", router: '/home/nav/businessManage/merchant' },
+          { id: 2, name: "轮播图管理", router: '/home/nav/businessManage/slideShow' }
         ],
         loading: false,
         isShow: false,
@@ -216,10 +222,6 @@
         this.formVisible = true;
       },
       saveSuccess() {
-        // this.$message({
-        //   message: '新增成功',
-        //   type: 'success'
-        // });
         this.getTableList(this.temp);
       },
       addNotice() {
@@ -307,12 +309,38 @@
 </script>
 
 <style scoped lang="scss">
+  .c-body {
+    width: 90%;
+    &.c-maxWidth {
+      max-width: calc(100vw - 200px);
+    }
+  }
+
   .c-navDetail {
-    margin-bottom: 10px;
+    // margin-bottom: 10px;
     li {
       float: left;
       margin-right: 10px;
       cursor: pointer;
+    }
+  }
+
+  .c-block {
+    margin-top: 15px;
+  }
+
+  .el-breadcrumb{
+    margin-bottom: 20px;
+    font-size: 16px;
+  }
+
+  .c-search {
+    position: relative;
+    width: 100%;
+    .c-addBtn {
+      position: absolute;
+      right: 0px;
+      top: 0px;
     }
   }
 

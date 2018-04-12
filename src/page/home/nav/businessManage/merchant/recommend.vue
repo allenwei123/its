@@ -201,7 +201,8 @@
     }
   }
   .c-image {
-    width: 50px;
+    width: 60px;
+    height: 60px;
   }
   .c-navDetail {
     margin-bottom: 10px;

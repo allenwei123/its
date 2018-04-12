@@ -238,15 +238,17 @@ Vue.filter('relationship', function (value) {
 /**
  * 优惠券状态
  * **/
-Vue.filter('validStatus', function (value) {
+Vue.filter('useStatus', function (value) {
   let newValue = '';
   switch (value) {
     case 0:
-      newValue = '无效';
+      newValue = '未使用';
       break;
     case 1:
-      newValue = '有效';
+      newValue = '已使用';
       break;
+    case -1:
+      newValue = '已过期';
   }
   return newValue;
 });

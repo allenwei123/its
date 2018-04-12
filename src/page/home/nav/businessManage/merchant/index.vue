@@ -2,16 +2,16 @@
   <el-main>
     <div>
       <ul class="c-navDetail clear">
-        <!--<el-breadcrumb separator-class="el-icon-arrow-right">-->
-          <!--<el-breadcrumb-item v-for="(nav, index) in navDetailData" :to="nav.router" :key="index">{{ nav.name }}-->
-          <!--</el-breadcrumb-item>-->
-        <!--</el-breadcrumb>-->
-        <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li>
+        <el-breadcrumb separator-class="el-icon-arrow-right">
+          <el-breadcrumb-item v-for="(nav, index) in navDetailData" :to="nav.router" :key="index">{{ nav.name }}
+          </el-breadcrumb-item>
+        </el-breadcrumb>
+        <!-- <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li> -->
       </ul>
       <div class="c-search">
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
           <el-form-item>
-            <el-cascader :options="cityData" v-model="formInline.address" class="c-cities">
+            <el-cascader :options="cityData" v-model="formInline.address" class="c-cities" @change="changeAddress" clearable>
             </el-cascader>
           </el-form-item>
           <!--<el-form-item>-->
@@ -25,7 +25,7 @@
           <!--</el-select>-->
           <!--</el-form-item>-->
           <el-form-item>
-            <el-input placeholder="商户名称" v-model="formInline.name"></el-input>
+            <el-input placeholder="服务名称" v-model="formInline.name"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
@@ -101,9 +101,10 @@
         isSou: false,
         tableData: [],
         navDetailData: [
-          {id: 0, name: "首页", router: '/home'},
+          // {id: 0, name: "首页", router: '/home'},
           {id: 1, name: "商圈管理", router: '/home/nav/businessManage/merchant'},
-          {id: 2, name: "周边商圈", router: '/'}
+          {id: 2, name: "周边商圈", router: '/home/nav/businessManage/merchant'},
+          {id: 3, name: "商家管理", router: '/home/nav/businessManage/merchant'}
         ],
         formInline: {
           name: "",
@@ -135,8 +136,7 @@
       handleCurrentChange(val) {
         if (this.currentPage !== val) {
           this.sendAjax(val);
-        }
-        ;
+        };
       },
       routeClick(row, num) {//跳转页面
         //row 1:推荐商品 2：优惠卷管理
@@ -189,6 +189,9 @@
       find(){//查询
         this.sendAjax(1);
       },
+      changeAddress(){
+        this.find();
+      },
       sendAjax(page) {
         let nPage = page || this.$route.query.page || 1;
 //        ,communityId:this.$store.getters.communityId
@@ -238,6 +241,11 @@
 
   .c-block {
     margin-top: 15px;
+  }
+
+  .el-breadcrumb{
+    margin-bottom: 20px;
+    font-size: 16px;
   }
 
   .c-search {

@@ -65,12 +65,8 @@
 <script>
 import { send as ossUpload, getUri } from "@/utils/oss";
 import fun from "@/utils/fun.js";
-// const typeOptions = [
-//   { value: '1', label: '生活服务' },
-//   { value: '2', label: '家政服务' }
-// ];
 export default {
-  name: "EmplAdd",
+  name: "AmenityAdd",
   data() {
     return {
       formLabelWidth: "120px",
@@ -89,16 +85,6 @@ export default {
         url: '',
         icon: null
       },
-      // rules: {
-      //   employeeId: [{required: true, message: '请输入工号', trigger: 'blur' }],
-      //   userName: [{required: true, message: '请输入名称', trigger: 'blur' }],
-      //   phone: [{ required: true, message: '请输入正确号码', trigger: 'blur', pattern: /^1[34578]\d{9}$/}],
-      //   // password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
-      //   sex: [{ required: true, message: '请选择性别', trigger: 'blur' }],
-      //   postCode: [{ required: true, message: '请选择岗位', trigger: 'blur' }]
-      // },
-      // postCodeOptions: [],
-      // typeOptions: typeOptions,
       current: 1 //1 初始 2：添加后 3：编辑后
     };
   },

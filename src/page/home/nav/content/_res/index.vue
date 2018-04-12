@@ -159,7 +159,6 @@
           })
       },
       change() {
-        console.log(this.tableData)
         this.isShow = false;
         this.getTableList();
       },

@@ -91,7 +91,6 @@
       },
       getTableList(pages) {
         this.loading = true;
-        console.log(this.gateTypeName);
         let url = `vehicle/inout/page?page=${pages}&size=${this.pageSize}`;
         let params = {};
         if (this.q_input) {
@@ -101,7 +100,6 @@
           params['inOutDate'] = this.value1;
         }
         params['inOutTag'] = this.gateTypeName;
-        console.log(params);
         this.$xttp.post(url, params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {

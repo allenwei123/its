@@ -42,8 +42,8 @@ export default {
   data() {
     return {
       navDetailData: [
-        { id: 0, name: "首页" },
-        { id: 1, name: "社区物联" },
+        { id: 0, name: "社区物联" },
+        { id: 1, name: "监控管理" },
         { id: 2, name: "监控设备" }
       ],
       tabList:[{id:111},{id:222},{id:333},{id:444},{id:555},{id:666}],
