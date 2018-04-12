@@ -17,8 +17,8 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item label="所在楼层" prop="floorNo" :label-width="formLabelWidth" class="c-must">
-              <el-input-number v-model="form.floorNo" :min="-5" :max="100" label="选择所在楼层"></el-input-number>
+            <el-form-item label="所在楼层" prop="floorCode" :label-width="formLabelWidth" class="c-must">
+              <el-input-number v-model="form.floorCode" :min="-5" :max="100" label="选择所在楼层"></el-input-number>
             </el-form-item>
           <el-form-item label="住房面积" prop="area" :label-width="formLabelWidth">
             <el-input type="number" v-model="form.area"></el-input>
@@ -47,13 +47,13 @@ export default {
         communityIdShow: toName(this.$store.getters.communityList,this.$store.getters.communityId),
         communityId: this.$store.getters.communityId,
         buildingId: "",
-        floorNo: "",
+        floorCode: "",
         area:''
       },
       rules: {
         name: [{ required: true, message: "请输入房间编号", trigger: "blur" }],
         buildingId: [{ required: true, message: "请输入楼栋名称", trigger: "blur" }],
-        floorNo: [{ required: true, message: "请输入楼层", trigger: "blur" }],
+        floorCode: [{ required: true, message: "请输入楼层", trigger: "blur" }],
         area:[{ required: true, message: "请输入面积", trigger: "blur" }]
       },
       floorOptions: [],//楼层下拉
@@ -103,8 +103,8 @@ export default {
       let name = this.form.name;
       let communityId = this.form.communityId;
       let buildingId = this.form.buildingId;
-      let floorNo = this.form.floorNo;
-      let area = this.form.area; 
+      let floorCode = this.form.floorCode;
+      let area = this.form.area;
       let communityIdShow = this.form.communityIdShow;
 
       let params = {};
@@ -115,7 +115,7 @@ export default {
       params['communityId'] = communityId;
       params['communityIdShow'] = communityIdShow;
       params['buildingId'] = buildingId;
-      params['floorNo'] = floorNo;
+      params['floorCode'] = floorCode;
       params['area'] = area * 100;
       this.$xttp
         .post( uri, params)

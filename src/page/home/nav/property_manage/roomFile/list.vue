@@ -39,7 +39,7 @@
         <!-- <el-table-column prop="buildingId" align="center" label="所属楼栋"></el-table-column> -->
         <!-- <el-table-column prop="floorNo" align="center" label="所在楼层"></el-table-column> -->
         <el-table-column label="所在楼层" min-width="100" align="center" :show-overflow-tooltip="true">
-          <template slot-scope="scope">{{ scope.row.floorNo }}</template>
+          <template slot-scope="scope">{{ scope.row.floorCode }}</template>
         </el-table-column>
         <el-table-column label="房间面积(P)" min-width="200" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ (scope.row.area / 100).toFixed(2) }}</template>

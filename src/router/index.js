@@ -227,7 +227,11 @@ const router = new Router({
               {
                 path: 'baseInfo',
                 component: (resolve) => require(["@/page/home/nav/summary/baseInfo"], resolve)
-              }
+              },
+              {
+                path: 'alarm',
+                component: (resolve) => require(["@/page/home/nav/summary/alarm"], resolve)
+              },
             ]
           },
           {

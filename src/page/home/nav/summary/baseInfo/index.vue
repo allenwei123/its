@@ -178,14 +178,27 @@
         ],
         series: [{
           name: '门禁统计',
-          data: [820, 932, 901, 934, 1290, 1330, 1320],
+          data: [820, 932, 901, 934, 1290, 800, 1320],
           type: 'line',
           areaStyle: {},
           itemStyle: {
             normal: {
-              color: '#badeff',
+//              color: '#badeff',
+              color: {
+                type: 'linear',
+                x: 1,
+                y: 1,
+                x2: 1,
+                y2: 0,
+                colorStops: [{
+                  offset: 0, color: '#fff' // 0% 处的颜色
+                }, {
+                  offset: 1, color: '#c1e1fe' // 100% 处的颜色
+                }],
+                globalCoord: true // 缺省为 false
+              },
               shadowBlur: 200,
-              shadowColor: 'rgba(255, 0, 255, 0.5)'
+              shadowColor: 'rgba(255, 123, 255, 0.5)'
             }
           },
         }]

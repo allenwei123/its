@@ -1,9 +1,9 @@
 <template>
   <el-container>
     <el-main>
-    <ul class="c-navDetail clear">
+      <ul class="c-navDetail clear">
         <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li>
-    </ul>
+      </ul>
       <div class="c-notice-container">
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
@@ -23,9 +23,14 @@
             <el-table-column label="序号" width="60" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column label="轮播图" min-width="300" :show-overflow-tooltip="true" align="center">
+            <!-- <el-table-column label="轮播图" min-width="300" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope"><img :src="uri"></template>
+            </el-table-column> -->
+
+            <el-table-column label="轮播图" min-width="200" align="center" :show-overflow-tooltip="true">
+              <template slot-scope="scope"><el-button type="text"><img width="60px" height="60px" :src="scope.row.url"></el-button></template>
             </el-table-column>
+
             <el-table-column label="关联社区" min-width="180" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{scope.row.communityName}}</template>
             </el-table-column>
@@ -54,7 +59,7 @@
 
                 <template v-if="scope.row.published !== 1">
                   <el-button type="primary" size="mini" @click="publish(scope.row)">发布</el-button>
-                  <el-button type="primary" size="mini" @click="modify(scope.row)">编辑</el-button>
+                  <!-- <el-button type="primary" size="mini" @click="modify(scope.row)">编辑</el-button> -->
                   <el-button type="danger" size="mini" @click="del(scope.row)">删除</el-button>
                 </template>
               </template>
@@ -83,13 +88,13 @@
   export default {
     name: 'slideShow',
     components: {
-      NoticeForm,
+      NoticeForm
       // NoticePreview
     },
     data () {
       return {
         navDetailData: [
-          { id: 0, name: "首页" },
+          { id: 0, name: "商圈管理" },
           { id: 1, name: "周边商圈" },
           { id: 2, name: "轮播图管理" }
         ],
@@ -109,12 +114,17 @@
         uri: '',
         // 当前页
         temp: '',
+        isEdit: false,
+        notice: null,
       }
     },
     methods: {
       handlegetTableList(val) {
         this.temp = val;
         this.getTableList(this.temp);
+      },
+      editChange(msg){
+        this.isEdit = false;
       },
       query() {
         this.q_input = this.input;
@@ -126,18 +136,18 @@
         }
       },
       gotoType(type) {
-          let names = {
-              '1': '本地商店',
-              '2': '外来链接',
-          };
-          return names[type];
+        let names = {
+          '1': '本地商店',
+          '2': '外来链接',
+        };
+        return names[type];
       },
       dataStatusFilter(type) {
-          let names = {
-              '0': '无效',
-              '1': '有效'
-          };
-          return names[type];
+        let names = {
+          '0': '无效',
+          '1': '有效'
+        };
+        return names[type];
       },
       // 获取通知类型名称
       getNoticeTypeName(type) {
@@ -160,17 +170,26 @@
       },
       // 发布轮播图
       publish(item) {
-        this.loading = true;
-        let slideId = item.id;
-        let url = `biz/slide/${slideId}/publish`;
-        this.$xttp.get(url).then((res) => {
-          this.loading = false;
-          if (res.errorCode === 0) {
-            item.published = 1;
-          }
-        }).catch(() => {
-          this.loading = false;
-        });
+        this.$confirm('确定发布轮播图?','提示',{
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type:'warning'
+        }).then(() => {
+          this.loading = true;
+          let slideId = item.id;
+          let url = `biz/slide/${slideId}/publish`;
+          this.$xttp.get(url).then((res) => {
+            this.loading = false;
+            if (res.errorCode === 0) {
+              item.published = 1;
+            }
+          }).catch(() => {
+            this.loading = false;
+          });
+        }).catch((err) => {
+          console.log(err);
+        })
+
       },
       // 删除
       del(item) {
@@ -197,10 +216,10 @@
         this.formVisible = true;
       },
       saveSuccess() {
-        this.$message({
-          message: '新增成功',
-          type: 'success'
-        });
+        // this.$message({
+        //   message: '新增成功',
+        //   type: 'success'
+        // });
         this.getTableList(this.temp);
       },
       addNotice() {
@@ -234,17 +253,26 @@
       },
       // 撤销
       revoke(item) {
-        this.loading = true;
-        let id = item.id;
-        this.$xttp.get(`biz/slide/${id}/revoke`).then(res => {
-          this.loading = false;
-          if (res.errorCode === 0) {
-            this.getTableList(this.temp);
-            item.published = -1;
-          }
-        }).catch(() => {
-          this.loading = false;
-        });
+        this.$confirm('确定撤销发布?','提示',{
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.loading = true;
+          let id = item.id;
+          this.$xttp.get(`biz/slide/${id}/revoke`).then(res => {
+            this.loading = false;
+            if (res.errorCode === 0) {
+              this.getTableList(this.temp);
+              item.published = -1;
+            }
+          }).catch(() => {
+            this.loading = false;
+          });
+        }).catch((err) => {
+          console.log(err);
+        })
+
       },
       getTableList(pages) {
         this.loading = true;
@@ -258,19 +286,19 @@
           this.loading = false;
           if (res.errorCode === 0) {
             this.tableData = res.data.records;
-            this.tableData.forEach(element => {
-              getUri(element.photo,(uri)=> {
-                  this.uri = uri;
-              });
-            });
             this.total = res.data.total;
+            this.tableData.forEach(function(item) {
+              getUri(item.photo,key => {
+                item.url = key;
+              })
+            })
           }
         }).catch(() => {
           this.loading = false;
         })
       },
 
-      
+
     },
     created() {
       this.query();
@@ -279,13 +307,13 @@
 </script>
 
 <style scoped lang="scss">
-    .c-navDetail {
-      margin-bottom: 10px;
-      li {
-          float: left;
-          margin-right: 10px;
-          cursor: pointer;
-      }
+  .c-navDetail {
+    margin-bottom: 10px;
+    li {
+      float: left;
+      margin-right: 10px;
+      cursor: pointer;
     }
+  }
 
 </style>

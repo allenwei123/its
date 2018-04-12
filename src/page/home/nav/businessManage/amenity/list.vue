@@ -193,10 +193,10 @@ import SeePage from './see';
       serviceType(row,column) {
         let st = row[column.property]
         if(st === 1){
-          return '本地商店';
+          return '生活服务';
         }
         if(st === 2){
-          return '外来连接'
+          return '家政服务'
         }
       },
       sendAjax(page) {

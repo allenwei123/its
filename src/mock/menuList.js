@@ -367,6 +367,19 @@ const arr = [
           }
         ]
       },
+      {
+        id:'5-2',
+        name:'警报故障',
+        show: 1,
+        menuItem:[
+          {
+            id: '5-2-1',
+            title:'警报故障统计',
+            show: 1,
+            link:'/home/nav/summary/alarm'
+          },
+        ]
+      },
     ]
   }
 ]

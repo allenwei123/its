@@ -2,7 +2,7 @@ import http from './request';
 import store from '@/store';
 
 function createData(info, file) {
-    let fileKey = 'web1' + store.getters.uid + info.bucket + Date.parse(new Date()) + file.name.substr(file.name.lastIndexOf('.'));
+    let fileKey = 'web1' + store.getters.uid +'_'+ info.bucket+'_'+ + Date.parse(new Date()) + file.name.substr(file.name.lastIndexOf('.'));
     // 组装发送数据
 
     var request = new FormData();
@@ -26,9 +26,14 @@ export function send(file, success) {
     let now = Date.parse(new Date()) / 1000;
 
     if (!info || info.expire < now + 3) {
-        http.get("/oss/bit-test/policy")
+        http.get("/oss/bit-smcm-img/policy")
             .then(res => {
                 if (!res.errorCode) {
+                  console.log(res.data);
+                  let host = res.data.host;
+                  host = host.replace('http:','https:');
+                  res.data.host = host;
+                  console.log(res.data);
                     window.localStorage.setItem('uploadInfo', JSON.stringify(res.data));
                     send(file, success);
                 }
@@ -68,7 +73,9 @@ export function getUri(key,success) {
             accessKeyId: info.accessKeyId,//info.accessKeyId
             accessKeySecret: info.accessKeySecret,//info.accessKeySecret
             stsToken: info.securityToken,//info.securityToken
-            bucket: info.bucket || 'bit-test'//info.bucket
+            // bucket: info.bucket || 'bit-test'//info.bucket
+            bucket: info.bucket || 'bit-smcm-img',//info.bucket
+            secure: true  //啓動https
         });
         if(success) {
             success(client.signatureUrl(key));

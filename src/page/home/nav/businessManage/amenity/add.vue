@@ -9,8 +9,8 @@
           <el-form-item label="服务类型：" :label-width="formLabelWidth" prop="serviceType" class="c-must">
             <el-select v-model="form.serviceType" value-key="key" placeholder="请选择">
               <!-- <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option> -->
-              <el-option label="本地商店" value="1">本地商店</el-option>
-              <el-option label="外来连接" value="2">外来连接</el-option>
+              <el-option label="生活服务" value="1">生活服务</el-option>
+              <el-option label="家政服务" value="2">家政服务</el-option>
             </el-select>
           </el-form-item>
 
@@ -40,7 +40,7 @@
               <el-radio-group v-model="form.serviceWay" @change="changeServiceType">
                 <el-radio label="1">热线服务</el-radio>
                 <el-radio label="2">在线服务</el-radio>
-              </el-radio-group>  
+              </el-radio-group>
           </el-form-item>
 
           <el-form-item v-if="isSee" label="服务热线：" :label-width="formLabelWidth" prop="contact" class="c-must">
