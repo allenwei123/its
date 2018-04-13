@@ -232,6 +232,14 @@ const router = new Router({
                 path: 'alarm',
                 component: (resolve) => require(["@/page/home/nav/summary/alarm"], resolve)
               },
+              {
+                path: 'payment',
+                component: (resolve) => require(["@/page/home/nav/summary/payment"], resolve)
+              },
+              {
+                path: 'equipment',
+                component: (resolve) => require(["@/page/home/nav/summary/equipment"], resolve)
+              },
             ]
           },
           {

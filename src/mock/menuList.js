@@ -380,6 +380,32 @@ const arr = [
           },
         ]
       },
+      {
+        id:'5-3',
+        name:'物业缴费',
+        show: 1,
+        menuItem:[
+          {
+            id: '5-3-1',
+            title:'物业缴费统计',
+            show: 1,
+            link:'/home/nav/summary/payment'
+          },
+        ]
+      },
+      {
+        id:'5-4',
+        name:'物业设备',
+        show: 1,
+        menuItem:[
+          {
+            id: '5-4-1',
+            title:'物业设备统计',
+            show: 1,
+            link:'/home/nav/summary/equipment'
+          },
+        ]
+      },
     ]
   }
 ]
