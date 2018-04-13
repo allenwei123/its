@@ -28,7 +28,7 @@
               <el-button type="primary" @click="query">查询</el-button>
             </el-form-item>
             <el-form-item style="float: right">
-              <el-button type="primary" class="c-addBtn" @click="addNotice">新增公告</el-button>
+              <el-button type="success" plain class="c-addBtn" @click="addNotice">新增公告</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -61,14 +61,14 @@
                 <!--已发布-->
                 <template v-if="scope.row.publishStatus === 1">
                   <!--推送公告逻辑：此公告已经发布并且还未推送的才能给物业推送，一个公告只能推送一次-->
-                  <el-button type="primary" size="mini" v-if="scope.row.pushStatus === 0" @click="push(scope.row)">推送</el-button>
-                  <el-button type="primary" size="mini" @click="revoke(scope.row)">撤销</el-button>
+                  <el-button type="success" size="mini" v-if="scope.row.pushStatus === 0" @click="push(scope.row)">推送</el-button>
+                  <el-button type="info" size="mini" @click="revoke(scope.row)">撤销</el-button>
                 </template>
 
                 <!--未发布-->
                 <template v-if="scope.row.publishStatus !== 1">
-                  <el-button type="primary" size="mini" @click="publish(scope.row)">发布</el-button>
-                  <el-button type="primary" size="mini" @click="modify(scope.row)">修改</el-button>
+                  <el-button type="success" size="mini" @click="publish(scope.row)">发布</el-button>
+                  <el-button type="warning" size="mini" @click="modify(scope.row)">编辑</el-button>
                   <el-button type="danger" size="mini" @click="del(scope.row)">删除</el-button>
                 </template>
               </template>

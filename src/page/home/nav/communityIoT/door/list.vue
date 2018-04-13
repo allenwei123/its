@@ -2,7 +2,11 @@
   <el-container>
     <el-main>
       <ul class="c-navDetail clear">
-        <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li>
+        <el-breadcrumb separator-class="el-icon-arrow-right">
+          <el-breadcrumb-item v-for="(nav, index) in navDetailData" :to="nav.router" :key="index">{{ nav.name }}
+          </el-breadcrumb-item>
+        </el-breadcrumb>
+        <!-- <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li> -->
       </ul>
       <div class="c-rpass-container">
         <div class="c-search">
@@ -23,7 +27,7 @@
               <el-button type="primary" @click="query">查询</el-button>
             </el-form-item>
             <el-form-item style="float: right">
-              <el-button type="primary" class="c-addBtn" @click="add">新增门禁</el-button>
+              <el-button type="success" plain class="c-addBtn" @click="add">新增门禁</el-button>
             </el-form-item>
           </el-form>
         </div>

@@ -19,7 +19,7 @@
               <el-button type="primary" @click="query">查询</el-button>
             </el-form-item>
             <el-form-item style="float: right">
-              <el-button type="primary" @click="addNotice">新增轮播图</el-button>
+              <el-button type="success" plain @click="addNotice">新增轮播图</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -49,7 +49,7 @@
               <template slot-scope="scope">{{scope.row.shopName}}</template>
             </el-table-column>
             <el-table-column label="链接地址" min-width="200" :show-overflow-tooltip="true" align="center">
-              <template slot-scope="scope">{{scope.row.href}}</template>
+              <template slot-scope="scope"><el-button type="text">{{scope.row.href}}</el-button></template>
             </el-table-column>
             <el-table-column label="状态" min-width="160" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{getPublishStatusName(scope.row.published)}}</template>
@@ -58,14 +58,14 @@
               <template slot-scope="scope">
                 <!-- <el-button type="primary" size="mini" @click="preview(scope.row)">预览</el-button> -->
                 <template v-if="scope.row.published === 1">
-                  <el-button type="primary" size="mini" v-if="scope.row.published === 0" @click="push(scope.row)">推送</el-button>
-                  <el-button type="primary" size="mini" @click="revoke(scope.row)">撤销</el-button>
+                  <el-button type="primary" size="small" v-if="scope.row.published === 0" @click="push(scope.row)">推送</el-button>
+                  <el-button type="info" size="small" @click="revoke(scope.row)">撤销</el-button>
                 </template>
 
                 <template v-if="scope.row.published !== 1">
-                  <el-button type="primary" size="mini" @click="publish(scope.row)">发布</el-button>
-                  <!-- <el-button type="primary" size="mini" @click="modify(scope.row)">编辑</el-button> -->
-                  <el-button type="danger" size="mini" @click="del(scope.row)">删除</el-button>
+                  <el-button type="primary" size="small" @click="publish(scope.row)">发布</el-button>
+                  <el-button type="warning" size="small" @click="modify(scope.row)">编辑</el-button>
+                  <el-button type="danger" size="small" @click="del(scope.row)">删除</el-button>
                 </template>
               </template>
             </el-table-column>
@@ -143,8 +143,8 @@
       },
       gotoType(type) {
         let names = {
-          '1': '本地商店',
-          '2': '外来链接',
+          '1': '生活服务',
+          '2': '家政服务',
         };
         return names[type];
       },
@@ -336,6 +336,7 @@
 
   .c-search {
     position: relative;
+    border: 1px solid red;
     width: 100%;
     .c-addBtn {
       position: absolute;

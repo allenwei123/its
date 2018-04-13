@@ -22,7 +22,7 @@
             <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
           </el-form-item>
         </el-form>
-        <el-button type="primary" class="c-addBtn" @click="onSubmit">新增服务</el-button>
+        <el-button type="success" plain class="c-addBtn" @click="onSubmit">新增服务</el-button>
       </div>
     </div>
 
@@ -70,9 +70,9 @@
       </el-table-column>
       <el-table-column align="center" fixed="right" label="操作" width="220">
         <template slot-scope="scope">
-          <!-- <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button> -->
+          <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button>
           <el-button @click="editHandle(scope.row)" type="warning" size="small">编辑</el-button>
-          <!-- <el-button @click="delHandle(scope.row)" type="danger" size="small">删除</el-button> -->
+          <el-button @click="delHandle(scope.row)" type="danger" size="small">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -86,16 +86,16 @@
       </el-pagination>
     </div>
     <transition name="add">
-      <AddPage v-if="isShow" :msg="isShow" @upup="change" @reload="find(1)" :add.sync="notice"></AddPage>
+      <AddPage v-if="isShow" :msg="isShow" @upup="change" @reload="find()" :add.sync="notice"></AddPage>
     </transition>
     <transition name="edit">
-      <EditPage v-if="isEdit" :msg="isEdit" @upedit="editChange" @reload="find(1)" :add.sync="notice"></EditPage>
+      <EditPage v-if="isEdit" :msg="isEdit" @upedit="editChange" @reload="find()" :add.sync="notice"></EditPage>
     </transition>
     <transition name="fade">
       <SeePage v-if="see" :msg="see" @upsee="seeChange"  :data="seeData"></SeePage>
     </transition>
     <el-dialog title="温馨提示" :visible.sync="visible2">
-      <p>请问您是否确定删除这条数据吗？</p>
+      <p>确定删除这条服务？</p>
       <div style="text-align: right; margin: 0">
         <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
         <el-button type="primary" size="mini" @click="confirmDel">确定</el-button>
@@ -171,12 +171,14 @@ import SeePage from './see';
       },
       confirmDel(){
         if(this.delData.id){
-          this.$xttp.get(`/community/building/${this.delData.id}/delete`)
+          let id = this.delData.id;
+         let url =  `biz/convenience/${id}/delete`
+          this.$xttp.get(url)
             .then(res=> {
               if(!res.errorCode){
                 this.visible2 = false;
                 this.delData = null;
-                this.$message({message:res.data,type:'success'});
+                this.$message({message:'删除服务成功',type:'success'});
                 this.find();
               }
             })
@@ -224,7 +226,6 @@ import SeePage from './see';
               this.tableData = res.data.records;
               this.currentPage = res.data.currentPage;
               this.total = res.data.total;
-              console.log(this.tableData);
               this.tableData.forEach(function(item) {
                 getUri(item.icon,key => {
                       item.uri = key;

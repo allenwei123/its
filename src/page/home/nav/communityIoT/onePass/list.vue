@@ -2,7 +2,11 @@
     <el-main>
       <div>
         <ul class="c-navDetail clear">
-          <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li>
+          <el-breadcrumb separator-class="el-icon-arrow-right">
+            <el-breadcrumb-item v-for="(nav, index) in navDetailData" :to="nav.router" :key="index">{{ nav.name }}
+            </el-breadcrumb-item>
+          </el-breadcrumb>
+          <!-- <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li> -->
         </ul>
         <div class="c-search">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
@@ -18,7 +22,7 @@
               <el-button type="primary" @click="query"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
             </el-form-item>
           </el-form>
-          <el-button type="primary" class="c-addBtn" @click="onSubmit">新增卡片</el-button>
+          <el-button type="success" plain class="c-addBtn" @click="onSubmit">新增卡片</el-button>
         </div>
       </div>
       

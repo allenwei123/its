@@ -1,7 +1,14 @@
 <template>
   <el-container>
     <el-main>
-      <div style="margin-bottom: 5px;"> <b>{{deviceName || '门禁'}}：</b>使用记录</div>
+      <!-- <div style="margin-bottom: 5px;"> <b>{{deviceName || '门禁'}}：</b>使用记录</div> -->
+      <ul class="c-navDetail clear">
+        <el-breadcrumb separator-class="el-icon-arrow-right">
+          <el-breadcrumb-item v-for="(nav, index) in navDetailData" :to="nav.router" :key="index">{{ nav.name }}
+          </el-breadcrumb-item>
+        </el-breadcrumb>
+        <!-- <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li> -->
+      </ul>
       <div class="c-rpass-container">
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
@@ -65,6 +72,12 @@
         input: '',
         q_input: null,
         deviceName: '',
+        navDetailData: [
+          { id: 0, name: "社区物联" },
+          { id: 1, name: "门禁管理" },
+          { id: 2, name: "门禁档案", router: '' },
+          { id: 3, name: "使用记录" }
+        ]
       }
     },
     methods: {

@@ -8,8 +8,8 @@
           </el-form-item>
           <el-form-item label="服务类型：" :label-width="formLabelWidth" prop="serviceType" class="c-must">
             <el-select v-model="form.serviceType" value-key="key" placeholder="请选择">
-              <el-option label="本地商店" value="1">本地商店</el-option>
-              <el-option label="外来连接" value="2">外来连接</el-option>
+              <el-option label="生活服务" value="1">生活服务</el-option>
+              <el-option label="家政服务" value="2">家政服务</el-option>
             </el-select>
           </el-form-item>
 
@@ -176,6 +176,11 @@ export default {
         if(this.form.contact == ''){
           this.showInfo('请填写服务热线');
           return;
+        }else{
+          if(!fun.isTelOrPhoneAvailable(this.form.contact)){
+            this.showInfo('服务热线填写错误，请重新填写');
+            return;
+          }
         }
       }
       if(this.form.serviceWay == 2) {

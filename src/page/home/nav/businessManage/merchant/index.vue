@@ -31,7 +31,7 @@
             <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
           </el-form-item>
         </el-form>
-        <el-button type="primary" class="c-addBtn" @click="onSubmit">新增商户</el-button>
+        <el-button type="success" plain class="c-addBtn" @click="onSubmit">新增商户</el-button>
       </div>
     </div>
 
@@ -43,8 +43,8 @@
       <el-table-column label="商家名称" min-width="100" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">{{ scope.row.name}}</template>
       </el-table-column>
-      <el-table-column label="商户类型" min-width="60" align="center" :show-overflow-tooltip="true">
-        <template slot-scope="scope">{{ scope.row.type }}</template>
+      <el-table-column label="商家类型" min-width="60" align="center" :show-overflow-tooltip="true">
+        <template slot-scope="scope">{{ scope.row.typeName }}</template>
       </el-table-column>
       <el-table-column label="地区" min-width="60" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">{{ scope.row.province + scope.row.city + scope.row.district }}</template>

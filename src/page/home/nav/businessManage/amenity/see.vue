@@ -6,10 +6,10 @@
             <li class="c-list"><span class="c-label">分类:</span> <span class="c-content"> {{ data.serviceType | serviceType }} </span></li>
             <li class="c-list"><span class="c-label">服务类型:</span> <span class="c-content"> {{ data.serviceWay | serviceWay}} </span></li>
             <li class="c-list" v-if="data.serviceWay == 1"><span class="c-label">热线电话:</span> <span class="c-content"> {{ data.contact }} </span></li>
-            <li class="c-list" v-if="data.serviceWay == 2"><span class="c-label">外部链接:</span> <span class="c-content"> {{ data.url }} </span></li>
+            <li class="c-list" v-if="data.serviceWay == 2"><span class="c-label">外部链接:</span> <span class="c-content" style="word-wrap:break-word;word-break:break-all;"><a>{{ data.url }}</a>  </span></li>
             <li class="c-list"><span class="c-label">创建时间:</span> <span class="c-content"> {{ data.createAt | time('yyyy-MM-dd HH:mm:ss')}} </span></li>
             <!-- <li class="c-list"><span class="c-label">图片:</span> <span class="c-content"> {{ data.picture }} </span></li> -->
-            <li class="c-list"><span class="c-label">图片:</span> <div class="c-image" v-if="uri"><img :src="uri"></div></li>
+            <li class="c-list"><span class="c-label">图片:</span> <div class="c-image" v-if="uri"><img style="width:400px; height:200px;" :src="uri"></div></li>
             
         </ul>  
     </el-dialog>
@@ -28,8 +28,9 @@ export default {
   },
   props: ["msg","data"],
   created(){
+      console.log(this.data.icon);
     if(this.data.icon) {
-          getUri(this.uri,(uri)=> {
+          getUri(this.data.icon,(uri)=> {
             this.uri = uri;
           });
       }

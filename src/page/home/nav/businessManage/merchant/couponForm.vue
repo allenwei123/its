@@ -53,8 +53,8 @@
         <el-input  v-model="data.prompt" size="small"></el-input>
       </el-form-item>
 
-      <el-form-item label="校验密令" prop="validCode" >
-        <el-input  v-model="data.validCode" size="small"></el-input>
+      <el-form-item label="校验密令" prop="validCode">
+        <el-input  v-model="data.validCode" size="small" :disabled="editDisabled"></el-input>
       </el-form-item>
 
       <!--<el-form-item label="是否推送" prop="label" >-->
@@ -95,6 +95,7 @@
         fileList:[],//展示图片列表
         uploadFile:[],
         typeList:[],//推送社区
+        editDisabled: false,
         rules: {
           name: [{required: true, message: '请输入优惠券名称', trigger: 'blur'}],
           maxPrice: [{ required: true, message: '请输入优惠券金额', trigger: 'blur' }],
@@ -112,7 +113,8 @@
         getUri(this.data.icon,uri => {
             let o = {url: uri};
             this.fileList.push(o);
-        })
+        });
+        this.editDisabled = true;
       }
     },
     methods: {

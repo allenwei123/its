@@ -59,8 +59,13 @@
           <template slot-scope="scope">{{ scope.row.url }}</template>
         </el-table-column> -->
         <el-table-column label="凭证" min-width="300" align="center" :show-overflow-tooltip="true">
-          <template slot-scope="scope"><el-button type="text" size="small" @click="showP(scope.row.url)">{{scope.row.url}}</el-button></template>
+          <template slot-scope="scope"><el-button type="text" size="small" @click="showP(scope.row.url)">{{scope.row.url}}</el-button></template>  
         </el-table-column>
+        
+        <el-table-column label="凭证" min-width="300" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope"><el-button type="text"><img width="60px" height="60px" :src="scope.row.uri"></el-button></template> 
+        </el-table-column>
+        
         <!-- <el-table-column fixed="right" align="center" label="操作" width="200">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="seeHandle(scope.row)">查看</el-button>
@@ -104,7 +109,8 @@
 // import AddPage from './add';
 
 import { mapGetters } from "vuex";
-import {getUri} from "@/utils/oss.js";
+// import {getUri} from "@/utils/oss.js";
+import { send as ossUpload, getUri } from "@/utils/oss";
 import time from "@/utils/time.js";
 export default {
   name: "class",
@@ -115,6 +121,7 @@ export default {
       taskType: "1",
       dialogVisible: false,
       srcP: '',
+      
       navDetailData: [{ id: 0, name: "物业管理" }, { id: 1, name: "保安考勤" }],
       formInline: {
         empl: "",
@@ -122,7 +129,8 @@ export default {
         // startDate: '',
         // endDate: ''
         start: "",
-        end: ""
+        end: "",
+        uri: '',
       },
       pickerOptions: {
         shortcuts: [
@@ -211,6 +219,11 @@ export default {
           if (res.success) {
             this.tableData = res.data.records;
             this.total = res.data.total;
+            this.tableData.forEach(function(item) {
+              getUri(item.url,key => {
+                item.uri = key;
+              })
+            })
           }
         })
         .catch(() => {

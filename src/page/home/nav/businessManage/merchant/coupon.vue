@@ -29,7 +29,7 @@
             <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
           </el-form-item>
         </el-form>
-        <el-button type="primary" class="c-addBtn" @click="onSubmit">新增优惠券</el-button>
+        <el-button type="success" plain class="c-addBtn" @click="onSubmit">新增优惠券</el-button>
       </div>
     </div>
 
@@ -60,7 +60,7 @@
       </el-table-column>
 
       <el-table-column label="状态" min-width="60" align="center" :show-overflow-tooltip="true">
-        <template slot-scope="scope">{{ scope.row.useStatus | useStatus }}</template>
+        <template slot-scope="scope">{{ scope.row.validStatus | validStatus }}</template>
       </el-table-column>
 
       <el-table-column label="已领取数量" min-width="60" align="center" :show-overflow-tooltip="true">
@@ -74,8 +74,8 @@
       <el-table-column align="center" fixed="right" label="操作" width="220">
         <template slot-scope="scope">
           <el-button @click="editHandle(scope.row)" type="warning" size="small">编辑</el-button>
-          <el-button @click="delHandle(scope.row)" type="danger" size="small" v-if="scope.row.useStatus == -1">删除</el-button>
-          <el-button @click="validHandle(scope.row)" type="danger" size="small">{{ isIssue ? '发布' : '撤下' }}</el-button>
+          <el-button @click="delHandle(scope.row)" type="danger" size="small" v-if="scope.row.validStatus == 0">删除</el-button>
+          <el-button @click="validHandle(scope.row)" type="success" size="small">{{ isIssue ? '发布' : '撤下' }}</el-button>
         </template>
       </el-table-column>
 
@@ -165,7 +165,7 @@
         this.delData = row;
       },
       validHandle(row){
-        this.isIssue = row.useStatus == 0 ? true : false;
+        this.isIssue = row.validStatus == 0 ? true : false;
         this.visible3 = true;
         this.ValidId = row.id;
       },
@@ -186,7 +186,7 @@
           let msg = this.isIssue ? '发布' : '撤下';
           let status = this.isIssue ? 1 : 0;
         if(this.ValidId){
-          this.$xttp.post(`/biz/coupon/valid`,{useStatus:status,id:this.ValidId})
+          this.$xttp.post(`/biz/coupon/valid`,{validStatus:status,id:this.ValidId})
             .then(res=> {
               if(!res.errorCode){
                 this.visible3 = false;

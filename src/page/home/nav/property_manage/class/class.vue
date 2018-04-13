@@ -21,7 +21,7 @@
               <el-button type="primary" @click="query">查询</el-button>
             </el-form-item>
           </el-form>
-          <el-button type="primary" class="c-addBtn" @click="addClass">新增班次</el-button>
+          <el-button type="success" plain class="c-addBtn" @click="addClass">新增班次</el-button>
         </div>
       </div>
       <el-table class="c-table" :data="tableData" style="width: 100%" v-loading="loading" stripe >

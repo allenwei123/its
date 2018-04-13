@@ -144,7 +144,7 @@ export default {
   props: ["visible", "detail", "isModify"],
   created() {
     if (this.isModify) {
-      this.text = "修改公告";
+      this.text = "编辑公告";
       this.form.title = this.detail.title;
       this.form.type = this.detail.noticeType.toString();
       this.form.thumbnailUrl = this.detail.thumbnailUrl;

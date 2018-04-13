@@ -98,6 +98,8 @@
       },
       closeForm() {
         this.formVisible = false;
+        this.communityList = [];
+        this.shopList = [];
       },
       onExceed() {
         this.$message("只能上传一张图片");
@@ -107,7 +109,6 @@
         this.shop();
       },
       changeGotoType(){
-        console.log(this.form.gotoType);
         if(this.form.gotoType == 1){
           this.isSee = false;
           this.isShow = true;
@@ -144,11 +145,9 @@
         let url = `/biz/shop/list`;
         let params = {};
         params['communityId']  = this.form.communityId;
-        console.log(params);
         this.$xttp.post(url,params)
           .then(res => {
             if(res.success){
-              console.log(res);
               this.loading = false;
               this.shopList = res.data;
               if(res.data.length > 0){
@@ -234,23 +233,18 @@
           url = "biz/slide/edit";
           params["id"] = this.detail.id;
         }
-        console.log(params);
-        console.log(url);
-        // return;
         this.$xttp.post(url, params).then(res => {
           this.loading = false;
-          console.log(params);
           if (res.errorCode === 0) {
-            console.log(res);
             this.formVisible = false;
             if(this.isModify){
               this.$message({
-                message: '修改成功',
+                message: '编辑轮播图成功',
                 type: 'success'
               });
             }else{
               this.$message({
-                message: '新增成功',
+                message: '新增轮播图成功',
                 type: 'success'
               });
             }
@@ -265,8 +259,7 @@
     created() {
       this.community();
       if (this.isModify) {
-        this.title = "修改轮播图";
-        console.log(this.detail);
+        this.title = "编辑轮播图";
         if(this.detail.photo){
           getUri(this.detail.photo,(uri) => {
             this.fileList2.push({url:uri});
@@ -274,12 +267,8 @@
           this.form.photo = this.detail.photo;
         }
         this.form.rank = this.detail.rank;
-        // this.form.communityId = this.detail.communityId.toString();
-        // this.community();
         this.form.communityId = this.detail.communityId;
-        console.log(this.detail.gotoType);
         this.form.gotoType = this.detail.gotoType;
-        console.log(this.form.gotoType);
         if(this.detail.href != null){
           this.isSee = true;
           this.form.href = this.detail.href;
@@ -290,18 +279,7 @@
           this.shop();
           this.form.shopId = this.detail.shopId;
         }
-        // this.form.value3 = this.detail.communityName;
-        // // this.form.label = this.detail.rank;
-        // this.form.href = this.detail.communityName;
-        // this.from.gotoType = this.detail.gotoType;
-        // console.log(this.radio)
-        // if (this.detail.photo) {
-        //   getUri(this.detail.photo,(uri) => {
-        //     this.fileList2.unshift({url:uri});
-        //   });
-        // }
       }else{
-        // this.community();
         this.shop();
       }
     }

@@ -37,7 +37,7 @@
               <!-- <el-button type="success" plain @click="keySchedul">一键排班</el-button> -->
             </el-form-item>
           </el-form>
-          <el-button type="primary" class="c-addBtn" @click="onSubmit">新增排班</el-button>
+          <el-button type="success" plain class="c-addBtn" @click="onSubmit">新增排班</el-button>
         </div>
       </div>
       

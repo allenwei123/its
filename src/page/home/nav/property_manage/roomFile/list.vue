@@ -28,7 +28,7 @@
               <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
             </el-form-item>
           </el-form>
-          <el-button type="primary" class="c-addBtn" @click="onSubmit">新增房间</el-button>
+          <el-button type="success" plain class="c-addBtn" @click="onSubmit">新增房间</el-button>
         </div>
       </div>
 

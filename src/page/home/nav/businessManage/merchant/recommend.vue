@@ -29,7 +29,7 @@
             <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
           </el-form-item>
         </el-form>
-        <el-button type="primary" class="c-addBtn" @click="onSubmit" >新增商品</el-button>
+        <el-button type="success" plain class="c-addBtn" @click="onSubmit" >新增商品</el-button>
       </div>
     </div>
 
@@ -206,6 +206,7 @@
   }
   .c-navDetail {
     margin-bottom: 10px;
+    border-bottom: 1px solid gray;
     li {
           float: left;
           margin-right: 10px;

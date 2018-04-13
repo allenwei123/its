@@ -28,7 +28,7 @@
               <el-button type="primary" @click="query">查询</el-button>
             </el-form-item>
             <el-form-item style="float: right">
-              <el-button type="primary" class="c-addBtn" @click="add">新增故障</el-button>
+              <el-button type="success" plain class="c-addBtn" @click="add">新增故障</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -62,13 +62,13 @@
                 <el-button type="primary" size="mini" @click="handleClick(scope.row)">查看详情</el-button>
                 <!-- 已提交 待受理-->
                 <template v-if="scope.row.faultStatus === 1">
-                  <el-button type="primary" size="mini" @click="receive(scope.row)">受理故障</el-button>
+                  <el-button type="success" size="mini" @click="receive(scope.row)">受理故障</el-button>
                   <el-button type="danger" size="mini" @click="reject(scope.row)">驳回申请</el-button>
                 </template>
 
                 <!-- 已受理 待分派-->
                 <template v-if="scope.row.faultStatus === 2">
-                  <el-button type="primary" size="mini" @click="assignHandle(scope.row)">指派人员</el-button>
+                  <el-button type="info" size="mini" @click="assignHandle(scope.row)">指派人员</el-button>
                 </template>
                 
               </template>

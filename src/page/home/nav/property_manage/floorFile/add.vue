@@ -44,13 +44,6 @@ export default {
         communityId: this.$store.getters.communityId,
         communityName: this.$store.getters.communityName
       },
-      // rules: {
-      //   name: [{ required: true, message: "请输入楼栋名称", trigger: "blur" }],
-      //   code: [{ required: true, message: "请输入楼栋编号", trigger: "blur" }],
-      //   overGround: [{ required: true, message: "请输入楼面层数", trigger: "blur" }],
-      //   underGround: [{ required: true, message: "请输入地下层数", trigger: "blur" }]
-      //   // roomNum: [{ required: true, message: "请输入房间数量", trigger: "blur" }]
-      // },
       cityArr: [],
       current: 1 //1 初始 2：添加后 3：编辑后
     };
@@ -62,6 +55,10 @@ export default {
       this.form = this.add;
       this.form.communityIdShow = toName(this.$store.getters.communityList,this.$store.getters.communityId);
       this.titleFont = "编辑楼栋档案";
+      this.form.name = this.add.name;
+      this.form.overGround = this.add.overGround;
+      this.form.underGround = this.add.underGround;
+      this.form.roomNum = this.add.roomNum;
     }
   },
   mounted() {},
@@ -91,14 +88,6 @@ export default {
         return;
       }
       this.postData();
-
-      // this.$refs[formName].validate(valid => {
-      //   if (valid) {
-      //     this.postData();
-      //   } else {
-      //     return false;
-      //   }
-      // });
     },
     postData() {
       if (this.cityArr[0]) {

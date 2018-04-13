@@ -2,6 +2,13 @@
   <el-container>
     <el-main>
       <div class="c-rpass-container">
+        <ul class="c-navDetail clear">
+          <el-breadcrumb separator-class="el-icon-arrow-right">
+            <el-breadcrumb-item v-for="(nav, index) in navDetailData" :to="nav.router" :key="index">{{ nav.name }}
+            </el-breadcrumb-item>
+          </el-breadcrumb>
+          <!-- <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li> -->
+        </ul>
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
             <el-form-item label="">
@@ -66,6 +73,12 @@
         q_input: null,
         date: '',
         value1: '',
+        navDetailData: [
+          { id: 1, name: "社区物联" },
+          { id: 0, name: "停车管理" },
+          { id: 2, name: "停车设备" },
+          { id: 3, name: "进出记录" }
+        ],
         // inOutTag: '',
       }
     },

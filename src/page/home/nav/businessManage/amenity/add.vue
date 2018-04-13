@@ -143,12 +143,19 @@ export default {
         return;
       }
 
-      console.log(this.form.serviceWay+"====AAAA");
-
       if(this.form.serviceWay == 1){
         if(this.form.contact == ''){
           this.showInfo('请填写服务热线');
           return;
+        }else{
+          // if(!(/^(0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8})|(400|800)([0-9\\-]{7,10})|(([0-9]{4}|[0-9]{3})(-| )?)?([0-9]{7,8})((-| |转)*([0-9]{1,4}))?$/).test(this.form.contact)){
+          //   this,showInfo('服务热线填写错误，请重新填写');
+          //   return;
+          // }
+          if(!fun.isTelOrPhoneAvailable(this.form.contact)){
+            this.showInfo('服务热线填写错误，请重新填写');
+            return;
+          }
         }
       }
       if(this.form.serviceWay == 2) {
@@ -159,7 +166,6 @@ export default {
       }
 
       let files = this.$refs.upload.uploadFiles;
-      console.log(files.length)
       if (files.length) {
         ossUpload(files[0].raw, key => {
           this.form.icon = key;
@@ -172,15 +178,6 @@ export default {
       else {
         this.submitForm();
       }
-
-      // this.postData();
-      // this.$refs[formName].validate((valid) => {
-      //     if (valid) {
-      //       this.postData();
-      //     } else {
-      //       return false;
-      //     }
-      //   });
     },
     submitForm(){
       this.loading = true;
@@ -197,11 +194,11 @@ export default {
       if(this.form.serviceWay == 2){
         params['url'] = this.form.url;
       }
+      return;
       let url = 'biz/convenience/add';
       this.$xttp.post(url, params)
           .then(res => {
             if(res.success){
-              console.log(res);
               this.handleClose();
               this.$message({
                 message: "新增服务成功",
@@ -216,28 +213,6 @@ export default {
             console.log(err);
           })
 
-    },
-    postData() {
-      let msg = this.add ? '编辑' : '添加';
-      let uri = this.add ? '/user/property/update-user' : '/user/property/create-user';
-      this.$xttp
-        .post( uri, this.form)
-        .then(res => {
-          if (res.errorCode === 0) {
-            this.$message({
-              message: msg + "员工成功",
-              type: "success"
-            });
-            this.current =  2;
-            this.handleClose();
-            this.$emit('reload');
-          }else {
-            this.$message({message:res.errorMsg,type:'error'});
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
     }
   }
 };

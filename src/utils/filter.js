@@ -140,10 +140,10 @@ Vue.filter('serviceType',function (value){
   let newValue = '';
   switch (value) {
     case 1:
-      newValue = '本地商店';
+      newValue = '生活服务';
       break;
     case 2:
-      newValue = '外来链接';
+      newValue = '家政服务';
       break;
   }
   return newValue;
@@ -238,17 +238,15 @@ Vue.filter('relationship', function (value) {
 /**
  * 优惠券状态
  * **/
-Vue.filter('useStatus', function (value) {
+Vue.filter('validStatus', function (value) {
   let newValue = '';
   switch (value) {
     case 0:
-      newValue = '未使用';
+      newValue = '无效';
       break;
     case 1:
-      newValue = '已使用';
+      newValue = '有效';
       break;
-    case -1:
-      newValue = '已过期';
   }
   return newValue;
 });

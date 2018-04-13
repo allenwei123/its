@@ -29,7 +29,7 @@
         </el-option>
       </el-select>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button @click="cancel">取 消</el-button>
         <el-button type="primary" @click="comfirm">确 定</el-button>
       </span>
     </el-dialog>
@@ -83,7 +83,6 @@
                   });
                   this.dialogVisible = true;
                   this.$store.dispatch('cgCommunityList', this.options);
-                  // console.log(this.options);
                 }
               })
           }
@@ -110,6 +109,10 @@
         }else {
           this.$message('请选择社区');
         }
+      },
+      cancel(){
+        this.dialogVisible = false;
+        this.options = [];
       }
     }
   }

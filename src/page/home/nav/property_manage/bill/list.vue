@@ -7,7 +7,43 @@
       <div class="c-notice-container">
         <div class="c-search">
           <el-form :inline="true" class="demo-form-inline">
-            <el-form-item  width="80">
+            <el-row :gutter="20">
+              <el-col :span="16">
+                <el-form-item  width="80">
+                  <el-select v-model="value1" placeholder="全部状态" clearable @change="changeStatus">
+                    <el-option v-for="temp in options" :key="temp.value" :label="temp.label" :value="temp.value"></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="">
+                  <el-date-picker
+                    v-model="date"
+                    type="month"
+                    format="yyyy年MM月"
+                    value-format="yyyy/MM/01"
+                    placeholder="账单日期" clearable @change="changeStatus">
+                  </el-date-picker>
+                </el-form-item>
+                <el-select v-model="value2" placeholder="全部楼栋" clearable @change="changeStatus">
+                  <el-option v-for="item in options2" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                </el-select>
+                <el-form-item label="">
+                  <el-input  placeholder="房号" v-model.trim="input"></el-input>
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="primary" @click="query">查询</el-button>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4" :offset="4">
+                <el-form-item style="float: right">
+                  <el-button type="primary" plain class="c-addBtn" @click="takeAll">全部生效</el-button>
+                </el-form-item>
+                <el-form-item style="float: right">
+                  <el-button type="success" plain class="c-addBtn1" @click="callAll">一键催交</el-button>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            
+            <!-- <el-form-item  width="80">
               <el-select v-model="value1" placeholder="全部状态" clearable @change="changeStatus">
                 <el-option v-for="temp in options" :key="temp.value" :label="temp.label" :value="temp.value"></el-option>
               </el-select>
@@ -31,11 +67,11 @@
               <el-button type="primary" @click="query">查询</el-button>
             </el-form-item>
             <el-form-item style="float: right">
-              <el-button type="primary" class="c-addBtn" @click="takeAll">全部生效</el-button>
+              <el-button type="primary" plain class="c-addBtn" @click="takeAll">全部生效</el-button>
             </el-form-item>
             <el-form-item style="float: right">
-              <el-button type="primary" class="c-addBtn1" @click="callAll">一键催交</el-button>
-            </el-form-item>
+              <el-button type="success" plain class="c-addBtn1" @click="callAll">一键催交</el-button>
+            </el-form-item> -->
           </el-form>
         </div>
         <div class="c-list">
@@ -47,10 +83,6 @@
             </el-table-column>
             <el-table-column prop="proprietorName" label="业主姓名" min-width="120" :show-overflow-tooltip="true" align="center">
             </el-table-column>
-            <!-- 无 -->
-            <!-- <el-table-column prop="roomName" label="账单名称" min-width="150" :show-overflow-tooltip="true"> -->
-              <!-- <template slot-scope="scope">{{scope.row.billDetailName}}</template> -->
-            <!-- </el-table-column> -->
             <el-table-column prop="totalPrice" label="账单金额" min-width="120" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{(scope.row.totalPrice /10000).toFixed(2)}}</template>
             </el-table-column>
@@ -74,20 +106,20 @@
                 <!-- 账单状态 未生效-->
                 <template v-if="scope.row.billStatus === -1">
                   <!-- @click="edit(scope.row)" 暂无接口 -->
-                  <el-button type="primary" size="mini" @click="edit(scope.row)">编辑</el-button>
-                  <el-button type="warning" size="mini" @click="take(scope.row, $event)">生效</el-button>
+                  <el-button type="warning" size="mini" @click="edit(scope.row)">编辑</el-button>
+                  <el-button type="success" size="mini" @click="take(scope.row, $event)">生效</el-button>
                 </template>
 
                 <!-- 账单状态 待缴费-->
                 <template v-if="scope.row.billStatus === 0 ">
                   <el-button type="warning" size="mini" @click="take(scope.row, $event)">提醒缴费</el-button>
-                  <el-button type="primary" size="mini" @click="take(scope.row, $event)">确认缴费</el-button>
+                  <el-button type="success" size="mini" @click="take(scope.row, $event)">确认缴费</el-button>
                 </template>
 
                 <!-- 账单状态 已超期-->
                 <template v-if="scope.row.billStatus === 2 ">
                   <el-button type="warning" size="mini" @click="take(scope.row, $event)">催缴</el-button>
-                  <el-button type="primary" size="mini"  @click="take(scope.row, $event)">确认缴费</el-button>
+                  <el-button type="success" size="mini"  @click="take(scope.row, $event)">确认缴费</el-button>
                 </template>
 
               </template>
@@ -281,7 +313,6 @@ export default {
       let communityId = this.$store.getters.communityId;
       params.communityId = communityId;
       params.propertyId = '5a82adee9ce976452b7001ee';
-      // console.log('params', params);
       this.$xttp.post(url, params).then(res => {
         if(res.errorCode === 0){
           this.loading = false;
@@ -300,7 +331,6 @@ export default {
             this.loading = false;
             if (res.errorCode === 0) {
               this.loading = false;
-              // console.log('res', res.data.records);
               this.tableData = res.data.records;
               this.tableData.filter( item => {
                 if(item.billStatus === -1){
@@ -440,7 +470,6 @@ export default {
           this.loading = false;
           if (res.errorCode === 0) {
             this.loading = false;
-            console.log('res', res.data.records);
             this.tableData = res.data.records;
             this.total = res.data.total;
           }
@@ -463,7 +492,6 @@ export default {
         if(res.errorCode === 0) {
           this.loading = false;
           this.options2 = res.data.records;
-          console.log('build', res);
         }
       }).catch( () => {
         this.loading = false;

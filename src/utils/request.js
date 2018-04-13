@@ -34,7 +34,7 @@ service.interceptors.request.use(config => {
 service.interceptors.response.use(
   res => {
     if (res.data) {
-      debugger;
+      // debugger;
       if(res.data.errorCode === 9050001) {
         store.dispatch('changeToken',null);
         // Message({message:'登录已过期,请您重新登录',type:'error'})
