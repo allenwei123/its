@@ -31,7 +31,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="班次：" prop="class" class="c-must" style="display:block;margin-top:25px;float:left;">
+            <el-form-item label="班次：" prop="class" class="c-must" style="display:block;margin-top:25px;">
               <el-radio-group v-model="form.class">
                 <el-radio @change="changeRadio" :checked="checked" :label="item.name" :key="item.name" v-for="(item) in classData" border></el-radio>
                 <!-- <el-radio @change="changeRadio" :checked="checked" :label="item.name" :value="item.id" :key="item.name" v-for="(item) in classData" border></el-radio> -->
@@ -302,6 +302,9 @@ export default {
   width: 200px;
 }
 .el-radio-group{
+  height: 40px;
+  line-height: 40px;
+  margin-top: -39px;
 }
 .el-radio.is-bordered+.el-radio.is-bordered{
   margin-right: 10px;

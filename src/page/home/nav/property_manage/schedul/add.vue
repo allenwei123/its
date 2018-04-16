@@ -39,22 +39,18 @@
             <hr style="height:1px;border:none;border-top:1px dashed #cecece;" />
 
             <el-form-item label="员工：" prop="empl" class="c-must" style="display:block;margin-top:25px;">
-              <!-- <el-select v-model="form.empl" placeholder="请选择员工" @change="changEmpl" :disabled="disabledPost">
-                <el-option v-for="(item , indexs) in emplData" :key="item.userId" :label="item.userName" :value="indexs">
-                </el-option>
-              </el-select> -->
               <el-select v-model="form.empl" placeholder="请选择员工" @change="changEmpl" :disabled="disabledPost">
                 <el-option v-for="item in emplData" :key="item.userId" :label="item.userName" :value="item.userId">
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item v-if="isSee" label="班次：" prop="class" class="c-must" style="display:block;margin-top:25px;float:left;">
+            <!-- <el-form-item v-if="isSee" label="班次：" prop="class" class="c-must" style="display:block;margin-top:25px;"> -->
+            <el-form-item v-if="isSee" label="班次：" prop="class" class="c-must" style="display:block;margin-top:25px;">
               <el-radio-group v-model="form.class">
-                <el-radio @change="changeRadio" :checked="checked" :label="item.name" :key="item.name" v-for="(item) in classData" border></el-radio>
-                <!-- <el-radio @change="changeRadio" :checked="checked" :label="item.name" :value="item.id" :key="item.name" v-for="(item) in classData" border></el-radio> -->
+                <el-radio @change="changeRadio" :checked="checked" :label="item.name" :key="item.name" v-for="(item) in classData" border class="c-radio"></el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item v-if="isShow">
+            <el-form-item v-if="isShow" style="display:block;">
               <el-row :gutter="24" type="flex" class="row-bg" justify="space-around">
                 <el-col :span="8">
                   <el-input placeholder="班次名称" v-model="form.name"></el-input>
@@ -380,6 +376,9 @@ export default {
   width: 200px;
 }
 .el-radio-group{
+  height: 40px;
+  line-height: 40px;
+  margin-top: -39px;
 }
 .el-radio.is-bordered+.el-radio.is-bordered{
   margin-right: 10px;

@@ -28,7 +28,7 @@
                 </el-table-column>
                 <el-table-column fixed="right" align="center" label="操作" width="100">
                     <template slot-scope="scope">
-                        <el-button type="primary" size="mini"  @keyup="textChange" @click="editPrice(scope.row)">修改价格</el-button>
+                        <el-button type="warning" size="mini"  @keyup="textChange" @click="editPrice(scope.row)">编辑价格</el-button>
                         <!-- <el-button @click="delHandle(scope.row)" type="danger" size="small">删除</el-button> -->
                     </template>
                 </el-table-column>
@@ -129,6 +129,10 @@ export default {
         
         if(projectName == '' || projectName.length == 0){
             this.showInfo('项目名称不能为空','warning');
+            return;
+        }
+        if(projectName == this.detail.itemName){
+            this.showInfo('项目名称没有修改','warning');
             return;
         }
         params['id'] = projectId;

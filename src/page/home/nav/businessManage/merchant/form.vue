@@ -2,11 +2,11 @@
   <el-dialog :title="titleFont" :visible.sync="msg" :before-close="handleClose" class="c-maxbody">
     <el-form :model="data" label-width="120px" ref="ruleForm" :rules="rules" class="c-myForm">
 
-      <el-form-item prop="name" label="店名">
+      <el-form-item prop="name" label="店名：">
         <el-input auto-complete="false" v-model="data.name" size="small"></el-input>
       </el-form-item>
 
-      <el-form-item label="店标">
+      <el-form-item label="店标：">
         <el-upload
           class="avatar-uploader"
           action=""
@@ -18,7 +18,7 @@
         ><i class="el-icon-plus avatar-uploader-icon"></i></el-upload>
       </el-form-item>
 
-      <el-form-item label="图片">
+      <el-form-item label="图片：">
         <el-upload
           class="avatar-uploader"
           action=""
@@ -29,7 +29,7 @@
         ><i class="el-icon-plus avatar-uploader-icon"></i></el-upload>
       </el-form-item>
 
-      <el-form-item label="商家类型" prop="type">
+      <el-form-item label="商家类型：" prop="type">
         <el-select v-model="data.type" placeholder="请选择" clearable size="small" @change="selectType">
           <el-option
             v-for="s in typeList"
@@ -41,14 +41,14 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="标签" prop="tag">
+      <el-form-item label="标签：" prop="tag">
         <el-checkbox-group v-model="data.tag" size="small">
-          <el-checkbox v-for="(t,index) in minTag" :label.number="t" :name="t" :key="index"
-                       class="c-checkbox"></el-checkbox>
+          <el-checkbox v-for="(t,index) in minTag" :label="t" :name="t" :key="index"
+            class="c-checkbox"></el-checkbox>
         </el-checkbox-group>
       </el-form-item>
 
-      <el-form-item label="运营时间">
+      <el-form-item label="运营时间：">
         <el-time-select
           placeholder="起始时间"
           v-model="data.serviceBeginAt"
@@ -56,7 +56,7 @@
           start: '00:00',
           step: '00:15',
           end: '24:00'
-        }"></el-time-select>
+        }"></el-time-select>&nbsp;-&nbsp;
         <el-time-select
           placeholder="结束时间"
           v-model="data.serviceEndAt"
@@ -69,16 +69,16 @@
         </el-time-select>
       </el-form-item>
 
-      <el-form-item label="联系号码" prop="telPhone">
+      <el-form-item label="联系号码：" prop="telPhone">
         <el-input type="number" v-model="data.telPhone" min="1" size="small"></el-input>
       </el-form-item>
 
-      <el-form-item label="所在地区" prop="ThreeAddress">
+      <el-form-item label="所在地区：" prop="ThreeAddress">
         <el-cascader :options="options" v-model="data.ThreeAddress" size="small" @change="checkAdress">
         </el-cascader>
       </el-form-item>
 
-      <el-form-item label="详细地址" prop="address">
+      <el-form-item label="详细地址：" prop="address">
         <el-select
           v-model="data.address"
           remote
@@ -101,7 +101,7 @@
         <div class="c-map-body" id="container"></div>
       </div>
 
-      <el-form-item prop="communityIds" label="关联社区">
+      <el-form-item prop="communityIds" label="关联社区：">
         <el-select
         v-model="data.communityIds"
         multiple
@@ -141,7 +141,7 @@
       return {
         autoUpload: false,
         time: null,
-        titleFont: this.edata ? '编辑商家':'增加商家',
+        titleFont: this.edata ? '编辑商户':'新增商户',
         data: {
           type: null,
           tag: [],
@@ -329,7 +329,10 @@
         if (bool) {
           this.data.tag = [];
         }
-        this.minTag = this.typeList.find(item => this.data.type == item.code).tag;
+        if(this.data.type){
+          this.minTag = this.typeList.find(item => this.data.type == item.code).tag;  
+        }
+
       }
     }
   }

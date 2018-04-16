@@ -30,15 +30,15 @@
         <el-table-column label="序号" width="50" :show-overflow-tooltip="true" align="center">
           <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
         </el-table-column>
-        <el-table-column label="卡号" :show-overflow-tooltip="true" width="130" align="center">
+        <el-table-column label="卡号" :show-overflow-tooltip="true" width="350" align="center">
           <template slot-scope="scope">{{ scope.row.keyNo }}</template>
         </el-table-column>
 
-        <el-table-column label="卡片类型" :show-overflow-tooltip="true" align="center">
+        <el-table-column label="卡片类型" :show-overflow-tooltip="true" align="center" width="250">
           <template slot-scope="scope">{{scope.row.keyType | card }}</template>
         </el-table-column>
 
-        <el-table-column label="用户" :show-overflow-tooltip="true" align="center" width="100">
+        <el-table-column label="用户" :show-overflow-tooltip="true" align="center" width="200">
           <template slot-scope="scope">{{scope.row.name }}</template>
         </el-table-column>
 
@@ -46,15 +46,15 @@
           <template slot-scope="scope">{{scope.row.phone }}</template>
         </el-table-column> -->
 
-        <el-table-column label="手机号码" :show-overflow-tooltip="true" align="center">
+        <!-- <el-table-column label="手机号码" :show-overflow-tooltip="true" align="center">
           <template slot-scope="scope">{{scope.row.phone }}</template>
-        </el-table-column>
+        </el-table-column> -->
 
-        <el-table-column label="住房信息" :show-overflow-tooltip="true" align="center"  width="200">
+        <el-table-column label="住房信息" :show-overflow-tooltip="true" align="center"  width="400">
           <template slot-scope="scope">{{scope.row.roomName }}</template>
         </el-table-column>
 
-        <el-table-column label="有效期" :show-overflow-tooltip="true" align="center"  width="170">
+        <el-table-column label="有效期" :show-overflow-tooltip="true" align="center"  width="400">
           <template slot-scope="scope">{{scope.row.startDate | time }} ~ {{scope.row.endDate | time }}</template>
         </el-table-column>
 

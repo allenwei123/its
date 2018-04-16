@@ -146,7 +146,7 @@
 
       <!-- 生效 -->
       <el-dialog title="温馨提示" :visible.sync="visible1">
-          <p class="p-center">{{text}}</p>
+          <!-- <p class="p-center">{{text}}</p> -->
           <p>{{warn}}</p>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="visible1 = false">取消</el-button>
@@ -155,8 +155,8 @@
       </el-dialog>
 
       <!-- 全部生效 -->
-      <el-dialog title="温馨提示" :visible.sync="visible2">
-          <p class="p-center">全部生效</p>
+      <el-dialog title="全部生效" :visible.sync="visible2">
+          <!-- <p class="p-center">全部生效</p> -->
           <p>生效后账单将发送给对应业主，且不可再次修改，是否立即生效？</p>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
@@ -165,8 +165,8 @@
       </el-dialog>
 
       <!-- 一键催交 -->
-      <el-dialog title="温馨提示" :visible.sync="visible3">
-          <p class="p-center">一键催交</p>
+      <el-dialog title="一键催交" :visible.sync="visible3">
+          <!-- <p class="p-center">一键催交</p> -->
           <p>是否提醒物业管理费超期未缴账单相关业主尽快缴费！</p>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="visible3 = false">取消</el-button>

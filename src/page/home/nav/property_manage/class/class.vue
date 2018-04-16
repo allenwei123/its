@@ -49,7 +49,7 @@
             <!-- <el-button type="primary" size="mini" @click="seeHandle(scope.row)">查看</el-button> -->
             <!-- <el-button type="primary" size="mini" @click="editHandle(scope.row)">编辑</el-button> -->
             <el-button @click="editHandle(scope.row)" type="warning" size="small">编辑</el-button>
-            <!-- <el-button @click="delHandle(scope.row)" type="danger" size="small">删除</el-button> -->
+            <el-button @click="delHandle(scope.row)" type="danger" size="small">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

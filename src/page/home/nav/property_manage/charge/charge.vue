@@ -203,10 +203,10 @@ import time from '@/utils/time.js';
                   }
               })
         }).catch(() => {
-            this.$message({
-                type: 'info',
-                message: '修改收费项目失败'
-            });       
+            // this.$message({
+            //     type: 'info',
+            //     message: '修改收费项目失败'
+            // });       
         });
       },
     },

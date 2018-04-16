@@ -62,9 +62,9 @@
           <template slot-scope="scope"><el-button type="text" size="small" @click="showP(scope.row.url)">{{scope.row.url}}</el-button></template>  
         </el-table-column>
         
-        <el-table-column label="凭证" min-width="300" align="center" :show-overflow-tooltip="true">
+        <!-- <el-table-column label="凭证" min-width="300" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope"><el-button type="text"><img width="60px" height="60px" :src="scope.row.uri"></el-button></template> 
-        </el-table-column>
+        </el-table-column> -->
         
         <!-- <el-table-column fixed="right" align="center" label="操作" width="200">
           <template slot-scope="scope">

@@ -38,7 +38,7 @@
               <template slot-scope="scope">{{scope.row.userName}}</template>
             </el-table-column>
             <el-table-column label="身份" :show-overflow-tooltip="true" align="center">
-              <template slot-scope="scope">{{scope.row.phone}}</template>
+              <template slot-scope="scope">{{getuserStatus(scope.row.userStatus)}}</template>
             </el-table-column>
             <el-table-column label="使用时间" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{scope.row.time | time('yyyy-MM-dd HH:mm')}}</template>
@@ -97,6 +97,13 @@
         let names = {
           '1': '蓝牙',
           '2': '远程'
+        };
+        return names[status];
+      },
+      getuserStatus(status) {
+        let names = {
+          '1': '住户',
+          '2': '物业'
         };
         return names[status];
       },

@@ -42,12 +42,15 @@
             <el-table-column label="有效时间" min-width="320" align="center" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.beginAt | time('yyyy-MM-dd HH:mm')}}~{{scope.row.endAt | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
-            <el-table-column label="放行备注" min-width="120" align="center" :show-overflow-tooltip="true">
+            <el-table-column label="放行备注" min-width="300" align="center" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.remark}}</template>
             </el-table-column>
             <el-table-column label="备注照片" min-width="120" align="center" :show-overflow-tooltip="true">
-              <template slot-scope="scope">{{scope.row.url}}</template>
+              <template slot-scope="scope"><el-button type="text">{{scope.row.url === null ? '无' : scope.row.url }}</el-button></template>
             </el-table-column>
+            <!-- <el-table-column label="备注照片" min-width="120" align="center" :show-overflow-tooltip="true">
+              <template slot-scope="scope"><el-button><img width="60px" height="60px" :src="scope.row.uri"></el-button></template>
+            </el-table-column> -->
             <el-table-column label="状态" min-width="100" align="center" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.releaseStatus === 1 ? '已使用' : scope.row.releaseStatus === -1 ? '已过期': '未使用' }}</template>
             </el-table-column>
@@ -71,6 +74,8 @@
 </template>
 
 <script>
+import { send as ossUpload, getUri } from "@/utils/oss";
+
   export default {
     name: 'rpass',
     data () {
@@ -88,6 +93,7 @@
         input: '',
         q_input: null,
         releaseStatus: '',
+        uri: null,
         statusOptions: [{key: 1, name: '已使用'}, {key: 0, name: '未使用'}, {key: -1, name: '已过期'}], //审核状态下拉框数据
       }
     },
@@ -116,6 +122,16 @@
           if (res.errorCode === 0) {
             this.tableData = res.data.records;
             this.total = res.data.total;
+            // this.tableData.forEach(function(item) {
+            //   if(item.url != null){
+            //       getUri(item.url,key => {
+            //       item.uri = key;
+            //     })
+            //   }else{
+            //     console.log("haha")
+            //   }
+              
+            // })
             this.loading = false;
           }
         }).catch(() => {

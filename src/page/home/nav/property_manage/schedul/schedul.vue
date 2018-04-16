@@ -59,8 +59,8 @@
         </el-table-column>
         <el-table-column fixed="right" label="操作" align="center" width="180">
           <template slot-scope="scope">
-            <!-- <el-button type="primary" size="mini" @click="handleClick(scope.row)">查看</el-button> -->
             <el-button type="warning" size="mini" @click="editHandle(scope.row)">编辑</el-button>
+            <el-button type="danger" size="mini" @click="delHandle(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -238,7 +238,8 @@ export default {
     },
     confirmDel(){
       if(this.delData.id){
-        this.$xttp.get(`/community/${this.delData.id}/delete`)
+        // task/schedule/{id}/delete
+        this.$xttp.get(`task/schedule/${this.delData.id}/delete`)
         .then(res=> {
           if(!res.errorCode){
             this.visible2 = false;
