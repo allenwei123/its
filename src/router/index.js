@@ -26,6 +26,7 @@ const router = new Router({
           //基础管理
           {
             path: 'side',
+            name:'11b0',
             component: (resolve) => require(["@/page/home/nav/_res"], resolve),
             children: [
               {
@@ -310,7 +311,7 @@ router.beforeEach((to, from, next) => {
   };
 
   if(store.getters.pms && store.getters.pms[to.name] == 0 ) {
-    next('/404');
+   return next('/404');
   }
 
   if(to.path.split('/')[3] && currentNav !== to.path.split('/')[3]){

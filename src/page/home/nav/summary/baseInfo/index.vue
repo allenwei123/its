@@ -62,7 +62,7 @@
       </el-row>
       <el-row type="flex" class="c-apply-box">
         <el-col :span="24" class="c-box">
-          <p class="c-fc-blue c-left-title">临时访客申请
+          <p class="c-fc-blue c-left-title">临时访客申请 (次/天)
             <el-date-picker
               class="c-selectMonth"
               v-model="selectMonth"
@@ -214,6 +214,11 @@
               if(!res.errorCode) {
                 var myChart3 = echarts.init(document.getElementById('line'));
                 let arr = res.data.daySections;
+                let max = 0;
+                arr.forEach(item => {
+                    max = item.count > max ? item.count : max;
+                });
+                max = max < 5 ? 5 : max;
                 //折线图
                 let lineOption = {
                   xAxis: {
@@ -227,7 +232,8 @@
                       })
                   },
                   yAxis: {
-                    type: 'value'
+                    type: 'value',
+                    max: max
                   },
                   tooltip: {
                     trigger: 'axis',
@@ -388,6 +394,8 @@
     .c-percent50 {
       width: 50%;
       float: left;
+      background: rgba(0,0,0,0.1);
+      border-radius: 10px;
       .c-percent-childLeft {
         float: right;
         width: 80%;

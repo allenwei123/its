@@ -30,7 +30,7 @@
           </el-row>
           <!--  警报时间统计 -->
           <el-row class="c-box" style="margin-top: 10px;">
-            <p class="c-fc-blue c-left-title">警报时间统计</p>
+            <p class="c-fc-blue c-left-title">警报时间统计 (次/天)</p>
               <div id="i-alarm">
 
               </div>
@@ -145,6 +145,11 @@
       },
       createdLine() {
         let dom = echarts.init(document.getElementById('i-alarm'));
+        let max = 0;
+        this.alarmData.hourSections.forEach(item => {
+          max = item.count > max ? item.count : max;
+        });
+        max = max < 5 ? 5 : max;
         let lineOption = {
           xAxis: {
             type: 'category',
@@ -152,7 +157,8 @@
             data: this.alarmData.hourSections.map(item => item.name )
           },
           yAxis: {
-            type: 'value'
+            type: 'value',
+            max: max
           },
           tooltip: {
             trigger: 'axis',
@@ -163,11 +169,6 @@
               }
             }
           },
-          yAxis: [
-            {
-              type: 'value'
-            }
-          ],
           series: [{
             name: '门禁统计',
             data: this.alarmData.hourSections.map(item => item.count ),

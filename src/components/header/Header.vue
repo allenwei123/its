@@ -28,18 +28,22 @@
 
 <script>
 import { mapGetters } from "vuex";
+import aside from '@/mock/menuList';
+
   export default {
     name: 'Header',
     data() {
+     let arr2 =  aside.map(item => {
+          return {
+            src:item.src,
+            name: item.name,
+            show: this.$store.getters.pms[item.show]
+          }
+      });
       return {
         items: [
-          {name: '首页', src: '/home/nav/main',id: 0,show:this.$store.getters.pms['11a0'] },
-          {name: '物业管理', src: '/home/nav/side',id: 1 ,show:this.$store.getters.pms['11a1']},
-          {name: '物业服务', src: '/home/nav/propertyService',id: 2 ,show:this.$store.getters.pms['11a2']},
-          {name: '社区物联', src: '/home/nav/communityIoT',id: 3 ,show:this.$store.getters.pms['11a3']},
-          {name: '商圈管理', src: '/home/nav/businessManage',id: 4 ,show:this.$store.getters.pms['11a4']},
-//          {name: '系统管理', src: '/'},
-          {name: '数据统计', src: '/home/nav/summary',id: 5 ,show:this.$store.getters.pms['11a5']},
+//          {name: '首页', src: '/home/nav/main',id: 0,show:this.$store.getters.pms['11a0'] },
+          ...arr2
         ],
         currentUser:'',
         pms: this.$store.getters.pms,//菜单权限

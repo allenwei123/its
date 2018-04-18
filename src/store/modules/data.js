@@ -49,7 +49,7 @@ export default {
     actions: {
       changeAsideData({commit,state}, value) {
         if(value > 0){
-            commit('CHANGE_ASIDEDATA',aside[value - 1].group);
+            commit('CHANGE_ASIDEDATA',aside[value].group);
         }
       },
       addCommunityId({ commit }, value) {

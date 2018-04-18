@@ -1,8 +1,15 @@
 const arr = [
   {
+    id: '0',
+    name: '首页',
+    show: '11a0',
+    src: '/home/nav/main'
+  },
+  {
     id:'1',
     name:'物业管理',
-    show: 1,
+    show: '11b0',
+    src: '/home/nav/side',
     group:[
       {
         id:'1-1',
@@ -139,7 +146,8 @@ const arr = [
   {
     id:'2',
     name:'物业服务',
-    show: 1,
+    show: '11b1',
+    src: '/home/nav/propertyService',
     group:[
       {
         id:'2-1',
@@ -223,7 +231,8 @@ const arr = [
   {
     id:'3',
     name:'社区物联',
-    show: 1,
+    show: '11b2',
+    src: '/home/nav/communityIoT',
     group:[
       {
         id:'3-1',
@@ -313,7 +322,8 @@ const arr = [
   {
     id:'4',
     name:'商圈管理',
-    show: 1,
+    show: '11b3',
+    src: '/home/nav/businessManage',
     group: [
       {
         id:'4-1',
@@ -352,7 +362,8 @@ const arr = [
   {
     id:'5',
     name:'数据统计',
-    show: 1 ,
+    show: '11b4' ,
+    src: '/home/nav/summary',
     group: [
       {
         id:'5-1',
