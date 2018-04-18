@@ -28,7 +28,8 @@ export default {
           buildLists:[],
           userToPropertyId: '',
           checkList:[]
-      }
+      },
+      communityId: this.$store.getters.communityId
     };
   },
   props: ["msg","add","power"],
@@ -49,13 +50,11 @@ export default {
       });
     },
     getInit(){
-        let communityId = this.$store.getters.communityId;
-
-        this.$xttp.get('community/building/list',{communityId:communityId}).then(res => {
-          if(res.success){
-            this.form.buildLists = res.data;
-          }
-        })
+      this.$xttp.get('community/building/list',{params:{communityId:this.communityId}}).then(res => {
+        if(res.success){
+          this.form.buildLists = res.data;
+        }
+      })
     },
     save() {
       let communityId = this.$store.getters.communityId;

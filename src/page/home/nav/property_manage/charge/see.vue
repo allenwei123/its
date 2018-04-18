@@ -65,7 +65,6 @@ export default {
   methods:{
       //过虐input
       textChange(){
-          console.log(888)
       },
       handleClose() {
         this.$emit("upsee", false );

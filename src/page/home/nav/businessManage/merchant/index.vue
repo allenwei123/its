@@ -46,16 +46,16 @@
       <el-table-column label="商家类型" min-width="60" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">{{ scope.row.typeName }}</template>
       </el-table-column>
-      <el-table-column label="地区" min-width="60" align="center" :show-overflow-tooltip="true">
+      <el-table-column label="地区" min-width="120" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">{{ scope.row.province + scope.row.city + scope.row.district}}</template>
       </el-table-column>
-      <el-table-column label="详细地址" min-width="60" align="center" :show-overflow-tooltip="true">
+      <el-table-column label="详细地址" min-width="200" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">{{ scope.row.address }}</template>
       </el-table-column>
       <!--<el-table-column label="关联社区" min-width="70" align="center" :show-overflow-tooltip="true">-->
       <!--<template slot-scope="scope">{{ scope.row.}}</template>-->
       <!--</el-table-column>-->
-      <el-table-column label="优惠券" min-width="70" align="center" :show-overflow-tooltip="true">
+      <el-table-column label="优惠券" min-width="50" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">{{ scope.row.couponNum }}</template>
       </el-table-column>
       <el-table-column align="center" fixed="right" label="操作" width="350">

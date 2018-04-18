@@ -45,9 +45,9 @@
         </el-table-column>
         <el-table-column align="left" fixed="right" label="操作" width="220">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)"v-if="pms['1103']" type="primary" size="small">查看</el-button>
-            <el-button @click="editHandle(scope.row)" v-if="pms['1102']" type="warning" size="small">编辑</el-button>
-            <el-button @click="delHandle(scope.row)" v-if="pms['1105']" type="danger" size="small">删除</el-button>
+            <el-button @click="handleClick(scope.row)" v-if="pms['1103']" type="primary" size="small">查看</el-button>
+            <el-button @click="editHandle(scope.row)" v-if="pms['1102'] && scope.row.open == false" type="warning" size="small">编辑</el-button>
+            <el-button @click="delHandle(scope.row)" v-if="pms['1105']&& scope.row.open == false" type="danger" size="small">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

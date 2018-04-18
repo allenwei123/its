@@ -27,7 +27,7 @@
         </el-table-column>
         <el-table-column v-if="show" align="center" prop="id" label=""></el-table-column>
         <el-table-column v-if="show" align="center" prop="userId" label=""></el-table-column>
-        <el-table-column align="center" prop="carNo" label="车牌号" width="300"></el-table-column>
+        <el-table-column align="center" prop="carNo" label="车牌号" min-width="240"></el-table-column>
         <el-table-column label="车库信息" width="450" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.parkingName}}</template>
         </el-table-column>
@@ -35,7 +35,7 @@
           <template slot-scope="scope"><a href="">{{ scope.row.userName}}</a></template>
         </el-table-column>
         <el-table-column align="center" prop="auditStatus" label="审核状态" :formatter="auditStatusFilter" width="120"></el-table-column>
-        <el-table-column align="left" fixed="right" label="操作" width="240">
+        <el-table-column align="left" fixed="right" label="操作" min-width="200">
           <template slot-scope="scope">
             <!-- <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button> -->
             <el-button v-if="scope.row.auditStatus == 1 || scope.row.auditStatus == -1 && pms['1145']" @click="handleUnbundl(scope.row)" type="danger" size="small">注销</el-button>

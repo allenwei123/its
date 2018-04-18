@@ -110,7 +110,6 @@ import time from '@/utils/time.js';
         projectData: null
       }
     },
-    computed: mapGetters(["pms"]),
     components: {
       SeePage,
       AddPage,
@@ -193,21 +192,25 @@ import time from '@/utils/time.js';
       editHandle(row){
         let Id = row.id;
         let url = `/fees/item/edit/${Id}`;
-        this.$prompt('请输入收费项目名称', '修改收费项目', {
+        this.$prompt('请输入收费项目名称', '编辑收费项目', {
           confirmButtonText: '确定',
           cancelButtonText: '取消'
           }).then(({ value }) => {
               let itemName = value;
               this.$xttp.post(url,{itemName:itemName}).then(res => {
                   if(res.success){
-                      this.getTableList();
-                  }
+                    this.$message({
+                    type: 'success',
+                    message: '编辑收费项目成功'
+                  })
+                  this.getTableList();
+                }
               })
         }).catch(() => {
-            this.$message({
-                type: 'info',
-                message: '修改收费项目失败'
-            })
+            // this.$message({
+            //     type: 'info',
+            //     message: '修改收费项目失败'
+            // })
         });
       },
     },

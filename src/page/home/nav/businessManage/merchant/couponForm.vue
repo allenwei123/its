@@ -111,7 +111,6 @@
     props: ['msg','shopId','edata'],
     created() {
       if(this.edata) {
-        console.log(this.edata);
         this.data = this.edata;
         this.time = [this.data.validityBeginAt,this.data.validityEndAt];
         getUri(this.data.icon,uri => {

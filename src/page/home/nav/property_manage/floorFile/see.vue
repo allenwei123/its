@@ -1,13 +1,13 @@
 <template>
     <el-dialog title="楼栋详情" :visible.sync="msg" :before-close="handleClose">
         <ul>
-            <li class="c-list"><span class="c-label">楼栋名称:</span> <span class="c-content"> {{ data.name }} </span></li>
-            <li class="c-list"><span class="c-label">楼栋编号:</span> <span class="c-content"> {{ data.code }} </span></li>
-            <li class="c-list"><span class="c-label">楼面层数:</span> <span class="c-content"> {{ data.overGround }} </span></li>
-            <li class="c-list"><span class="c-label">地下层数:</span> <span class="c-content"> {{ 0 - data.underGround }} </span></li>
-            <li class="c-list"><span class="c-label">总层数:</span> <span class="c-content"> {{ data.overGround - data.underGround }} </span></li>
-            <li class="c-list"><span class="c-label">房间数量:</span> <span class="c-content"> {{ data.roomNum }} </span></li>
-            <li class="c-list"><span class="c-label">已录入房间数:</span> <span class="c-content"> {{ data.inputRoomNum }} </span></li>
+            <li class="c-list"><span class="c-label">楼栋名称：</span> <span class="c-content"> {{ data.name }} </span></li>
+            <li class="c-list"><span class="c-label">楼栋编号：</span> <span class="c-content"> {{ data.code }} </span></li>
+            <li class="c-list"><span class="c-label">楼面层数：</span> <span class="c-content"> {{ data.overGround }} </span></li>
+            <li class="c-list"><span class="c-label">地下层数：</span> <span class="c-content"> {{ 0 - data.underGround }} </span></li>
+            <li class="c-list"><span class="c-label">总层数：</span> <span class="c-content"> {{ data.overGround - data.underGround }} </span></li>
+            <li class="c-list"><span class="c-label">房间数量：</span> <span class="c-content"> {{ data.roomNum }} </span></li>
+            <li class="c-list"><span class="c-label">已录入房间数：</span> <span class="c-content"> {{ data.inputRoomNum }} </span></li>
             <!-- <li class="c-list"><span class="c-label">创建时间:</span> <span class="c-content"> {{ data.createAt | time }} </span></li> -->
         </ul>
     </el-dialog>

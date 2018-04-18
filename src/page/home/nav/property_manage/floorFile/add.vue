@@ -4,16 +4,16 @@
             <el-form-item label="楼栋名称：" :label-width="formLabelWidth" prop="name" class="c-must">
             <el-input v-model="form.name"></el-input>
             </el-form-item>
-            <el-form-item label="楼面层数" :label-width="formLabelWidth" prop="code" class="c-must">
-            <el-input type="number" v-model="form.overGround" placeholder="从一层开始算"></el-input>
+            <el-form-item label="楼面层数：" :label-width="formLabelWidth" prop="code" class="c-must">
+            <el-input type="number" v-model="form.overGround" min="1" placeholder="从一层开始算"></el-input>
             </el-form-item>
 
-            <el-form-item label="地下层数" :label-width="formLabelWidth" prop="code" class="c-must">
-              <el-input type="number" v-model="form.underGround" placeholder="从负一层开始算" ></el-input>
+            <el-form-item label="地下层数：" :label-width="formLabelWidth" prop="code" class="c-must">
+              <el-input type="number" v-model="form.underGround" max="0" placeholder="从负一层开始算" ></el-input>
             </el-form-item>
 
-          <el-form-item label="房间数量" :label-width="formLabelWidth" prop="code" class="c-must">
-            <el-input type="number" v-model="form.roomNum" ></el-input>
+          <el-form-item label="房间数量：" :label-width="formLabelWidth" prop="code" class="c-must">
+            <el-input type="number" v-model="form.roomNum" min="1" ></el-input>
           </el-form-item>
 
             <el-form-item :label-width="formLabelWidth">

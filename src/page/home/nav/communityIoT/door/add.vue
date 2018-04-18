@@ -116,8 +116,6 @@ import time from "@/utils/time.js";
         },
         created() {
           this.getFloorList();
-            // console.log(this.data);
-            // this.makeAt = this.getTime(this.data.makeAt, 'yyyy-MM-dd HH:mm');
         },
         props: ['msg'],
     }

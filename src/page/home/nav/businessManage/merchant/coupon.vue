@@ -74,8 +74,9 @@
       <el-table-column align="center" fixed="right" label="操作" width="220">
         <template slot-scope="scope">
           <el-button @click="editHandle(scope.row)" type="warning" size="small" v-if="pms['11T9']">编辑</el-button>
-          <el-button @click="delHandle(scope.row)" type="danger" size="small" v-if="(scope.row.useStatus == -1) && pms['11TC']">删除</el-button>
-          <el-button @click="validHandle(scope.row)" type="success" size="small" v-if="pms['11TA']">{{ isIssue ? '发布' : '撤下' }}</el-button>
+          <el-button @click="delHandle(scope.row)" type="danger" size="small" v-if="(scope.row.validStatus == 0) && pms['11TC']">删除</el-button>
+          <!-- <el-button @click="validHandle(scope.row)" type="success" size="small" v-if="pms['11TA']">{{ scope.row.validStatus ? '发布' : '撤下' }}</el-button> -->
+          <el-button @click="validHandle(scope.row)" type="success" size="small" v-if="pms['11TA']">{{ !scope.row.validStatus ? '发布' : '撤下' }}</el-button>
         </template>
       </el-table-column>
 

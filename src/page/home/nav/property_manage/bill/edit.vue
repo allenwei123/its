@@ -95,7 +95,6 @@ import time from "@/utils/time.js";
             this.makeAt = this.getTime(this.data.makeAt, 'yyyy-MM-dd HH:mm');
             this.postData();
             this.roomArea();
-            console.log(22, this)
         },
         props: ['msg', 'data'],
     }

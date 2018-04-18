@@ -28,7 +28,6 @@ export default {
   },
   props: ["msg","data"],
   created(){
-      console.log(this.data.icon);
     if(this.data.icon) {
           getUri(this.data.icon,(uri)=> {
             this.uri = uri;

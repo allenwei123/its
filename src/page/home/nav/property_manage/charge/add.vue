@@ -62,13 +62,9 @@ export default {
   props: ["msg","add","projectData"],
   created() {
     if(this.add){//判断此时组件为 编辑
-      // this.cityArr = [this.add.province,this.add.city,this.add.district || '' ];
       this.form = this.add;
-      // this.form.cityArr = [this.add.province,this.add.city,this.add.district || '' ];
       this.titleFont = '编辑项目';
       this.form.unitPrice = this.projectData.unitPrice/10000;
-      console.log(this.projectData.unitPrice);
-      console.log(this.projectData.type);
       this.form.type = this.projectData.type;
       this.form.floorSer = this.projectData.floorSer;
       this.form.itemName = this.projectData.itemName;

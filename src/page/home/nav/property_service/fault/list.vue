@@ -323,7 +323,6 @@
         });
         this.confirmRejectData.faultStatus = -1;
         this.confirmRejectData['rejectReason'] = this.reason;
-        console.log('驳回', this.confirmRejectData);
         this.rejectAccept(this.confirmRejectData);
       },
       //驳回申报
