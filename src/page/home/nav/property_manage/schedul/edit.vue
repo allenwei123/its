@@ -88,7 +88,7 @@ export default {
   data() {
     return {
       formLabelWidth: "120px",
-      titleFont:'修改排班',
+      titleFont:'编辑排班',
       checked: false,
       disabledPost: true,
       disabled1: true,

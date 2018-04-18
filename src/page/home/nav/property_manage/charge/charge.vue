@@ -65,7 +65,7 @@
       </transition>
 
       <el-dialog title="温馨提示" :visible.sync="visible2">
-        <p>请问您确定要删除这条数据吗？</p>
+        <p>确定要删除此项目？</p>
         <div style="text-align: right; marigin: 0">
           <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
           <el-button type="primary" size="mini" @click="confirmDel">确定</el-button>

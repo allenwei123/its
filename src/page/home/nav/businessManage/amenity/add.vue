@@ -148,10 +148,6 @@ export default {
           this.showInfo('请填写服务热线');
           return;
         }else{
-          // if(!(/^(0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8})|(400|800)([0-9\\-]{7,10})|(([0-9]{4}|[0-9]{3})(-| )?)?([0-9]{7,8})((-| |转)*([0-9]{1,4}))?$/).test(this.form.contact)){
-          //   this,showInfo('服务热线填写错误，请重新填写');
-          //   return;
-          // }
           if(!fun.isTelOrPhoneAvailable(this.form.contact)){
             this.showInfo('服务热线填写错误，请重新填写');
             return;

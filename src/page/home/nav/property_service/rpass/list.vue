@@ -33,7 +33,7 @@
             <el-table-column label="申报人" min-width="120" align="center" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.userName}}</template>
             </el-table-column>
-            <el-table-column label="住房" min-width="150" align="center" :show-overflow-tooltip="true">
+            <el-table-column label="相关住房" min-width="150" align="center" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.building}}{{scope.row.room}}</template>
             </el-table-column>
             <el-table-column label="联系方式" min-width="150" align="center" :show-overflow-tooltip="true">
@@ -121,6 +121,7 @@ import { send as ossUpload, getUri } from "@/utils/oss";
         this.$xttp.post(url, params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {
+            console.log(res.data.records);
             this.tableData = res.data.records;
             this.total = res.data.total;
             // this.tableData.forEach(function(item) {

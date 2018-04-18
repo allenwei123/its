@@ -112,13 +112,16 @@
         let url = `sys/door-record/page?page=${pages}&size=${this.pageSize}`;
         let params = {};
         params['communityId'] = this.communityId;
+        // params['communityId'] = '5a82adf3b06c97e0cd6c0f3d';
         if(this.value6) {
           let a = new Date(this.value6[0]);
           let b = new Date(this.value6[1]);
           params['startDate'] = a.getFullYear() + '-' +(a.getMonth() < 10 ? '0': '')  + (a.getMonth() + 1) + '-' + (a.getDate() < 10 ? '0': '') + a.getDate();
           params['endDate'] = b.getFullYear() + '-' +(b.getMonth() < 10 ? '0': '')  + (b.getMonth() + 1) + '-' + (b.getDate() < 10 ? '0': '') + b.getDate();
         }
-        params['deviceId'] = this.$route.query.deviceId;
+        // params['deviceId'] = this.$route.query.deviceId;
+         params['doorId'] = this.$route.query.deviceId;
+        // params['doorId'] = '5a965d159ce9abb08ccf3e4a';
         if (this.q_input) {
           params['userName'] = this.q_input;
         }

@@ -113,6 +113,7 @@
           params['inOutDate'] = this.value1;
         }
         params['inOutTag'] = this.gateTypeName;
+        params['gateNO'] = this.$route.query.gateNO;
         this.$xttp.post(url, params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {

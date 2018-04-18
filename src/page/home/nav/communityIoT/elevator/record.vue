@@ -116,8 +116,8 @@ import { time as itmeFormatter } from "@/utils/time"
         let url = `sys/elevator-record/page?page=${pages}&size=${this.pageSize}`;
         let params = {};
         params['communityId'] = this.$store.getters.communityId;
-        // params['deviceId'] = this.$route.query.id; 
-
+        params['macAddress'] = this.$route.query.macAddress; 
+        console.log(params);
         if(this.value6) {
           let a = new Date(this.value6[0]);
           let b = new Date(this.value6[1]);

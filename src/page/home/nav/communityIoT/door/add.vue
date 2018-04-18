@@ -85,12 +85,13 @@ import time from "@/utils/time.js";
                 return time.timestampToFormat(timestamp, format);
             },
             getFloorList() {//获取社区对应的楼栋
-                this.$xttp.get('community/building/list',{params:{communityId:this.communityId}})
-                  .then(res => {
-                    if(!res.errorCode) {
-                      this.options3 = res.data;
-                    }
-                })
+            let communityId = this.$store.getters.communityId
+              this.$xttp.get('community/building/list',{params:{communityId:communityId}})
+                .then(res => {
+                  if(!res.errorCode) {
+                    this.options3 = res.data;
+                  }
+              })
             },
             postData() {
               let url = `communityIoT/door/add`;
@@ -112,9 +113,9 @@ import time from "@/utils/time.js";
                   console.log(err);
                 });
             }
-
         },
-        created() {
+        mounted() {
+          console.log("hahahha");
           this.getFloorList();
         },
         props: ['msg'],

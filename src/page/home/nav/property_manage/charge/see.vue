@@ -7,7 +7,7 @@
             <el-form-item label="项目名称：" :label-width="formLabelWidth" prop="itemName" class="c-must">
                 <el-row :gutter="20">
                     <el-col :span="12"><el-input v-model.trim="form.itemName"></el-input></el-col>
-                    <el-col :span="6"><el-button type="primary" plain @click="editProject">修改项目名称</el-button></el-col>
+                    <el-col :span="6"><el-button type="primary" plain @click="editProject">编辑项目名称</el-button></el-col>
                 </el-row>
               <!-- <el-input v-model="form.itemName"></el-input> -->
               <!-- <el-col :span="12"></el-col>
@@ -131,7 +131,7 @@ export default {
             return;
         }
         if(projectName == this.detail.itemName){
-            this.showInfo('项目名称没有修改','warning');
+            this.showInfo('项目名称没有改变','warning');
             return;
         }
         params['id'] = projectId;
@@ -142,7 +142,7 @@ export default {
             if(res.success){
                 this.form.itemName = res.data.itemName;
                 this.$emit('reload');
-                this.showInfo('修改项目名称成功','success');
+                this.showInfo('编辑项目名称成功','success');
             }
         }).catch(() => {
             this.loading = fasle;

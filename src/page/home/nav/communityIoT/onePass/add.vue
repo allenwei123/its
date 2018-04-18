@@ -1,25 +1,25 @@
 <template>
   <el-dialog title="新增卡片" :visible.sync="msg" :before-close="handleClose">
     <el-form :model="form" :rules="rules" ref="ruleForm"  label-width="120px">
-      <el-form-item label="卡号" prop="keyNo" required>
+      <el-form-item label="卡号" prop="keyNo">
         <el-input v-model="form.keyNo" auto-complete="off" placeholder="请输入12位卡号"></el-input>
       </el-form-item>
 
-      <el-form-item label="卡类型" label-width="120px" prop="value1" required>
-        <el-select v-model="form.value1"  clearable>
+      <el-form-item label="卡类型" label-width="120px" prop="keyType">
+        <el-select v-model="form.keyType"  clearable>
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
 
-      <el-form-item label="角色" label-width="120px"  prop="value2" required>
-        <el-select v-model="form.value2"  clearable @change="role">
+      <el-form-item label="角色" label-width="120px"  prop="postCode">
+        <el-select v-model="form.postCode"  clearable @change="role">
           <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
 
-      <el-form-item label="所属员工" label-width="120px" prop="value3" required>
-        <el-select v-model="form.value3"  clearable>
-          <el-option v-for="item in options3" :key="item.userId" :label="item.userName" :value="item.userId"></el-option>
+      <el-form-item label="员工" label-width="120px" prop="userToPropertyId">
+        <el-select v-model="form.userToPropertyId"  clearable>
+          <el-option v-for="item in options3" :key="item.id" :label="item.userName" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
      
@@ -37,10 +37,11 @@ import time from "@/utils/time.js";
         data() {
           return {
             form: {
-              value1: '',
-              value2: '',
-              value3: '',
-              keyNo: ''
+              keyType: '',
+              postCode: '',
+              userToPropertyId: '',
+              keyNo: '',
+              communityId: this.$store.getters.communityId
             },
             value: '',
             makeAt: '',
@@ -70,12 +71,13 @@ import time from "@/utils/time.js";
               label: '客服人员'
             }],
             //员工
-            options3: '',
+            // options3: '',
+            options3: [],
             rules: {
               keyNo: [{required: true, message: '请输入卡号', trigger: 'blur'}],
-              value1: [{ required: true, message: '请选择卡类型', trigger: 'blur' }],
-              value2: [{ required: true, message: '请输入角色', trigger: 'blur' }],
-              value3: [{ required: true, message: '请选择员工', trigger: 'blur' }],
+              keyType: [{ required: true, message: '请选择卡类型', trigger: 'blur' }],
+              postCode: [{ required: true, message: '请输入角色', trigger: 'blur' }],
+              userToPropertyId: [{ required: true, message: '请选择员工', trigger: 'blur' }],
             },
             userToRoomId: '',    
           }
@@ -84,14 +86,14 @@ import time from "@/utils/time.js";
           submitForm(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                  this.postData();
+                  this.postData1();
                 } else {
                   return false;
                 }
             });
           },
           role() {
-            let url = `user/property/${this.$store.getters.communityId}/user-list?postCode=${this.form.value2}`;
+            let url = `user/property/${this.$store.getters.communityId}/user-list?postCode=${this.form.postCode}`;
             this.$xttp.get(url).then(res => {
               if(res.errorCode === 0) {
                 this.loading = false;
@@ -108,10 +110,48 @@ import time from "@/utils/time.js";
               if (timestamp == null) return "/";
               return time.timestampToFormat(timestamp, format);
           },
+          postData1(){
+            let url = `user/card/add`;
+            let obj = {};
+            obj['keyType'] = this.form.keyType;
+            obj['usersTime'] = 0;
+            obj['keyNo'] = this.form.keyNo;
+            obj['userToPropertyId'] = this.form.userToPropertyId;
+            obj['communityId'] = this.form.communityId;
+            obj['processTime'] = '1576800000';
+            console.log(obj);
+            if(obj.keyNo.length !== 12){
+              this.$message({
+                message: "请输入12位卡号",
+                type: "warning"
+              });
+              return;
+            }
+
+            this.$xttp.post(url,obj).then(res => {
+              if(res.success){
+              this.loading = false;
+              this.$message({
+                  message: "新增卡片成功",
+                  type: "success"
+                });
+                this.handleClose();
+                this.$emit('addSuccess');
+              }else {
+                this.$message({message:res.data.errorMsg,type:'error'});
+              }
+            }).catch(() => {
+              this.loading = false;
+            })
+          },
           postData() {
             let url = `room/query-by-user`;
-            let obj = {communityId:this.$store.getters.communityId,userId:'5aa733d4e4b0274d66f17e9c'};
-            // let url = `user/property/${this.$store.getters.communityId}/user-list?postCode=${this.form.value2}`;
+            // let obj = {communityId:this.$store.getters.communityId,userId:'5aa733d4e4b0274d66f17e9c'};
+            let obj = {communityId:this.$store.getters.communityId,userId:this.form.userToPropertyId};
+            console.log(this.form.userToPropertyId);
+            console.log(this.form);
+            return;
+            // let url = `user/property/${this.$store.getters.communityId}/user-list?postCode=${this.form.postCode}`;
             this.$xttp.post(url, obj).then(res => {
               if(res.errorCode === 0) {
                 this.loading = false;
@@ -120,7 +160,7 @@ import time from "@/utils/time.js";
                 //获取id后再去申请卡片 卡片控制12位
                 let url = `user/card/add`;
                 let obj = {
-                  "keyType": this.form.value1,
+                  "keyType": this.form.keyType,
                   // 和谐警苑
                   "rooms": ["5a82b08ab06c97e0cd6c1182"],
                   "processTime": 214748368,

@@ -29,18 +29,15 @@ export function send(file, success) {
         http.get("/oss/bit-smcm-img/policy")
             .then(res => {
                 if (!res.errorCode) {
-                  console.log(res.data);
                   let host = res.data.host;
                   host = host.replace('http:','https:');
                   res.data.host = host;
-                  console.log(res.data);
                     window.localStorage.setItem('uploadInfo', JSON.stringify(res.data));
                     send(file, success);
                 }
             })
     } else {
         let data = createData(info, file);
-        // return data;
         return http.post(info.host, data.req).then(res => {
             if (res.status === 200) {
                 if (success) {

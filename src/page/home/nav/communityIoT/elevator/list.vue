@@ -178,7 +178,7 @@
         this.$router.push({
           path: 'elevatorRecord',
           query: {
-            id: item.id
+            macAddress: item.macAddress
           }
         })
       }

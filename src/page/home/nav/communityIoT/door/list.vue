@@ -183,7 +183,8 @@ import AddPage from "./add";
         this.$router.push({
           path: '/home/nav/communityIoT/doorRecord',
           query: {
-            deviceId: item.deviceId || '' // deviceId = item.id
+            // deviceId: item.deviceId || '' // deviceId = item.id
+            deviceId: item.id
           }
         });
       }
