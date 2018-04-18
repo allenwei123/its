@@ -25,7 +25,7 @@
           <!--</el-select>-->
           <!--</el-form-item>-->
           <el-form-item>
-            <el-input placeholder="服务名称" v-model="formInline.name"></el-input>
+            <el-input placeholder="商家名称" v-model="formInline.name"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
@@ -47,7 +47,7 @@
         <template slot-scope="scope">{{ scope.row.typeName }}</template>
       </el-table-column>
       <el-table-column label="地区" min-width="60" align="center" :show-overflow-tooltip="true">
-        <template slot-scope="scope">{{ scope.row.province + scope.row.city + scope.row.district }}</template>
+        <template slot-scope="scope">{{ scope.row.province + scope.row.city + scope.row.district}}</template>
       </el-table-column>
       <el-table-column label="详细地址" min-width="60" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">{{ scope.row.address }}</template>
@@ -104,7 +104,7 @@
           // {id: 0, name: "首页", router: '/home'},
           {id: 1, name: "商圈管理", router: '/home/nav/businessManage/merchant'},
           {id: 2, name: "周边商圈", router: '/home/nav/businessManage/merchant'},
-          {id: 3, name: "商家管理", router: '/home/nav/businessManage/merchant'}
+          {id: 3, name: "商户管理", router: '/home/nav/businessManage/merchant'}
         ],
         formInline: {
           name: "",
@@ -194,7 +194,6 @@
       },
       sendAjax(page) {
         let nPage = page || this.$route.query.page || 1;
-//        ,communityId:this.$store.getters.communityId
         let obj = {page: nPage};
         obj['province'] = this.formInline.address[0];
         obj['city'] = this.formInline.address[1];
@@ -209,6 +208,11 @@
           .then(res => {
             if (!res.errorCode) {
               this.tableData = res.data.records;
+              this.tableData.forEach(item => {
+                if(item.district == null){
+                  item.district = '';
+                }
+              });
               this.currentPage = res.data.currentPage;
               this.total = res.data.total;
               this.$router.push({path: this.$route.path, query: {page: nPage}})

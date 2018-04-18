@@ -1,8 +1,8 @@
 <template>
   <el-dialog :title="titleFont" :visible.sync="msg" :before-close="handleClose" class="c-maxbody">
-    <el-form :model="data" label-width="120px" ref="ruleForm" :rules="rules" class="c-myForm">
-
-      <el-form-item prop="name" label="店名：">
+    <!-- <el-form :model="data" label-width="120px" ref="ruleForm" :rules="rules" class="c-myForm"> -->
+    <el-form :model="data" label-width="120px" ref="ruleForm" class="c-myForm">
+      <el-form-item prop="name" label="店名：" class="c-must">
         <el-input auto-complete="false" v-model="data.name" size="small"></el-input>
       </el-form-item>
 
@@ -29,7 +29,7 @@
         ><i class="el-icon-plus avatar-uploader-icon"></i></el-upload>
       </el-form-item>
 
-      <el-form-item label="商家类型：" prop="type">
+      <el-form-item label="商家类型：" prop="type" class="c-must">
         <el-select v-model="data.type" placeholder="请选择" clearable size="small" @change="selectType">
           <el-option
             v-for="s in typeList"
@@ -70,7 +70,7 @@
       </el-form-item>
 
       <el-form-item label="联系号码：" prop="telPhone">
-        <el-input type="number" v-model="data.telPhone" min="1" size="small"></el-input>
+        <el-input type="tel" v-model="data.telPhone" size="small"></el-input>
       </el-form-item>
 
       <el-form-item label="所在地区：" prop="ThreeAddress">
@@ -116,6 +116,7 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
+      <!-- <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button> -->
       <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
     </div>
   </el-dialog>
@@ -126,6 +127,7 @@
   import {Map as map} from '@/utils/map'
   import {send, getUri} from '@/utils/oss'
   import tagList from '@/mock/tag'
+  import fun from "@/utils/fun.js"
 
   export default {
     name: "merchantForm",
@@ -169,12 +171,14 @@
           type: [{required: true, message: '请选择商家类型', trigger: 'blur'}],
           tag: [{validator: checkTag, trigger: 'change'}],
           ThreeAddress: [{type: 'array', required: true, message: '请输入所在地区', trigger: 'change'}],
-          telPhone: [{required: true, message: '请选择联系号码', trigger: 'blur'}, {
-            min: 11,
-            max: 11,
-            message: "必须11个字符",
-            trigger: 'blur'
-          }],
+          telPhone: [
+            {required: true, message: '请输入号码',pattern: /^[1][3,4,5,7,8][0-9]{9}$/, trigger: 'blur'},
+            // { pattern: /^[1][3,4,5,7,8][0-9]{9}$/, message: '请填写正确号码', trigger: 'blur change'}
+          ],
+          telPhone: [{ required: true, message: '请输入手机号', trigger: 'blur' },
+                    //  { pattern: /^1[34578]\d{9}$/, message: '请输入正确号码', trigger: 'blur' }
+                      { pattern: /^((\d3)|(\d{3}\-))?13[0-9]\d{8}|15[89]\d{8}|17[0-9]\d{8}|18[0-9]\d$/, message: '请输入正确号码', trigger: 'blur chage' } 
+                    ],
           address: [{required: true, message: '请输入你的详细地址', trigger: 'blur'}],
         },
       }
@@ -213,28 +217,55 @@
       handleClose() {
         this.$emit("upList", 1);
       },
-      submitForm() {
+      showInfo(text) {
+        this.$message({
+          message: text,
+          type: "warning"
+        });
+      },
+      submitForm(formName) {
         let that = this;
-        let arr = [...this.uploadFile,...this.uploadFile_pic];
-        let length = arr.length;
-        if (length) {
-          let flag = 0;
-          arr.forEach((item) => {
-            send(item, (key) => {
-              flag++;
-              if(flag == 1 && this.uploadFile.length){
-                  that.data.logo = key;
-              }else {
-                  this.data.picture.push(key);
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            if(that.data.name == undefined){
+              that.showInfo('请输入店名');
+              return;
+            }
+            if(that.data.type == undefined){
+              that.showInfo('请选择商家类型');
+              return;
+            }
+            if(that.data.telPhone != undefined){
+              let telReg = /^((0\d{2,3}-\d{7,8})|[1][3,4,5,7,8][0-9]{9})$/;
+              if(!telReg.test(that.data.telPhone)){
+                that.showInfo('请输入正确号码');
+                return;
               }
-              if(flag == length) {
-                that.sendAjax();
-              }
-            });
-          });
-        } else {
-          that.sendAjax();
-        }
+            }
+            let arr = [...this.uploadFile,...this.uploadFile_pic];
+            let length = arr.length;
+            if (length) {
+              let flag = 0;
+              arr.forEach((item) => {
+                send(item, (key) => {
+                  flag++;
+                  if(flag == 1 && this.uploadFile.length){
+                      that.data.logo = key;
+                  }else {
+                      this.data.picture.push(key);
+                  }
+                  if(flag == length) {
+                    that.save();
+                  }
+                });
+              });
+            } else {
+              that.save();
+            }
+          }else{
+            return false;
+          }
+        })
       },
       getTag() {
         this.$xttp.get('/biz/shop/type/list')
@@ -255,7 +286,7 @@
             }
           })
       },
-      sendAjax(){
+      save(){
         if (!this.data.name || !this.data.type  || !this.data.telPhone || !this.data.address )return;
         let msg = this.edata ? '编辑' : '添加';
         let postUrl = this.edata ? '/biz/shop/edit' : '/biz/shop/add';
@@ -263,7 +294,7 @@
           .then(res => {
             if (!res.errorCode) {
               this.$message({
-                message: msg + "商家成功",
+                message: msg + "商户成功",
                 type: "success"
               });
               this.$emit("upList", 2);

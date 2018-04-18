@@ -2,11 +2,11 @@
       <el-dialog :title="titleFont" :visible.sync="msg" :before-close="handleClose">
         <el-form :model="form" :rules="rules" ref="ruleForm" class="demo-form-inline">
 
-            <el-form-item label="房间编号" :label-width="formLabelWidth" prop="name" class="c-must">
+            <el-form-item label="房间名称：" :label-width="formLabelWidth" prop="name" class="c-must">
             <el-input v-model="form.name"></el-input>
             </el-form-item>
 
-            <el-form-item label="所属楼栋" prop="buildingId" :label-width="formLabelWidth" class="c-must">
+            <el-form-item label="所属楼栋：" prop="buildingId" :label-width="formLabelWidth" class="c-must">
               <el-select v-model="form.buildingId" clearable>
                 <el-option
                   v-for="item in floorOptions"
@@ -17,10 +17,10 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item label="所在楼层" prop="floorCode" :label-width="formLabelWidth" class="c-must">
+            <el-form-item label="所在楼层：" prop="floorCode" :label-width="formLabelWidth" class="c-must">
               <el-input-number v-model="form.floorCode" :min="-5" :max="100" label="选择所在楼层"></el-input-number>
             </el-form-item>
-          <el-form-item label="住房面积" prop="area" :label-width="formLabelWidth">
+          <el-form-item label="住房面积：" prop="area" :label-width="formLabelWidth">
             <el-input type="number" v-model="form.area"></el-input>
           </el-form-item>
 
@@ -51,7 +51,7 @@ export default {
         area:''
       },
       rules: {
-        name: [{ required: true, message: "请输入房间编号", trigger: "blur" }],
+        name: [{ required: true, message: "请输入房间名称", trigger: "blur" }],
         buildingId: [{ required: true, message: "请输入楼栋名称", trigger: "blur" }],
         floorCode: [{ required: true, message: "请输入楼层", trigger: "blur" }],
         area:[{ required: true, message: "请输入面积", trigger: "blur" }]
@@ -64,11 +64,15 @@ export default {
   created() {
     this.selectCommunity();
     if(this.add){//判断此时组件为 编辑
+      // let addData = JSON.parese(JSON.stringify(this.add));
+      // console.log(this.addData);
       this.form = this.add;
-      console.log(this.add);
+      // this.form = this.addData;
+      // console.log(this.add);
       this.titleFont = '编辑房间档案';
       this.form.communityIdShow = this.$store.getters.communityName
       this.form.area = (this.add.area/100).toFixed(2);
+      // this.form.area = (this.addData.area/100).toFixed(2);
     }
   },
   mounted() {},

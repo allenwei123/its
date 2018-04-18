@@ -2,7 +2,7 @@
   <el-dialog :title="titleFont" :visible.sync="msg" :before-close="handleClose" class="c-uploadDialog">
     <el-form :model="data" label-width="120px" ref="ruleForm" :rules="rules" class="c-myForm">
 
-      <el-form-item prop="picture" label="商品图片" >
+      <el-form-item prop="picture" label="商品图片：" >
         <el-upload
           class="avatar-uploader"
           action=""
@@ -13,7 +13,7 @@
         ><i class="el-icon-plus avatar-uploader-icon"></i></el-upload>
       </el-form-item>
 
-      <el-form-item label="商品名称" prop="name">
+      <el-form-item label="商品名称：" prop="name" class="c-must">
         <el-input v-model="data.name" size="small"></el-input>
       </el-form-item>
 

@@ -22,7 +22,7 @@
           <!--</el-form-item>-->
 
           <el-form-item>
-            <el-input v-model="formInline.name" placeholder="优惠品名称"></el-input>
+            <el-input v-model="formInline.name" placeholder="商品名称"></el-input>
           </el-form-item>
 
           <el-form-item>
@@ -206,7 +206,6 @@
   }
   .c-navDetail {
     margin-bottom: 10px;
-    border-bottom: 1px solid gray;
     li {
           float: left;
           margin-right: 10px;

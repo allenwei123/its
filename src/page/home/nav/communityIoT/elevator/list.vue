@@ -36,8 +36,11 @@
             <el-table-column label="梯号" min-width="100" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{scope.row.name}}</template>
             </el-table-column>
+            <el-table-column label="社区名称" min-width="120" :show-overflow-tooltip="true" align="center">
+              <template slot-scope="scope">{{scope.row.communityName}}</template>
+            </el-table-column>
             <el-table-column label="所属楼栋" min-width="120" :show-overflow-tooltip="true" align="center">
-              <template slot-scope="scope">{{scope.row.buildName}}</template>
+              <template slot-scope="scope">{{scope.row.buildingName}}</template>
             </el-table-column>
             <el-table-column label="品牌" min-width="220" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{scope.row.brandName}}</template>
@@ -128,7 +131,7 @@
         let url = `/communityIoT/elevator/list?page=${this.currentPage}&size=${this.pageSize}`;
         let params = {};
         // 临时 id
-        params['communityId'] = this.communityId;
+        params['communityId'] = this.$store.getters.communityId;
         if(this.value1) {
           params['brandId'] = this.value1;//品牌查询
         }
@@ -136,7 +139,7 @@
           params['elevatorId'] = this.value2;//电梯编号
         }
         if(this.value3) {
-          params['buildingId'] = [this.value3];//楼栋查询
+          params['buildingIds'] = [this.value3];//楼栋查询
         }
         if(this.input) {
           params['name'] = this.input;//梯号
@@ -180,9 +183,9 @@
       }
     },
     created() {
-      this.query();
       this.getBrandList();
       this.getFloorList();
+      this.query();
     }
   }
 </script>

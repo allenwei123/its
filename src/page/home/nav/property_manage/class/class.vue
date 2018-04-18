@@ -173,8 +173,10 @@ import time from '@/utils/time.js';
       change(msg) {
         if (msg == 1) {
           this.isShow = false;
+          this.query();
         } else if(msg == 2 || msg == 3) {
           this.isShow = false;
+          this.query();
         }
       },
       delHandle(row){

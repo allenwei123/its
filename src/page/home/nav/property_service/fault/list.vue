@@ -96,7 +96,7 @@
         <AssignPage v-if="showAssign" :msg="showAssign" @upsee="assignChange" :data="assignData" @assignSuccess="assign(assignData)"></AssignPage>
       </transition> -->
       <el-dialog title="温馨提示" :visible.sync="visible2">
-          <p>请问您确定提交吗？</p>
+          <p>确定受理故障？</p>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
             <el-button type="primary" size="mini" @click="confirm">确定</el-button>
@@ -235,7 +235,7 @@
       },
       getfaultItem(status) {
         let items = {
-          '1': '水电煤气',
+          '1': '水电燃气',
           '2': '房屋结构',
           '3': '消防安防',
           '10': '电梯',
@@ -276,7 +276,7 @@
       },
       assignStaff (assignData){
         if(!this.value){
-         this.visible1 = false;
+        //  this.visible1 = false;
          this.$message({
             message: '请选择维修人员',
             type: 'warning'
@@ -298,7 +298,7 @@
             console.log('res', res);
             this.loading = false;
              this.$message({
-              message: '分派成功',
+              message: '指派人员成功',
               type: 'success'
             });
           }

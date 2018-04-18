@@ -10,7 +10,7 @@
             </el-form-item>
 
             <el-form-item prop="maxPrice" label="优惠金额">
-              <el-input auto-complete="false" type="number" min="1" v-model="data.maxPrice" size="small"></el-input>
+              <el-input auto-complete="false" type="text" v-model="data.maxPrice" size="small"></el-input>
             </el-form-item>
           </el-row>
         </el-col>
@@ -29,10 +29,10 @@
       </el-row>
 
       <el-form-item label="发行数量" prop="amount" >
-        <el-input type="number" min="1" v-model="data.amount" size="small"></el-input>
+        <el-input type="text" v-model="data.amount" size="small"></el-input>
       </el-form-item >
 
-      <el-form-item label="有效期限" prop="validityBeginAt" >
+      <el-form-item label="有效期限" prop="validityBeginAt" class="c-must" >
         <el-date-picker
           v-model="time"
           type="daterange"
@@ -53,7 +53,7 @@
         <el-input  v-model="data.prompt" size="small"></el-input>
       </el-form-item>
 
-      <el-form-item label="校验密令" prop="validCode">
+      <el-form-item label="校验密令" prop="validCode" class="c-must">
         <el-input  v-model="data.validCode" size="small" :disabled="editDisabled"></el-input>
       </el-form-item>
 
@@ -97,10 +97,13 @@
         typeList:[],//推送社区
         editDisabled: false,
         rules: {
-          name: [{required: true, message: '请输入优惠券名称', trigger: 'blur'}],
-          maxPrice: [{ required: true, message: '请输入优惠券金额', trigger: 'blur' }],
-          amount: [{ required: true, message: '请输入优惠券数量', trigger: 'change' }],
-          time: [{type: 'array', required: true, message: '请选择时间', trigger: 'change'}],
+          name: [{required: true, message: '请输入优惠券名称', trigger: 'blur change'}],
+          maxPrice: [{ required: true, message: '请输入优惠券金额', trigger: 'blur change' }],
+          amount: [{ required: true, message: '请输入优惠券数量', trigger: 'blur change' }],
+          time: [{type: 'array', required: true, message: '请选择时间', trigger: 'blur change'}],
+          validCode: [{required: true, message: '请输入校验密令', trigger: 'blur change'},
+                      {pattern: '^[A-Za-z0-9]+$', message: '请输入6-8位数字或字母', trigger: 'blur change'}
+          ]
         },
         time: []
       }
@@ -108,6 +111,7 @@
     props: ['msg','shopId','edata'],
     created() {
       if(this.edata) {
+        console.log(this.edata);
         this.data = this.edata;
         this.time = [this.data.validityBeginAt,this.data.validityEndAt];
         getUri(this.data.icon,uri => {
@@ -115,25 +119,63 @@
             this.fileList.push(o);
         });
         this.editDisabled = true;
+        // this.fileList = [];
       }
     },
     methods: {
       handleClose() {
         this.$emit("upList", 1 );
+        this.fileList = [];
+        this.uploadFile = [];
       },
-      submitForm() {
-          let that = this;
-        if(this.uploadFile.length){
-          send(this.uploadFile[0],(key)=> {
-            that.data.icon = key;
-            that.sendAjax();
-          })
-        }else {
-            this.sendAjax();
-        }
+      showInfo(text) {
+        this.$message({
+          message: text,
+          type: "warning"
+        });
       },
-      sendAjax() {
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            if(this.data.shopId == ''){
+              this.showInfo('请输入用户名称');
+              return;
+            }
+            if(this.data.maxPrice == ''){
+              this.showInfo('优惠券金额不能为空');
+              return;
+            }
+            if(this.data.amount == ''){
+              this.showInfo('请输入优惠券数量');
+              return;
+            }
+            if(this.data.time == ''){
+              this.showInfo('请选择优惠券有效期限');
+              return;
+            }
+            if(this.data.validCode == ''){
+              this.showInfo('请输入校验密码');
+              return;
+            }
+            if(this.uploadFile.length){
+              send(this.uploadFile[0],(key)=> {
+                // that.data.icon = key;
+                this.data.icon = key;
+                this.save();
+                // that.save();
+              })
+            }else {
+                this.save();
+            }
+            // this.save();
+          } else {
+            return false;
+          }
+        });
+      },
+      save() {
         if(!this.data.maxPrice || !this.data.amount) return;
+
         let msg = this.edata ? '编辑' :'添加';
         let postUrl = this.edata ? '/biz/coupon/edit' :'/biz/coupon/add';
         this.data.shopId = this.shopId;
@@ -145,6 +187,8 @@
                 type: "success"
               });
               this.$emit("upList", 2);
+              this.uploadFile = [];
+              this.fileList = [];
             }
           })
       },

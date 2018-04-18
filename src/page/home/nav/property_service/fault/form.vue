@@ -3,9 +3,17 @@
     <el-form :model="form" :rules="rules" ref="ruleForm" label-width="120px">
       <el-form-item label="故障类型" prop="faultItem" required>
         <el-select v-model="form.faultItem"  placeholder="故障类型">
+          <el-option label="公共-水电燃气" value="1"></el-option>
+          <el-option label="公共-房屋结构" value="2"></el-option>
+          <el-option label="公共-电梯" value="10"></el-option>
           <el-option label="公共-消防安防" value="3"></el-option>
           <el-option label="公共-门禁" value="11"></el-option>
-          <el-option label="公共-其他" value="99"></el-option>
+          <el-option label="公共-其它" value="99"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="故障楼栋" prop="buildingId">
+        <el-select v-model="form.buildingId" placeholder="全部楼栋" clearable>
+          <el-option v-for="item in buildingOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="故障地址" label-width="120px" prop="faultAddress" required>
@@ -34,6 +42,7 @@
     data() {
       return {
         communityList: [],
+        buildingOptions: [],
         form: {
           faultAddress: '',
           faultType: '2',
@@ -44,10 +53,11 @@
           faultItem: '',
           // roomId: '',
           buildingId: '',
-          communityId: this.$store.getters.communityId,
+          communityId: this.$store.getters.communityId
         },
         rules: {
           faultItem: [{required: true, message: '请输入故障类型', trigger: 'blur'}],
+          buildingId: [{required: true, message: '请选择故障楼栋', trigger: 'blur'}],
           faultAddress: [{ required: true, message: '请输入故障地址', trigger: 'blur' }],
           faultContent: [{ required: true, message: '请描述故障', trigger: 'blur' }],
           userName: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
@@ -67,6 +77,15 @@
       },
       handleClose() {
         this.$emit("upsee", false );
+      },
+      getBuilding(){
+        let url = 'community/building/list';
+        this.$xttp.get('community/building/list',{params:{communityId:this.form.communityId}})
+        .then(res => {
+          if(res.success){
+            this.buildingOptions = res.data;
+          }
+        })
       },
       postData() {
         let url = `property/fault/addFault`;
@@ -91,7 +110,8 @@
     },
     props: ['msg'],
     created() {
-      
+      console.log("sss");
+      this.getBuilding();
     }
   }
 </script>

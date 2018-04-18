@@ -75,7 +75,7 @@
         <template slot-scope="scope">
           <el-button @click="editHandle(scope.row)" type="warning" size="small">编辑</el-button>
           <el-button @click="delHandle(scope.row)" type="danger" size="small" v-if="scope.row.validStatus == 0">删除</el-button>
-          <el-button @click="validHandle(scope.row)" type="success" size="small">{{ isIssue ? '发布' : '撤下' }}</el-button>
+          <el-button @click="validHandle(scope.row)" type="success" size="small">{{ !scope.row.validStatus ? '发布' : '撤下' }}</el-button>
         </template>
       </el-table-column>
 
@@ -188,7 +188,7 @@
         if(this.ValidId){
           this.$xttp.post(`/biz/coupon/valid`,{validStatus:status,id:this.ValidId})
             .then(res=> {
-              if(!res.errorCode){
+              if(res.success){
                 this.visible3 = false;
                 this.ValidId = null;
                 this.isIssue = !this.isIssue;

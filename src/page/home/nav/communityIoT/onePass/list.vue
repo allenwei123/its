@@ -201,7 +201,6 @@ export default {
       this.$xttp.post(url,params)
       .then(res => {
         if (!res.errorCode) {
-          console.log('res',res);
           this.tableData = res.data.records;
           this.total = res.data.total;
           this.tableData.forEach(item => {
@@ -216,6 +215,9 @@ export default {
                 .toISOString()
                 .split(".")[0]
                 .replace("T", " ");
+            }
+            if(item.roomName.length == 0){
+              item.roomName = '';
             }
           });
           // this.$router.push({path:this.$route.path,query:{page: nPage }})

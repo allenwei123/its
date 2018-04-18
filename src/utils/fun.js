@@ -3,6 +3,7 @@
  * @param {*} phone 
  */
 function isPhoneAvailable(phone) {
+  // let phoneReg = /^((\d3)|(\d{3}\-))?13[0-9]\d{8}|15[89]\d{8}|17[0-9]\d{8}|18[0-9]\d$/;
   let phoneReg = /^[1][3,4,5,7,8][0-9]{9}$/;
   if (phoneReg.test(phone)) {
     return false;
