@@ -24,7 +24,7 @@
               <el-input placeholder="梯号" v-model.trim="input"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="query">查询</el-button>
+              <el-button type="primary" @click="query" v-if="pms['11L1']">查询</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -54,7 +54,7 @@
             <el-table-column label="操作" width="120" :fixed="tableData.length ? 'right' : '/'" align="left">
               <template slot-scope="scope">
                 <!-- <el-button type="primary" size="mini" @click="viewFault(scope.row)">维修记录</el-button> -->
-                <el-button type="primary" size="mini" @click="viewRecord(scope.row)">使用记录</el-button>
+                <el-button type="primary" size="mini" @click="viewRecord(scope.row)" v-if="pms['11L2']">使用记录</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -74,6 +74,7 @@
     name: 'message',
     data() {
       return {
+        pms: this.$store.getters.pms,//菜单权限
         //电梯品牌
         value1: '',
         options: [],

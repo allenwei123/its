@@ -14,10 +14,10 @@
               <el-input v-model.trim="formInline.carNo" placeholder="关键字搜索"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
+              <el-button type="primary" @click="find"><i class="iconfont icon-sousuo" v-if="pms['1142']" >&nbsp;</i>查询</el-button>
             </el-form-item>
           </el-form>
-          <el-button type="primary" class="c-addBtn" @click="addCar">新增车辆</el-button>
+          <el-button type="primary" class="c-addBtn" @click="addCar" v-if="pms['1141']">新增车辆</el-button>
         </div>
       </div>
 
@@ -38,9 +38,9 @@
         <el-table-column align="left" fixed="right" label="操作" width="240">
           <template slot-scope="scope">
             <!-- <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button> -->
-            <el-button v-if="scope.row.auditStatus == 1 || scope.row.auditStatus == -1" @click="handleUnbundl(scope.row)" type="danger" size="small">注销</el-button>
-            <el-button v-if="scope.row.auditStatus == 0" @click="handleDone(scope.row, '1')" type="success" size="small">通过</el-button>
-            <el-button v-if="scope.row.auditStatus == 0" @click="handleDone(scope.row,'-1')" type="warning" size="small">拒绝</el-button>
+            <el-button v-if="scope.row.auditStatus == 1 || scope.row.auditStatus == -1 && pms['1145']" @click="handleUnbundl(scope.row)" type="danger" size="small">注销</el-button>
+            <el-button v-if="scope.row.auditStatus == 0  && pms['1143']" @click="handleDone(scope.row, '1') " type="success" size="small">通过</el-button>
+            <el-button v-if="scope.row.auditStatus == 0  && pms['1144']" @click="handleDone(scope.row,'-1')" type="warning" size="small">拒绝</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -90,6 +90,7 @@ export default {
   data() {
     return {
       show: false,
+      pms: this.$store.getters.pms,//菜单权限
       postOptions: [],
       isSou: false,
       tableData: [],

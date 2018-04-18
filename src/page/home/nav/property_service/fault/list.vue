@@ -25,10 +25,10 @@
               <el-input  placeholder="申报人" v-model.trim="input"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="query">查询</el-button>
+              <el-button type="primary" @click="query"  v-if="pms['11I1']">查询</el-button>
             </el-form-item>
             <el-form-item style="float: right">
-              <el-button type="success" plain class="c-addBtn" @click="add">新增故障</el-button>
+              <el-button type="primary" class="c-addBtn" @click="add"  v-if="pms['11I2']">新增故障</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -59,18 +59,18 @@
             </el-table-column>
             <el-table-column prop="" label="操作" width="300" fixed="right" align="left">
               <template slot-scope="scope">
-                <el-button type="primary" size="mini" @click="handleClick(scope.row)">查看详情</el-button>
+                <el-button type="primary" size="mini" @click="handleClick(scope.row)" v-if="pms['11I3']">查看详情</el-button>
                 <!-- 已提交 待受理-->
                 <template v-if="scope.row.faultStatus === 1">
-                  <el-button type="success" size="mini" @click="receive(scope.row)">受理故障</el-button>
-                  <el-button type="danger" size="mini" @click="reject(scope.row)">驳回申请</el-button>
+                  <el-button type="success" size="mini" v-if="pms['11I5']" @click="receive(scope.row)">受理故障</el-button>
+                  <el-button type="danger" size="mini" v-if="pms['11I6']" @click="reject(scope.row)">驳回申请</el-button>
                 </template>
 
                 <!-- 已受理 待分派-->
                 <template v-if="scope.row.faultStatus === 2">
-                  <el-button type="info" size="mini" @click="assignHandle(scope.row)">指派人员</el-button>
+                  <el-button type="info" size="mini" @click="assignHandle(scope.row)" v-if="pms['11I4']">指派人员</el-button>
                 </template>
-                
+
               </template>
             </el-table-column>
           </el-table>
@@ -134,7 +134,7 @@
   import SeePage from "./see";
   //分配人员
   // import AssignPage from "./assign.vue";
-  
+
   export default {
     name: 'fault',
     components: {
@@ -144,6 +144,7 @@
     },
     data () {
       return {
+        pms: this.$store.getters.pms,//菜单权限
         value6: '',
         value1: '',
         options: [{
@@ -328,7 +329,7 @@
       //驳回申报
       rejectAccept(row) {
         let url = `property/fault/editFaultStatus`;
-        this.$xttp.post(url,{id: row.id, 
+        this.$xttp.post(url,{id: row.id,
           faultStatus: row.faultStatus,
           rejectReason: row.rejectReason
         }).then(res => {

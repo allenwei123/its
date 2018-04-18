@@ -5,19 +5,19 @@
         <el-col :span="24">
           <el-row class="c-box">
             <el-col :span="6" class="c-summary-num">
-              <p class="c-fc-blue c-ta-center">74 <span class="c-fc-gray">单</span></p>
+              <p class="c-fc-blue c-ta-center">{{ billData.validCount }} <span class="c-fc-gray">单</span></p>
               <p class="c-ta-center c-fc-gray">本期已生效</p>
             </el-col>
             <el-col :span="6" class="c-summary-num">
-              <p class="c-fc-blue c-ta-center">33674<span class="c-fc-gray">元</span></p>
+              <p class="c-fc-blue c-ta-center">{{ billData.validAmount }}<span class="c-fc-gray">元</span></p>
               <p class="c-ta-center c-fc-gray">本期应收总额</p>
             </el-col>
             <el-col :span="6" class="c-summary-num">
-              <p class="c-fc-blue c-ta-center">1097 <span class="c-fc-gray">单</span></p>
+              <p class="c-fc-blue c-ta-center">{{ billData.paidCount }}  <span class="c-fc-gray">单</span></p>
               <p class="c-ta-center c-fc-gray">本期已缴费</p>
             </el-col>
             <el-col :span="6" class="c-summary-num">
-              <p class="c-fc-blue c-ta-center">1504 <span class="c-fc-gray">单</span></p>
+              <p class="c-fc-blue c-ta-center">{{ billData.unpaidCount }}  <span class="c-fc-gray">单</span></p>
               <p class="c-ta-center c-fc-gray">本期待缴费</p>
             </el-col>
           </el-row>
@@ -27,6 +27,7 @@
             type="month"
             value-format="timestamp"
             size="mini"
+            @change="getData"
             placeholder="选择月">
           </el-date-picker>
         </el-col>
@@ -48,9 +49,13 @@
   export default {
     name: "summaryPayment",
     data() {
+      let date = new Date();
+      let c =date.setDate(1);
       return {
-        selectMonth: new Date(),//使用记录
+        selectMonth: c ,//使用记录
         progressData: [],//使用记录的bar
+        billData:{ },
+        communityId: this.$store.getters.communityId,
       }
     },
     components: {
@@ -58,26 +63,39 @@
     },
     mounted(){
       this.getProgressData();
+      this.getData();
     },
     methods: {
       getProgressData() {
-        setTimeout(() => {
-          this.progressData = [
-            { name: "A区1栋1号梯", num: 5, max: 7 },
-            { name: "A区1栋2号梯", num: 6, max: 7 },
-            { name: "A区4栋2号梯", num: 4, max: 7  },
-            { name: "A区2栋3号梯", num: 3, max: 7 },
-            { name: "A区2栋5号梯", num: 2, max: 7 },
-            { name: "A区2栋5号梯", num: 2, max: 7 },
-            { name: "A区2栋5号梯", num: 2, max: 7 },
-            { name: "A区2栋5号梯", num: 2, max: 7 },
-            { name: "A区2栋5号梯", num: 2, max: 7 },
-            { name: "A区2栋5号梯", num: 2, max: 7 },
-            { name: "A区2栋5号梯", num: 2, max: 7 },
-            { name: "A区2栋5号梯", num: 2, max: 7 },
-            { name: "A区12栋12号梯",num: 1, max: 7 }
-          ].sort((a, b) => a.num < b.num);
-        }, 500)
+          this.$xttp.get(`/statistics/${this.communityId}/property-bill/expire`)
+            .then(res => {
+              if(!res.errorCode && res.data.proprietorSections.length) {
+                this.progressData = res.data.proprietorSections.map(item => {
+                  return {
+                    name: item.name,
+                    num: item.count,
+                    max: item.total
+                  }
+                });
+              }
+            });
+      },
+      getData() {
+        let data = {communityId:this.communityId,startAt:this.selectMonth,endAt:this.getCurrentMonthLast(this.selectMonth)};
+        this.$xttp.post('/statistics/property-bill/summary',data)
+          .then(res => {
+            if(!res.errorCode) {
+              this.billData = res.data;
+            }
+          })
+      },
+      getCurrentMonthLast(value) {
+        var aa = new Date(value);
+        var currentMonth=aa.getMonth();
+        var nextMonth=++currentMonth;
+        var nextMonthFirstDay=new Date(aa.getFullYear(),nextMonth,1);
+        var oneDay=1000*60*60*24;
+        return (new Date(nextMonthFirstDay-oneDay)).getTime();
       },
     }
   }

@@ -254,12 +254,23 @@ let currentNav = '';
 let errorList = ['/home/nav/communityIoT/record','/home/nav/propertyService/message'];//记录暂时没开发的
 router.beforeEach((to, from, next) => {
   let arr = ['main','side','propertyService','communityIoT','businessManage','summary'];
+  if(!store.getters.pms && store.getters.communityId && localStorage.getItem('userInfo') ) {//判断是否有权限
+    store.dispatch('updatedPermission')
+      .then(ev => {
+        if(ev.msg) {
+         next(to.path);
+        }
+      });
+    return next(false);
+  }
+
   if(to.path.split('/')[3] && currentNav !== to.path.split('/')[3]){
     let currentIndex = arr.findIndex(item => item == to.path.split('/')[3]);
     currentNav = to.path.split('/')[3];
     store.dispatch('changeAsideData',currentIndex );
     store.dispatch('updatedNavIndex',currentIndex );
   }
+
   let isLogin = function () {
     return localStorage.getItem('userInfo');
   }

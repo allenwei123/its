@@ -26,10 +26,10 @@
           </el-form-item>
 
           <el-form-item>
-            <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
+            <el-button type="primary" @click="find"><i class="iconfont icon-sousuo" v-if="pms['11S7']">&nbsp;</i>查询</el-button>
           </el-form-item>
         </el-form>
-        <el-button type="success" plain class="c-addBtn" @click="onSubmit" >新增商品</el-button>
+        <el-button type="success" class="c-addBtn" @click="onSubmit" v-if="pms['11S8']">新增商品</el-button>
       </div>
     </div>
 
@@ -49,8 +49,8 @@
 
       <el-table-column align="center" fixed="right" label="操作" width="150">
         <template slot-scope="scope">
-          <el-button @click="editHandle(scope.row)" type="warning" size="small">编辑</el-button>
-          <el-button @click="delHandle(scope.row)" type="danger" size="small">删除</el-button>
+          <el-button @click="editHandle(scope.row)" type="warning" size="small" v-if="pms['11S9']">编辑</el-button>
+          <el-button @click="delHandle(scope.row)" type="danger" size="small" v-if="pms['11SA']">删除</el-button>
         </template>
       </el-table-column>
 
@@ -85,6 +85,7 @@
     name: "merchantList",
     data() {
       return {
+        pms: this.$store.getters.pms,//菜单权限
         isSou: false,
         tableData: [],
         navDetailData: [

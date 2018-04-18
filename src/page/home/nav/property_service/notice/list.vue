@@ -25,10 +25,10 @@
               <el-input  placeholder="标题" v-model.trim="input"></el-input>
             </el-form-item> -->
             <el-form-item>
-              <el-button type="primary" @click="query">查询</el-button>
+              <el-button type="primary" @click="query" v-if="pms['11K1']">查询</el-button>
             </el-form-item>
             <el-form-item style="float: right">
-              <el-button type="success" plain class="c-addBtn" @click="addNotice">新增公告</el-button>
+              <el-button type="success" class="c-addBtn" @click="addNotice"  v-if="pms['11K2']">新增公告</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -57,19 +57,19 @@
             </el-table-column>
             <el-table-column label="操作" width="300" :fixed="tableData.length ? 'right' : '/'" align="left">
               <template slot-scope="scope">
-                <el-button type="primary" size="mini" @click="preview(scope.row)">预览</el-button>
+                <el-button type="primary" size="mini" @click="preview(scope.row)" v-if="pms['11K3']">预览</el-button>
                 <!--已发布-->
                 <template v-if="scope.row.publishStatus === 1">
                   <!--推送公告逻辑：此公告已经发布并且还未推送的才能给物业推送，一个公告只能推送一次-->
-                  <el-button type="success" size="mini" v-if="scope.row.pushStatus === 0" @click="push(scope.row)">推送</el-button>
-                  <el-button type="info" size="mini" @click="revoke(scope.row)">撤销</el-button>
+                  <el-button type="success" size="mini" v-if="(scope.row.pushStatus === 0) && pms['11K7']" @click="push(scope.row)">推送</el-button>
+                  <el-button type="info" size="mini" @click="revoke(scope.row)" v-if="pms['11K8']">撤销</el-button>
                 </template>
 
                 <!--未发布-->
                 <template v-if="scope.row.publishStatus !== 1">
-                  <el-button type="success" size="mini" @click="publish(scope.row)">发布</el-button>
-                  <el-button type="warning" size="mini" @click="modify(scope.row)">编辑</el-button>
-                  <el-button type="danger" size="mini" @click="del(scope.row)">删除</el-button>
+                  <el-button type="success" size="mini" @click="publish(scope.row)" v-if="pms['11K4']">发布</el-button>
+                  <el-button type="warning" size="mini" @click="modify(scope.row)" v-if="pms['11K5']">编辑</el-button>
+                  <el-button type="danger" size="mini" @click="del(scope.row)" v-if="pms['11K6']">删除</el-button>
                 </template>
               </template>
             </el-table-column>
@@ -100,6 +100,7 @@
     },
     data () {
       return {
+        pms: this.$store.getters.pms,//菜单权限
         value6: '',
         value1: '',
         options: [ {

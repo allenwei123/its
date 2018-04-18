@@ -2,14 +2,13 @@
   <div class="home_container">
     <Header></Header>
     <transition name="fade">
-      <router-view/>
+      <router-view />
     </transition>
   </div>
 </template>
 
 
 <script>
-  import { mapState } from 'vuex'
   import Header from '../../../components/header/Header'
   import Content from './../nav/_res/index.vue'
 
@@ -26,7 +25,6 @@
       Content
     },
     created() {
-      this.$store.dispatch('updatedAsideData');
     }
   }
 </script>

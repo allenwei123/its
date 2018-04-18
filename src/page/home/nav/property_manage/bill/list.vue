@@ -42,7 +42,7 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            
+
             <!-- <el-form-item  width="80">
               <el-select v-model="value1" placeholder="全部状态" clearable @change="changeStatus">
                 <el-option v-for="temp in options" :key="temp.value" :label="temp.label" :value="temp.value"></el-option>
@@ -64,13 +64,13 @@
               <el-input  placeholder="房号" v-model.trim="input"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="query">查询</el-button>
+              <el-button type="primary" @click="query"  v-if="pms['11C1']">查询</el-button>
             </el-form-item>
             <el-form-item style="float: right">
-              <el-button type="primary" plain class="c-addBtn" @click="takeAll">全部生效</el-button>
+              <el-button type="primary" class="c-addBtn" v-if="pms['11C2']" @click="takeAll">全部生效</el-button>
             </el-form-item>
             <el-form-item style="float: right">
-              <el-button type="success" plain class="c-addBtn1" @click="callAll">一键催交</el-button>
+              <el-button type="success" class="c-addBtn1" v-if="pms['11C3']" @click="callAll">一键催交</el-button>
             </el-form-item> -->
           </el-form>
         </div>
@@ -102,24 +102,24 @@
             <el-table-column label="操作" width="300" :fixed="tableData.length ? 'right' : '/'" align="left">
               <template slot-scope="scope">
 
-                <el-button type="primary" size="mini" @click="seeDetail(scope.row)">查看详情</el-button>
+                <el-button type="primary" size="mini" v-if="pms['11C4']" @click="seeDetail(scope.row)">查看详情</el-button>
                 <!-- 账单状态 未生效-->
                 <template v-if="scope.row.billStatus === -1">
                   <!-- @click="edit(scope.row)" 暂无接口 -->
-                  <el-button type="warning" size="mini" @click="edit(scope.row)">编辑</el-button>
-                  <el-button type="success" size="mini" @click="take(scope.row, $event)">生效</el-button>
+                  <el-button type="warning" size="mini" v-if="pms['11C7']" @click="edit(scope.row)">编辑</el-button>
+                  <el-button type="success" size="mini" v-if="pms['11C9']" @click="take(scope.row, $event)">生效</el-button>
                 </template>
 
                 <!-- 账单状态 待缴费-->
                 <template v-if="scope.row.billStatus === 0 ">
-                  <el-button type="warning" size="mini" @click="take(scope.row, $event)">提醒缴费</el-button>
-                  <el-button type="success" size="mini" @click="take(scope.row, $event)">确认缴费</el-button>
+                  <el-button type="warning" size="mini" v-if="pms['11C5']" @click="take(scope.row, $event)">提醒缴费</el-button>
+                  <el-button type="success" size="mini" v-if="pms['11C6']" @click="take(scope.row, $event)">确认缴费</el-button>
                 </template>
 
                 <!-- 账单状态 已超期-->
                 <template v-if="scope.row.billStatus === 2 ">
-                  <el-button type="warning" size="mini" @click="take(scope.row, $event)">催缴</el-button>
-                  <el-button type="success" size="mini"  @click="take(scope.row, $event)">确认缴费</el-button>
+                  <el-button type="warning" size="mini" v-if="pms['11C7']" @click="take(scope.row, $event)">催缴</el-button>
+                  <el-button type="success" size="mini" v-if="pms['11C6']"  @click="take(scope.row, $event)">确认缴费</el-button>
                 </template>
 
               </template>
@@ -190,6 +190,7 @@ export default {
   data() {
     return {
       value1: '',
+      pms: this.$store.getters.pms,//菜单权限
       options: [{
         value: '0',
         label: '待缴费'
@@ -297,7 +298,7 @@ export default {
       }).catch(() => {
         this.loading = false;
         this.$message.error('失败');
-      })    
+      })
     },
     //全部生效
     takeAll() {
@@ -343,12 +344,12 @@ export default {
           .catch(() => {
             this.loading = false;
           });
-          
+
         }
       }).catch(() => {
         this.loading = false;
         this.$message.error('失败');
-      })    
+      })
     },
     // 账单状态
     take(row, e) {

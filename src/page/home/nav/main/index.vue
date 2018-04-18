@@ -9,7 +9,7 @@
           <el-main>
             <div class="c-title-info">
               <ul class="c-three">
-                <li class="c-three-li">
+                <li class="c-three-li" v-if="pms['11a1']">
                   <h5 class="c-three-title c-tl-center">业主认可</h5>
                   <div class="c-three-detail">
                     <div>
@@ -21,7 +21,7 @@
                       <span class="c-color-white ">已审核</span></div>
                   </div>
                 </li>
-                <li class="c-three-li">
+                <li class="c-three-li" v-if="pms['11a2']">
                   <h5 class="c-three-title c-tl-center">物业缴费</h5>
                   <div class="c-three-detail">
                     <div>
@@ -33,7 +33,7 @@
                       <span class="c-color-white ">超额未缴</span></div>
                   </div>
                 </li>
-                <li class="c-three-li">
+                <li class="c-three-li" v-if="pms['11a3']">
                   <h5 class="c-three-title c-tl-center">警报消息</h5>
                   <div class="c-three-detail">
                     <div>
@@ -41,7 +41,7 @@
                       <span class="c-color-white ">待处理</span>
                     </div>
                     <div>
-                      
+
                       <p class="c-color-white c-fs-24 c-tl-center">{{ alarmData.receivedNum || 0 }}</p>
                       <span class="c-color-white ">待排查</span></div>
                   </div>
@@ -50,7 +50,7 @@
             </div>
             <div class="c-title-info">
               <ul class="c-three">
-                <li class="c-three-one c-three-bottomLi">
+                <li class="c-three-one c-three-bottomLi" v-if="pms['11a4']">
                   <p class="c-left-title">任务待办</p>
                   <div class="c-wait-box">
                     <ul>
@@ -64,7 +64,7 @@
                     </ul>
                   </div>
                 </li>
-                <li class="c-three-two c-three-bottomLi">
+                <li class="c-three-two c-three-bottomLi" v-if="pms['11a5']">
                   <p class="c-left-title">常用功能</p>
                   <div class="c-common-use">
                     <ul>
@@ -110,7 +110,7 @@
               </ul>
             </div>
           </el-main>
-          <el-aside class="c-aside">
+          <el-aside class="c-aside" v-if="pms['11a6']">
             <p class="c-left-title">通讯录</p>
             <div class="c-user-list">
               <ul>
@@ -140,6 +140,7 @@ export default {
       isLoading: false, //加载中
       door: false,
       currentPage: 1,//記錄任務列表
+      pms: this.$store.getters.pms,//菜单权限
     };
   },
   mounted() {

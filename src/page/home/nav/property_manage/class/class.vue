@@ -18,7 +18,7 @@
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="query">查询</el-button>
+              <el-button type="primary" @click="query" v-if="pms['1181']">查询</el-button>
             </el-form-item>
           </el-form>
           <el-button type="success" plain class="c-addBtn" @click="addClass">新增班次</el-button>
@@ -48,8 +48,8 @@
           <template slot-scope="scope">
             <!-- <el-button type="primary" size="mini" @click="seeHandle(scope.row)">查看</el-button> -->
             <!-- <el-button type="primary" size="mini" @click="editHandle(scope.row)">编辑</el-button> -->
-            <el-button @click="editHandle(scope.row)" type="warning" size="small">编辑</el-button>
-            <el-button @click="delHandle(scope.row)" type="danger" size="small">删除</el-button>
+            <el-button @click="editHandle(scope.row)" v-if="pms['1183']" type="warning" size="small">编辑</el-button>
+            <!-- <el-button @click="delHandle(scope.row)" type="danger" size="small">删除</el-button> -->
           </template>
         </el-table-column>
       </el-table>
@@ -88,6 +88,7 @@ import time from '@/utils/time.js';
       return {
         loading: false,
         show: false,
+        pms: this.$store.getters.pms,//菜单权限
         navDetailData: [
           { id: 0, name: "物业管理" },
           { id: 1, name: "作业管理" },
@@ -181,7 +182,7 @@ import time from '@/utils/time.js';
       },
       delHandle(row){
         this.visible2 = true;
-        this.delData = row; 
+        this.delData = row;
       },
       confirmDel(){
         if(this.delData.id) {

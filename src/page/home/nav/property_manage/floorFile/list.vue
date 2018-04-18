@@ -17,7 +17,7 @@
               <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
             </el-form-item>
           </el-form>
-          <el-button type="success" plain class="c-addBtn" @click="onSubmit">新增楼栋</el-button>
+          <el-button type="success" class="c-addBtn" v-if="pms['1101']" @click="onSubmit">新增楼栋</el-button>
         </div>
       </div>
 
@@ -45,9 +45,9 @@
         </el-table-column>
         <el-table-column align="left" fixed="right" label="操作" width="220">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button>
-            <el-button @click="editHandle(scope.row)" type="warning" size="small">编辑</el-button>
-            <el-button @click="delHandle(scope.row)" type="danger" size="small">删除</el-button>
+            <el-button @click="handleClick(scope.row)"v-if="pms['1103']" type="primary" size="small">查看</el-button>
+            <el-button @click="editHandle(scope.row)" v-if="pms['1102']" type="warning" size="small">编辑</el-button>
+            <el-button @click="delHandle(scope.row)" v-if="pms['1105']" type="danger" size="small">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -77,10 +77,8 @@
 </template>
 
 <script>
-import axios from "axios";
 import AddPage from "./add";
 import SeePage from "./see";
-import { mapGetters } from "vuex";
 
 export default {
   name: "floorFileList",
@@ -88,6 +86,7 @@ export default {
     return {
       isSou: false,
       tableData: [],
+      pms: this.$store.getters.pms,//菜单权限
       navDetailData: [
         { id: 0, name: "首页" },
         { id: 1, name: "基础管理" },
@@ -108,7 +107,6 @@ export default {
       delData:null
     };
   },
-  computed: mapGetters(["showAside"]),
   components: {
     AddPage,
     SeePage

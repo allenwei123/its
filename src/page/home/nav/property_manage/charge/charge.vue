@@ -13,10 +13,10 @@
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
             <el-form-item style="float: right; margin-bottom: 4px;">
-              <el-button type="primary" plain @click="cycleMang">周期管理</el-button>
+              <el-button type="primary" @click="cycleMang" v-if="pms['11D4']">周期管理</el-button>
             </el-form-item>
             <el-form-item style="float: right; margin-bottom: 4px;">
-              <el-button type="success" plain @click="addProject">新增项目</el-button>
+              <el-button type="success" @click="addProject" v-if="pms['11D1']">新增项目</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -37,9 +37,9 @@
         </el-table-column>
         <el-table-column fixed="right" align="center" label="操作" width="500">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="seeHandle(scope.row)">查看</el-button>
-            <el-button type="warning" size="mini" @click="editHandle(scope.row)">编辑</el-button>
-            <el-button @click="delHandle(scope.row)" type="danger" size="small">删除</el-button>
+            <el-button type="primary" size="mini" @click="seeHandle(scope.row)" v-if="pms['11D2']">查看</el-button>
+            <el-button type="warning" size="mini" @click="editHandle(scope.row)" >编辑</el-button>
+            <el-button @click="delHandle(scope.row)" type="danger" size="small" v-if="pms['11D3']">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -86,6 +86,7 @@ import time from '@/utils/time.js';
     name: 'class',
     data () {
       return {
+        pms: this.$store.getters.pms,//菜单权限
         loading: false,
         show: false,
         isShow: false,
@@ -109,7 +110,7 @@ import time from '@/utils/time.js';
         projectData: null
       }
     },
-    computed: mapGetters(["showAside"]),
+    computed: mapGetters(["pms"]),
     components: {
       SeePage,
       AddPage,
@@ -189,8 +190,8 @@ import time from '@/utils/time.js';
           })
         }
       },
-      editHandle(row){     
-        let Id = row.id;  
+      editHandle(row){
+        let Id = row.id;
         let url = `/fees/item/edit/${Id}`;
         this.$prompt('请输入收费项目名称', '修改收费项目', {
           confirmButtonText: '确定',
@@ -203,10 +204,10 @@ import time from '@/utils/time.js';
                   }
               })
         }).catch(() => {
-            // this.$message({
-            //     type: 'info',
-            //     message: '修改收费项目失败'
-            // });       
+            this.$message({
+                type: 'info',
+                message: '修改收费项目失败'
+            })
         });
       },
     },

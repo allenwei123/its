@@ -13,7 +13,7 @@
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
             <el-form-item label="员工：" prop="empl">
               <el-select v-model="formInline.empl" clearable placeholder="请选择员工" @change="changeEmpl">
-                <el-option v-for="item in emplData" :key="item.userName" :label="item.userName" :value="item.userName"> 
+                <el-option v-for="item in emplData" :key="item.userName" :label="item.userName" :value="item.userName">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -33,7 +33,7 @@
               </el-date-picker>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="query">查询</el-button>
+              <el-button type="primary" @click="query" v-if="pms['11A1']">查询</el-button>
             </el-form-item>
           </el-form>
           <!-- <el-button type="primary" class="c-addBtn" @click="addClass">新增班次</el-button> -->
@@ -117,6 +117,7 @@ export default {
   data() {
     return {
       loading: false,
+      pms: this.$store.getters.pms,//菜单权限
       show: false,
       taskType: "1",
       dialogVisible: false,

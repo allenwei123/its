@@ -33,14 +33,18 @@
             </el-form-item>
             <el-form-item>
               <!-- <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button> -->
-              <el-button type="primary" @click="find">查询</el-button>
+              <el-button type="primary" @click="find" v-if="pms['1181']">查询</el-button>
               <!-- <el-button type="success" plain @click="keySchedul">一键排班</el-button> -->
             </el-form-item>
           </el-form>
+<<<<<<< Updated upstream
           <el-button type="success" plain class="c-addBtn" @click="onSubmit">新增排班</el-button>
+=======
+          <el-button type="primary" class="c-addBtn" @click="onSubmit" v-if="pms['1182']">新增排班</el-button>
+>>>>>>> Stashed changes
         </div>
       </div>
-      
+
       <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." border highlight-current-row ref="multipleTable" style="width: 100%">
         <el-table-column label="序号" width="80" align="center">
           <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
@@ -59,8 +63,7 @@
         </el-table-column>
         <el-table-column fixed="right" label="操作" align="center" width="180">
           <template slot-scope="scope">
-            <el-button type="warning" size="mini" @click="editHandle(scope.row)">编辑</el-button>
-            <el-button type="danger" size="mini" @click="delHandle(scope.row)">删除</el-button>
+            <el-button type="warning" size="mini" @click="editHandle(scope.row)"  v-if="pms['1193']">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -105,6 +108,7 @@ export default {
   data() {
     return {
       show: false,
+      pms: this.$store.getters.pms,//菜单权限
       postOptions: [],
       isSou: false,
       tableData: [],
@@ -222,7 +226,7 @@ export default {
     },
     delHandle(row) {
       this.visible2 = true;
-      this.delData = row; 
+      this.delData = row;
     },
 
     changeRangeDate() {
@@ -320,7 +324,7 @@ export default {
 .see-enter-active, .see-leave-active {
   transition: all 0.5s ease;
 }
-       
+
 .see-enter, .see-leave-active {
   opacity: 0;
   transform: rotateY(180deg);
@@ -328,7 +332,7 @@ export default {
 .edit-enter-active, .edit-leave-active {
   transition: all 0.5s ease;
 }
-       
+
 .edit-enter, .edit-leave-active {
   opacity: 0;
   transform: rotateY(180deg);
@@ -336,7 +340,7 @@ export default {
 .show-enter-active, .show-leave-active {
   transition: all 0.5s ease;
 }
-       
+
 .show-enter, .show-leave-active {
   opacity: 0;
   transform: translateX(-500px);

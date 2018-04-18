@@ -28,7 +28,7 @@
               <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
             </el-form-item>
           </el-form>
-          <el-button type="success" plain class="c-addBtn" @click="onSubmit">新增房间</el-button>
+          <el-button type="success" class="c-addBtn" @click="onSubmit" v-if="pms['1111']">新增房间</el-button>
         </div>
       </div>
 
@@ -52,8 +52,8 @@
         <el-table-column align="left" fixed="right" label="操作" width="220">
           <template slot-scope="scope">
             <!-- <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button> -->
-            <el-button @click="editHandle(scope.row)" type="warning" size="small">编辑</el-button>
-            <el-button @click="delHandle(scope.row)" type="danger" size="small">删除</el-button>
+            <el-button @click="editHandle(scope.row)" v-if="pms['1112']" type="warning" size="small">编辑</el-button>
+            <el-button @click="delHandle(scope.row)" v-if="pms['1114']" type="danger" size="small">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -93,6 +93,7 @@ export default {
     return {
       isSou: false,
       tableData: [],
+      pms: this.$store.getters.pms,//菜单权限
       navDetailData: [
         { id: 0, name: "首页" },
         { id: 1, name: "基础管理" },

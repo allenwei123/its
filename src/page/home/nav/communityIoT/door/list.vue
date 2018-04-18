@@ -24,10 +24,10 @@
               <el-input placeholder="门禁" v-model.trim="input"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="query">查询</el-button>
+              <el-button type="primary" @click="query"  v-if="pms['11N1']">查询</el-button>
             </el-form-item>
             <el-form-item style="float: right">
-              <el-button type="success" plain class="c-addBtn" @click="add">新增门禁</el-button>
+              <el-button type="success" class="c-addBtn" @click="add" v-if="pms['11N3']">新增门禁</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -56,7 +56,7 @@
             </el-table-column>
             <el-table-column label="操作" width="120" fixed="right" align="left">
               <template slot-scope="scope">
-                <el-button type="primary" size="mini" @click="view(scope.row)">使用记录</el-button>
+                <el-button type="primary" size="mini" @click="view(scope.row)" v-if="pms['11N2']">使用记录</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -85,6 +85,7 @@ import AddPage from "./add";
     },
     data() {
       return {
+        pms: this.$store.getters.pms,//菜单权限
         show: false,
         loading: false,
         communityName: this.$store.getters.communityName,

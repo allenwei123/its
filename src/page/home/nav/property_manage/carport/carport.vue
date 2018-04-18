@@ -9,7 +9,7 @@
           <!-- <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li> -->
         </ul>
       </div>
-      
+
       <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." border highlight-current-row ref="multipleTable" style="width: 100%">
         <el-table-column label="序号" width="80" align="center">
           <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
@@ -29,7 +29,7 @@
         </el-table-column>
         <el-table-column align="center" fixed="right" label="操作" width="250">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button>
+            <el-button @click="handleClick(scope.row)" v-if="pms['1151']" type="primary" size="small">查看</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -78,6 +78,7 @@ export default {
   data() {
     return {
       show: false,
+      pms: this.$store.getters.pms,//菜单权限
       postOptions: [],
       isSou: false,
       tableData: [{
@@ -143,7 +144,7 @@ export default {
     },
     delHandle(row) {
       this.visible2 = true;
-      this.delData = row; 
+      this.delData = row;
     },
     seeChange(msg){
       this.isSee = false;
@@ -156,7 +157,7 @@ export default {
         this.isShow = false;
       }
     },
-    
+
     handleDone(row,status){
       var id = row.id;
       var status = status;
@@ -243,7 +244,7 @@ export default {
 .fade-enter-active, .fade-leave-active {
   transition: all 0.5s ease;
 }
-       
+
 .fade-enter, .fade-leave-active {
   opacity: 0;
   transform: rotateY(180deg);
@@ -251,7 +252,7 @@ export default {
 .see-enter-active, .see-leave-active {
   transition: all 0.5s ease;
 }
-       
+
 .see-enter, .see-leave-active {
   opacity: 0;
   transform: translateX(-500px);

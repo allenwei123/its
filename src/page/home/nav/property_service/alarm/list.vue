@@ -21,7 +21,7 @@
               <el-input placeholder="申请人" v-model.trim="input"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="query">查询</el-button>
+              <el-button type="primary" @click="query" v-if="pms['11F1']">查询</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -75,6 +75,7 @@
     name: 'alarm',
     data () {
       return {
+        pms: this.$store.getters.pms,//菜单权限
         navDetailData: [
           { id: 0, name: "物业服务" },
           { id: 1, name: "社区服务" },

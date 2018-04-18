@@ -20,13 +20,13 @@
               <el-input v-model="employeeId" placeholder="工号"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
+              <el-button type="primary" @click="find" v-if="pms['1171']"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
             </el-form-item>
           </el-form>
-          <el-button type="success" plain class="c-addBtn" @click="onSubmit">新增员工</el-button>
+          <el-button type="success" class="c-addBtn" @click="onSubmit" v-if="pms['1172']">新增员工</el-button>
         </div>
       </div>
-      
+
       <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." border highlight-current-row ref="multipleTable" style="width: 100%" :default-sort = "{prop: 'createAt', order: 'descending'}">
         <el-table-column label="序号" type="index" align="center" width="50"></el-table-column>
         <!-- <el-table-column label="序号" width="80" :show-overflow-tooltip="true">
@@ -67,7 +67,7 @@
         <el-table-column v-if="show" label="员工ID" min-width="120" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{scope.row.userId}}</template>
         </el-table-column>
-        
+
         <el-table-column label="手机号" min-width="120" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{scope.row.phone}}</template>
         </el-table-column>
@@ -82,9 +82,9 @@
         </el-table-column> -->
         <el-table-column align="left" fixed="right" label="操作" width="250">
           <template slot-scope="scope">
-            <el-button @click="powerHandle(scope.row)" type="success" size="small">职权管理</el-button>
-            <el-button @click="editHandle(scope.row)" type="warning" size="small">编辑</el-button>
-            <el-button v-if="scope.row.postCode != 'MANAGER'" @click="handleWriteoff(scope.row)" type="danger" size="small">注销</el-button>
+            <el-button @click="powerHandle(scope.row)" type="success" size="small" v-if="pms['1174']">职权管理</el-button>
+            <el-button @click="editHandle(scope.row)" type="warning" size="small"  v-if="pms['1173']">编辑</el-button>
+            <el-button v-if="(scope.row.postCode != 'MANAGER') && pms['1175']" @click="handleWriteoff(scope.row)" type="danger" size="small">注销</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -129,6 +129,7 @@ export default {
     return {
       show: false,
       tableData: [],
+      pms: this.$store.getters.pms,//菜单权限
       navDetailData: [
         { id: 0, name: "首页" },
         { id: 1, name: "员工管理" },
@@ -147,7 +148,7 @@ export default {
       delData:null,
       ispower: false,
       powerData: null
-      
+
     };
   },
   computed: mapGetters(["showAside"]),
@@ -208,11 +209,11 @@ export default {
     },
     delHandle(row) {
       this.visible2 = true;
-      this.delData = row; 
+      this.delData = row;
     },
     handleWriteoff(row){
       this.visible2 = true;
-      this.delData = row; 
+      this.delData = row;
     },
     confirmDel(){
       if(this.delData.id){
@@ -256,7 +257,7 @@ export default {
         delete obj.employeeId;
       }
       this.loading = true;
-      
+
       let communityId = this.$store.getters.communityId;
       let url = `user/property/${communityId}/user-list`;
       this.$xttp.get(url, {params:obj}).then(res => {
@@ -308,7 +309,7 @@ export default {
 .fade-enter-active, .fade-leave-active {
   transition: all 0.5s ease;
 }
-       
+
 .fade-enter, .fade-leave-active {
   opacity: 0;
   transform: rotateY(180deg);
@@ -316,7 +317,7 @@ export default {
 .fade1-enter-active, .fade1-leave-active {
   transition: all 0.5s ease;
 }
-       
+
 .fade1-enter, .fade1-leave-active {
   opacity: 0;
   transform: translateX(-500px);
