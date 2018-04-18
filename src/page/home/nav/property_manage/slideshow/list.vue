@@ -8,10 +8,10 @@
               <el-input  placeholder="标题" v-model.trim="input"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="query">查询</el-button>
+              <el-button type="primary" @click="query"  v-if="pms['11z1']">查询</el-button>
             </el-form-item>
             <el-form-item style="float: right">
-              <el-button type="success" plain @click="addNotice">新增轮播图</el-button>
+              <el-button type="success" plain @click="addNotice"  v-if="pms['11z6']">新增轮播图</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -64,16 +64,16 @@
             </el-table-column>
             <el-table-column label="操作" width="300" align="center" :fixed="tableData.length ? 'right' : '/'">
               <template slot-scope="scope">
-                <el-button type="primary" size="mini" @click="preview(scope.row)">预览</el-button>
+                <el-button type="primary" size="mini" @click="preview(scope.row)"  v-if="pms['11z2']">预览</el-button>
                 <template v-if="scope.row.published === 1">
-                  <el-button type="primary" size="mini" v-if="scope.row.published === 0" @click="push(scope.row)">推送</el-button>
-                  <el-button type="primary" size="mini" @click="revoke(scope.row)">撤销</el-button>
+                  <el-button type="primary" size="mini" v-if="(scope.row.published === 0) && pms['11z3']" @click="push(scope.row)">推送</el-button>
+                  <el-button type="primary" size="mini" @click="revoke(scope.row)" v-if="pms['11z3']">撤销</el-button>
                 </template>
 
                 <template v-if="scope.row.published !== 1">
-                  <el-button type="primary" size="mini" @click="publish(scope.row)">发布</el-button>
+                  <el-button type="primary" size="mini" @click="publish(scope.row)" v-if="pms['11z4']">发布</el-button>
                   <!-- <el-button type="primary" size="mini" @click="modify(scope.row)">修改</el-button> -->
-                  <el-button type="danger" size="mini" @click="del(scope.row)">删除</el-button>
+                  <el-button type="danger" size="mini" @click="del(scope.row)" v-if="pms['11z4']">删除</el-button>
                 </template>
               </template>
             </el-table-column>
@@ -104,6 +104,7 @@
     },
     data () {
       return {
+        pms: this.$store.getters.pms,//菜单权限
         loading: false,
         isShow: false,
         tableData: [],

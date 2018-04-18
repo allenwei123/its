@@ -36,12 +36,8 @@
               <el-button type="primary" @click="find" v-if="pms['1181']">查询</el-button>
               <!-- <el-button type="success" plain @click="keySchedul">一键排班</el-button> -->
             </el-form-item>
-          </el-form>
-<<<<<<< Updated upstream
-          <el-button type="success" plain class="c-addBtn" @click="onSubmit">新增排班</el-button>
-=======
-          <el-button type="primary" class="c-addBtn" @click="onSubmit" v-if="pms['1182']">新增排班</el-button>
->>>>>>> Stashed changes
+          </el-form>=
+          <el-button type="success" class="c-addBtn" @click="onSubmit" v-if="pms['1182']">新增排班</el-button>
         </div>
       </div>
 

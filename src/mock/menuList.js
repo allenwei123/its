@@ -383,7 +383,7 @@ const arr = [
       {
         id:'5-3',
         name:'物业缴费',
-        show: 1,
+        show: '11bp',
         menuItem:[
           {
             id: '5-3-1',

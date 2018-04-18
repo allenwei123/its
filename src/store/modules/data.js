@@ -1,5 +1,6 @@
 import aside from '@/mock/menuList';
 import http from '@/utils/request';
+import router from '@/router/index';
 
 function formater(arr) {
   if(Array.isArray(arr)) {
@@ -29,6 +30,7 @@ export default {
           item.menuItem = b;
           return true;
         });
+        router.push(a[0].menuItem[0].link);//重定向 第一个子集
         state.asideData = a;
       },
       ADDCOMMUNITYID: (state, newValue) => {
