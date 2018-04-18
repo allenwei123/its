@@ -9,7 +9,7 @@
               <p class="c-ta-center c-fc-gray">本期已生效</p>
             </el-col>
             <el-col :span="6" class="c-summary-num">
-              <p class="c-fc-blue c-ta-center">{{ billData.validAmount }}<span class="c-fc-gray">元</span></p>
+              <p class="c-fc-blue c-ta-center">{{ billData.validAmount/100 }}<span class="c-fc-gray">元</span></p>
               <p class="c-ta-center c-fc-gray">本期应收总额</p>
             </el-col>
             <el-col :span="6" class="c-summary-num">
