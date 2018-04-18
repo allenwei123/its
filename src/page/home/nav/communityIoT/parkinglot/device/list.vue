@@ -15,7 +15,7 @@
               <el-input placeholder="车闸" v-model.trim="input"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="query">查询</el-button>
+              <el-button type="primary" @click="query" v-if="pms['11Q1']">查询</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -44,7 +44,7 @@
             </el-table-column> -->
             <el-table-column label="操作" width="150" fixed="right" align="left">
               <template slot-scope="scope">
-                <el-button type="primary" size="mini" @click="viewRecord(scope.row)">进出记录</el-button>
+                <el-button type="primary" size="mini" v-if="pms['11Q2']" @click="viewRecord(scope.row)">进出记录</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -63,6 +63,7 @@
   export default {
     data() {
       return {
+        pms: this.$store.getters.pms,//菜单权限
         navDetailData: [
           { id: 1, name: "社区物联" },
           { id: 0, name: "停车管理" },

@@ -19,10 +19,10 @@
             <el-input v-model="formInline.name" placeholder="服务名称" style="width:200px;"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
+            <el-button type="primary" @click="find" v-if="pms['11U1']"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
           </el-form-item>
         </el-form>
-        <el-button type="success" plain class="c-addBtn" @click="onSubmit">新增服务</el-button>
+        <el-button type="success" class="c-addBtn" @click="onSubmit" v-if="pms['11U2']">新增服务</el-button>
       </div>
     </div>
 
@@ -70,9 +70,9 @@
       </el-table-column>
       <el-table-column align="center" fixed="right" label="操作" width="220">
         <template slot-scope="scope">
-          <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button>
-          <el-button @click="editHandle(scope.row)" type="warning" size="small">编辑</el-button>
-          <el-button @click="delHandle(scope.row)" type="danger" size="small">删除</el-button>
+           <!--<el-button @click="handleClick(scope.row)" type="primary" size="small" v-if="pms['11U3']">查看</el-button>-->
+          <el-button @click="editHandle(scope.row)" type="warning" size="small" v-if="pms['11U3']">编辑</el-button>
+           <!--<el-button @click="delHandle(scope.row)" type="danger" size="small" v-if="pms['11U3']">删除</el-button>-->
         </template>
       </el-table-column>
     </el-table>
@@ -115,6 +115,7 @@ import SeePage from './see';
     name: "merchantList",
     data() {
       return {
+        pms: this.$store.getters.pms,//菜单权限
         isSou: false,
         isSee: false,
         isEdit: false,

@@ -28,10 +28,10 @@
             <el-input placeholder="服务名称" v-model="formInline.name"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
+            <el-button type="primary" @click="find" v-if="pms['11S1']"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
           </el-form-item>
         </el-form>
-        <el-button type="success" plain class="c-addBtn" @click="onSubmit">新增商户</el-button>
+        <el-button type="success" class="c-addBtn" @click="onSubmit" v-if="pms['11S2']">新增商户</el-button>
       </div>
     </div>
 
@@ -60,10 +60,10 @@
       </el-table-column>
       <el-table-column align="center" fixed="right" label="操作" width="350">
         <template slot-scope="scope">
-          <el-button @click="routeClick(scope.row,1)" type="primary" size="small">推荐商品</el-button>
-          <el-button @click="routeClick(scope.row,2)" type="success" size="small">优惠券管理</el-button>
-          <el-button @click="editHandle(scope.row)" type="warning" size="small">编辑</el-button>
-          <el-button @click="delHandle(scope.row)" type="danger" size="small">删除</el-button>
+          <el-button @click="routeClick(scope.row,1)" type="primary" size="small" v-if="pms['11S3']">推荐商品</el-button>
+          <el-button @click="routeClick(scope.row,2)" type="success" size="small" v-if="pms['11S4']">优惠券管理</el-button>
+          <el-button @click="editHandle(scope.row)" type="warning" size="small" v-if="pms['11S5']">编辑</el-button>
+          <el-button @click="delHandle(scope.row)" type="danger" size="small" v-if="pms['11S6']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -98,6 +98,7 @@
     name: "merchantList",
     data() {
       return {
+        pms: this.$store.getters.pms,//菜单权限
         isSou: false,
         tableData: [],
         navDetailData: [

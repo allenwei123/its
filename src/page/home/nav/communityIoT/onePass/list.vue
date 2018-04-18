@@ -19,13 +19,13 @@
               <el-input v-model="input" placeholder="卡号"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="query"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
+              <el-button type="primary" @click="query"  v-if="pms['11R1']"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
             </el-form-item>
           </el-form>
-          <el-button type="success" plain class="c-addBtn" @click="onSubmit">新增卡片</el-button>
+          <el-button type="success" class="c-addBtn" @click="onSubmit"  v-if="pms['11R2']">新增卡片</el-button>
         </div>
       </div>
-      
+
       <el-table :data="tableData" style="width: 100%" v-loading="loading">
         <el-table-column label="序号" width="50" :show-overflow-tooltip="true" align="center">
           <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
@@ -65,14 +65,14 @@
         <!-- <el-table-column label="状态" :show-overflow-tooltip="true" align="center">
           <template slot-scope="scope">{{ getdataStatus(scope.row.dataStatus) }}</template>
         </el-table-column> -->
-      
+
         <!-- <el-table-column label="操作" width="80" fixed="right" align="left">
           <template slot-scope="scope">
             <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button>
           </template>
         </el-table-column> -->
       </el-table>
-      
+
       <div class="c-block">
         <el-pagination
           @current-change="getTableList"
@@ -102,6 +102,7 @@ export default {
   name: "onePass",
   data() {
     return {
+      pms: this.$store.getters.pms,//菜单权限
       tableData: [],
       navDetailData: [
         { id: 0, name: "社区物联" },
@@ -262,7 +263,7 @@ export default {
 .fade-enter-active, .fade-leave-active {
   transition: all 0.5s ease;
 }
-       
+
 .fade-enter, .fade-leave-active {
   opacity: 0;
   transform: rotateY(180deg);
@@ -270,7 +271,7 @@ export default {
 .fade1-enter-active, .fade1-leave-active {
   transition: all 0.5s ease;
 }
-       
+
 .fade1-enter, .fade1-leave-active {
   opacity: 0;
   transform: translateX(-500px);

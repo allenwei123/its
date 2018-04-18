@@ -1,36 +1,35 @@
 import aside from '@/mock/menuList';
 import http from '@/utils/request';
 
-function a() {
-  let arr = arguments[0];
-  let mockData = arguments[1];
-  let flag = 0;
-  if(arr.length) {
-    arr.forEach(item1 => {
-      item1.group.forEach(item2 => {
-        item2.menuItem.forEach(item3 => {
-          if(mockData[flag]=='1' || mockData[flag] == '0') {
-            item3.show = mockData[flag];
-            flag++;
-          }
-        })
-      })
-    });
+function formater(arr) {
+  if(Array.isArray(arr)) {
+    let o = {};
+    for(let i = 0,len = arr.length;i < len;i++ ){
+      let str = arr[i];
+      let key = str.substring(0,4);
+      let val = + str.substring(4,5);
+      o[key] = val;
+    };
+    return o;
   }
-  return arr;
-};
-
+}
 export default {
     state: {
       asideData: aside[0].group,
-      allAside:[],
+      permissionData: null ,
       communityId: localStorage["communityId"] ,
       communityList: localStorage["communityList"] ? JSON.parse(localStorage["communityList"]) : null,
       navIndex: 0,
     },
     mutations: {
       CHANGE_ASIDEDATA: (state, newValue) => {
-        state.asideData = newValue;
+       let a = newValue.filter(item => {
+          if(!state.permissionData[item.show]) return false;
+          let b = item.menuItem.filter(i => state.permissionData[i.show] == 1);
+          item.menuItem = b;
+          return true;
+        });
+        state.asideData = a;
       },
       ADDCOMMUNITYID: (state, newValue) => {
         state.communityId = newValue;
@@ -38,13 +37,8 @@ export default {
       CGCOMMUNITYLIST: (state, newValue) => {
         state.communityList = newValue;
       },
-      UPDATEDASIDEDATA: (state, newValue ) => {
-        state.allAside = newValue;
-        if(newValue){
-          state.asideData = newValue[0].group;
-        }else {
-          state.asideData = [];
-        }
+      UPDATEDPERMISSIONDATA: (state, newValue ) => {
+        state.permissionData = newValue;
       },
       NAVINDEX: (state, newValue ) => {
         state.navIndex = newValue;
@@ -53,9 +47,7 @@ export default {
     actions: {
       changeAsideData({commit,state}, value) {
         if(value > 0){
-          if(state.allAside.length){
-            commit('CHANGE_ASIDEDATA',state.allAside[value - 1].group);
-          }
+            commit('CHANGE_ASIDEDATA',aside[value - 1].group);
         }
       },
       addCommunityId({ commit }, value) {
@@ -76,20 +68,19 @@ export default {
         }
         commit('CGCOMMUNITYLIST',value )
       },
-      updatedAsideData( { commit ,state }) {
+      updatedPermission( { commit ,state }) {
         return new Promise((resolve, reject) => {
-          http.get(`/sys/menu/${state.communityId}/getByOuterKey`)
+          http.get(`/community/config`)
             .then(res => {
-              let menuList =res.data?a(aside,res.data.spread.split('')) : null;
-              commit('UPDATEDASIDEDATA', menuList);
-              if(state.navIndex !== 0){
-                commit('CHANGE_ASIDEDATA',state.allAside[state.navIndex - 1].group);
+              if(!res.errorCode) {
+                let obj = formater(res.data.menus);
+                commit('UPDATEDPERMISSIONDATA',obj);
+                resolve({msg:'success'});
               }
-              resolve({msg:'success'})
             }).catch(err => {
               reject(err)
             })
-        } )
+        } );
       },
       updatedNavIndex( { commit ,state } ,value) {
         commit('NAVINDEX',value);

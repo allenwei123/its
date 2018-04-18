@@ -95,69 +95,16 @@
   export default {
     name: "summaryBaseInfo",
     data() {
+      let date=new Date();
+      let c =date.setDate(1);
       return {
         roomData: {},
-        selectMonth: (new Date()).getTime(),
+        selectMonth:  c,
         allPersonData: {},//住户数据
         tenantAll: null,//男女比例总数
       }
     },
     mounted(){
-//      var myChart3 = echarts.init(document.getElementById('line'));
-//
-//      //折线图
-//      let lineOption = {
-//        xAxis: {
-//          type: 'category',
-//          boundaryGap: false,
-//          data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
-//        },
-//        yAxis: {
-//          type: 'value'
-//        },
-//        tooltip: {
-//          trigger: 'axis',
-//          axisPointer: {
-//            type: 'cross',
-//            label: {
-//              backgroundColor: '#6a7985'
-//            }
-//          }
-//        },
-//        yAxis: [
-//          {
-//            type: 'value'
-//          }
-//        ],
-//        series: [{
-//          name: '门禁统计',
-//          data: [820, 932, 901, 934, 1290, 800, 1320],
-//          type: 'line',
-//          areaStyle: {},
-//          itemStyle: {
-//            normal: {
-////              color: '#badeff',
-//              color: {
-//                type: 'linear',
-//                x: 1,
-//                y: 1,
-//                x2: 1,
-//                y2: 0,
-//                colorStops: [{
-//                  offset: 0, color: '#fff' // 0% 处的颜色
-//                }, {
-//                  offset: 1, color: '#c1e1fe' // 100% 处的颜色
-//                }],
-//                globalCoord: true // 缺省为 false
-//              },
-//              shadowBlur: 200,
-//              shadowColor: 'rgba(255, 123, 255, 0.5)'
-//            }
-//          },
-//        }]
-//      };
-//      myChart3.setOption(lineOption);
-
       this.getRoomData();
       this.getPersonData();
       this.getApplicationData();
@@ -262,7 +209,7 @@
               })
         },
         getApplicationData() {
-          this.$xttp.post(`/statistics/tenant/application`,{communityId:'5a8cfa62518089ae7afccc0c',startAt:this.selectMonth,endAt:this.getCurrentMonthLast(this.selectMonth)})
+          this.$xttp.post(`/statistics/tenant/application`,{communityId:this.$store.getters.communityId,startAt:this.selectMonth,endAt:this.getCurrentMonthLast(this.selectMonth)})
             .then(res => {
               if(!res.errorCode) {
                 var myChart3 = echarts.init(document.getElementById('line'));
@@ -272,9 +219,11 @@
                   xAxis: {
                     type: 'category',
                     boundaryGap: false,
+                    axisLine:{
+                      show: true
+                    },
                     data: arr.map(item => {
-                        
-                       return item.name
+                       return item.name.substring(5,item.name.length)
                       })
                   },
                   yAxis: {
@@ -289,11 +238,6 @@
                       }
                     }
                   },
-                  yAxis: [
-                    {
-                      type: 'value'
-                    }
-                  ],
                   series: [{
                     name: '访客统计',
                     data: arr.map(item => item.count),

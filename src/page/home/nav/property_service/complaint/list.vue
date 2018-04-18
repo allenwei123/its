@@ -25,7 +25,7 @@
               <el-input placeholder="投诉人" v-model.trim="input"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="query">查询</el-button>
+              <el-button type="primary" @click="query" v-if="pms['11H1']">查询</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -51,7 +51,7 @@
             </el-table-column>
             <el-table-column label="操作" width="150" :fixed="tableData.length ? 'right' : '/'">
               <template slot-scope="scope">
-                <el-button type="danger" size="mini" @click="del(scope.row)">删除</el-button>
+                <el-button type="danger" size="mini" @click="del(scope.row)" v-if="pms['11H2']">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -73,6 +73,7 @@
     name: 'complaint',
     data () {
       return {
+        pms: this.$store.getters.pms,//菜单权限
         value6: '',
         value1: '',
         options: [ {
@@ -132,7 +133,6 @@
           params['startAt'] = a.getFullYear() + '-' +(a.getMonth() < 10 ? '0': '')  + (a.getMonth() + 1) + '-' + (a.getDate() < 10 ? '0': '') + a.getDate();
           params['endAt'] = b.getFullYear() + '-' +(b.getMonth() < 10 ? '0': '')  + (b.getMonth() + 1) + '-' + (b.getDate() < 10 ? '0': '') + b.getDate();
         }
-        console.log(params);
         this.$xttp.post(url, params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {

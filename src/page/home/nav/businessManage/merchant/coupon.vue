@@ -26,10 +26,10 @@
           </el-form-item>
 
           <el-form-item>
-            <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
+            <el-button type="primary" @click="find"><i class="iconfont icon-sousuo" v-if="pms['11T7']">&nbsp;</i>查询</el-button>
           </el-form-item>
         </el-form>
-        <el-button type="success" plain class="c-addBtn" @click="onSubmit">新增优惠券</el-button>
+        <el-button type="success" class="c-addBtn" @click="onSubmit" v-if="pms['11T8']">新增优惠券</el-button>
       </div>
     </div>
 
@@ -68,14 +68,14 @@
       </el-table-column>
 
       <el-table-column label="已使用数量" min-width="60" align="center" :show-overflow-tooltip="true">
-        <template slot-scope="scope">{{ scope.row.useNum || '无' }}</template>
+        <template slot-scope="scope">{{ scope.row.useNum }}</template>
       </el-table-column>
 
       <el-table-column align="center" fixed="right" label="操作" width="220">
         <template slot-scope="scope">
-          <el-button @click="editHandle(scope.row)" type="warning" size="small">编辑</el-button>
-          <el-button @click="delHandle(scope.row)" type="danger" size="small" v-if="scope.row.validStatus == 0">删除</el-button>
-          <el-button @click="validHandle(scope.row)" type="success" size="small">{{ isIssue ? '发布' : '撤下' }}</el-button>
+          <el-button @click="editHandle(scope.row)" type="warning" size="small" v-if="pms['11T9']">编辑</el-button>
+          <el-button @click="delHandle(scope.row)" type="danger" size="small" v-if="(scope.row.useStatus == -1) && pms['11TC']">删除</el-button>
+          <el-button @click="validHandle(scope.row)" type="success" size="small" v-if="pms['11TA']">{{ isIssue ? '发布' : '撤下' }}</el-button>
         </template>
       </el-table-column>
 
@@ -116,6 +116,7 @@
     name: "couponList",
     data() {
       return {
+        pms: this.$store.getters.pms,//菜单权限
         isSou: false,
         tableData: [],
         navDetailData: [

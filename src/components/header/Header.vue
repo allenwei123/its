@@ -19,7 +19,7 @@
       <!--nav 导航模块-->
       <div class="c-top_bar_area">
         <ul class="c-top-nav">
-          <li v-for="(item,index) in items" :key="item.name" v-bind:class="{'c-nav-active':navIndex == index}" @click="navClick(item,index)" >{{ item.name}}</li>
+          <li v-for="(item,index) in items" :key="item.name" v-bind:class="{'c-nav-active':navIndex == index}" v-if="item.show" @click="navClick(item)" >{{ item.name}}</li>
         </ul>
       </div>
     </div>
@@ -33,15 +33,16 @@ import { mapGetters } from "vuex";
     data() {
       return {
         items: [
-          {name: '首页', src: '/home/nav/main'},
-          {name: '物业管理', src: '/home/nav/side'},
-          {name: '物业服务', src: '/home/nav/propertyService'},
-          {name: '社区物联', src: '/home/nav/communityIoT'},
-          {name: '商圈管理', src: '/home/nav/businessManage'},
+          {name: '首页', src: '/home/nav/main',id: 0,show:this.$store.getters.pms['11a0'] },
+          {name: '物业管理', src: '/home/nav/side',id: 1 ,show:this.$store.getters.pms['11a1']},
+          {name: '物业服务', src: '/home/nav/propertyService',id: 2 ,show:this.$store.getters.pms['11a2']},
+          {name: '社区物联', src: '/home/nav/communityIoT',id: 3 ,show:this.$store.getters.pms['11a3']},
+          {name: '商圈管理', src: '/home/nav/businessManage',id: 4 ,show:this.$store.getters.pms['11a4']},
 //          {name: '系统管理', src: '/'},
-          {name: '数据统计', src: '/home/nav/summary'},
+          {name: '数据统计', src: '/home/nav/summary',id: 5 ,show:this.$store.getters.pms['11a5']},
         ],
         currentUser:'',
+        pms: this.$store.getters.pms,//菜单权限
       }
     },
     computed:mapGetters(['communityList','communityId','navIndex']),
@@ -52,7 +53,6 @@ import { mapGetters } from "vuex";
     methods: {
       logout() {
         this.$router.push('/auth/logout');
-        // this.$router.push('/auth/login');
       },
       handleCommand(command) {
         this.$store.dispatch('addCommunityId',command);

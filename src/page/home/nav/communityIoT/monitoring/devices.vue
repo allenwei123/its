@@ -23,10 +23,10 @@
               <el-input v-model="input" placeholder="监控设备名称"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="query"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
+              <el-button type="primary" @click="query" v-if="pms['11O1']"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
             </el-form-item>
             <el-form-item style="float: right">
-              <el-button type="success" plain @click="add">新增监控</el-button>
+              <el-button type="success" @click="add" v-if="pms['11O2']">新增监控</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -63,7 +63,7 @@
 
         <el-table-column label="操作" width="120" fixed="right" align="left">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="primary" size="small">查看录像</el-button>
+            <el-button @click="handleClick(scope.row)" type="primary" size="small" v-if="pms['11O3']">查看录像</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -95,6 +95,7 @@ export default {
   name: "other",
   data() {
     return {
+      pms: this.$store.getters.pms,//菜单权限
       show: false,
       isSou: false,
       tableData: [],
@@ -231,7 +232,7 @@ export default {
      this.query();
      this.build();
   },
- 
+
 };
 </script>
 

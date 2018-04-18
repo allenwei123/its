@@ -143,7 +143,7 @@
         let inOutTag = parseInt(this.$route.query.inOutTag);
         return inOutTag === 1 ? item.inTime : item.outTime;
       }
-    }, 
+    },
     created() {
       this.query();
     }

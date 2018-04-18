@@ -37,7 +37,7 @@
             <el-input v-model.trim="formInline.name" placeholder="用户名"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
+            <el-button type="primary" @click="find" v-if="pms['1131']"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -90,11 +90,11 @@
           <el-button @click="printHandle(scope.row)" type="primary" size="small">
             认证详情
           </el-button>
-          <el-button @click="handle(scope.row,1)" v-if="scope.row.auditStatus == 0" type="success" size="small">审核
+          <el-button @click="handle(scope.row,1)" v-if="scope.row.auditStatus == 0 && pms['1132']" type="success" size="small">审核
           </el-button>
-          <el-button @click="handle(scope.row,2)" v-if="scope.row.auditStatus == 0" type="warning" size="small">驳回
+          <el-button @click="handle(scope.row,2)" v-if="scope.row.auditStatus == 0 && pms['1133']" type="warning" size="small">驳回
           </el-button>
-          <el-button @click="handle(scope.row,3)" v-if="scope.row.auditStatus == 1" type="danger" size="small">注销
+          <el-button @click="handle(scope.row,3)" v-if="scope.row.auditStatus == 1 && pms['1135']" type="danger" size="small">注销
           </el-button>
         </template>
       </el-table-column>
@@ -141,6 +141,7 @@
       return {
         isSou: false,
         tableData: [],
+        pms: this.$store.getters.pms,//菜单权限
         floorOptions: [],
         navDetailData: [
           {id: 0, name: "首页"},
@@ -306,7 +307,7 @@
         } else {
           delete obj.name;
         }
-        
+
         this.loading = true;
         this.$xttp
           .get(`/user/${obj.communityId}/getByCommunityId`, {params: obj})
@@ -318,7 +319,7 @@
               if(this.obj.auditStatus == 0){
                 this.formInline.value = '未认证';
               }
-              
+
               this.tableData.forEach(item => {
                 if (item.checkInTime) {
                   item.time1 = new Date(item.createAt)

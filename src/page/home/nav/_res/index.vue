@@ -10,7 +10,7 @@
         <el-menu width="200px" v-if="asideData.length" :collapse="isCollapse" background-color="#ffffff" text-color="#000" :default-active="$route.path" active-text-color="#409EFF">
           <el-submenu  v-for="(itemNemu,index) in asideData" :index="itemNemu.id" v-bind:key="index">
             <template slot="title"><i class="iconfont icon-wuyeguanli">&nbsp;</i><span slot="title" class="c-aside-title">{{ itemNemu.name }}</span></template>
-            <el-menu-item class="test" v-for="(itemGroup) in itemNemu.menuItem" v-bind:key="itemGroup.link" v-if="itemGroup.show == '1'" :index="itemGroup.link" @click="alink(itemGroup)">{{ itemGroup.title  }}</el-menu-item>
+            <el-menu-item class="test" v-for="(itemGroup) in itemNemu.menuItem" v-bind:key="itemGroup.link" :index="itemGroup.link" @click="alink(itemGroup)">{{ itemGroup.title  }}</el-menu-item>
 
           </el-submenu>
         </el-menu>
@@ -40,8 +40,7 @@ import { mapGetters } from "vuex"
     components:{
     },
     mounted() {},
-    updated() {
-    },
+    updated() {},
     methods:{
       alink(item) {
         this.$router.push({path:item.link})

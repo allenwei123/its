@@ -2,7 +2,7 @@
   <div class="c-progress-box" ref="progress">
     <div v-if="!type">
       <div class="c-progress-span c-name" ref="name">{{ data.name }}</div>
-      <div class="c-progress-span c-bar" ref="bar"></div>
+      <div class="c-progress-span c-bar" ref="bar" v-show="data.num"></div>
       <div class="c-progress-span" v-if="!data.num">
         <svg width="20" height="20"> <circle stroke="#3d87f5" stroke-width="2" fill="transparent" r="8" cx="10" cy="10"/> </svg>
       </div>

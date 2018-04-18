@@ -7,22 +7,22 @@
             <p class="c-fc-blue c-left-title c-noLeft"><i class="iconfont icon-jingwuicon_svg- c-fc-blue"></i> 警报数量统计
               <el-date-picker
                 class="c-selectMonth"
-              v-model="value4"
+              v-model="selectMonth"
               type="month"
               value-format="timestamp"
               size="mini"
-              align="right"
+              align="right" @change="getAlarmData"
               placeholder="选择月">
             </el-date-picker>
             </p>
             <el-col :span="24" class="c-alarmNum">
-              <p class="c-fc-blue c-ta-center">+74</p>
+              <p class="c-fc-blue c-ta-center">+{{ alarmData ? alarmData.total : 0 }}</p>
               <p class="c-ta-center c-fc-gray">本月新增警报</p>
             </el-col>
             <!--  警报处理明细 -->
             <el-col :span="24" class="c-alarm-detail">
               <p class="c-fc-blue c-left-title">警报处理明细</p>
-              <p class="c-tip c-fc-blue">社区共有2名保安，人均处理报警事故2起</p>
+              <!--<p class="c-tip c-fc-blue">社区共有 {{ progressData.length ? progressData.length : 0 }}名保安，人均处理报警事故起</p>-->
               <div v-loading="!progressData.length" class="c-alarm-dm">
                 <myProgress v-for="(item,index) in progressData" :key="index" :percent="(item.num / progressData[0].num) * 100" :data="item"></myProgress>
               </div>
@@ -42,11 +42,12 @@
               <p class="c-fc-blue c-left-title c-noLeft"><i class="iconfont icon-wuyebaoxiu c-fc-blue"></i> 故障报修统计
                 <el-date-picker
                   class="c-selectMonth"
-                  v-model="value3"
+                  v-model="selectFault"
                   type="month"
                   value-format="timestamp"
                   size="mini"
                   align="right"
+                  @change="getFaultData"
                   placeholder="选择月">
                 </el-date-picker>
               </p>
@@ -54,18 +55,27 @@
               <div class="c-fault-detail">
                 <div id="fault"></div>
                 <div class="c-fault-all">
-                  <p class="c-fc-blue c-ta-center">+327</p>
+                  <p class="c-fc-blue c-ta-center">+{{ allFaultNum }}</p>
                   <p class="c-fc-gray c-ta-center">本月新增故障</p>
                 </div>
               </div>
               <!-- 故障维修统计  -->
               <el-row class="c-maintain">
-                <p class="c-fc-blue c-left-title" @click="aa">故障维修统计</p>
-                <p class="c-tip c-fc-blue">社区共有4名维修工人，人均处理故障89起</p>
+                <p class="c-fc-blue c-left-title">故障维修统计</p>
+                <!--<p class="c-tip c-fc-blue">社区共有4名维修工人，人均处理故障89起</p>-->
                 <ul class="c-maintain-detail" v-loading="!maintainData.length">
                   <li class="c-maintain-item" v-for="(item,index) in maintainData" :key="index">
-                    <myProgress :data="item" :percent="item.percent"></myProgress>
-                    <div class="c-maintain-tip c-fc-gray"> 服务评价：<div> <el-rate v-model="item.rate"></el-rate></div></div>
+                    <myProgress :data="item" :percent="(item.num / maintainData[0].num) * 100"></myProgress>
+                    <div class="c-maintain-tip c-fc-gray"> 服务评价：<div>
+                      <el-rate
+                        v-model="item.rate"
+                        show-score
+                        disabled
+                        text-color="#ff9900"
+                        score-template="{value}">
+                      </el-rate>
+                      <!--<el-rate v-model="item.rate"  show-score ></el-rate>-->
+                    </div></div>
                   </li>
                 </ul>
               </el-row>
@@ -92,39 +102,46 @@
   export default {
     name: "summaryAlarm",
     data() {
+      let date=new Date();
+      let c =date.setDate(1);
       return {
+        selectMonth: c ,
         progressData: [],
         maintainData:[],//故障维修统计
-        value4: new Date(),
-        value3: new Date()
+        selectFault: c ,
+        communityId:this.$store.getters.communityId,
+        alarmData:{},//警报数据
+        allFaultNum: 0,//故障数据总数
       }
     },
     components: {
       myProgress
     },
     mounted(){
-      this.getProgressData();
-      this.createdLine();
-      this.createdFault();
-      this.getMaintainData();
+      this.getAlarmData();
+      this.getFaultData();
     },
     methods: {
-      getProgressData() {
-        this.loading = true;
-        setTimeout(() => {
-          this.progressData = [
-            {name: "陈晓春", num: 233},
-            {name: "张三", num: 344},
-            {name: "李四", num: 45},
-            {name: "老万", num: 555},
-            {name: "臣明", num: 220},
-            {name: "大傻", num: 0},
-            {name: "大傻1", num: 0},
-            {name: "大傻2", num: 0},
-            {name: "大傻3", num: 0},
-          ].sort((a, b) => a.num < b.num);
-          this.loading = false;
-        }, 500)
+      getAlarmData() {
+        let data = {communityId:this.communityId,startAt:this.selectMonth,endAt:this.getCurrentMonthLast(this.selectMonth)};
+        this.$xttp.post('/statistics/alarm',data)
+          .then(res => {
+            if(!res.errorCode) {
+                this.alarmData = res.data;
+                if(res.data.securitySections.length) {
+                    this.progressData = res.data.securitySections.map(item => {
+                        return {
+                            num: item.count,
+                            name:item .name
+                        }
+                    });
+                }
+                //警报时间
+                if(res.data.hourSections.length) {
+                    this.createdLine();
+                }
+            }
+          })
       },
       createdLine() {
         let dom = echarts.init(document.getElementById('i-alarm'));
@@ -132,7 +149,7 @@
           xAxis: {
             type: 'category',
             boundaryGap: false,
-            data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+            data: this.alarmData.hourSections.map(item => item.name )
           },
           yAxis: {
             type: 'value'
@@ -153,7 +170,7 @@
           ],
           series: [{
             name: '门禁统计',
-            data: [820, 932, 901, 934, 1290, 800, 1320],
+            data: this.alarmData.hourSections.map(item => item.count ),
             type: 'line',
             areaStyle: {},
             itemStyle: {
@@ -180,7 +197,28 @@
         };
         dom.setOption(lineOption);
       },
-      createdFault() {
+      getFaultData() {
+        let data = {communityId:this.communityId,startAt:this.selectFault,endAt:this.getCurrentMonthLast(this.selectFault)};
+        this.$xttp.post('/statistics/fault',data)
+          .then(res => {
+            if(!res.errorCode) {
+                this.allFaultNum = res.data.total;
+                if(res.data.typeSections.length) {
+                    this.createdFault(res.data.typeSections);
+                };
+                if(res.data.repairSections.length) {
+                    this.maintainData = res.data.repairSections.map(item => {
+                        return {
+                            name:item.name,
+                            num: item.count || 0,
+                            rate: item.avgScore ? (+ item.avgScore) : 0
+                        }
+                    })
+                }
+            }
+          })
+      },
+      createdFault( arr ) {
         let dom = echarts.init(document.getElementById('fault'));
         let option = {
           color: ['#41a3fc','#1fe057'],
@@ -214,28 +252,16 @@
                   length2: 20
                 }
               },
-              data:[
-                {value:137, name:'住户故障'},
-                {value:200, name:'公众故障'},
-              ].sort((a,b)=> a > b)
+              data:arr.map(item => {
+                  return {
+                      name: item.name,
+                      value: item.count
+                  }
+              })
             }
           ]
         };
         dom.setOption(option);
-      },
-      getMaintainData() {
-          setTimeout(()=> {
-              this.maintainData = [
-                {name:'陈晓春',num:113, percent:70 ,rate:3 },
-                {name:'陈法春',num:34, percent:40 ,rate:4 },
-                {name:'陈法春1',num:34, percent:20 ,rate:4 },
-                {name:'张三',num:34, percent:50 ,rate:4 },
-                {name:'李四',num:34, percent:50 ,rate:4 },
-                {name:'王五',num:66, percent:90 ,rate:4 },
-                {name:'万晓春',num:223, percent:30 ,rate:5 },
-                {name:'凑晓春',num:45, percent:50 ,rate:2 },
-              ];
-          },1500)
       },
       getCurrentMonthLast(value) {
         var aa = new Date(value);
@@ -244,9 +270,6 @@
         var nextMonthFirstDay=new Date(aa.getFullYear(),nextMonth,1);
         var oneDay=1000*60*60*24;
         return (new Date(nextMonthFirstDay-oneDay)).getTime();
-      },
-      aa(){
-        console.log(this.getCurrentMonthLast(this.value4));
       }
     }
   }

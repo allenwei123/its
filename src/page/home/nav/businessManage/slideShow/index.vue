@@ -16,10 +16,10 @@
               <el-input  placeholder="商户名称" v-model.trim="input"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="query">查询</el-button>
+              <el-button type="primary" @click="query" v-if="pms['11T1']">查询</el-button>
             </el-form-item>
             <el-form-item style="float: right">
-              <el-button type="success" plain @click="addNotice">新增轮播图</el-button>
+              <el-button type="success" @click="addNotice" v-if="pms['11T2']">新增轮播图</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -63,9 +63,9 @@
                 </template>
 
                 <template v-if="scope.row.published !== 1">
-                  <el-button type="primary" size="small" @click="publish(scope.row)">发布</el-button>
-                  <el-button type="warning" size="small" @click="modify(scope.row)">编辑</el-button>
-                  <el-button type="danger" size="small" @click="del(scope.row)">删除</el-button>
+                  <el-button type="primary" size="mini" @click="publish(scope.row)" v-if="pms['11T3']">发布</el-button>
+                   <el-button type="warning" size="mini" @click="modify(scope.row)" v-if="pms['11T5']">编辑</el-button>
+                  <el-button type="danger" size="mini" @click="del(scope.row)" v-if="pms['11T6']">删除</el-button>
                 </template>
               </template>
             </el-table-column>
@@ -99,6 +99,7 @@
     },
     data () {
       return {
+        pms: this.$store.getters.pms,//菜单权限
         navDetailData: [
           { id: 0, name: "商圈管理" , router: '/home/nav/businessManage/merchant'},
           { id: 1, name: "周边商圈", router: '/home/nav/businessManage/merchant' },

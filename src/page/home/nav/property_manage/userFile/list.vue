@@ -15,7 +15,7 @@
               <el-input v-model.trim="formInline.contractPhone" placeholder="手机号码"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
+              <el-button type="primary" @click="find"><i class="iconfont icon-sousuo" v-if="pms['1121']">&nbsp;</i>查询</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -57,7 +57,7 @@
           label="操作"
           width="150">
           <template slot-scope="scope">
-            <el-button @click="handle(scope.row)" type="success" size="small">住房信息</el-button>
+            <el-button @click="handle(scope.row)" type="success" size="small" v-if="pms['1122']">住房信息</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -85,6 +85,7 @@ export default {
     return {
       isSou: false,
       tableData: [],
+      pms: this.$store.getters.pms,//菜单权限
       navDetailData: [
         { id: 0, name: "首页" },
         { id: 1, name: "基础管理" },
