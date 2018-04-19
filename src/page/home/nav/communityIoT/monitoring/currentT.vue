@@ -42,14 +42,7 @@
           {id: 1, name: "监控管理"},
           {id: 2, name: "监控设备"}
         ],
-        tabList: [
-//          {id: 'playercontainer',url:'rtmp://rtmp.open.ys7.com/openlive/96b8c5cc889c494199f9d471bcc7a6f8' },
-//          {id: 'playercontainer2',url:'rtmp://rtmp.open.ys7.com/openlive/2f47e1374d7449b78cad7e9f01bbea57'},
-//          {id: 'playercontainer3',url:'rtmp://rtmp.open.ys7.com/openlive/3fb41d029a2d49878373f1ac16218a0f'},
-//          {id: 'playercontainer4',url:'rtmp://rtmp.open.ys7.com/openlive/96b8c5cc889c494199f9d471bcc7a6f8'},
-//          {id: 'playercontainer5',url:'rtmp://rtmp.open.ys7.com/openlive/2f47e1374d7449b78cad7e9f01bbea57'},
-//          {id: 'playercontainer6',url:'rtmp://rtmp.open.ys7.com/openlive/3fb41d029a2d49878373f1ac16218a0f'}
-          ],
+        tabList: [],
         currentPage: 1,
         total: 1,
         vObj: null,

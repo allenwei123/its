@@ -1,5 +1,7 @@
 import http from './request';
 import store from '@/store';
+import { env,currentEnv } from './config.js';
+let current = currentEnv();
 
 function createData(info, file) {
     let fileKey = 'web1' + store.getters.uid +'_'+ info.bucket+'_'+ + Date.parse(new Date()) + file.name.substr(file.name.lastIndexOf('.'));
@@ -24,9 +26,9 @@ function createData(info, file) {
 export function send(file, success) {
     let info = window.localStorage.getItem('uploadInfo') == 'undefined' ? null : JSON.parse(window.localStorage.getItem('uploadInfo'));
     let now = Date.parse(new Date()) / 1000;
-
+    let bucket = env[current].bucket;
     if (!info || info.expire < now + 3) {
-        http.get("/oss/bit-smcm-img/policy")
+        http.get(`/oss/${bucket}/policy`)
             .then(res => {
                 if (!res.errorCode) {
                   let host = res.data.host;
@@ -53,6 +55,7 @@ export function getUri(key,success) {
     let info = window.localStorage.getItem('downloadInfo') == 'undefined' ? null : JSON.parse(window.localStorage.getItem('downloadInfo'));
     let now = Date.parse(new Date()) / 1000;
     let expire = 88888888888888888888888888888;
+    let bucket = env[current].bucket;
     if(info) {
         expire = new Date(info.expiration).getTime()/1000;
     }
@@ -70,8 +73,8 @@ export function getUri(key,success) {
             accessKeyId: info.accessKeyId,//info.accessKeyId
             accessKeySecret: info.accessKeySecret,//info.accessKeySecret
             stsToken: info.securityToken,//info.securityToken
-            // bucket: info.bucket || 'bit-test'//info.bucket
-            bucket: info.bucket || 'bit-smcm-img',//info.bucket
+            bucket: info.bucket || bucket,//info.bucket
+            // bucket: info.bucket || 'bit-smcm-img',//info.bucket
             secure: true  //啓動https
         });
         if(success) {

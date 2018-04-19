@@ -159,6 +159,11 @@ const router = new Router({
                 component: (resolve) => require(["@/page/home/nav/property_service/message/list"], resolve)
               },
               {
+                path: 'messageDetail',
+                name:'11J0',
+                component: (resolve) => require(["@/page/home/nav/property_service/message/detail"], resolve)
+              },
+              {
                 path: 'onlineService',
                 name:'11G0',
                 component: (resolve) => require(["@/page/home/nav/property_service/online"], resolve)
@@ -296,7 +301,7 @@ const router = new Router({
   ]
 });
 let currentNav = '';
-let errorList = ['/home/nav/communityIoT/record','/home/nav/propertyService/message'];//记录暂时没开发的
+let errorList = ['/home/nav/communityIoT/record'];//记录暂时没开发的
 router.beforeEach((to, from, next) => {
   let arr = ['main','side','propertyService','communityIoT','businessManage','summary'];
 
