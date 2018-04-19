@@ -6,11 +6,11 @@
           <!--   房间汇总  -->
           <el-row type="flex" class="c-box c-room-box">
             <el-col :span="12" class="c-summary-item">
-              <p class="c-ta-center "><strong class="c-fc-blue">{{ roomData.total }}</strong>套</p>
+              <p class="c-ta-center "><strong class="c-fc-blue">{{ roomData.total || 0 }}</strong>套</p>
               <p class="c-ta-center c-room-all">房间总数</p>
             </el-col>
             <el-col :span="12" class="c-summary-item">
-              <p class="c-ta-center"><strong class="c-fc-blue">{{ roomData.checkInCount }}</strong>套</p>
+              <p class="c-ta-center"><strong class="c-fc-blue">{{ roomData.checkInCount || 0 }}</strong>套</p>
               <p class="c-ta-center c-room-all">认证房间数</p>
             </el-col>
           </el-row>
@@ -299,6 +299,8 @@
     width: 100%;
     background: #efefef;
     position: relative;
+    height: calc(100vh - 70px);
+    overflow-y: scroll;
   }
 
   //功能型类
@@ -358,13 +360,16 @@
 
   .c-apply-box {
     margin-top: 15px;
-    height: calc(100vh - 520px);
+    /*height: calc(100vh - 520px);*/
+    height: 360px;
   }
+
 
   /*住户统计*/
   .c-age-charts {
     width: 100%;
     height: calc(100% - 21px);
+    /*height: 326px;*/
   }
   .c-person-charts {
     width:100%;

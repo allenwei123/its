@@ -1,10 +1,12 @@
 import axios from 'axios';
 import store from '@/store';
 import { Message } from 'element-ui'
+import { env,currentEnv } from './config.js';
+let current = currentEnv();
+
 let service = axios.create({
-  // baseURL: 'http://apismcm.test.bitiot.com.cn/v1', // api的base_url
-  baseURL: 'https://api.smcm.bitiot.com.cn/v1',
-  // baseURL:'http://192.168.10.151:9000/v1',
+  // baseURL: 'https://api.smcm.bitiot.com.cn/v1',
+  baseURL: env[current].api,
   timeout: 5000 // request timeout
 });
 

@@ -289,6 +289,8 @@
     width: 100%;
     background: #efefef;
     position: relative;
+    height: calc(100vh - 70px);
+    overflow-y: scroll;
   }
 
   //功能型类
@@ -334,7 +336,7 @@
 
   //标注型类
   .c-right-part {
-    height: 100%;
+    // height: 100%;
     margin-left: 10px;
   }
 
@@ -346,10 +348,11 @@
     }
   }
   .c-alarm-detail {
-    height: 350px;
+    height: 280px;
     box-sizing: border-box;
     .c-alarm-dm {
-      height: 290px;
+      margin-top: 15px;
+      height: 250px;
       overflow-y: scroll;
     }
   }
@@ -371,7 +374,8 @@
   .c-maintain{
     .c-maintain-detail {
       margin-top: 20px;
-      height: calc(100vh - 500px);
+      // height: calc(100vh - 500px);
+      height: 370px;
       overflow-y: scroll;
       .c-maintain-item {
         margin-top: 15px;
@@ -388,7 +392,8 @@
   //图表
   #i-alarm {
     width:100%;
-    height: calc( 100vh - 607px );
+    // height: calc( 100vh - 607px );
+    height: 285px;
   }
   #fault {
     width:100%;

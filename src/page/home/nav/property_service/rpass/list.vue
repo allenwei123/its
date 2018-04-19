@@ -121,7 +121,6 @@ import { send as ossUpload, getUri } from "@/utils/oss";
         this.$xttp.post(url, params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {
-            console.log(res.data.records);
             this.tableData = res.data.records;
             this.total = res.data.total;
             // this.tableData.forEach(function(item) {
