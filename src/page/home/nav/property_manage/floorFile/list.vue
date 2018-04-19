@@ -17,7 +17,7 @@
               <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
             </el-form-item>
           </el-form>
-          <el-button type="success" class="c-addBtn" v-if="pms['1101']" @click="onSubmit">新增楼栋</el-button>
+          <el-button type="success" plain class="c-addBtn" v-if="pms['1101']" @click="onSubmit">新增楼栋</el-button>
         </div>
       </div>
 

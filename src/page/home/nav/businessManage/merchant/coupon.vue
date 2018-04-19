@@ -29,7 +29,7 @@
             <el-button type="primary" @click="find"><i class="iconfont icon-sousuo" v-if="pms['11T7']">&nbsp;</i>查询</el-button>
           </el-form-item>
         </el-form>
-        <el-button type="success" class="c-addBtn" @click="onSubmit" v-if="pms['11T8']">新增优惠券</el-button>
+        <el-button type="success" plain class="c-addBtn" @click="onSubmit" v-if="pms['11T8']">新增优惠券</el-button>
       </div>
     </div>
 
@@ -71,7 +71,7 @@
         <template slot-scope="scope">{{ scope.row.useNum }}</template>
       </el-table-column>
 
-      <el-table-column align="center" fixed="right" label="操作" width="220">
+      <el-table-column align="left" fixed="right" label="操作" width="220">
         <template slot-scope="scope">
           <el-button @click="editHandle(scope.row)" type="warning" size="small" v-if="pms['11T9']">编辑</el-button>
           <el-button @click="delHandle(scope.row)" type="danger" size="small" v-if="(scope.row.validStatus == 0) && pms['11TC']">删除</el-button>

@@ -13,10 +13,10 @@
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
             <el-form-item style="float: right; margin-bottom: 4px;">
-              <el-button type="primary" @click="cycleMang" v-if="pms['11D4']">周期管理</el-button>
+              <el-button type="primary" plain @click="cycleMang" v-if="pms['11D4']">周期管理</el-button>
             </el-form-item>
             <el-form-item style="float: right; margin-bottom: 4px;">
-              <el-button type="success" @click="addProject" v-if="pms['11D1']">新增项目</el-button>
+              <el-button type="success" plain @click="addProject" v-if="pms['11D1']">新增项目</el-button>
             </el-form-item>
           </el-form>
         </div>

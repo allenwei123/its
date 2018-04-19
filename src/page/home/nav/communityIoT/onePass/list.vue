@@ -22,7 +22,7 @@
               <el-button type="primary" @click="query"  v-if="pms['11R1']"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
             </el-form-item>
           </el-form>
-          <el-button type="success" class="c-addBtn" @click="onSubmit"  v-if="pms['11R2']">新增卡片</el-button>
+          <el-button type="success" plain class="c-addBtn" @click="onSubmit"  v-if="pms['11R2']">新增卡片</el-button>
         </div>
       </div>
 

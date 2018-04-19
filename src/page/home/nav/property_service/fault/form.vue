@@ -1,7 +1,7 @@
 <template>
   <el-dialog title="新增故障" :visible.sync="msg" :before-close="handleClose">
     <el-form :model="form" :rules="rules" ref="ruleForm" label-width="120px">
-      <el-form-item label="故障类型" prop="faultItem" required>
+      <el-form-item label="故障类型：" prop="faultItem">
         <el-select v-model="form.faultItem"  placeholder="故障类型">
           <el-option label="公共-水电燃气" value="1"></el-option>
           <el-option label="公共-房屋结构" value="2"></el-option>
@@ -11,21 +11,21 @@
           <el-option label="公共-其它" value="99"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="故障楼栋" prop="buildingId">
+      <el-form-item label="故障楼栋：" prop="buildingId">
         <el-select v-model="form.buildingId" placeholder="全部楼栋" clearable>
           <el-option v-for="item in buildingOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="故障地址" label-width="120px" prop="faultAddress" required>
+      <el-form-item label="故障地址：" label-width="120px" prop="faultAddress">
         <el-input v-model="form.faultAddress" auto-complete="off"></el-input>
       </el-form-item>
-      <el-form-item label="故障描述" prop="faultContent" required>
+      <el-form-item label="故障描述：" prop="faultContent">
         <el-input type="textarea" v-model="form.faultContent" :rows="5"></el-input>
       </el-form-item>
-      <el-form-item label="申报人" label-width="120px" prop="userName" required>
+      <el-form-item label="申报人：" label-width="120px" prop="userName">
         <el-input v-model="form.userName" auto-complete="off"></el-input>
       </el-form-item>
-      <el-form-item label="联系方式" label-width="120px" prop="contact" required>
+      <el-form-item label="联系方式：" label-width="120px" prop="contact">
         <el-input v-model.number="form.contact" auto-complete="off"></el-input>
       </el-form-item>
 
@@ -110,7 +110,6 @@
     },
     props: ['msg'],
     created() {
-      console.log("sss");
       this.getBuilding();
     }
   }

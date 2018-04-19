@@ -28,7 +28,7 @@
               <el-button type="primary" @click="query"  v-if="pms['11I1']">查询</el-button>
             </el-form-item>
             <el-form-item style="float: right">
-              <el-button type="primary" class="c-addBtn" @click="add"  v-if="pms['11I2']">新增故障</el-button>
+              <el-button type="success" plain class="c-addBtn" @click="add"  v-if="pms['11I2']">新增故障</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -296,7 +296,6 @@
         params['repairId'] = this.value;
         this.$xttp.post(url, params).then(res => {
           if(res.errorCode === 0) {
-            console.log('res', res);
             this.loading = false;
              this.$message({
               message: '指派人员成功',
@@ -407,7 +406,7 @@
           params['playTimeBegin'] = a.getFullYear() + '-' +(a.getMonth() < 10 ? '0': '')  + (a.getMonth() + 1) + '-' + (a.getDate() < 10 ? '0': '') + a.getDate();
           params['playTimeEnd'] = b.getFullYear() + '-' +(b.getMonth() <  10 ? '0': '')  + (b.getMonth() + 1) + '-' + (b.getDate() < 10 ? '0': '') + b.getDate();
         }
-        // console.log(params);
+
         this.$xttp.post(url, params).then(res => {
           if (res.errorCode === 0) {
             this.tableData = res.data.records;

@@ -19,7 +19,7 @@
               <el-button type="primary" @click="query" v-if="pms['11T1']">查询</el-button>
             </el-form-item>
             <el-form-item style="float: right">
-              <el-button type="success" @click="addNotice" v-if="pms['11T2']">新增轮播图</el-button>
+              <el-button type="success" plain @click="addNotice" v-if="pms['11T2']">新增轮播图</el-button>
             </el-form-item>
           </el-form>
         </div>

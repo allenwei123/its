@@ -2,7 +2,7 @@
     <el-container class="c-home">
       <el-main>
         <div class="c-header">
-          <i class="iconfont icon-house c-fs-24"></i>
+          <i class="iconfont icon-xiaoqu c-fs-24"></i>
           <span>和谐警苑</span>
         </div>
         <el-container class="c-main">
@@ -10,7 +10,7 @@
             <div class="c-title-info">
               <ul class="c-three">
                 <li class="c-three-li" v-if="pms['11a1']">
-                  <h5 class="c-three-title c-tl-center">业主认可</h5>
+                  <h3 class="c-three-title c-tl-center">业主认证</h3>
                   <div class="c-three-detail">
                     <div>
                       <p class="c-color-white c-fs-24 c-tl-center">{{ alarmData.unReviewedNum || 0 }}</p>
@@ -22,7 +22,7 @@
                   </div>
                 </li>
                 <li class="c-three-li" v-if="pms['11a2']">
-                  <h5 class="c-three-title c-tl-center">物业缴费</h5>
+                  <h3 class="c-three-title c-tl-center">物业缴费</h3>
                   <div class="c-three-detail">
                     <div>
                       <p class="c-color-white c-fs-24 c-tl-center">{{ alarmData.unPaymentNum || 0 }}</p>
@@ -30,11 +30,11 @@
                     </div>
                     <div>
                       <p class="c-color-white c-fs-24 c-tl-center">{{ alarmData.overdueNum || 0 }}</p>
-                      <span class="c-color-white ">超额未缴</span></div>
+                      <span class="c-color-white ">超期未缴</span></div>
                   </div>
                 </li>
                 <li class="c-three-li" v-if="pms['11a3']">
-                  <h5 class="c-three-title c-tl-center">警报消息</h5>
+                  <h3 class="c-three-title c-tl-center">警报消息</h3>
                   <div class="c-three-detail">
                     <div>
                       <p class="c-color-white c-fs-24 c-tl-center">{{ alarmData.unCheckedNum || 0 }}</p>
@@ -56,7 +56,7 @@
                     <ul>
                       <li class="c-wait-item" v-for="item in taskList" :key="item.id">
                         <div class="c-wait-time"><i class="iconfont icon-shijian c-time"></i><span class="c-time"> {{ item.createAt | time}}</span></div>
-                        <a href="javascript:void(0)" class="c-task-detail">{{ item.title }}。<b> 请尽快处理!</b></a>
+                        <a href="javascript:void(0)" class="c-task-detail">{{ item.title }}。请尽快处理!</a>
                       </li>
                       <li class="c-loading" v-if="isLoading">
                         <div><img src="static/image/loading.png" alt=""></div>

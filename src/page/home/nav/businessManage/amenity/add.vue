@@ -149,7 +149,7 @@ export default {
           return;
         }else{
           if(!fun.isTelOrPhoneAvailable(this.form.contact)){
-            this.showInfo('服务热线填写错误，请重新填写');
+            this.showInfo('服务热线格式错误，请重新填写');
             return;
           }
         }
@@ -190,7 +190,6 @@ export default {
       if(this.form.serviceWay == 2){
         params['url'] = this.form.url;
       }
-      return;
       let url = 'biz/convenience/add';
       this.$xttp.post(url, params)
           .then(res => {

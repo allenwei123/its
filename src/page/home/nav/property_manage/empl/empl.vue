@@ -23,7 +23,7 @@
               <el-button type="primary" @click="find" v-if="pms['1171']"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button>
             </el-form-item>
           </el-form>
-          <el-button type="success" class="c-addBtn" @click="onSubmit" v-if="pms['1172']">新增员工</el-button>
+          <el-button type="success" plain class="c-addBtn" @click="onSubmit" v-if="pms['1172']">新增员工</el-button>
         </div>
       </div>
 

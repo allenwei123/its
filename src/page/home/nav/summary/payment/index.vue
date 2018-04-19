@@ -33,7 +33,8 @@
         </el-col>
         <el-col :span="24" class="c-box c-summary-detail">
           <p class="c-fc-blue c-left-title">超期数据统计</p>
-          <div class="c-progress-body" v-loading="!progressData.length">
+          <p v-if="progressData.length == 0" style="text-align:center">暂无数据</p>
+          <div class="c-progress-body" v-loading="isLoading">
             <myProgress type="more" labelWidth="150" v-for="(item,index) in progressData" :key="index" :percent="(item.num / progressData[0].num) * 100" :data="item"></myProgress>
           </div>
         </el-col>
@@ -56,6 +57,7 @@
         progressData: [],//使用记录的bar
         billData:{ },
         communityId: this.$store.getters.communityId,
+        isLoading: false
       }
     },
     components: {
@@ -67,8 +69,10 @@
     },
     methods: {
       getProgressData() {
+        this.isLoading = true;
           this.$xttp.get(`/statistics/${this.communityId}/property-bill/expire`)
             .then(res => {
+              this.isLoading = false;
               if(!res.errorCode && res.data.proprietorSections.length) {
                 this.progressData = res.data.proprietorSections.map(item => {
                   return {

@@ -117,7 +117,7 @@
     </el-form>
     <div slot="footer" class="dialog-footer">
       <!-- <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button> -->
-      <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
+      <el-button type="primary" @click="submitForm()">保存</el-button>
     </div>
   </el-dialog>
 </template>
@@ -145,8 +145,10 @@
         time: null,
         titleFont: this.edata ? '编辑商户':'新增商户',
         data: {
+          name: '',
           type: null,
           tag: [],
+          telPhone: '',
           address: '',
           serviceBeginAt: '',
           serviceEndAt: '',
@@ -171,10 +173,10 @@
           type: [{required: true, message: '请选择商家类型', trigger: 'blur'}],
           tag: [{validator: checkTag, trigger: 'change'}],
           ThreeAddress: [{type: 'array', required: true, message: '请输入所在地区', trigger: 'change'}],
-          telPhone: [
-            {required: true, message: '请输入号码',pattern: /^[1][3,4,5,7,8][0-9]{9}$/, trigger: 'blur'},
-            // { pattern: /^[1][3,4,5,7,8][0-9]{9}$/, message: '请填写正确号码', trigger: 'blur change'}
-          ],
+          // telPhone: [
+          //   {required: true, message: '请输入号码',pattern: /^[1][3,4,5,7,8][0-9]{9}$/, trigger: 'blur'},
+          //   // { pattern: /^[1][3,4,5,7,8][0-9]{9}$/, message: '请填写正确号码', trigger: 'blur change'}
+          // ],
           telPhone: [{ required: true, message: '请输入手机号', trigger: 'blur' },
                     //  { pattern: /^1[34578]\d{9}$/, message: '请输入正确号码', trigger: 'blur' }
                       { pattern: /^((\d3)|(\d{3}\-))?13[0-9]\d{8}|15[89]\d{8}|17[0-9]\d{8}|18[0-9]\d$/, message: '请输入正确号码', trigger: 'blur chage' } 
@@ -223,49 +225,43 @@
           type: "warning"
         });
       },
-      submitForm(formName) {
+      submitForm() {
         let that = this;
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            if(that.data.name == undefined){
-              that.showInfo('请输入店名');
-              return;
-            }
-            if(that.data.type == undefined){
-              that.showInfo('请选择商家类型');
-              return;
-            }
-            if(that.data.telPhone != undefined){
-              let telReg = /^((0\d{2,3}-\d{7,8})|[1][3,4,5,7,8][0-9]{9})$/;
-              if(!telReg.test(that.data.telPhone)){
-                that.showInfo('请输入正确号码');
-                return;
-              }
-            }
-            let arr = [...this.uploadFile,...this.uploadFile_pic];
-            let length = arr.length;
-            if (length) {
-              let flag = 0;
-              arr.forEach((item) => {
-                send(item, (key) => {
-                  flag++;
-                  if(flag == 1 && this.uploadFile.length){
-                      that.data.logo = key;
-                  }else {
-                      this.data.picture.push(key);
-                  }
-                  if(flag == length) {
-                    that.save();
-                  }
-                });
-              });
-            } else {
-              that.save();
-            }
-          }else{
-            return false;
+        if(that.data.name == ''){
+          that.showInfo('请输入店名');
+          return;
+        }
+        if(that.data.type == null || that.data.type == ''){
+          that.showInfo('请选择商家类型');
+          return;
+        }
+        if(that.data.telPhone != ''){
+          let telReg = /^((0\d{2,3}-\d{7,8})|[1][3,4,5,7,8][0-9]{9})$/;
+          if(!telReg.test(that.data.telPhone)){
+            that.showInfo('请输入正确号码');
+            return;
           }
-        })
+        }
+        let arr = [...that.uploadFile,...that.uploadFile_pic];
+        let length = arr.length;
+        if (length) {
+          let flag = 0;
+          arr.forEach((item) => {
+            send(item, (key) => {
+              flag++;
+              if(flag == 1 && that.uploadFile.length){
+                  that.data.logo = key;
+              }else {
+                  that.data.picture.push(key);
+              }
+              if(flag == length) {
+                that.save();
+              }
+            });
+          });
+        } else {
+          that.save();
+        }
       },
       getTag() {
         this.$xttp.get('/biz/shop/type/list')
@@ -287,7 +283,7 @@
           })
       },
       save(){
-        if (!this.data.name || !this.data.type  || !this.data.telPhone || !this.data.address )return;
+        // if (!this.data.name || !this.data.type  || !this.data.telPhone || !this.data.address )return;
         let msg = this.edata ? '编辑' : '添加';
         let postUrl = this.edata ? '/biz/shop/edit' : '/biz/shop/add';
         this.$xttp.post(postUrl, this.data)
@@ -357,11 +353,13 @@
         })
       },
       selectType(bool){
-        if (bool) {
+        if (bool == '') {
           this.data.tag = [];
         }
         if(this.data.type){
           this.minTag = this.typeList.find(item => this.data.type == item.code).tag;  
+        }else{
+          this.minTag = null;
         }
 
       }

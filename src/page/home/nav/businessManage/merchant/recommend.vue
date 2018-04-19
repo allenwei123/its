@@ -29,7 +29,7 @@
             <el-button type="primary" @click="find"><i class="iconfont icon-sousuo" v-if="pms['11S7']">&nbsp;</i>查询</el-button>
           </el-form-item>
         </el-form>
-        <el-button type="success" class="c-addBtn" @click="onSubmit" v-if="pms['11S8']">新增商品</el-button>
+        <el-button type="success" plain class="c-addBtn" @click="onSubmit" v-if="pms['11S8']">新增商品</el-button>
       </div>
     </div>
 

@@ -30,7 +30,7 @@
           </el-row>
           <!--  警报时间统计 -->
           <el-row class="c-box" style="margin-top: 10px;">
-            <p class="c-fc-blue c-left-title">警报时间统计 (次/天)</p>
+            <p class="c-fc-blue c-left-title">警报时间统计 (次/小时)</p>
               <div id="i-alarm">
 
               </div>
@@ -128,6 +128,7 @@
           .then(res => {
             if(!res.errorCode) {
                 this.alarmData = res.data;
+                console.log(res.data);
                 if(res.data.securitySections.length) {
                     this.progressData = res.data.securitySections.map(item => {
                         return {
