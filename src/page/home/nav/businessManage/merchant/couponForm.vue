@@ -3,18 +3,18 @@
     <el-form :model="data" label-width="120px" ref="ruleForm" :rules="rules" class="c-myForm">
 
       <el-row  :gutter="10">
-        <el-col  :md="24" :lg="10">
+        <el-col  :md="24" :lg="12">
           <el-row>
-            <el-form-item prop="name" label="优惠名称">
+            <el-form-item prop="name" label="优惠名称：">
               <el-input auto-complete="false" v-model="data.name " size="small"></el-input>
             </el-form-item>
 
-            <el-form-item prop="maxPrice" label="优惠金额">
+            <el-form-item prop="maxPrice" label="优惠金额：">
               <el-input auto-complete="false" type="text" v-model="data.maxPrice" size="small"></el-input>
             </el-form-item>
           </el-row>
         </el-col>
-        <el-col  :md="24" :lg="14">
+        <el-col  :md="24" :lg="10">
           <el-upload
             class="avatar-uploader"
             action=""
@@ -28,11 +28,11 @@
         </el-col>
       </el-row>
 
-      <el-form-item label="发行数量" prop="amount" >
+      <el-form-item label="发行数量：" prop="amount" >
         <el-input type="text" v-model="data.amount" size="small"></el-input>
       </el-form-item >
 
-      <el-form-item label="有效期限" prop="validityBeginAt" class="c-must" >
+      <el-form-item label="有效期限：" prop="validityBeginAt" class="c-must" >
         <el-date-picker
           v-model="time"
           type="daterange"
@@ -45,15 +45,15 @@
         </el-date-picker>
       </el-form-item>
 
-      <el-form-item label="领取限制" prop="couponLimit" >
+      <el-form-item label="领取限制：" prop="couponLimit" >
         <el-input  v-model="data.couponLimit" size="small"></el-input>
       </el-form-item>
 
-      <el-form-item label="使用须知" prop="prompt" >
+      <el-form-item label="使用须知：" prop="prompt" >
         <el-input  v-model="data.prompt" size="small"></el-input>
       </el-form-item>
 
-      <el-form-item label="校验密令" prop="validCode" class="c-must">
+      <el-form-item label="校验密令：" prop="validCode" class="c-must">
         <el-input  v-model="data.validCode" size="small" :disabled="editDisabled"></el-input>
       </el-form-item>
 
@@ -143,10 +143,22 @@
             if(this.data.maxPrice == ''){
               this.showInfo('优惠券金额不能为空');
               return;
+            }else{
+              let regNum =/^[0-9]*$/;
+              if(!regNum.test(this.data.maxPrice)){
+                this.showInfo('优惠金额请输入数字');
+                return;
+              }
             }
             if(this.data.amount == ''){
-              this.showInfo('请输入优惠券数量');
+              this.showInfo('请输入优惠券发行数量');
               return;
+            }else{
+              let regNum =/^[0-9]*$/;
+              if(!regNum.test(this.data.amount)){
+                this.showInfo('优惠券发行数量请输入数字');
+                return;
+              }
             }
             if(this.data.time == ''){
               this.showInfo('请选择优惠券有效期限');

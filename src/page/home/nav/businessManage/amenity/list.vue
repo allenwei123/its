@@ -62,7 +62,7 @@
       <el-table-column label="热线电话" min-width="200" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">{{ scope.row.contact}}</template>
       </el-table-column>
-      <el-table-column label="外部链接" min-width="200" align="center" :show-overflow-tooltip="true">
+      <el-table-column label="外部链接" min-width="200" align="center">
         <template slot-scope="scope"><el-button type="text">{{ scope.row.url }}</el-button></template>
       </el-table-column>
       <el-table-column label="修改时间" min-width="200" align="center" :show-overflow-tooltip="true">

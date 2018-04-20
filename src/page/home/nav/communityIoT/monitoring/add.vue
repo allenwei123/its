@@ -1,22 +1,24 @@
 <template>
   <el-dialog title="新增监控" :visible.sync="msg" :before-close="handleClose">
     <el-form :model="data"   label-width="120px">
-      <el-form-item label="监控" prop="faultItem" >
+      <el-form-item label="监控：" prop="faultItem" class="c-must">
         <el-input  auto-complete="off"></el-input>
       </el-form-item>
-      <el-form-item label="所属楼栋" label-width="120px">
+      <el-form-item label="所属楼栋：" label-width="120px" class="c-must">
+        <el-select v-model="form.building" placeholder="请选择楼栋">
+          <el-option v-for="item in buildingOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        </el-select>
+      </el-form-item>
+      <!-- 暂无 -->
+      <el-form-item label="厂商：" label-width="120px" class="c-must" >
         <el-input  auto-complete="off"></el-input>
       </el-form-item>
       <!-- 暂无 -->
-      <el-form-item label="厂商" label-width="120px" >
+      <el-form-item label="型号：" label-width="120px" class="c-must" >
         <el-input  auto-complete="off"></el-input>
       </el-form-item>
       <!-- 暂无 -->
-      <el-form-item label="型号" label-width="120px" >
-        <el-input  auto-complete="off"></el-input>
-      </el-form-item>
-      <!-- 暂无 -->
-      <el-form-item label="设备编号" label-width="120px" >
+      <el-form-item label="设备编号：" label-width="120px" class="c-must" >
         <el-input  auto-complete="off"></el-input>
       </el-form-item>
     </el-form>
@@ -32,9 +34,13 @@ import time from "@/utils/time.js";
     export default {
         data() {
             return {
+              buildingOptions: [],
                 data: {},
                 value: '',
                 makeAt: '',
+                form:{
+                  building: ''
+                }
             }
         },
         methods: {

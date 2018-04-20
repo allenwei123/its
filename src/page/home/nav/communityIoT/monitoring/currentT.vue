@@ -40,7 +40,7 @@
         navDetailData: [
           {id: 0, name: "社区物联"},
           {id: 1, name: "监控管理"},
-          {id: 2, name: "监控设备"}
+          {id: 2, name: "实时监控"}
         ],
         tabList: [],
         currentPage: 1,

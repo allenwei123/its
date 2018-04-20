@@ -210,6 +210,11 @@ const arr = [
             title:'动态消息',
             link:'/home/nav/propertyService/message',
             show: '11J0'
+          },{
+            id: '2-4-2',
+            title: '举报管理',
+            link: '/home/nav/propertyService/inform',
+            show: '11y2'
           }
         ]
       },
