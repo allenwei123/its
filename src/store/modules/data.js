@@ -75,6 +75,7 @@ export default {
           http.get(`/community/config`)
             .then(res => {
               if(!res.errorCode) {
+                console.log(res.data.menus);
                 let obj = formater(res.data.menus);
                 commit('UPDATEDPERMISSIONDATA',obj);
                 resolve({msg:'success'});

@@ -105,8 +105,8 @@ export default {
       pms: this.$store.getters.pms,//菜单权限
       tableData: [],
       navDetailData: [
-        { id: 0, name: "社区物联" },
-        { id: 1, name: "一卡通管理" },
+        { id: 0, name: "社区物联",  router:'/home/nav/communityIoT/elevator' },
+        { id: 1, name: "一卡通管理", router: '/home/nav/communityIoT/onePass' },
         { id: 2, name: "一卡通档案" }
       ],
       cardList:[ {name:'手机蓝牙',id:1},{name:'蓝牙卡',id:2},{name:'IC卡',id:4},{name:'二维码',id:8} ],

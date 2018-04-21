@@ -41,7 +41,7 @@
             </el-form-item>
 
             <el-form-item style="float: right">
-              <el-button type="primary" class="c-addBtn" @click="manageClick">审核管理设置</el-button>
+              <el-button type="success" plain class="c-addBtn" @click="manageClick">审核管理设置</el-button>
             </el-form-item>
           </el-form>
 
@@ -75,16 +75,15 @@
             <el-table-column label="操作" min-width="300" :fixed="tableData.length ? 'right' : '/'">
               <template slot-scope="scope">
                 <el-button type="primary" size="mini" @click="detail(scope.row)">详情</el-button>
-                <!-- <el-button type="primary" size="mini">屏蔽</el-button> -->
                 <!--0:待审核-->
                 <template v-if="scope.row.status === 0">
-                  <el-button type="primary" size="mini">通过</el-button>
-                  <el-button type="primary" size="mini">不通过</el-button>
+                  <el-button type="success" @click="handleDone(scope.row,'1')" size="mini">通过</el-button>
+                  <el-button type="warning" @click="handleDone(scope.row,'-1')" size="mini">不通过</el-button>
                 </template>
 
                 <!--1:手动通过,2:自动通过-->
                 <template v-if="scope.row.status === 1 || scope.row.status === 2">
-                  <el-button type="primary" size="mini">屏蔽</el-button>
+                  <el-button type="danger" @click="handlePB(scope.row)" size="mini">屏蔽</el-button>
                 </template>
 
                 <!--2:自动通过-->
@@ -104,6 +103,23 @@
       <transition name="fade">
         <editPage v-if="isManage" :msg="isManage" @upsee="manageEmit" ></editPage>
       </transition>
+
+      <el-dialog title="审核" :visible.sync="visible2">
+        <p v-if="pass">确定审核通过此条动态?</p>
+        <p v-if="refuse">确定拒绝通过此条动态?</p>
+        <div style="text-align: right; margin: 0">
+          <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
+          <el-button type="primary" size="mini" @click="confirmPR">确定</el-button>
+        </div>
+      </el-dialog>
+
+      <el-dialog title="屏蔽" :visible.sync="visible3">
+        <p>确定屏蔽此条动态?</p>
+        <div style="text-align: right; margin: 0;">
+          <el-button size="mini" type="text" @click="visible3 = false">取消</el-button>
+          <el-button size="mini" type="primary" @click="confirmPB">确定</el-button>
+        </div>
+      </el-dialog>
     </el-main>
   </el-container>
 </template>
@@ -133,7 +149,13 @@
         typeOptions: [{label: '邻里社交',value: '1'},{label: '悬赏求助',value: '2'},{label: '二手交易',value: '3'}],//类型选择数据
         type:'',//类型
         statusOptions: [{label: '待审核',value: '0'},{label: '手动通过',value: '1'},{label: '自动通过',value: '2'},{label: '未通过',value: '-1'},{label: '自动屏蔽',value: '-2'},{label: '手动屏蔽',value: '-3'}],//状态选择数据
-        status:''//状态
+        status:'',//状态
+        pass: false,  //通过
+        refuse: false,  //拒绝
+        visible2: false,  //审核页面
+        commentId: '',
+        commentStatus: '',
+        visible3: false
       }
     },
     components: {
@@ -231,6 +253,52 @@
       },
       detail(row) {
         this.$router.push('/home/nav/propertyService/messageDetail')
+      },
+      handleDone(row,status){
+        let id = row.id;
+        
+        if(status == 1){
+          this.visible2 = true;
+          this.pass = true;
+          this.refuse = false;
+          this.commentId = id;
+          this.commentStatus = status;
+        }
+        if(status == -1){
+          this.visible2 = true;
+          this.pass = false;
+          this.refuse = true;
+          this.commentId = id;
+          this.commentStatus = status;
+        }
+
+      },
+      // 审核动态
+      confirmPR(){
+        // let url = `mom/moment/${id}/audit?status=${status}`;
+        let url = `mom/moment/${this.commentId}/audit?status=${this.commentStatus}`;
+        console.log(url);
+        this.$xttp.get(url).then(res => {
+          if(res.success){
+            console.log(res);
+            this.visible2 = false;
+            this.commentId = '';
+            this.commentStatus = '';
+            this.$message({
+              message: '操作成功',
+              type: 'success'
+            });
+            this.getTableList()
+          }
+        })
+      },
+      handlePB(row){
+        this.visible3 = true;
+        this.commentId = row.id;
+      },
+      // 屏蔽动态
+      confirmPB(){
+
       }
     }
   }
@@ -241,5 +309,8 @@
       position: absolute;
       right: 0px;
       top: 0px;
+    }
+    .el-input--suffix .el-input__inner {
+      padding-right: 10px;
     }
 </style>

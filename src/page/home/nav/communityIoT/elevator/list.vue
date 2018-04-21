@@ -82,8 +82,8 @@
         value2: '',
         options2: [],
         navDetailData: [
-          { id: 0, name: "社区物联" },
-          { id: 1, name: "电梯管理" },
+          { id: 0, name: "社区物联", router:'/home/nav/communityIoT/elevator'},
+          { id: 1, name: "电梯管理", router:'/home/nav/communityIoT/elevator' },
           { id: 2, name: "电梯档案" }
         ],
         value3:'',//楼栋

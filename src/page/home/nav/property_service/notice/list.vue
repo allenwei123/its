@@ -63,6 +63,7 @@
               <template slot-scope="scope">
                 <el-button type="primary" size="mini" @click="preview(scope.row)" v-if="pms['11K3']">预览</el-button>
                 <el-button type="danger" size="mini" @click="del(scope.row)" v-if="pms['11K6']">删除</el-button>
+              </template>
                 <!--已发布-->
                 <!-- <template v-if="scope.row.publishStatus === 1"> -->
                   <!--推送公告逻辑：此公告已经发布并且还未推送的才能给物业推送，一个公告只能推送一次-->
@@ -76,7 +77,6 @@
                   <el-button type="warning" size="mini" @click="modify(scope.row)" v-if="pms['11K5']">编辑</el-button>
                   <el-button type="danger" size="mini" @click="del(scope.row)" v-if="pms['11K6']">删除</el-button>
                 </template> -->
-              </template>
             </el-table-column>
           </el-table>
         </div>
@@ -119,8 +119,8 @@
           label: '已撤销'
         }],
         navDetailData: [
-          { id: 0, name: "物业服务" },
-          { id: 1, name: "消息管理" },
+          { id: 0, name: "物业服务", router: '/home/nav/propertyService/rpass' },
+          { id: 1, name: "消息管理", router: '/home/nav/propertyService/notice' },
           { id: 2, name: "社区公告" }
         ],
         loading: false,

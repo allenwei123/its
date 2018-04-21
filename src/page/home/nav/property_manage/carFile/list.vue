@@ -17,7 +17,7 @@
               <el-button type="primary" @click="find"><i class="iconfont icon-sousuo" v-if="pms['1142']" >&nbsp;</i>查询</el-button>
             </el-form-item>
           </el-form>
-          <el-button type="primary" class="c-addBtn" @click="addCar" v-if="pms['1141']">新增车辆</el-button>
+          <el-button type="success" plain class="c-addBtn" @click="addCar" v-if="pms['1141']">新增车辆</el-button>
         </div>
       </div>
 
@@ -28,10 +28,10 @@
         <el-table-column v-if="show" align="center" prop="id" label=""></el-table-column>
         <el-table-column v-if="show" align="center" prop="userId" label=""></el-table-column>
         <el-table-column align="center" prop="carNo" label="车牌号" min-width="240"></el-table-column>
-        <el-table-column label="车库信息" width="450" align="center" :show-overflow-tooltip="true">
+        <el-table-column label="车库信息" min-width="400" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.parkingName}}</template>
         </el-table-column>
-        <el-table-column label="所属住户" width="250" align="center" :show-overflow-tooltip="true">
+        <el-table-column label="所属住户" width="200" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope"><a href="">{{ scope.row.userName}}</a></template>
         </el-table-column>
         <el-table-column align="center" prop="auditStatus" label="审核状态" :formatter="auditStatusFilter" width="120"></el-table-column>
@@ -97,8 +97,8 @@ export default {
       msg: '',
       // communityId:'',
       navDetailData: [
-        { id: 0, name: "物业管理" },
-        { id: 1, name: "基础管理" },
+        { id: 0, name: "物业管理", router: '/home/nav/side/floorFile' },
+        { id: 1, name: "基础管理", router: '/home/nav/side/floorFile' },
         { id: 2, name: "车辆认证" }
       ],
       formInline: {

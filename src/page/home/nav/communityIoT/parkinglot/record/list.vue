@@ -74,9 +74,9 @@
         date: '',
         value1: '',
         navDetailData: [
-          { id: 1, name: "社区物联" },
-          { id: 0, name: "停车管理" },
-          { id: 2, name: "停车设备" },
+          { id: 0, name: "社区物联", router:'/home/nav/communityIoT/elevator' },
+          { id: 1, name: "停车管理", router:'/home/nav/communityIoT/parkinglotDevice' },
+          { id: 2, name: "停车设备", router:'/home/nav/communityIoT/parkinglotDevice' },
           { id: 3, name: "进出记录" }
         ],
         // inOutTag: '',

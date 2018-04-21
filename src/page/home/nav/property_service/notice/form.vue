@@ -43,11 +43,12 @@
     <div slot="footer" class="dialog-footer">
       <el-button @click="closeForm">取消</el-button>
       <!--<el-button type="primary" @click="preview">预览</el-button>-->
-      <el-button type="primary" @click="save">保存</el-button>
+      <el-button type="primary" @click="save">发布</el-button>
       <!--<el-button type="primary" @click="publish">发布</el-button>-->
     </div>
   </el-dialog>
 </template>
+
 
 <script>
 import { send as ossUpload, getUri } from "@/utils/oss";
@@ -105,13 +106,31 @@ export default {
       if (files.length) {
         ossUpload(files[0].raw, key => {
           this.form.thumbnailUrl = key;
-          this.submitForm();
+          this.$confirm('保存并发布公告，是否继续?','提示',{
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.submitForm();
+          }).catch(() => {
+            
+          })
+          
         });
       } else if (files.length === 0) {
         this.showInfo("图片内容不能为空");
         return;
       } else {
-        this.submitForm();
+        s.$confirm('保存并发布公告，是否继续?','提示',{
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.submitForm();
+          }).catch(() => {
+            
+          })
+        // this.submitForm();
       }
       
     },

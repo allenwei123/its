@@ -77,8 +77,8 @@
       return {
         pms: this.$store.getters.pms,//菜单权限
         navDetailData: [
-          { id: 0, name: "物业服务" },
-          { id: 1, name: "社区服务" },
+          { id: 0, name: "物业服务", router: '/home/nav/propertyService/rpass' },
+          { id: 1, name: "社区服务", router: '/home/nav/propertyService/rpass' },
           { id: 2, name: "警报记录" }
         ],
         loading: false,

@@ -76,9 +76,9 @@ import { time as itmeFormatter } from "@/utils/time"
         deviceName: '',
         a:'',
         navDetailData: [
-          { id: 0, name: "社区物联" },
-          { id: 1, name: "电梯管理" },
-          { id: 2, name: "电梯档案" },
+          { id: 0, name: "社区物联" , router:'/home/nav/communityIoT/elevator'},
+          { id: 1, name: "电梯管理" , router:'/home/nav/communityIoT/elevator'},
+          { id: 2, name: "电梯档案" , router:'/home/nav/communityIoT/elevator'},
           { id: 3, name: "使用记录" }
         ],
       }

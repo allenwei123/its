@@ -73,9 +73,9 @@
         q_input: null,
         deviceName: '',
         navDetailData: [
-          { id: 0, name: "社区物联" },
-          { id: 1, name: "门禁管理" },
-          { id: 2, name: "门禁档案", router: '' },
+          { id: 0, name: "社区物联" , router:'/home/nav/communityIoT/elevator' },
+          { id: 1, name: "门禁管理", router:'/home/nav/communityIoT/door'},
+          { id: 2, name: "门禁档案", router:'/home/nav/communityIoT/door' },
           { id: 3, name: "使用记录" }
         ]
       }

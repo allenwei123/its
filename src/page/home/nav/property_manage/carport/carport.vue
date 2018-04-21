@@ -97,8 +97,8 @@ export default {
       msg: '',
       // communityId:'',
       navDetailData: [
-        { id: 0, name: "物业管理" },
-        { id: 1, name: "基础管理" },
+        { id: 0, name: "物业管理", router: '/home/nav/side/floorFile' },
+        { id: 1, name: "基础管理", router: '/home/nav/side/floorFile' },
         { id: 2, name: "车库档案" }
       ],
       formInline: {

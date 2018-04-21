@@ -167,8 +167,8 @@
           label: '已驳回'
         }],
         navDetailData: [
-          { id: 0, name: "物业服务" },
-          { id: 1, name: "故障报修" },
+          { id: 0, name: "物业服务", router: '/home/nav/propertyService/rpass' },
+          { id: 1, name: "故障报修", router: '/home/nav/propertyService/fault' },
           { id: 2, name: "故障管理" }
         ],
         loading: false,

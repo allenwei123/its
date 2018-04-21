@@ -87,8 +87,8 @@ export default {
       tableData: [],
       pms: this.$store.getters.pms,//菜单权限
       navDetailData: [
-        { id: 0, name: "首页" },
-        { id: 1, name: "基础管理" },
+        { id: 0, name: "物业管理", router: '/home/nav/side/floorFile' },
+        { id: 1, name: "基础管理", router: '/home/nav/side/floorFile' },
         { id: 2, name: "住户档案" }
       ],
       formInline: {

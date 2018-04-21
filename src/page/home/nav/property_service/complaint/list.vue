@@ -90,8 +90,8 @@
         total: 0,
         currentPage: 1,
         navDetailData: [
-          { id: 0, name: "物业服务" },
-          { id: 1, name: "投诉报事" },
+          { id: 0, name: "物业服务", router: '/home/nav/propertyService/rpass' },
+          { id: 1, name: "投诉报事", router: '/home/nav/propertyService/complaint' },
           { id: 2, name: "住户投诉" }
         ],
       }

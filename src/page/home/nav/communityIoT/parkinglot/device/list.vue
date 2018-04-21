@@ -65,8 +65,8 @@
       return {
         pms: this.$store.getters.pms,//菜单权限
         navDetailData: [
-          { id: 1, name: "社区物联" },
-          { id: 0, name: "停车管理" },
+          { id: 0, name: "社区物联", router:'/home/nav/communityIoT/elevator' },
+          { id: 1, name: "停车管理", router:'/home/nav/communityIoT/parkinglotDevice' },
           { id: 2, name: "停车设备" }
         ],
         loading: false,

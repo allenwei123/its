@@ -112,8 +112,8 @@ import AddPage from "./add";
         value2: '',
         options2: [],
        navDetailData: [
-          { id: 0, name: "社区物联" },
-          { id: 1, name: "门禁管理" },
+          { id: 0, name: "社区物联" , router:'/home/nav/communityIoT/elevator'},
+          { id: 1, name: "门禁管理" , router:'/home/nav/communityIoT/door'},
           { id: 2, name: "门禁档案" }
         ],
         options3: [],

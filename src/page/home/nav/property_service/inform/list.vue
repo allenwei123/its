@@ -62,7 +62,7 @@
                         <el-table-column label="操作" min-width="300" align="center" :fixed="tableData.length ? 'right' : '/'">
                             <template slot-scope="scope">
                                 <el-button type="primary" size="mini" @click="detail(scope.row)">动态详情</el-button>
-                                <el-button type="primary" @click="dialogVisible = true" size="mini">屏蔽</el-button>
+                                <el-button type="danger" @click="dialogVisible = true" size="mini">屏蔽</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -74,7 +74,8 @@
                     </el-pagination>
                 </div>
             </el-tab-pane>
-            <el-tab-pane label="举报评论">
+            <el-tab-pane>
+                <span slot="label"><i class="iconfont icon-duihuakuang"></i> 举报评论</span>
                 <div class="c-searchbar">
                     <el-form :inline="true" class="demo-form-inline">
                         <el-form-item>
@@ -121,7 +122,7 @@
                         <el-table-column label="操作" min-width="300" align="center" :fixed="tableData.length ? 'right' : '/'">
                             <template slot-scope="scope">
                                 <el-button type="primary" size="mini" @click="detail(scope.row)">评论详情</el-button>
-                                <el-button type="primary" size="mini" @click="commentNO(scope.row)">屏蔽</el-button>
+                                <el-button type="danger" size="mini" @click="commentNO(scope.row)">屏蔽</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -129,7 +130,7 @@
                 <div class="c-pagination">
                     <el-pagination
                         layout="total, prev, pager, next, jumper" @current-change="getTableList"
-                        :total="total" :page-size="pageSize" :current-page.sync="currentPage1">
+                        :total="total1" :page-size="pageSize" :current-page.sync="currentPage1">
                     </el-pagination>
                 </div>
             </el-tab-pane>
@@ -200,8 +201,8 @@
     //   editPage
     },
     created() {
-      this.query1();
       this.query();
+      this.query1();
     },
     methods: {
         handleClose(done){
@@ -264,7 +265,7 @@
       },
       getTableList1() {
         this.loading = true;
-        let url = `mom/moment/community/detail?page=${this.currentPage1}&size=${this.pageSize}`;
+        let url = `mom/comment/page-with-report?page=${this.currentPage1}&size=${this.pageSize}`;
         let params = {};
         //输入的搜索字添加params中
         if(this.type1){
@@ -273,12 +274,13 @@
         if(this.input1){
           params['creatorName'] = this.input1;
         }
+        params['communityId'] = this.$store.getters.communityId;
         this.$xttp.post(url, params).then(res => {
           console.log(res);
           this.loading = false;
           if (res.errorCode === 0) {
             this.tableData1 = res.data.records;
-            this.total = res.data.total;
+            this.total1 = res.data.total;
           }
         }).catch(() => {
           this.loading = false;
