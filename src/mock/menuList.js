@@ -216,6 +216,11 @@ const arr = [
             title: '举报管理',
             link: '/home/nav/propertyService/inform',
             show: '11y2'
+          },{
+            id: '2-4-3',
+            title: '禁言管理',
+            link: '/home/nav/propertyService/silent',
+            show: '11y2'
           }
         ]
       },

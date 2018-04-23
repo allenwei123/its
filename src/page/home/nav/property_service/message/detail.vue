@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-main>
+    <el-main v-loading="pageLoading">
         <ul class="c-navDetail clear">
             <el-breadcrumb separator-class="el-icon-arrow-right">
                 <el-breadcrumb-item v-for="(nav, index) in navDetailData" :to="nav.router" :key="index">{{ nav.name }}
@@ -10,22 +10,22 @@
                 <p class="c-title">动态详情</p>
                 <div class="c-author-body">
                     <div class="c-author-header">
-                        <img class="c-user-image" src="static/image/MANAGER.png" alt="头像加载失败">
+                        <img class="c-user-image" :src="homeHeadImg" alt="头像加载失败">
                         <div class="c-author-info">
-                            <p>刘强东</p>
-                            <p>2018-01-01 12:34</p>
+                            <p>{{ detailData.creatorName  }}</p>
+                            <p>{{ detailData.createAt | time('yyyy-MM-dd HH:mm')  }}</p>
                         </div>
                     </div>
                     <div class="c-author-msg">
-                        <p class="c-send-msg">小区门口有一条小狗白色的超级萌萌的小区门口有一条小狗，白小区门口有一条小狗，白色的超级萌萌的色的超级萌萌的</p>
-                        <ul class="c-send-msgBody">
-                            <li v-for="item in infoImage" :key="item.id">
-                                <img class="c-msg-image" src="static/image/MANAGER.png" alt="图片加载失败">
+                        <p class="c-send-msg">{{ detailData.content }}</p>
+                        <ul class="c-send-msgBody" v-loading="infoImageLoading">
+                            <li v-for="(item, index) in infoImage" :key="index">
+                                <img class="c-msg-image" :src="item" alt="图片加载失败">
                             </li>
                         </ul>
                         <div class="c-send-msgBtn">
-                            <el-button type="info">查看举报</el-button>
-                            <el-button type="danger">屏蔽动态</el-button>
+                            <el-button type="info" @click="isSee = true">查看举报({{ detailData.reportNum || 0 }})</el-button>
+                            <el-button type="danger" @click="visible = true">屏蔽动态</el-button>
                         </div>
                     </div>
                 </div>
@@ -33,14 +33,20 @@
                     <el-collapse accordion>
                         <el-collapse-item>
                             <template slot="title">
-                                &nbsp; 点赞 ( 66 )
+                                &nbsp; 点赞 ( {{ detailData.praiseNum || 0  }} )
                             </template>
-                            <ul>
+                            <ul class="c-like-box">
                                 <li v-for="item in likeOptions" :key="item.id">
-                                    <img class="c-user-image" src="static/image/MANAGER.png" alt="头像加载失败">
+                                    <img class="c-user-image" :src="item.creatorHeadImg" alt="头像加载失败">
                                     <div class="c-author-info">
-                                        <p>刘强东</p>
-                                        <p>2018-01-01 12:34</p>
+                                        <p>{{ item.creatorName }}</p>
+                                        <p>{{ item.createAt | time('yyyy-MM-dd HH:mm')  }}</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div style="width:150px;margin:0 auto;">
+                                        <el-button @click="getLike" v-if="likeCurrentNum > 9">点击查看更多...</el-button>
+                                        <p  v-if="!(likeCurrentNum > 9)">亲,暂时没有更多数据了</p>
                                     </div>
                                 </li>
                             </ul>
@@ -48,52 +54,188 @@
                     </el-collapse>
                 </div>
                 <div class="c-comment-body">
-                    <p class="c-comment-title">&nbsp; 评论( 66 )</p>
-                    <div class="c-border-bottom" v-for="item in commentOptions" :key="item.id">
+                    <p class="c-comment-title">&nbsp; 评论( {{ detailData.commentNum || 0  }} )</p>
+                    <div class="c-border-bottom" v-for="item in commentOptions" :key="item.id" v-loading="commentLoading">
                         <div class="c-margin10">
                             <div> 
-                                <img class="c-user-image" src="static/image/MANAGER.png" alt="头像加载失败">
+                                <img class="c-user-image" :src="item.creatorHeadImg" alt="头像加载失败">
                                 <div class="c-author-info">
-                                    <p>刘强东</p>
-                                    <p>2018-01-01 12:34</p>
+                                    <p>{{ item.creatorName }}</p>
+                                    <p>{{ item.createAt | time('yyyy-MM-dd HH:mm')  }}</p>
                                 </div>
                             </div>
-                            <p class="c-comment-content">小区门口有一条流浪狗，白色的超萌，不知道是不是有主的，想抱走！</p>
+                            <p class="c-comment-content">{{ item.content }}</p>
                             <div class="c-send-msgBtn">
                                 <el-button type="info" size="small">查看举报</el-button>
                                 <el-button type="danger" size="small">屏蔽评论</el-button>
                             </div>
                         </div>
                     </div>
+                    <div class="c-pagination">
+                        <el-pagination
+                            layout="total, prev, pager, next, jumper" @current-change="getCommentDetail"
+                            :total="total" :page-size="pageSize" :current-page.sync="currentPage">
+                        </el-pagination>
+                    </div>
                 </div>
           </div>
       </ul>
+      <seeDetail v-if="isSee" :msg="isSee" :id="detailData.id" @upsee="seeExport" ></seeDetail>
+      <el-dialog title="屏蔽动态" :visible.sync="visible">
+        <p>屏蔽后该动态将不再出现在社区动态内！</p>
+        <p style="margin-top:15px;">屏蔽原因:</p>
+        <div>
+            <el-select v-model="shieldReason" clearable placeholder="请选择">
+                <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.value"
+                :value="item.value">
+                </el-option>
+            </el-select>
+        </div>
+        <div style="text-align: right; marigin: 0">
+          <el-button size="mini" type="text" @click="visible = false">取消</el-button>
+          <el-button type="primary" size="mini" @click="comfirmShield">确定</el-button>
+        </div>
+      </el-dialog>
     </el-main>
   </el-container>
 </template>
 
 <script>
+    import { getUri } from '@/utils/oss.js'
+    import seeDetail from './exportDetail'
+
   export default {
     name:'detailMessage',
     data() {
       return {
+            pageLoading: false,
+            infoImageLoading: false,//内容信息加载进度。。。
+            commentLoading: false,//评论进度加载...
+            homeHeadImg:'',//发布者头像
+            momentId:'',//当前发布者id
+            detailData: {},
             navDetailData: [
                 { id: 0, name: "物业服务" ,router:'/home/nav/rpass' },
                 { id: 1, name: "动态管理" ,router:'/home/nav/propertyService/message' },
                 { id: 2, name: "社区动态" ,router:'/home/nav/propertyService/message'},
                 { id: 3, name: "动态详情" }
             ],
-            infoImage: [{id:0},{id:1},{id:2},{id:3}],
-            likeOptions: [{id:0},{id:1},{id:2},{id:3}],//点赞
-            commentOptions: [{id:0},{id:1},{id:2},{id:3}],//评论
+            infoImage: [],
+            likeOptions: [],//点赞
+            commentOptions: [],//评论
+            pageSize: 5,//评论分页
+            currentPage: 1 ,//评论分页
+            total: 0,//评论总条数
+            likeCurrentNum: 10,//点赞 当前页总数
+            likeNewTime: null ,//点赞 最新时间
+            isSee: false,//查看举报
+            visible:false,//屏蔽动态
+            shieldReason:'',//屏蔽原因
+            options:[{value: '欺诈信息',label:'欺诈信息'},{value: '色情/淫秽内容',label:'色情/淫秽内容'},{value: '低俗辱骂内容',label:'低俗辱骂内容'},{value: '暴力血腥内容',label:'暴力血腥内容'},{value: '违反法律法规',label:'违反法律法规'}],//屏蔽原因下拉接口
       }
     },
-    props: ['msg'],
+    components:{ seeDetail },
     created() {
-      
+        this.getMonmentDetail();
     },
     methods: {
-     
+     getMonmentDetail() {
+        this.pageLoading = true;
+        let url = `/mom/moment/${this.$route.query.id}/detail`;
+        this.$xttp.get(url).then(res => {
+            this.pageLoading = false;
+            if(!res.errorCode){
+                this.detailData = res.data;
+                if(this.detailData.photos.length) {
+                    this.infoImageLoading = true;
+                    this.getFilesUri(this.detailData.photos)
+                        .then(files => {
+                            this.infoImageLoading = false;
+                            this.infoImage = files;
+                        })
+                }
+                if(this.detailData.creatorHeadImg.indexOf('http:') < 0) {
+                    getUri(this.detailData.creatorHeadImg,url => this.homeHeadImg = url );
+                }else {
+                    this.homeHeadImg = this.detailData.creatorHeadImg;
+                }
+                this.momentId = this.detailData.id;
+                //获取评论列表
+                this.getCommentDetail();
+                //获取点赞
+                this.getLike();
+            }
+        })
+     },
+     getFilesUri(){
+         return new Promise((resolve,reject)=> {
+             let arr = arguments[0];
+             let newArr = [];
+             arr.forEach((item, index) => {
+                 getUri(item,url => {
+                    newArr.push(url);
+                    if(index == (arr.length - 1)){
+                        resolve(newArr);
+                    }
+                 })
+             });
+         })
+     },
+     getCommentDetail() {
+        this.commentLoading = true;
+        let url = `/mom/comment/${this.momentId}/detail?page=${this.currentPage}&size=${this.pageSize}`;
+        this.$xttp.get(url).then(res => {
+            this.commentLoading = false;
+            if(!res.errorCode){
+               this.commentOptions = res.data.records;
+               this.total = res.data.total;
+               this.commentOptions.forEach(item => {
+                   if(item.creatorHeadImg.indexOf('http:') < 0) {
+                        getUri(item.creatorHeadImg,url => item.creatorHeadImg = url )
+                    }else {
+                         item.creatorHeadImg = url
+                    }
+                   
+               })
+            }
+        })
+     },
+     getLike() {
+        let url = `/mom/praise/incremental-list`;
+        this.$xttp.post(url, {momentId:this.momentId,sort: 0,startAt:this.likeNewTime }).then(res => {
+            if(!res.errorCode){
+               this.likeCurrentNum = res.data.length;
+               if(res.data.length) {
+                   this.likeNewTime = res.data[res.data.length - 1].createAt;
+                   res.data.forEach(item => {
+                        if(item.creatorHeadImg.indexOf('http:') < 0) {
+                                getUri(item.creatorHeadImg,url => item.creatorHeadImg = url )
+                            }else {
+                                item.creatorHeadImg = url
+                            }
+                        this.likeOptions.push(item);
+                    })
+               }
+            }
+        })
+     },
+     seeExport(msg) {
+         this.isSee = false;
+     },
+     comfirmShield() {
+         if(this.shieldReason) {
+             this.$xttp.post('mom/shielding/speech',{reason:this.shieldReason,speechId:this.detailData.id,type:1})
+                .then(res => {
+                    if(!res.errorCode) {
+                        this.visible = false;
+                        this.$message('屏蔽成功');
+                    }
+                })
+         }
+     }
     }
   }
 </script>
@@ -171,6 +313,10 @@
         .c-like-body {
             margin-top: 10px;
         }
+    }
+    .c-like-box {
+        max-height: 300px;
+        overflow-y: scroll;
     }
     .c-comment-body {
         margin-top: 10px;

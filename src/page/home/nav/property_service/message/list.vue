@@ -133,7 +133,7 @@
     data () {
       return {
         navDetailData: [
-          { id: 0, name: "物业服务" ,router:'/home/nav/rpass' },
+          { id: 0, name: "物业服务" },
           { id: 1, name: "社区动态" ,router:'/home/nav/propertyService/message' },
           { id: 2, name: "动态消息" }
         ],
@@ -189,8 +189,6 @@
         if(this.status){
           params['status'] = this.status;
         }
-        console.log(this.times)
-        // console.log(this.times.length);
         if(this.times){
           let bt = new Date(this.times[0]);
           let et = new Date(this.times[1]);
@@ -200,10 +198,7 @@
         if(this.input){
           params['creatorName'] = this.input;
         }
-        console.log(this.times)
-        console.log(params);
         this.$xttp.post(url, params).then(res => {
-          console.log(res);
           this.loading = false;
           if (res.errorCode === 0) {
             this.tableData = res.data.records;
@@ -213,9 +208,6 @@
           this.loading = false;
         })
       },
-      // statusFormat(){
-
-      // },
       // 获取通知类型名称
       statusFormat(status) {
         let names = {
@@ -237,7 +229,7 @@
         return names[type];
       },
       changeTimes(time) {
-          console.log(time)
+          
       },
       changeTypes(type) {
         console.log('type:'+ type);
@@ -252,7 +244,7 @@
         this.isManage = true;
       },
       detail(row) {
-        this.$router.push('/home/nav/propertyService/messageDetail')
+        this.$router.push({path:'/home/nav/propertyService/messageDetail',query:{id:row.id }})
       },
       handleDone(row,status){
         let id = row.id;
@@ -277,10 +269,8 @@
       confirmPR(){
         // let url = `mom/moment/${id}/audit?status=${status}`;
         let url = `mom/moment/${this.commentId}/audit?status=${this.commentStatus}`;
-        console.log(url);
         this.$xttp.get(url).then(res => {
           if(res.success){
-            console.log(res);
             this.visible2 = false;
             this.commentId = '';
             this.commentStatus = '';

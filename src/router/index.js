@@ -159,6 +159,11 @@ const router = new Router({
                 component: (resolve) => require(["@/page/home/nav/property_service/message/list"], resolve)
               },
               {
+                path: 'silent',
+                name:'11J0',
+                component: (resolve) => require(["@/page/home/nav/property_service/silent"], resolve)
+              },
+              {
                 path: 'messageDetail',
                 name:'11J0',
                 component: (resolve) => require(["@/page/home/nav/property_service/message/detail"], resolve)
