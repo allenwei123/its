@@ -90,8 +90,8 @@ import time from '@/utils/time.js';
         show: false,
         pms: this.$store.getters.pms,//菜单权限
         navDetailData: [
-          { id: 0, name: "物业管理" },
-          { id: 1, name: "作业管理" },
+          { id: 0, name: "物业管理", router: '/home/nav/side/floorFile' },
+          { id: 1, name: "工作管理", router: '/home/nav/side/class' },
           { id: 2, name: "班次管理" }
         ],
         formInline: {

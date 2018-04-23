@@ -10,60 +10,20 @@
                 <p class="c-title">动态详情</p>
                 <div class="c-author-body">
                     <div class="c-author-header">
-                        <img class="c-user-image" src="static/image/MANAGER.png" alt="头像加载失败">
+                        <img class="c-user-image" v-if="uri" :src="uri" style="width:60px; height:60px; border-radius:100%">
+                        <!-- <div class="c-image" v-if="uri"><img :src="uri" alt="头像加载失败" width="60px" height="60px"></div> -->
                         <div class="c-author-info">
-                            <p>刘强东</p>
-                            <p>2018-01-01 12:34</p>
+                            <p>{{creatorName}}</p>
+                            <p>{{createAt | time }}</p>
                         </div>
                     </div>
                     <div class="c-author-msg">
-                        <p class="c-send-msg">小区门口有一条小狗白色的超级萌萌的小区门口有一条小狗，白小区门口有一条小狗，白色的超级萌萌的色的超级萌萌的</p>
+                        <p class="c-send-msg">{{ content }}</p>
                         <ul class="c-send-msgBody">
                             <li v-for="item in infoImage" :key="item.id">
                                 <img class="c-msg-image" src="static/image/MANAGER.png" alt="图片加载失败">
                             </li>
                         </ul>
-                        <div class="c-send-msgBtn">
-                            <el-button type="info">查看举报</el-button>
-                            <el-button type="danger">屏蔽动态</el-button>
-                        </div>
-                    </div>
-                </div>
-                <div class="c-like-body">
-                    <el-collapse accordion>
-                        <el-collapse-item>
-                            <template slot="title">
-                                &nbsp; 点赞 ( 66 )
-                            </template>
-                            <ul>
-                                <li v-for="item in likeOptions" :key="item.id">
-                                    <img class="c-user-image" src="static/image/MANAGER.png" alt="头像加载失败">
-                                    <div class="c-author-info">
-                                        <p>刘强东</p>
-                                        <p>2018-01-01 12:34</p>
-                                    </div>
-                                </li>
-                            </ul>
-                        </el-collapse-item>
-                    </el-collapse>
-                </div>
-                <div class="c-comment-body">
-                    <p class="c-comment-title">&nbsp; 评论( 66 )</p>
-                    <div class="c-border-bottom" v-for="item in commentOptions" :key="item.id">
-                        <div class="c-margin10">
-                            <div> 
-                                <img class="c-user-image" src="static/image/MANAGER.png" alt="头像加载失败">
-                                <div class="c-author-info">
-                                    <p>刘强东</p>
-                                    <p>2018-01-01 12:34</p>
-                                </div>
-                            </div>
-                            <p class="c-comment-content">小区门口有一条流浪狗，白色的超萌，不知道是不是有主的，想抱走！</p>
-                            <div class="c-send-msgBtn">
-                                <el-button type="info" size="small">查看举报</el-button>
-                                <el-button type="danger" size="small">屏蔽评论</el-button>
-                            </div>
-                        </div>
                     </div>
                 </div>
           </div>
@@ -73,27 +33,52 @@
 </template>
 
 <script>
+import { getUri } from '@/utils/oss';
+import time from '@/utils/time.js';
   export default {
     name:'detailMessage',
     data() {
       return {
             navDetailData: [
                 { id: 0, name: "物业服务" ,router:'/home/nav/rpass' },
-                { id: 1, name: "动态管理" ,router:'/home/nav/propertyService/message' },
-                { id: 2, name: "社区动态" ,router:'/home/nav/propertyService/message'},
+                { id: 1, name: "社区动态" ,router:'/home/nav/propertyService/message' },
+                { id: 2, name: "举报管理" ,router:'/home/nav/propertyService/inform' },
                 { id: 3, name: "动态详情" }
             ],
-            infoImage: [{id:0},{id:1},{id:2},{id:3}],
-            likeOptions: [{id:0},{id:1},{id:2},{id:3}],//点赞
-            commentOptions: [{id:0},{id:1},{id:2},{id:3}],//评论
+            uri:'',
+            commentOptions:[],
+            likeOptions: [],
+            infoImage: [],
+            creatorName: '',
+            createAt: '',
+            creatorHeadImg: null,
+            content: ''
       }
     },
-    props: ['msg'],
+    props: ['msg','seeData'],
     created() {
-      
+        let id = this.$route.query.id;
+        let url = `mom/moment/${id}/detail`;
+
+        this.$xttp.get(url).then(res => {   
+            console.log(res);
+            this.creatorName = res.data.creatorName;
+            this.content = res.data.content;
+            this.createAt = res.data.createAt;
+                if(res.data.creatorHeadImg) {
+                    getUri(res.data.creatorHeadImg,(uri)=> {
+                        this.uri = uri;
+                });
+            }
+        });
+        // console.log(this.$router.query.id);
+    //    console.log(this.$router.query.row.id);
+    //   this.initData();
     },
     methods: {
-     
+     initData(){
+         console.log("initData")
+     }
     }
   }
 </script>

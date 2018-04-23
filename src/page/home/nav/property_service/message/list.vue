@@ -135,7 +135,7 @@
         navDetailData: [
           { id: 0, name: "物业服务" ,router:'/home/nav/rpass' },
           { id: 1, name: "社区动态" ,router:'/home/nav/propertyService/message' },
-          { id: 2, name: "社区动态" }
+          { id: 2, name: "动态消息" }
         ],
         isShow: false,
         isManage:false,//审核管理设置

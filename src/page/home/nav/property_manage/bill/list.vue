@@ -2,7 +2,11 @@
   <el-container>
     <el-main>
       <ul class="c-navDetail clear">
-        <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li>
+        <el-breadcrumb separator-class="el-icon-arrow-right">
+          <el-breadcrumb-item v-for="(nav, index) in navDetailData" :to="nav.router" :key="index">{{ nav.name }}
+          </el-breadcrumb-item>
+        </el-breadcrumb>
+        <!-- <li v-for="(nav, index) in navDetailData" :key="index">{{ nav.name }} <span v-if="index !== navDetailData.length -  1"> > </span></li> -->
       </ul>
       <div class="c-notice-container">
         <div class="c-search">
@@ -205,8 +209,8 @@ export default {
         label: '已超期'
       }],
       navDetailData: [
-        { id: 0, name: "物业管理" },
-        { id: 1, name: "收费管理" },
+        { id: 0, name: "物业管理", router: '/home/nav/side/charge' },
+        { id: 1, name: "收费管理", router: '/home/nav/side/charge' },
         { id: 2, name: "账单管理" }
       ],
       loading: false,

@@ -109,8 +109,8 @@ export default {
       isSou: false,
       tableData: [],
       navDetailData: [
-        { id: 0, name: "物业管理" },
-        { id: 1, name: "作业管理" },
+        { id: 0, name: "物业管理", router: '/home/nav/side/floorFile' },
+        { id: 1, name: "工作管理", router: '/home/nav/side/class' },
         { id: 2, name: "排班管理" }
       ],
       formInline: {

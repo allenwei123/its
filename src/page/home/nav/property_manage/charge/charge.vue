@@ -98,8 +98,8 @@ import time from '@/utils/time.js';
         cycleData: null,
         formDetail: {},
         navDetailData: [
-          { id: 0, name: "物业管理" },
-          { id: 1, name: "收费管理" },
+          { id: 0, name: "物业管理", router: '/home/nav/side/charge' },
+          { id: 1, name: "收费管理", router: '/home/nav/side/charge' },
           { id: 2, name: "收费管理" }
         ],
         tableData: [],

@@ -123,7 +123,11 @@ export default {
       dialogVisible: false,
       srcP: '',
       
-      navDetailData: [{ id: 0, name: "物业管理" }, { id: 1, name: "保安考勤" }],
+      navDetailData: [
+        { id: 0, name: "物业管理", router: '/home/nav/side/floorFile' },
+        { id: 1, name: "工作管理", router: '/home/nav/side/class' },
+        { id: 1, name: "保安考勤" }
+      ],
       formInline: {
         empl: "",
         rangeDate: "",

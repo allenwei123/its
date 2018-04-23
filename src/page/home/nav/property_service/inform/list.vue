@@ -53,16 +53,10 @@
                         <el-table-column label="状态" align="center" min-width="120" :show-overflow-tooltip="true">
                             <template slot-scope="scope">{{ statusFormat(scope.row.status) }}</template>
                         </el-table-column>
-                        <!-- <el-table-column label="操作" min-width="300" :fixed="tableData.length ? 'right' : '/'">
-                            <template slot-scope="scope">
-                                <el-button type="primary" size="mini" @click="detail(scope.row)">动态详情</el-button>
-                                <el-button type="primary" size="mini">屏蔽</el-button>
-                            </template>
-                        </el-table-column> -->
                         <el-table-column label="操作" min-width="300" align="center" :fixed="tableData.length ? 'right' : '/'">
                             <template slot-scope="scope">
                                 <el-button type="primary" size="mini" @click="detail(scope.row)">动态详情</el-button>
-                                <el-button type="danger" @click="dialogVisible = true" size="mini">屏蔽</el-button>
+                                <el-button  v-if="scope.row.status == 1 || scope.row.status == 2" type="danger" @click="PBDT(scope.row)" size="mini">屏蔽</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -79,7 +73,7 @@
                 <div class="c-searchbar">
                     <el-form :inline="true" class="demo-form-inline">
                         <el-form-item>
-                            <el-select v-model="type1" placeholder="全部类型" clearable @change="changeTypes">
+                            <el-select v-model="type1" placeholder="全部类型" clearable @change="changeTypesComment">
                             <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                             </el-select>
                         </el-form-item>
@@ -113,7 +107,7 @@
                             <template slot-scope="scope">{{ scope.row.createAt | time('yyyy-MM-dd HH:mm:ss') }}</template>
                         </el-table-column>
                         <el-table-column label="举报数量" align="center" min-width="200" :show-overflow-tooltip="true">
-                            <template slot-scope="scope" v-if="scope.row.reportNum > 0"><el-button type="text">{{scope.row.reportNum}}</el-button>
+                            <template slot-scope="scope" v-if="scope.row.reportNum > 0"><el-button type="text" @click="showNum(scope.row)">{{scope.row.reportNum}}</el-button>
                             </template>
                         </el-table-column>
                         <el-table-column label="状态" align="center" min-width="120" :show-overflow-tooltip="true">
@@ -122,7 +116,8 @@
                         <el-table-column label="操作" min-width="300" align="center" :fixed="tableData.length ? 'right' : '/'">
                             <template slot-scope="scope">
                                 <el-button type="primary" size="mini" @click="detail(scope.row)">评论详情</el-button>
-                                <el-button type="danger" size="mini" @click="commentNO(scope.row)">屏蔽</el-button>
+                                <el-button  v-if="scope.row.status == 1 || scope.row.status == 2" type="danger" @click="commentNO(scope.row)" size="mini">屏蔽</el-button>
+                                <!-- <el-button type="danger" size="mini" @click="commentNO(scope.row)">屏蔽</el-button> -->
                             </template>
                         </el-table-column>
                     </el-table>
@@ -139,7 +134,7 @@
       <el-dialog title="屏蔽动态" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
         <p style="margin-bottom:40px;">屏蔽后该动态将不再出现在社区动态内！</p>
         <p style="margin-bottom:10px;">屏蔽原因：</p>
-        <el-select v-model="value" placeholder="请选择" label="屏蔽原因："  style="width:300px;">
+        <el-select v-model="PBReason" placeholder="请选择" label="屏蔽原因："  style="width:300px;" @change="changeReason">
             <el-option
             v-for="item in options"
             :key="item.value"
@@ -149,25 +144,24 @@
         </el-select>
         <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+            <el-button type="primary" @click="PBConfirm">确 定</el-button>
         </span>
       </el-dialog>
-      <!-- <transition name="fade">
-        <editPage v-if="isManage" :msg="isManage" @upsee="manageEmit" ></editPage>
-      </transition> -->
-      <transition name="shielding">
-        <SeePage v-if="shielding" :msg="shielding" @upsee="shieldingChange"  :data="shieldingData"></SeePage>
+
+      <transition name="fade">
+        <SeePage v-if="see" :msg="see" @upsee="seeChange"  :data="seeData"></SeePage>
       </transition>
+      
     </el-main>
   </el-container>
 </template>
 
 <script>
   import time from '@/utils/time.js';
-//   import editPage from './edit'
+  import SeePage from './detail'
 
   export default {
-    name: 'message',
+    name: 'inform',
     data () {
       return {
         navDetailData: [
@@ -182,23 +176,29 @@
         tableData1: [],
         pageSize: 10,
         total: 0,
+        total1: 0,
         currentPage: 1,
         currentPage1: 1,
         input: '',//住户
         times: '',//开始结束时间
         input1: '',
-        typeOptions: [{label: '系统自动通过',value: '1'},{label: '系统自动屏蔽',value: '2'},{label: '管理员屏蔽',value: '3'}],//类型选择数据
+        typeOptions: [{label: '待审核',value: '0'},{label: '审核通过',value: '1'},{label: '自动通过',value: '2'},{label: '未通过',value: '-1'},{label: '系统自动屏蔽',value: '-2'},{label: '管理员屏蔽',value: '-3'}],//类型选择数据
         type:'',//类型
         type1: '',
         shielding: false,  //社区动态屏蔽
         shieldingData: null,  //社区动态屏蔽内容
         dialogVisible: false,
         value:'5',
-        options:[{value: '1',label:'欺诈信息'},{value: '2',label:'色情/淫秽内容'},{value: '3',label:'低俗辱骂内容'},{value: '4',label:'暴力血腥内容'},{value: '5',label:'违反法律法规'},]
+        options:[{value: '欺诈信息',label:'欺诈信息'},{value: '色情/淫秽内容',label:'色情/淫秽内容'},{value: '低俗辱骂内容',label:'低俗辱骂内容'},{value: '暴力血腥内容',label:'暴力血腥内容'},{value: '违反法律法规',label:'违反法律法规'},],
+        speechId: '',
+        PBReason: '',
+        type: '',
+        see:false,
+        seeData: null, //查看数据
       }
     },
     components: {
-    //   editPage
+      SeePage
     },
     created() {
       this.query();
@@ -228,13 +228,8 @@
           this.getTableList1();
         }
       },
-      handle(row) {
-        this.shielding = true;
-        this.shieldingData = row;
-      },
-      shieldingChange(msg) {
-        //与查看弹窗交互
-        this.shielding = false;
+      seeChange(){
+          this.see = false;
       },
       format(){
         return {
@@ -253,7 +248,6 @@
           params['creatorName'] = this.input;
         }
         this.$xttp.post(url, params).then(res => {
-          console.log(res);
           this.loading = false;
           if (res.errorCode === 0) {
             this.tableData = res.data.records;
@@ -276,7 +270,6 @@
         }
         params['communityId'] = this.$store.getters.communityId;
         this.$xttp.post(url, params).then(res => {
-          console.log(res);
           this.loading = false;
           if (res.errorCode === 0) {
             this.tableData1 = res.data.records;
@@ -289,11 +282,11 @@
       statusFormat(status) {
         let names = {
           '0': '待审核',
-          '1': '手动通过',
+          '1': '审核通过',
           '2': '自动通过',
           '-1': '未通过',
           '-2': '自动屏蔽',
-          '-3': '手动屏蔽'
+          '-3': '管理员屏蔽'
         };
         return names[status];
       },
@@ -309,7 +302,10 @@
           console.log(time)
       },
       changeTypes(type) {
-        console.log('type:'+ type);
+        this.query();
+      },
+      changeTypesComment(){
+        this.query1();
       },
       changeStatus(status) {
         console.log('status:'+ status);
@@ -320,11 +316,58 @@
       manageClick() {
         this.isManage = true;
       },
+      showInfo(text) {
+        this.$message({
+            message: text,
+            type: "warning"
+        });
+      },
       detail(row) {
-        this.$router.push('/home/nav/propertyService/messageDetail')
+        this.$router.push({path: '/home/nav/propertyService/informDetail',query: {id:row.id}});
       },
       commentNO(row){
-          alert(row.id);
+          this.speechId = row.id;
+          this.dialogVisible = true;
+          this.type = 2;
+      },
+      PBDT(row){
+          this.speechId = row.id;
+          this.dialogVisible = true;
+          this.type = 1;
+      },
+      PBConfirm(){
+          let url = `mom/shielding/speech`;
+          let obj = {};
+          if(this.PBReason != ''){
+              obj['reason'] = this.PBReason;
+          }else{
+             this.showInfo('请选择屏蔽原因');
+             return;
+          }
+          
+          obj['speechId'] = this.speechId;
+          obj['type'] = this.type;
+          this.$xttp.post(url, obj).then(res => {
+          this.loading = false;
+          if (res.success) {
+            this.dialogVisible = false;
+            this.speechId = '';
+            this.type = '';
+            this.$message({message:'屏蔽成功!',type:'success'});
+            this.query();
+          }else{
+            this.dialogVisible = false;
+            this.$message({message:res.errorMsg,type:'error'});
+          }
+        }).catch(() => {
+          this.loading = false;
+        })
+      },
+      changeReason(){
+          console.log(this.PBReason);
+      },
+      showNum(row){
+        console.log(row.id);
       }
     }
   }
@@ -337,12 +380,14 @@
       top: 0px;
     }
 
-    .shielding-enter-active, .shielding-leave-active {
-        transition: all 0.5s ease;
-    }
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.5s ease;
+}
 
-    .shielding-enter, .shielding-leave-active {
-        opacity: 0;
-        transform: rotateY(180deg);
-    }
+.fade-enter,
+.fade-leave-active {
+  opacity: 0;
+  transform: rotateY(180deg);
+}
 </style>

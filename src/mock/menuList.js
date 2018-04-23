@@ -129,16 +129,17 @@ const arr = [
         menuItem:[
           {
             id:'1-4-1',
+            title:'收费管理',
+            link:'/home/nav/side/charge',
+            show: '11D0'
+          },
+          {
+            id:'1-4-2',
             title:'账单管理',
             link:'/home/nav/side/bill',
             show: '11C0'
           },
-          {
-            id:'1-4-1',
-            title:'收费管理',
-            link:'/home/nav/side/charge',
-            show: '11D0'
-          }
+          
         ]
       },
     ]

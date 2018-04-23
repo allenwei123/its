@@ -169,6 +169,12 @@ const router = new Router({
                 component: (resolve) => require(["@/page/home/nav/property_service/inform/list"], resolve)
               },
               {
+                path: 'informDetail',
+                // name:'11yB',
+                name: '11y2',
+                component: (resolve) => require(["@/page/home/nav/property_service/inform/detail"], resolve)
+              },
+              {
                 path: 'onlineService',
                 name:'11G0',
                 component: (resolve) => require(["@/page/home/nav/property_service/online"], resolve)
