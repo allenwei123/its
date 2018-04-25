@@ -57,7 +57,6 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-button icon="el-icon-search" circle></el-button>
       <div class="c-block">
         <el-pagination
           @current-change="handleCurrentChange"

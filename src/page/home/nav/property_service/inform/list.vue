@@ -21,7 +21,7 @@
                         <el-form-item label="">
                             <el-input placeholder="住户姓名" v-model.trim="input"></el-input>
                             </el-form-item>
-                        <el-form-item>
+                        <el-form-item v-if="pms['11yA']">
                             <el-button type="primary" @click="query">查询</el-button>
                         </el-form-item>
                     </el-form>
@@ -56,8 +56,8 @@
                         </el-table-column>
                         <el-table-column label="操作" min-width="300" align="left" :fixed="tableData.length ? 'right' : '/'">
                             <template slot-scope="scope">
-                                <el-button type="primary" size="mini" @click="detailDT(scope.row)">动态详情</el-button>
-                                <el-button  v-if="scope.row.status == 1 || scope.row.status == 2" type="danger" @click="PBDT(scope.row)" size="mini">屏蔽</el-button>
+                                <el-button type="primary" size="mini" @click="detailDT(scope.row)"  v-if="pms['11yB']">动态详情</el-button>
+                                <el-button  v-if="(scope.row.status == 1 || scope.row.status == 2) && pms['11yC']" type="danger" @click="PBDT(scope.row)" size="mini">屏蔽</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -81,7 +81,7 @@
                         <el-form-item label="">
                             <el-input placeholder="住户姓名" v-model.trim="input1"></el-input>
                             </el-form-item>
-                        <el-form-item>
+                        <el-form-item v-if="pms['11yA']">
                             <el-button type="primary" @click="query1">查询</el-button>
                         </el-form-item>
                     </el-form>
@@ -114,7 +114,7 @@
                         <el-table-column label="操作" min-width="300" align="left" :fixed="tableData.length ? 'right' : '/'">
                             <template slot-scope="scope">
                                 <!-- <el-button type="primary" size="mini" @click="detailPL(scope.row)">评论详情</el-button> -->
-                                <el-button  v-if="scope.row.status == 1 || scope.row.status == 2" type="danger" @click="commentNO(scope.row)" size="mini">屏蔽</el-button>
+                                <el-button  v-if="(scope.row.status == 1 || scope.row.status == 2) && pms['11yF']" type="danger" @click="commentNO(scope.row)" size="mini">屏蔽</el-button>
                                 <!-- <el-button type="danger" size="mini" @click="commentNO(scope.row)">屏蔽</el-button> -->
                             </template>
                         </el-table-column>
@@ -173,6 +173,7 @@
     name: 'inform',
     data () {
       return {
+        pms: this.$store.getters.pms,//菜单权限
         navDetailData: [
           { id: 0, name: "物业服务" ,router:'/home/nav/rpass' },
           { id: 1, name: "社区动态" ,router:'/home/nav/propertyService/message' },
