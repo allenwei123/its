@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="c-return" >
-      <router-link :to='{path:"/auth/login"}' ><i class="el-icon-arrow-left"></i>回到登陆页</router-link>
+      <a @click="go"><i class="el-icon-arrow-left"></i>回到登陆页</a>
     </div>
     <div class="c-error">
       您访问的页面，我暂时找不到...
@@ -16,6 +16,13 @@
           return {
 
           }
+      },
+      methods:{
+        go(){
+          this.$store.dispatch('addCommunityId',null);
+          this.$store.dispatch('clearPermission');
+          this.$router.push('/auth/login');
+        }
       }
   }
 </script>
