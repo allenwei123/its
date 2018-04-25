@@ -1,10 +1,10 @@
 import http from './request';
 import store from '@/store';
-import { env,currentEnv } from './config.js';
+import { env, currentEnv } from './config.js';
 let current = currentEnv();
 
 function createData(info, file) {
-    let fileKey = 'web1' + store.getters.uid +'_'+ info.bucket+'_'+ new Date().getTime() + file.name.substr(file.name.lastIndexOf('.'));
+    let fileKey = 'web1' + store.getters.uid + '_' + info.bucket + '_' + new Date().getTime() + file.name.substr(file.name.lastIndexOf('.'));
     // 组装发送数据
 
     var request = new FormData();
@@ -31,9 +31,9 @@ export function send(file, success) {
         http.get(`/oss/${bucket}/policy`)
             .then(res => {
                 if (!res.errorCode) {
-                  let host = res.data.host;
-                  host = host.replace('http:','https:');
-                  res.data.host = host;
+                    let host = res.data.host;
+                    host = host.replace('http:', 'https:');
+                    res.data.host = host;
                     window.localStorage.setItem('uploadInfo', JSON.stringify(res.data));
                     send(file, success);
                 }
@@ -51,33 +51,37 @@ export function send(file, success) {
 }
 
 
-export function getUri(key,success) {
+export function getUri(key, success) {
     let info = window.localStorage.getItem('downloadInfo') == 'undefined' ? null : JSON.parse(window.localStorage.getItem('downloadInfo'));
     let now = Date.parse(new Date()) / 1000;
     let expire = 88888888888888888888888888888;
-    let bucket = env[current].bucket;
-    if(info) {
-        expire = new Date(info.expiration).getTime()/1000;
+    if (info) {
+        expire = new Date(info.expiration).getTime() / 1000;
     }
     if (!info || expire < now + 3) {
         http.get("/oss/sts-token/read-only")
             .then(res => {
                 if (!res.errorCode) {
                     window.localStorage.setItem('downloadInfo', JSON.stringify(res.data));
-                    getUri(key,success);
+                    getUri(key, success);
                 }
             })
-    }else {
+    } else {
+        let bucket = env[current].bucket;
+        let s = /\_\S+\_/g;
+        if (s.test(key)) {
+            bucket = key.match(s)[0].replace(/\_/g, '');
+        }
         var client = new OSS.Wrapper({
             region: 'oss-cn-beijing',
             accessKeyId: info.accessKeyId,//info.accessKeyId
             accessKeySecret: info.accessKeySecret,//info.accessKeySecret
             stsToken: info.securityToken,//info.securityToken
-            bucket: info.bucket || bucket,//info.bucket
+            bucket: bucket,//info.bucket
             // bucket: info.bucket || 'bit-smcm-img',//info.bucket
             secure: true  //啓動https
         });
-        if(success) {
+        if (success) {
             success(client.signatureUrl(key));
         }
     }
