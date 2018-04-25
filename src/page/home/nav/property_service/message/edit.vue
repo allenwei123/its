@@ -6,11 +6,11 @@
         <el-form-item label-width="120px" label="审核管理设置" prop="a"> 
             <el-switch
                 v-model="form.a"
-                active-text="开始"
-                inactive-text="关闭"
+                active-text="关闭"
+                inactive-text="开启"
                 class="c-isClose">
             </el-switch>
-            <p class="c-tip">关闭后住户发布动态将自动通过系统审核</p>
+            <p class="c-tip">请严格管理社区住户发言，不建议关闭审核设置</p>
         </el-form-item> 
 
         <el-form-item label-width="120px"  label="动态举报设置"></el-form-item> 
@@ -86,16 +86,16 @@
               item.value = this.form.a;
               break;
             case 1: 
-              item.value = this.form.b;
-              break;
-            case 2: 
               item.value = this.form.c;
               break;
+            case 2: 
+              item.value = this.form.b;
+              break;
             case 3: 
-              item.value = this.form.d;
+              item.value = this.form.e;
               break;
             case 4: 
-              item.value = this.form.e;
+              item.value = this.form.d;
               break;
           }
         })
@@ -124,10 +124,10 @@
         this.$xttp.post("/property/parameter/page",params).then(res => {
             if (res.success){
                 this.form.a = res.data.records[0].value ==="false" ? false : true;
-                this.form.b = +res.data.records[1].value;
-                this.form.c = +res.data.records[2].value;
-                this.form.d = +res.data.records[3].value;
-                this.form.e = +res.data.records[4].value;
+                this.form.c = +res.data.records[1].value;
+                this.form.b = +res.data.records[2].value;
+                this.form.e = +res.data.records[3].value;
+                this.form.d = +res.data.records[4].value;
                 this.arr = res.data.records.map((item,index) => {
                    let o = {};
                    o['key'] = item.key;
