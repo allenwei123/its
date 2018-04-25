@@ -24,7 +24,7 @@
                             </li>
                         </ul>
                         <div class="c-send-msgBtn">
-                            <el-button type="info" @click="seeReport(detailData.id,1)" v-if="status !== 0">查看举报({{ detailData.reportNum || 0 }})</el-button>
+                            <el-button type="info" @click="seeReport(detailData.id,1)" v-if="status !== 0" :disabled="!detailData.reportNum">查看举报({{ detailData.reportNum || 0 }})</el-button>
                             <el-button type="danger" @click="shieldClick(detailData,1)" :disabled="btnStatus" v-if="status !== 0">屏蔽动态</el-button>
                             <el-button type="success" v-if="status == 0" @click="passDone(1)">通过</el-button>
                             <el-button type="warning" v-if="status == 0" @click="passDone(-1)">不通过</el-button>
@@ -68,7 +68,7 @@
                             </div>
                             <p class="c-comment-content">{{ item.content }}</p>
                             <div class="c-send-msgBtn">
-                                <el-button type="info" size="small" @click="seeReport(item.id,2)">查看举报({{ item.reportNum || 0 }})</el-button>
+                                <el-button type="info" size="small" @click="seeReport(item.id,2)" :disabled="!item.reportNum">查看举报({{ item.reportNum || 0 }})</el-button>
                                 <el-button type="danger" :disabled="btnStatus || (item.status == -3) " @click="shieldClick(item,2)"  size="small">屏蔽评论</el-button>
                             </div>
                         </div>
@@ -303,7 +303,7 @@
 
 <style scoped lang="scss">
 .c-title {
-  background: #8dd2e2;
+  background: #d7e7ff;
   line-height: 30px;
   text-indent: 1rem;
   font-weight: 800;
