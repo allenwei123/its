@@ -1,8 +1,12 @@
 <template>
-  <div class="c-error">
-    您访问的页面，我暂时找不到...
+  <div>
+    <div class="c-return" >
+      <router-link :to='{path:"/auth/login"}' ><i class="el-icon-arrow-left"></i>回到登陆页</router-link>
+    </div>
+    <div class="c-error">
+      您访问的页面，我暂时找不到...
+    </div>
   </div>
-
 </template>
 
 <script>
@@ -24,6 +28,12 @@
     text-align: center;
     font-size: 40px;
     color: skyblue;
+  }
+  .c-return {
+    height: 30px;
+    line-height: 30px;
+    margin-left: 20px;
+    font-weight: 800;
   }
 
 </style>

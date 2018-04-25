@@ -52,6 +52,9 @@ export default {
       UPDATEDPERMISSIONDATA: (state, newValue ) => {
         state.permissionData = newValue;
       },
+      CLEARPERMISSION: ( state ) => {
+        state.permissionData = null;
+      },
       NAVINDEX: (state, newValue ) => {
         state.navIndex = newValue;
       }
@@ -93,6 +96,9 @@ export default {
               reject(err)
             })
         } );
+      },
+      clearPermission( { commit ,state } ) {
+        commit('CLEARPERMISSION');
       },
       updatedNavIndex( { commit ,state } ,value) {
         commit('NAVINDEX',value);

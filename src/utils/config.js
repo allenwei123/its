@@ -6,9 +6,9 @@ export const env =  {
     },
     prod: {
         api: 'https://api.smcm.bitiot.com.cn/v1',
-        bucket: 'oss-cn-beijing'
+        bucket: 'bit-smcm-img'
     }
 }
 export function currentEnv() {
-    return 'dev'// 'prod'
+    return 'prod'// 'prod'
 }

@@ -3,7 +3,7 @@
       <el-main>
         <div class="c-header">
           <i class="iconfont icon-xiaoqu c-fs-24"></i>
-          <span>和谐警苑</span>
+          <span>{{ oName }}</span>
         </div>
         <el-container class="c-main">
           <el-main>
@@ -133,14 +133,15 @@
 export default {
   data() {
     return {
+      oName:localStorage.getItem('communityName'),
       communityId: this.$store.getters.communityId,
       userList: [],
       taskList: [], //任务
       alarmData: { unReviewedNum: "" }, //警报
       isLoading: false, //加载中
       door: false,
-      currentPage: 1,//記錄任務列表
-      pms: this.$store.getters.pms,//菜单权限
+      currentPage: 1, //記錄任務列表
+      pms: this.$store.getters.pms //菜单权限
     };
   },
   mounted() {
@@ -149,28 +150,30 @@ export default {
     this.getAlarm();
     let that = this;
     this.$nextTick(function() {
-      var scrollDom = document.getElementsByClassName("c-wait-box")[0];
-      let first = 1;
-      scrollDom.addEventListener("scroll", function() {
-        let scrollTop = scrollDom.clientHeight + scrollDom.scrollTop;
-        let scrollH = scrollDom.scrollHeight;
-        if (scrollTop > scrollH - 40) {
-          if (!that.door) {
-            that.isLoading = true;
-            that.getTask(true);
-          } else {
-            //此时说明没有更多数据
-            if (first < 2) {
-              //再次不能再激活 loading...
+      try {
+        var scrollDom = document.getElementsByClassName("c-wait-box")[0];
+        let first = 1;
+        scrollDom.addEventListener("scroll", function() {
+          let scrollTop = scrollDom.clientHeight + scrollDom.scrollTop;
+          let scrollH = scrollDom.scrollHeight;
+          if (scrollTop > scrollH - 40) {
+            if (!that.door) {
               that.isLoading = true;
-              first++;
-              setTimeout(() => {
-                that.isLoading = false;
-              }, 2000);
+              that.getTask(true);
+            } else {
+              //此时说明没有更多数据
+              if (first < 2) {
+                //再次不能再激活 loading...
+                that.isLoading = true;
+                first++;
+                setTimeout(() => {
+                  that.isLoading = false;
+                }, 2000);
+              }
             }
           }
-        }
-      });
+        });
+      } catch (error) {}
     });
   },
   methods: {
@@ -187,7 +190,7 @@ export default {
       this.$xttp
         .post(`/property/gtasks/queryGtasksPage`, {
           communityId: this.communityId,
-          page:this.currentPage++
+          page: this.currentPage++
         })
         .then(res => {
           if (!res.errorCode) {

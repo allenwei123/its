@@ -9,7 +9,7 @@
       </ul>
       <div class="c-rpass-container">
         <div class="c-searchbar">
-          <el-form :inline="true" class="demo-form-inline">
+          <el-form :inline="true" class="demo-form-inline" style="position:relative">
 
             <el-form-item>
               <el-select v-model="type" placeholder="全部类型" clearable @change="changeTypes" style="width:170px;">
@@ -40,8 +40,9 @@
               <el-button type="primary" @click="query">查询</el-button>
             </el-form-item>
 
-            <el-form-item style="float: right;margin-left:126px;">
+            <el-form-item class="c-rightBtn">
               <el-button type="success" plain class="c-addBtn" @click="manageClick">审核管理设置</el-button>
+              <el-button icon="el-icon-arrow-left"></el-button>
             </el-form-item>
           </el-form>
 
@@ -319,4 +320,14 @@
     .el-input--suffix .el-input__inner {
       padding-right: 10px;
     }
+    .c-rightBtn {
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+    @media screen and (max-width: 1400px) {
+      .c-addBtn {
+          display: none;
+      }
+  }
 </style>
