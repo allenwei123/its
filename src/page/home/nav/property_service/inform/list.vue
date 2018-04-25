@@ -199,7 +199,7 @@
         shieldingData: null,  //社区动态屏蔽内容
         dialogVisible: false,
         value:'5',
-        options:[{value: '欺诈信息',label:'欺诈信息'},{value: '色情/淫秽内容',label:'色情/淫秽内容'},{value: '低俗辱骂内容',label:'低俗辱骂内容'},{value: '暴力血腥内容',label:'暴力血腥内容'},{value: '违反法律法规',label:'违反法律法规'},],
+        options:[{value: '垃圾广告信息',label:'垃圾广告信息'},{value: '色情淫秽信息',label:'色情淫秽信息'},{value: '暴力血腥信息',label:'暴力血腥信息'},{value: '违规违法内容',label:'违规违法内容'},{value: '人身攻击',label:'人身攻击'},{value: '其他',label: '其他'}],
         speechId: '',
         PBReason: '',
         type: '',
