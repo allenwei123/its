@@ -25,10 +25,12 @@
         if(res.success){
           loading.close();
           // this.loading = false;
+          this.$store.dispatch('addCommunityId',null);
+          this.$store.dispatch('clearPermission');
           this.$router.push('/auth/login');
         }
       }).catch(() => {
-        loadingInstance.close();
+        loading.close();
       });
     }
   }

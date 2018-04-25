@@ -23,7 +23,7 @@
       <el-select v-model="value" placeholder="请选择" @change="change">
         <el-option
           v-for="item in options"
-          :key="item.id"
+          :key="item.name"
           :label="item.name"
           :value="item.id">
         </el-option>
@@ -45,9 +45,9 @@
         phone:localStorage.getItem('userInfo') ? localStorage.getItem('userInfo').phone : '',
         pwd: '',
         dialogVisible: false,
-        options:[] ,//社区列表
+        options:[{}] ,//社区列表
         // value: null ,//当前 社区
-        value: localStorage.getItem('communityId') ? localStorage.getItem('communityId') : null
+        value: null
       }
     },
     methods: {
