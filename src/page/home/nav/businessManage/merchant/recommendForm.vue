@@ -6,6 +6,8 @@
         <el-upload
           class="avatar-uploader"
           action=""
+          :limit="1"
+          :on-exceed="onExceed"
           :file-list="fileList"
           list-type="picture-card"
           :http-request="httpRequest"
@@ -92,6 +94,9 @@
       },
       httpRequest(file) {
         this.uploadFiles.push(file.file);
+      },
+      onExceed() {
+        this.$message("只能上传一张图片");
       },
       removeFile(file) {
          this.uploadFiles.splice(0,1);

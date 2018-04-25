@@ -18,7 +18,7 @@
             </el-form-item>
 
             <el-form-item>
-              <el-select v-model="status" placeholder="全部状态" clearable @change="changeStatus">
+              <el-select v-model="status" placeholder="全部状态" clearable>
                 <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
@@ -40,7 +40,7 @@
               <el-button type="primary" @click="query">查询</el-button>
             </el-form-item>
 
-            <el-form-item style="float: right">
+            <el-form-item style="float: right;margin-left:126px;">
               <el-button type="success" plain class="c-addBtn" @click="manageClick">审核管理设置</el-button>
             </el-form-item>
           </el-form>
@@ -233,9 +233,6 @@
       },
       changeTypes(type) {
         console.log('type:'+ type);
-      },
-      changeStatus(status) {
-        console.log('status:'+ status);
       },
       manageEmit(msg) {
         this.isManage = false;

@@ -317,7 +317,7 @@ const router = new Router({
   ]
 });
 let currentNav = '';
-let errorList = ['/home/nav/communityIoT/record'];//记录暂时没开发的
+let errorList = ['/home/nav/communityIoT/record','/home/nav/propertyService/silent'];//记录暂时没开发的
 router.beforeEach((to, from, next) => {
   let arr = ['main','side','propertyService','communityIoT','businessManage','summary'];
 
@@ -338,7 +338,7 @@ router.beforeEach((to, from, next) => {
   if(to.path.split('/')[3] && currentNav !== to.path.split('/')[3]){
     let currentIndex = arr.findIndex(item => item == to.path.split('/')[3]);
     currentNav = to.path.split('/')[3];
-    store.dispatch('changeAsideData',currentIndex );
+    store.dispatch('changeAsideData',{i:currentIndex,path:to.path} );
     store.dispatch('updatedNavIndex',currentIndex );
   }
 

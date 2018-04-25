@@ -24,14 +24,24 @@ export default {
     },
     mutations: {
       CHANGE_ASIDEDATA: (state, newValue) => {
-       let a = newValue.filter(item => {
+       let a = newValue['d'].filter(item => {
           if(!state.permissionData[item.show]) return false;
           let b = item.menuItem.filter(i => state.permissionData[i.show] == 1);
           item.menuItem = b;
           return true;
         });
-        router.push(a[0].menuItem[0].link);//重定向 第一个子集
-        state.asideData = a;
+          let b = {};
+          a.forEach(item => {
+            if(item.menuItem.find(v => v.link == newValue.path)){
+              b = item.menuItem.find(v => v.link == newValue.path);
+            } 
+          })
+          if(b.link){
+            router.push(b.link);
+          }else {
+            router.push(a[0].menuItem[0].link);//重定向 第一个子集
+          }
+          state.asideData = a;
       },
       ADDCOMMUNITYID: (state, newValue) => {
         state.communityId = newValue;
@@ -48,8 +58,8 @@ export default {
     },
     actions: {
       changeAsideData({commit,state}, value) {
-        if(value > 0){
-            commit('CHANGE_ASIDEDATA',aside[value].group);
+        if(value.i > 0){
+            commit('CHANGE_ASIDEDATA',{d:aside[(value.i)].group,path:value.path});
         }
       },
       addCommunityId({ commit }, value) {

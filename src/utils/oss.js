@@ -4,7 +4,7 @@ import { env,currentEnv } from './config.js';
 let current = currentEnv();
 
 function createData(info, file) {
-    let fileKey = 'web1' + store.getters.uid +'_'+ info.bucket+'_'+ + Date.parse(new Date()) + file.name.substr(file.name.lastIndexOf('.'));
+    let fileKey = 'web1' + store.getters.uid +'_'+ info.bucket+'_'+ new Date().getTime() + file.name.substr(file.name.lastIndexOf('.'));
     // 组装发送数据
 
     var request = new FormData();

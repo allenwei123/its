@@ -69,40 +69,40 @@
                   <div class="c-common-use">
                     <ul>
                       <li class="c-common-li">
-                        <a href="javascript:void(0)" class="c-common-a">
+                        <router-link class="c-common-a" :to='{path:"/home/nav/side/userFile"}'>
                           <span class="c-tl-center"><i class="iconfont icon-yonghu c-common-font"></i></span>
-                          <span class="c-color-gray">用户档案</span>
-                        </a>
+                          <span class="c-color-gray">住户档案</span>
+                        </router-link>
                       </li>
                       <li class="c-common-li">
-                        <a href="javascript:void(0)" class="c-common-a">
+                        <router-link :to='{path:"/home/nav/propertyService/fault"}' class="c-common-a" >
                           <span class="c-tl-center"><i class="iconfont icon-faults-statistics c-common-font"></i></span>
                           <span class="c-color-gray">故障申报</span>
-                        </a>
+                        </router-link>
                       </li>
                       <li class="c-common-li">
-                        <a href="javascript:void(0)" class="c-common-a">
+                        <router-link :to='{path:"/home/nav/propertyService/alarm"}' class="c-common-a">
                           <span class="c-tl-center"><i class="iconfont icon-jingwuicon_svg- c-common-font"></i></span>
                           <span class="c-color-gray">警报管理</span>
-                        </a>
+                        </router-link>
                       </li>
                       <li class="c-common-li">
-                        <a href="javascript:void(0)" class="c-common-a">
+                        <router-link :to='{path:"/home/nav/side/schedul"}' class="c-common-a">
                           <span class="c-tl-center"><i class="iconfont icon-paibanguanli c-common-font"></i></span>
                           <span class="c-color-gray">排班管理</span>
-                        </a>
+                        </router-link>
                       </li>
                       <li class="c-common-li">
-                        <a href="javascript:void(0)" class="c-common-a">
+                        <router-link :to='{path:"/home/nav/propertyService/notice"}' class="c-common-a">
                           <span class="c-tl-center"><i class="iconfont icon-bulletin c-common-font"></i></span>
                           <span class="c-color-gray">社区公告</span>
-                        </a>
+                        </router-link>
                       </li>
                       <li class="c-common-li">
-                        <a href="javascript:void(0)" class="c-common-a">
+                        <router-link :to='{path:"/home/nav/side/carFile"}' class="c-common-a" >
                           <span class="c-tl-center"><i class="iconfont icon-cheliang c-common-font"></i></span>
                           <span class="c-color-gray">车辆档案</span>
-                        </a>
+                        </router-link>
                       </li>
                     </ul>
                   </div>
@@ -117,7 +117,7 @@
                 <li class="c-user-item" v-for="item in userList" :key="item.id">
                   <img :src="'static/image/' + ( item.postCode || 'DEFAUL' ) + '.png'" class="c-user-image" alt="">
                   <div class="c-user-detail">
-                      <p class="c-user-name">{{ item.nickName || '无' }} <span class="c-color-gray"> {{ item.postCode | postCode }}</span></p>
+                      <p class="c-user-name">{{ item.userName || '无' }} <span class="c-color-gray"> {{ item.postCode | postCode }}</span></p>
                       <p>{{ item.phone || '无'}}</p>
                   </div>
                 </li>
