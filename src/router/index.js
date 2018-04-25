@@ -331,7 +331,7 @@ router.beforeEach((to, from, next) => {
     return next(false);
   };
 
-  if(store.getters.pms && store.getters.pms[to.name] == 0 ) {
+  if(store.getters.pms && store.getters.pms[to.name] == 0 && to.path != '/auth/login' && to.path != '/auth/logout') {
    return next('/404');
   }
 
