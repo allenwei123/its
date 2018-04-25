@@ -93,7 +93,6 @@ import { getUri } from '@/utils/oss';
       },
       getNickName(){
         this.nickname = this.$store.getters.nickname;
-        console.log(this.nickname);
       }
     },
   }

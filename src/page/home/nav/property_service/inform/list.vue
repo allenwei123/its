@@ -35,7 +35,7 @@
                         <el-table-column v-if="isShow" align="center" label="ID" min-width="10" :show-overflow-tooltip="true">
                             <template slot-scope="scope">{{ scope.row.id }}</template>
                         </el-table-column>
-                        <el-table-column label="详情" align="center" min-width="300" :show-overflow-tooltip="true">
+                        <el-table-column label="详情" align="left" min-width="300" :show-overflow-tooltip="true">
                             <template slot-scope="scope">{{ scope.row.content }}</template>
                         </el-table-column>
                         <!-- <el-table-column label="动态类型" align="center" min-width="120" :show-overflow-tooltip="true">
@@ -95,7 +95,7 @@
                         <el-table-column v-if="isShow" align="center" label="ID" min-width="10" :show-overflow-tooltip="true">
                             <template slot-scope="scope">{{ scope.row.id }}</template>
                         </el-table-column>
-                        <el-table-column label="详情" align="center" min-width="300" :show-overflow-tooltip="true">
+                        <el-table-column label="详情" align="left" min-width="300" :show-overflow-tooltip="true">
                             <template slot-scope="scope">{{ scope.row.content }}</template>
                         </el-table-column>
                         <el-table-column label="住户姓名" align="center" min-width="120" :show-overflow-tooltip="true">
@@ -167,7 +167,6 @@
 <script>
   import time from '@/utils/time.js';
   import SeePage from './DTdetail';
-  import PLPage  from './PLdetail';
   import showNumPage from './shownum'
 
   export default {
@@ -221,11 +220,7 @@
     },
     methods: {
         handleClose(done){
-            this.$confirm('确认关闭？')
-          .then(_ => {
-            done();
-          })
-          .catch(_ => {});
+          this.dialogVisible = false;
         },
       query() {
         if (this.currentPage !== 1) {
@@ -339,9 +334,6 @@
       },
       detailDT(row) {
         this.$router.push({path: '/home/nav/propertyService/DTinformDetail',query: {id:row.id}});
-      },
-      detailPL(row) {
-        this.$router.push({path: '/home/nav/propertyService/PLinformDetail',query: {id:row.id}});
       },
       commentNO(row){
           this.speechId = row.id;

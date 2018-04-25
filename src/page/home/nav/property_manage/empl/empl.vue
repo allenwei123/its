@@ -56,9 +56,6 @@
         <!-- <el-table-column label="岗位" min-width="120" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{getPost(scope.row.postCode)}}</template>
         </el-table-column> -->
-        <el-table-column label="角色" min-width="120" align="center" :show-overflow-tooltip="true">
-          <template slot-scope="scope">{{ scope.row.postCode | postCode }}</template>
-        </el-table-column>
 
         <el-table-column label="性别" min-width="100" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.sex | sex }}</template>
@@ -70,6 +67,10 @@
 
         <el-table-column label="手机号" min-width="120" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{scope.row.phone}}</template>
+        </el-table-column>
+
+        <el-table-column label="角色" min-width="120" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ scope.row.postCode | postCode }}</template>
         </el-table-column>
         <!-- <el-table-column v-if="show" label="创建时间" min-width="150" align="center" :show-overflow-tooltip="true" sortable>
           <template slot-scope="scope">{{scope.row.createAt | time('yyyy-MM-dd HH:mm')}}</template>

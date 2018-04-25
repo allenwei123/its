@@ -41,22 +41,25 @@
             <el-table-column prop="faultType" label="故障类型" min-width="180" align="center">
               <template slot-scope="scope">{{scope.row.faultType=== 1 ? '住户' : scope.row.faultType === 2 ? '公共' : '其它' }}-{{getfaultItem(scope.row.faultItem)}}</template>
             </el-table-column>
-            <el-table-column prop="userName" label="申报人" width="120" align="center">
+            <el-table-column prop="userName" label="申报人" width="150" align="center">
             </el-table-column>
-            <el-table-column prop="identity" label="身份" width="80" align="center">
+            <el-table-column prop="identity" label="身份" width="120" align="center">
               <template slot-scope="scope">{{scope.row.identity=== 1 ? '住户' : scope.row.faultType === 2 ? '物业' : '其它' }}</template>
             </el-table-column>
-            <el-table-column prop="contact" label="联系方式" width="120" align="center">
+            <el-table-column prop="contact" label="联系方式" width="180" align="center">
             </el-table-column>
-            <el-table-column prop="playTime" label="申报时间" width="160" align="center">
+            <el-table-column prop="playTime" label="申报时间" width="180" align="center">
               <template slot-scope="scope">{{getTime(scope.row.playTime, 'yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
-            <el-table-column prop="faultItem" label="故障描述" width="120" align="center">
-              <template slot-scope="scope">{{getfaultItem(scope.row.faultItem)}}</template>
-            </el-table-column>
-            <el-table-column prop="faultStatus" label="故障状态" width="80" align="center">
+
+            <el-table-column prop="faultStatus" label="故障状态" width="160" align="center">
               <template slot-scope="scope">{{getPublishStatusName(scope.row.faultStatus)}}</template>
             </el-table-column>
+
+            <el-table-column prop="faultItem" label="故障描述" width="300" align="left">
+              <template slot-scope="scope">{{getfaultItem(scope.row.faultItem)}}</template>
+            </el-table-column>
+            
             <el-table-column prop="" label="操作" width="300" fixed="right" align="left">
               <template slot-scope="scope">
                 <el-button type="primary" size="mini" @click="handleClick(scope.row)" v-if="pms['11I3']">查看详情</el-button>

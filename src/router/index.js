@@ -180,12 +180,6 @@ const router = new Router({
                 component: (resolve) => require(["@/page/home/nav/property_service/inform/DTdetail"], resolve)
               },
               {
-                path: 'PLinformDetail',
-                // name:'11yB',
-                name: '11y2',
-                component: (resolve) => require(["@/page/home/nav/property_service/inform/PLdetail"], resolve)
-              },
-              {
                 path: 'onlineService',
                 name:'11G0',
                 component: (resolve) => require(["@/page/home/nav/property_service/online"], resolve)

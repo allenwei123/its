@@ -44,7 +44,7 @@
         <el-table-column label="创建时间" min-width="160" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.createAt | time('yyyy-MM-dd HH:mm:ss') }}</template>
         </el-table-column>
-        <el-table-column label="备注信息" align="center" width="250" :show-overflow-tooltip="true">
+        <el-table-column label="备注信息" align="left" width="250" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.remark }}</template>
         </el-table-column>
         <el-table-column fixed="right" align="center" label="操作" width="200">

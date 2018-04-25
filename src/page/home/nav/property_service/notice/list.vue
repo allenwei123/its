@@ -37,7 +37,7 @@
             <el-table-column label="序号" width="80" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column label="标题" min-width="180" :show-overflow-tooltip="true" align="center">
+            <el-table-column label="标题" min-width="180" :show-overflow-tooltip="true" align="left">
               <template slot-scope="scope">{{scope.row.title}}</template>
             </el-table-column>
             <el-table-column label="类型" min-width="60" :show-overflow-tooltip="true" align="center">

@@ -72,7 +72,7 @@
                 <li class="c-td">车颜色</li>
                 <li class="c-td">{{ item.carColor }}</li>
                 <li class="c-td">车型</li>
-                <li class="c-td">{{ item.carType }}</li>
+                <li class="c-td">{{ item.carTypeName }}</li>
               </ul>
             </li>
             <li>

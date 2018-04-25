@@ -46,7 +46,7 @@
             <el-table-column label="投诉时间" min-width="160" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{getTime(scope.row.createAt, 'yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
-            <el-table-column label="投诉内容" min-width="150" :show-overflow-tooltip="true">
+            <el-table-column label="投诉内容" min-width="150" align="left" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.content}}</template>
             </el-table-column>
             <el-table-column label="操作" width="150" :fixed="tableData.length ? 'right' : '/'">

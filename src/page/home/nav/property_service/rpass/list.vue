@@ -42,7 +42,7 @@
             <el-table-column label="有效时间" min-width="320" align="center" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.beginAt | time('yyyy-MM-dd HH:mm')}}~{{scope.row.endAt | time('yyyy-MM-dd HH:mm')}}</template>
             </el-table-column>
-            <el-table-column label="放行备注" min-width="300" align="center" :show-overflow-tooltip="true">
+            <el-table-column label="放行备注" min-width="300" align="left" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{scope.row.remark}}</template>
             </el-table-column>
             <el-table-column label="备注照片" min-width="120" align="center" :show-overflow-tooltip="true">

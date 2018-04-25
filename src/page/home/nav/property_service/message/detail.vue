@@ -56,7 +56,7 @@
                     </el-collapse>
                 </div>
                 <div class="c-comment-body" v-if="status !== 0">
-                    <p class="c-comment-title">&nbsp 评论( {{ detailData.commentNum || 0  }} )</p>
+                    <p class="c-comment-title">&nbsp; 评论( {{ detailData.commentNum || 0  }} )</p>
                     <div class="c-border-bottom" v-for="item in commentOptions" :key="item.id" v-loading="commentLoading">
                         <div class="c-margin10">
                             <div> 

@@ -103,21 +103,34 @@
         this.query();
       },
       getTableList(pages) {
-        this.loading = true;
-        let url = `vehicle/inout/page?page=${pages}&size=${this.pageSize}`;
+        
+        if(pages == '' || pages == 'undefined'){
+          this.currentPage = 1;
+        }else{
+          this.currentPage = pages;
+        }
+        let url = `vehicle/inout/page?page=${this.currentPage}&size=${this.pageSize}`;
+        console.log(url);
         let params = {};
         if (this.q_input) {
           params['carNo'] = this.q_input;
-        };
+        }else{
+          delete params.carNo;
+        }
         if (this.value1) {
           params['inOutDate'] = this.value1;
+        }else{
+          delete params.inOutDate;
         }
         params['inOutTag'] = this.gateTypeName;
         params['gateNO'] = this.$route.query.gateNO;
+        console.log(params);
+        this.loading = true;
         this.$xttp.post(url, params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {
             this.tableData = res.data.records;
+            this.currentPage = res.data.currentPage;
             this.total = res.data.total;
           }
         }).catch(() => {
@@ -146,7 +159,8 @@
       }
     },
     created() {
-      this.query();
+      // this.query();
+      this.getTableList(1);
     }
   }
 </script>

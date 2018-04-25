@@ -54,7 +54,7 @@
             <el-table-column v-if="isShow" align="center" label="ID" min-width="10" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{ scope.row.id }}</template>
             </el-table-column>
-            <el-table-column label="详情" align="center" min-width="300" :show-overflow-tooltip="true">
+            <el-table-column label="详情" align="left" min-width="300" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{ scope.row.content }}</template>
             </el-table-column>
             <el-table-column label="动态类型" align="center" min-width="120" :show-overflow-tooltip="true">

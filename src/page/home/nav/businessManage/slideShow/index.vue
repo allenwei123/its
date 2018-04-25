@@ -48,7 +48,7 @@
             <el-table-column label="关联商家" min-width="180" :show-overflow-tooltip="true" align="center">
               <template slot-scope="scope">{{scope.row.shopName}}</template>
             </el-table-column>
-            <el-table-column label="链接地址" min-width="200" :show-overflow-tooltip="true" align="center">
+            <el-table-column label="链接地址" min-width="200" :show-overflow-tooltip="true" align="left">
               <template slot-scope="scope"><el-button type="text">{{scope.row.href}}</el-button></template>
             </el-table-column>
             <el-table-column label="状态" min-width="160" :show-overflow-tooltip="true" align="center">

@@ -47,17 +47,17 @@
         </el-table-column>
         <el-table-column prop="id" v-if="show"></el-table-column>
         <el-table-column prop="userId" v-if="show"></el-table-column>
-        <el-table-column prop="" label="值班日" width="200" align="center">
+        <el-table-column prop="" label="值班日" width="340" align="center">
           <template slot-scope="scope">{{getTime(scope.row.workDate, 'yyyy-MM-dd')}}</template>
         </el-table-column>
-        <el-table-column prop="userName" label="员工" align="center" width="150"></el-table-column>
-        <el-table-column prop="" label="班次" width="200" align="center">
+        <el-table-column prop="userName" label="员工" align="center" width="250"></el-table-column>
+        <el-table-column prop="" label="班次" width="370" align="center">
           <template slot-scope="scope">{{scope.row.className}}({{scope.row.attendTimeStr}}-{{scope.row.offTimeStr}})</template>
         </el-table-column>
-        <el-table-column label="岗位" min-width="120" align="center" :show-overflow-tooltip="true">
+        <el-table-column label="岗位" min-width="200" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.postCode | postCode}}</template>
         </el-table-column>
-        <el-table-column fixed="right" label="操作" align="center" width="180">
+        <el-table-column fixed="right" label="操作" align="center" width="300">
           <template slot-scope="scope">
             <el-button type="warning" size="mini" @click="editHandle(scope.row)"  v-if="pms['1193']">编辑</el-button>
           </template>
@@ -196,15 +196,6 @@ export default {
       //编辑
       this.isEdit = true;
       this.editData = row;
-      // this.isShow = true;
-      // this.notice = row;
-    },
-    editHandle(row) {
-      //编辑
-      this.isEdit = true;
-      this.editData = row;
-      // this.isShow = true;
-      // this.notice = row;
     },
     change(msg) {//与添加弹窗交互
       if(msg == 1) {
@@ -288,7 +279,6 @@ export default {
                 this.tableData = res.data.records;
                 this.currentPage = res.data.currentPage;
                 this.total = res.data.total;
-                // this.$router.push({path:this.$route.path,query:{page: nPage }})
             }
             this.loading = false;
         }).catch(err => {

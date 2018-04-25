@@ -73,7 +73,6 @@
             // this.options = [];
             this.$xttp.get(`community/${userId}/queryByUserId`)
               .then(res => {
-                console.log(res);
                 if(!res.errorCode) {
                   res.data.forEach(item => {
                     let obj = {
