@@ -177,7 +177,7 @@
         if(this.isModify){
           let files = this.$refs.upload.uploadFiles;
           if(files.length){
-            if(this.detail.photo == this.form.photo && this.detail.photo != ''){
+            if(!(files[0].name) && this.detail.photo != ''){
               this.form.photo = this.detail.photo;
               this.submitForm();
             }else{

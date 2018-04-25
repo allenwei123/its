@@ -3,11 +3,11 @@
     <h2>审核管理设置</h2>
     <el-form :model="form" :rules="rules" ref="ruleForm" label-width="120px">
 
-        <el-form-item label-width="120px"  label="审核管理设置" prop="close"> 
+        <el-form-item label-width="120px" label="审核管理设置" prop="a"> 
             <el-switch
-                v-model="form.close"
-                active-text="关闭"
-                inactive-text="开始"
+                v-model="form.a"
+                active-text="开始"
+                inactive-text="关闭"
                 class="c-isClose">
             </el-switch>
             <p class="c-tip">关闭后住户发布动态将自动通过系统审核</p>
@@ -15,25 +15,25 @@
 
         <el-form-item label-width="120px"  label="动态举报设置"></el-form-item> 
 
-        <el-form-item label-width="120px"  label="提醒举报数:" prop="close" required> 
-            <el-input type="number" v-model="form.jubao"  min='0'></el-input>
+        <el-form-item label-width="120px"  label="提醒举报数:" prop="b"> 
+            <el-input type="number" v-model="form.b"  min='0'></el-input>
             <p class="c-tip">当举报数达到该数量后将提醒您</p>
         </el-form-item> 
 
-        <el-form-item label-width="120px"  label="屏蔽举报数:" prop="close" required> 
-            <el-input type="number" v-model="form.pinbbi" min='0'></el-input>
+        <el-form-item label-width="120px"  label="屏蔽举报数:" prop="c"> 
+            <el-input type="number" v-model="form.c" min='0'></el-input>
             <p class="c-tip">当举报数达到该数量后将自动屏蔽动态</p>
         </el-form-item> 
 
         <el-form-item label-width="120px"  label="评论举报设置" ></el-form-item> 
 
-        <el-form-item label-width="120px"  label="提醒举报数:" prop="jb"> 
-            <el-input v-model.number="form.jb"  min='0'></el-input>
+        <el-form-item label-width="120px"  label="提醒举报数:" prop="d"> 
+            <el-input v-model.number="form.d"  min='0'></el-input>
             <p class="c-tip">当举报数达到该数量后将提醒您</p>
         </el-form-item> 
 
-        <el-form-item label-width="120px"  label="屏蔽举报数:" prop="ad"> 
-            <el-input v-model.number="form.ad" min='0' auto-complete="off"></el-input>
+        <el-form-item label-width="120px"  label="屏蔽举报数:" prop="e"> 
+            <el-input v-model.number="form.e" min='0' auto-complete="off"></el-input>
             <p class="c-tip">当举报数达到该数量后将自动屏蔽评论</p>
         </el-form-item>     
 
@@ -52,11 +52,16 @@
     name:'editMessage',
     data() {
       return {
-        buildingOptions: [],
+        arr: [],
         form: {
           communityId: this.$store.getters.communityId,
-          close: false
+          a:false,
+          b:null,
+          c:null,
+          d:null,
+          e:null,
         },
+        parms: {},
         rules: {
           ad: [{required: true, message: '请输入举报数量'},{ type: 'number', message: '年龄必须为数字值'}],
         },
@@ -64,42 +69,45 @@
     },
     props: ['msg'],
     created() {
-      this.getBuilding();
+      this.getInit();
     },
     methods: {
       submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
-            if (valid) {
-              this.postData();
-            } else {
-              return false;
-            }
-        });
+        this.postData();
       },
       handleClose() {
         this.$emit("upsee", false );
       },
-      getBuilding(){
-        let url = 'community/building/list';
-        this.$xttp.get('community/building/list',{params:{communityId:this.form.communityId}})
-        .then(res => {
-          if(res.success){
-            this.buildingOptions = res.data;
+      postData() {
+        let params = {};
+        this.arr.forEach((item,index) => {
+          switch(index){
+            case 0: 
+              item.value = this.form.a;
+              break;
+            case 1: 
+              item.value = this.form.b;
+              break;
+            case 2: 
+              item.value = this.form.c;
+              break;
+            case 3: 
+              item.value = this.form.d;
+              break;
+            case 4: 
+              item.value = this.form.e;
+              break;
           }
         })
-      },
-      postData() {
-        let url = `property/fault/addFault`;
-        this.$xttp
-          .post(url, this.form)
+        let uri = '/property/parameter/multi-edit';
+        this.$xttp.post(uri,this.arr)
           .then(res => {
             if (res.errorCode === 0) {
               this.$message({
-                message: "新增成功",
+                message: "修改成功",
                 type: "success"
               });
               this.handleClose();
-              this.$emit('addSuccess');
             }else {
               this.$message({message:res.data.errorMsg,type:'error'});
             }
@@ -107,7 +115,34 @@
           .catch(err => {
             console.log(err);
           });
-      }
+      },
+      getInit(){
+        let communityId = this.$store.getters.communityId;
+        let params = {};
+        params['communityId'] = communityId;
+        params['type'] = 2;
+        this.$xttp.post("/property/parameter/page",params).then(res => {
+            if (res.success){
+                this.form.a = res.data.records[0].value ==="false" ? false : true;
+                this.form.b = +res.data.records[1].value;
+                this.form.c = +res.data.records[2].value;
+                this.form.d = +res.data.records[3].value;
+                this.form.e = +res.data.records[4].value;
+                this.arr = res.data.records.map((item,index) => {
+                   let o = {};
+                   o['key'] = item.key;
+                   o['id'] = item.id;
+                   o['name'] = item.name;
+                   if(index == 0) {
+                     o['value'] = item.value ==="false" ? false : true;
+                   }else {
+                     o['value'] = +item.value;
+                   }
+                   return o;
+                 });
+            }
+        })
+    },
     }
   }
 </script>

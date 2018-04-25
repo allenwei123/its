@@ -68,7 +68,6 @@
         }">
         </el-time-select>
       </el-form-item>
-
       <el-form-item label="联系号码：" prop="telPhone">
         <el-input type="tel" v-model="data.telPhone" size="small"></el-input>
       </el-form-item>
@@ -353,11 +352,11 @@
         })
       },
       selectType(bool){
-        if (bool == '') {
+        if (bool) {
           this.data.tag = [];
         }
         if(this.data.type){
-          this.minTag = this.typeList.find(item => this.data.type == item.code).tag;  
+          this.minTag = this.typeList.find(item => this.data.type == item.code).tag;
         }else{
           this.minTag = null;
         }

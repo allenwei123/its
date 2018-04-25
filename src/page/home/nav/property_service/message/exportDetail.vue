@@ -36,7 +36,7 @@
     created() {
       this.postData();
     },
-    props: ['msg','id'],
+    props: ['msg','id','type'],
     methods: {
       handleClose() {
         this.$emit("upsee", false );
@@ -44,7 +44,7 @@
       postData() {
         let url = `/mom/report/list`;
         this.$xttp
-          .post(url,{speechId:this.id,type:1 })
+          .post(url,{speechId:this.id,type:this.type })
           .then(res => {
             if (res.errorCode === 0) {
               this.tableData = res.data.records;
