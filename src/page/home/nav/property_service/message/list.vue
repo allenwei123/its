@@ -12,13 +12,13 @@
           <el-form :inline="true" class="demo-form-inline">
 
             <el-form-item>
-              <el-select v-model="type" placeholder="全部类型" clearable @change="changeTypes">
-              <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
-            </el-select>
+              <el-select v-model="type" placeholder="全部类型" clearable @change="changeTypes" style="width:170px;">
+                <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+              </el-select>
             </el-form-item>
 
             <el-form-item>
-              <el-select v-model="status" placeholder="全部状态" clearable>
+              <el-select v-model="status" placeholder="全部状态" clearable style="width:170px;">
                 <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
@@ -34,7 +34,7 @@
               </el-date-picker>
             </el-form-item>
             <el-form-item label="">
-              <el-input placeholder="住户姓名" v-model.trim="input"></el-input>
+              <el-input placeholder="住户姓名" v-model.trim="input" style="width:170px;"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="query">查询</el-button>
@@ -115,6 +115,16 @@
 
       <el-dialog title="屏蔽" :visible.sync="visible3">
         <p>确定屏蔽此条动态?</p>
+        <div>
+            <el-select v-model="shieldReason" clearable placeholder="请选择">
+                <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.value"
+                :value="item.value">
+                </el-option>
+            </el-select>
+        </div>
         <div style="text-align: right; margin: 0;">
           <el-button size="mini" type="text" @click="visible3 = false">取消</el-button>
           <el-button size="mini" type="primary" @click="confirmPB">确定</el-button>
@@ -155,7 +165,9 @@
         visible2: false,  //审核页面
         commentId: '',
         commentStatus: '',
-        visible3: false
+        visible3: false,
+        shieldReason:'',//屏蔽原因
+        options:[{value: '违反法律法规',label:'违反法律法规'},{value: '欺诈信息',label:'欺诈信息'},{value: '色情/淫秽内容',label:'色情/淫秽内容'},{value: '低俗辱骂内容',label:'低俗辱骂内容'},{value: '暴力血腥内容',label:'暴力血腥内容'}],//屏蔽原因下拉接口
       }
     },
     components: {
@@ -285,7 +297,14 @@
       },
       // 屏蔽动态
       confirmPB(){
-
+        this.$xttp.post('mom/shielding/speech',{reason:this.shieldReason,speechId:this.commentId,type:1})
+          .then(res => {
+              if(!res.errorCode) {   
+                this.visible3 = false;
+                this.$message('屏蔽成功');
+                this.query();
+              }
+          })
       }
     }
   }
