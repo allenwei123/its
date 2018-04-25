@@ -67,16 +67,16 @@
         <el-pagination
           @current-change="handleCurrentChange"
           :current-page="currentPage"
-          :page-size="pageSize"
+          :page-size="10"
           layout="total, prev, pager, next, jumper"
           :total="total">
         </el-pagination>
       </div>
       <transition name="show">
-        <AddPage v-if="isShow" :msg="isShow" @upup="change" @reload="sendAjax" :add.sync="notice"></AddPage>
+        <AddPage v-if="isShow" :msg="isShow" @upup="change" @reload="sendAjax(1)" :add.sync="notice"></AddPage>
       </transition>
       <transition name="edit">
-        <EditPage v-if="isEdit" :msg="isEdit" @upedit="editChange" @reload="sendAjax" :edit.sync="editData"></EditPage>
+        <EditPage v-if="isEdit" :msg="isEdit" @upedit="editChange" @reload="sendAjax(1)" :edit.sync="editData"></EditPage>
       </transition>
       <transition name="see">
         <SeePage v-if="see" :msg="see" @upsee="seeChange"  :data="seeData"></SeePage>
@@ -93,78 +93,79 @@
 </template>
 
 <script>
-import AddPage from "./add";
-import SeePage from "./see";
-import EditPage from './edit';
 import { mapGetters } from "vuex";
 import time from '@/utils/time.js';
 
+import AddPage from "./add";
+import SeePage from "./see";
+import EditPage from './edit';
+
 export default {
-  name: "schedul",
+  name: 'schedul',
   data() {
-    return {
-      show: false,
-      pms: this.$store.getters.pms,//菜单权限
-      postOptions: [],
-      isSou: false,
-      tableData: [],
-      navDetailData: [
-        { id: 0, name: "物业管理", router: '/home/nav/side/floorFile' },
-        { id: 1, name: "工作管理", router: '/home/nav/side/class' },
-        { id: 2, name: "排班管理" }
-      ],
-      formInline: {
-        rangeDate: '',
-        post: 'SECURITY',
-        date: ''
-      },
-      pickerOptions: {
-        shortcuts: [{
-        text: '最近一周',
-        onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-            picker.$emit('pick', [start, end]);
-        }
-        }, {
-        text: '最近一个月',
-        onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-            picker.$emit('pick', [start, end]);
-        }
-        }, {
-        text: '最近三个月',
-        onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-            picker.$emit('pick', [start, end]);
-        }
-        }]
-      },
-      total: 0,//列表总数
-      pageSize:10,
-      currentPage: 1,
-      loading: false,
-      //添加
-      isShow: false, //控制添加页面弹出
-      notice:null,//编辑传送的值
-      //查看
-      see:false,//控制查看组件弹出
-      seeData:null,//查看数据
-      //删除
-      visible2:false,//控制删除框
-      delData:null,
-      // 修改
-      isEdit: false,
-      editData: null
-    };
+      return {
+        show: false,
+        pms: this.$store.getters.pms,//菜单权限
+        postOptions: [],
+        isSou: false,
+        tableData: [],
+        navDetailData: [
+            { id: 0, name: "物业管理", router: '/home/nav/side/floorFile' },
+            { id: 1, name: "工作管理", router: '/home/nav/side/class' },
+            { id: 2, name: "排班管理" }
+        ],
+        formInline: {
+            rangeDate: '',
+            post: 'SECURITY',
+            date: ''
+        },
+        pickerOptions: {
+            shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+                const end = new Date();
+                const start = new Date();
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                picker.$emit('pick', [start, end]);
+            }
+            }, {
+            text: '最近一个月',
+            onClick(picker) {
+                const end = new Date();
+                const start = new Date();
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                picker.$emit('pick', [start, end]);
+            }
+            }, {
+            text: '最近三个月',
+            onClick(picker) {
+                const end = new Date();
+                const start = new Date();
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                picker.$emit('pick', [start, end]);
+            }
+            }]
+        },
+        total: 0,//列表总数
+        pageSize:10,
+        currentPage: 1,
+        loading: false,
+        //添加
+        isShow: false, //控制添加页面弹出
+        notice:null,//编辑传送的值
+        //查看
+        see:false,//控制查看组件弹出
+        seeData:null,//查看数据
+        //删除
+        visible2:false,//控制删除框
+        delData:null,
+        // 修改
+        isEdit: false,
+        editData: null
+      };
   },
   computed: mapGetters(["showAside"]),
-  components: {
+  components:{
     AddPage,
     SeePage,
     EditPage
@@ -178,7 +179,9 @@ export default {
       return time.timestampToFormat(timestamp, format);
     },
     handleCurrentChange(val) {
-      this.sendAjax(val);
+      if(this.currentPage !== val){
+        this.sendAjax(val);
+      }
     },
     handleCreate(){
       // this.notice = null;
@@ -188,6 +191,13 @@ export default {
       //查看
       this.see = true;
       this.seeData = row;
+    },
+    editHandle(row) {
+      //编辑
+      this.isEdit = true;
+      this.editData = row;
+      // this.isShow = true;
+      // this.notice = row;
     },
     editHandle(row) {
       //编辑
@@ -212,13 +222,13 @@ export default {
       this.isEdit = false;
     },
     changeDate() {
-      this.sendAjax();
+      this.find();
     },
     changePostCode() {
-      this.sendAjax();
+      this.find();
     },
     find(){
-      this.sendAjax(null,this.formInline.name);
+      this.sendAjax(1);
     },
     delHandle(row) {
       this.visible2 = true;
@@ -226,7 +236,7 @@ export default {
     },
 
     changeRangeDate() {
-      this.sendAjax();
+      this.find();
     },
     initPost(){
       let communityId = this.$store.getters.communityId
@@ -250,44 +260,47 @@ export default {
         })
       }
     },
-    sendAjax(page) {
-      let nPage = page || this.$route.query.page || 1;
-      let communityId = this.$store.getters.communityId;
-      let rangeDate = this.formInline.rangeDate;
-      let startDate;
-      let endDate;
-      let postCode = this.formInline.post;
-      if(rangeDate == '' || rangeDate == 'undefined' || rangeDate == null){
-        startDate = '';
-        endDate = '';
-      }else{
-        startDate = rangeDate[0];
-        endDate = rangeDate[1];
-      }
-
-      let obj = {page:nPage,size:this.pageSize,communityId:communityId,postCode:postCode,startDate: startDate,endDate:endDate}
-      this.loading = true;
-      this.$xttp.post("task/schedule/page",obj)
-      .then(res => {
-        if (res.success) {
-          this.tableData = res.data.records;
-          this.currentPage = res.data.currentPage;
-          this.total = res.data.total;
-          this.$router.push({path:this.$route.path,query:{page: nPage }})
+    sendAjax(page){
+        if(page == 'undefined'){
+            this.currentPage = 1;
+        }else{
+            this.currentPage = page;
         }
-        this.loading = false;
-      }).catch(err => {
-        this.loading = false;
-      })
+        // let nPage = page || this.$store.query.page || 1;
+        let obj = {};
+        obj['communityId'] = this.$store.getters.communityId;
+        if(this.formInline.rangeDate){
+            obj['startDate'] = this.formInline.rangeDate[0];
+            obj['endDate'] = this.formInline.rangeDate[1];
+        }else{
+            delete obj.startDate;
+            delete obj.endDate;
+        }
+        if(this.formInline.post){
+            obj['postCode'] = this.formInline.post;
+        }else{
+            delete obj.postCode;
+        }
+
+        this.loading = true;
+        this.$xttp.post(`task/schedule/page?page=${this.currentPage}&size=${this.pageSize}`,obj).then(res => {
+            if(res.success) {
+                this.tableData = res.data.records;
+                this.currentPage = res.data.currentPage;
+                this.total = res.data.total;
+                // this.$router.push({path:this.$route.path,query:{page: nPage }})
+            }
+            this.loading = false;
+        }).catch(err => {
+            this.loading = false;
+        })
     }
   },
-  created() {
-    this.initPost();
-    this.sendAjax();
-  },
-  mounted() {
+  created(){
+      this.initPost();
+      this.sendAjax(1);
   }
-};
+}
 </script>
 
 <style scoped lang="scss">

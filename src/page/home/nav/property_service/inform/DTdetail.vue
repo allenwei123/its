@@ -8,9 +8,9 @@
           </el-breadcrumb>
           <div>
                 <p class="c-title">动态详情</p>
-                <div class="c-author-body">
+                <div class="c-author-body" v-loading="commentLoading">
                     <div class="c-author-header">
-                        <img class="c-user-image" v-if="uri" :src="uri" style="width:60px; height:60px; border-radius:100%">
+                        <img class="c-user-image" v-if="uri" :src="uri" style="width:45px; height:45px; border-radius:100%">
                         <!-- <div class="c-image" v-if="uri"><img :src="uri" alt="头像加载失败" width="60px" height="60px"></div> -->
                         <div class="c-author-info">
                             <p>{{creatorName}}</p>
@@ -20,10 +20,16 @@
                     <div class="c-author-msg">
                         <p class="c-send-msg">{{ content }}</p>
                         <ul class="c-send-msgBody">
-                            <li v-for="item in infoImage" :key="item.id">
-                                <img class="c-msg-image" src="static/image/MANAGER.png" alt="图片加载失败">
+                            <li v-for="(item,index) in infoImage" :key="index" style="margin:5px;">
+                                <img class="c-msg-image" style="width:150px; height:150px;" :src="item">
                             </li>
                         </ul>
+
+                        <!-- <ul class="c-send-msgBody" v-loading="infoImageLoading">
+                            <li v-for="(item, index) in infoImage" :key="index">
+                                <img class="c-msg-image" :src="item" alt="图片加载失败">
+                            </li>
+                        </ul> -->
                     </div>
                 </div>
           </div>
@@ -52,7 +58,9 @@ import time from '@/utils/time.js';
             creatorName: '',
             createAt: '',
             creatorHeadImg: null,
-            content: ''
+            content: '',
+            infoImageLoading: false,
+            commentLoading: false
       }
     },
     props: ['msg','seeData'],
@@ -60,25 +68,40 @@ import time from '@/utils/time.js';
         let id = this.$route.query.id;
         let url = `mom/moment/${id}/detail`;
 
-        this.$xttp.get(url).then(res => {   
-            console.log(res);
+        this.$xttp.get(url).then(res => {
             this.creatorName = res.data.creatorName;
             this.content = res.data.content;
             this.createAt = res.data.createAt;
-                if(res.data.creatorHeadImg) {
-                    getUri(res.data.creatorHeadImg,(uri)=> {
-                        this.uri = uri;
+            if(res.data.creatorHeadImg) {
+                getUri(res.data.creatorHeadImg,(uri)=> {
+                    this.uri = uri;
                 });
             }
+            if(res.data.photos.length) {
+                this.infoImageLoading = true;
+                this.getFilesUri(res.data.photos)
+                    .then(files => {
+                        this.infoImageLoading = false;
+                        this.infoImage = files;
+                    })
+            }
         });
-        // console.log(this.$router.query.id);
-    //    console.log(this.$router.query.row.id);
-    //   this.initData();
     },
     methods: {
-     initData(){
-         console.log("initData")
-     }
+     getFilesUri(){
+         return new Promise((resolve,reject)=> {
+             let arr = arguments[0];
+             let newArr = [];
+             arr.forEach((item, index) => {
+                 getUri(item,url => {
+                    newArr.push(url);
+                    if(index == (arr.length - 1)){
+                        resolve(newArr);
+                    }
+                 })
+             });
+         })
+     },
     }
   }
 </script>
@@ -136,14 +159,15 @@ import time from '@/utils/time.js';
             }
             .c-send-msgBody {
                 margin: -4px 0 0 -4px;
-                width: 342px;
+                // width: 342px;
+                width: 100%;
                 overflow: hidden;
                 li {
-                    width:110px;
-                    height: 110px;
+                    width:18%;
+                    height: 200px;
                     float: left;
                     overflow: hidden;
-                    margin: 4px 0 0 4px;
+                    margin: 4px 10px 10px 4px;
                     img {
                         width: 100%;
                         height: 100%;

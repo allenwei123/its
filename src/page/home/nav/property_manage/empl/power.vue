@@ -7,10 +7,10 @@
               <el-col :span="6"><el-checkbox :label="items.id">{{items.name}}</el-checkbox></el-col>
             </el-checkbox-group>
           </el-form-item>
-          <el-form-item style="text-align:center">
+          <!-- <el-form-item style="text-align:center">
             <el-button @click="handleClose">取 消</el-button>
             <el-button type="primary" @click="save()">授权</el-button>
-          </el-form-item>
+          </el-form-item> -->
         </el-form>
     </el-dialog>
 </template>
@@ -23,7 +23,8 @@ export default {
   data() {
     return {
       formLabelWidth: "120px",
-      titleFont:'职权管理',
+      // titleFont:'职权管理',
+      titleFont:'查看职权',
       form: {
           buildLists:[],
           userToPropertyId: '',
@@ -51,8 +52,10 @@ export default {
     },
     getInit(){
       this.$xttp.get('community/building/list',{params:{communityId:this.communityId}}).then(res => {
+        // this.$xttp.post('user/district/list',{params:{communityId:this.communityId}}).then(res => {
         if(res.success){
           this.form.buildLists = res.data;
+          this.form.checkList = this.power.buildingIds;
         }
       })
     },

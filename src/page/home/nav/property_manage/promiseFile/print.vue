@@ -108,7 +108,7 @@
               <li>
                 <ul class="c-dp-fx c-tr" v-for="item in data.inhabitantList" :key="item.id">
                   <li class="c-td c-ta-center">{{ item.name }}</li>
-                  <li class="c-td c-ta-center">{{ item.sex | sex }}</li>
+                  <li class="c-td c-ta-center">{{ item.sex | sex}}</li>
                   <li class="c-td c-ta-center">{{ item.birthday }}</li>
                   <li class="c-td c-ta-center">{{ item.filterRelationship }}</li>
                   <li class="c-td c-ta-center c-flex-200">{{ item.identityCard }}</li>
@@ -151,9 +151,9 @@ export default {
             break;
         }
     });
-    if( this.data.carList.length < 3 ) {
+    if( this.data.carList.length < 1 ) {
       (function f(arr){
-        if( arr.length < 3 ) {
+        if( arr.length < 1 ) {
           arr.push({id:Math.floor(Math.random()*1000)});
           f(arr);
         }else {

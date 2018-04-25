@@ -144,8 +144,8 @@
       },
       gotoType(type) {
         let names = {
-          '1': '生活服务',
-          '2': '家政服务',
+          '1': '本地商店',
+          '2': '外来连接',
         };
         return names[type];
       },

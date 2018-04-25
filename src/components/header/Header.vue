@@ -3,18 +3,19 @@
     <div>
       <a href="" class="c-logo">智慧社区管理平台</a>
       <ul class="c-navgator">
-        <li><span class="c-account"> <i class="iconfont icon-guanlikehu c-sidebar-conl">&nbsp;</i>当前社区：
+        <li><span class="c-account"> <i class="iconfont icon-xiazai20 c-sidebar-conl">&nbsp;</i>
           <el-dropdown @command="handleCommand" style="color: #fff; cursor: pointer">
-            <span class="el-dropdown-link">
-              {{ currentUser }}<i style="color: #fff" class="el-icon-arrow-down el-icon--right"></i>
-            </span>
+            <!-- <el-dropdown style="color: #fff; cursor: pointer"> -->
+            <span class="el-dropdown-link">{{currentUser}}</span>
              <el-dropdown-menu slot="dropdown">
-               <el-dropdown-item v-for="item in communityList" :key="item.id" :command="item.id">{{item.name}}</el-dropdown-item>
+               <el-dropdown-item @click="logout">退出</el-dropdown-item>
              </el-dropdown-menu>
           </el-dropdown>
         </span></li>
-        <!-- <li> <el-button type="success" size="mini">修改密码</el-button></li> -->
-        <li><el-button type="danger" size="mini" @click="logout">退出</el-button></li>
+        <!-- <li><img class="c-user-image" v-if="uri" :src="uri" style="width:45px; height:45px; border-radius:100%"></li> -->
+        <li><img class="c-user-image" src="../../assets/headImg.png" style="width:45px; height:45px; border-radius:100%"></li>
+        <li>{{nickname}}</li>
+        <!-- <li><el-button type="danger" size="mini" @click="logout">退出</el-button></li> -->
       </ul>
       <!--nav 导航模块-->
       <div class="c-top_bar_area">
@@ -29,6 +30,7 @@
 <script>
 import { mapGetters } from "vuex";
 import aside from '@/mock/menuList';
+import { getUri } from '@/utils/oss';
 
   export default {
     name: 'Header',
@@ -47,11 +49,15 @@ import aside from '@/mock/menuList';
         ],
         currentUser:'',
         pms: this.$store.getters.pms,//菜单权限
+        uri: '',
+        nickname: ''
       }
     },
-    computed:mapGetters(['communityList','communityId','navIndex']),
+    computed:mapGetters(['communityList','communityId','navIndex','headImg']),
     mounted() {
       this.changeIdToName(this.communityId);
+      this.gotHeadImg();
+      this.getNickName();
     },
     created() {},
     methods: {
@@ -59,15 +65,16 @@ import aside from '@/mock/menuList';
         this.$router.push('/auth/logout');
       },
       handleCommand(command) {
-        this.$store.dispatch('addCommunityId',command);
-        this.changeIdToName(command);
-        const loading = this.$loading({
-          lock: true,
-          text: '正在加载',
-          spinner: 'el-icon-loading',
-          background: 'rgba(0, 0, 0, 0.7)'
-        });
-        this.$store.dispatch('updatedAsideData').then(()=> {loading.close()});
+        this.$router.push('/auth/logout');
+        // this.$store.dispatch('addCommunityId',command);
+        // this.changeIdToName(command);
+        // const loading = this.$loading({
+        //   lock: true,
+        //   text: '正在加载',
+        //   spinner: 'el-icon-loading',
+        //   background: 'rgba(0, 0, 0, 0.7)'
+        // });
+        // this.$store.dispatch('updatedAsideData').then(()=> {loading.close()});
       },
       changeIdToName(id) {
         this.communityList.forEach(item => {
@@ -76,6 +83,17 @@ import aside from '@/mock/menuList';
       },
       navClick(item) {
         this.$router.push({path:item.src});
+      },
+      gotHeadImg(){
+        if(this.$store.getters.headImg) {
+          getUri(this.$store.getters.headImg,(uri)=> {
+              this.uri = uri;
+          });
+        }
+      },
+      getNickName(){
+        this.nickname = this.$store.getters.nickname;
+        console.log(this.nickname);
       }
     },
   }

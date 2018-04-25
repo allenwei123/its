@@ -70,8 +70,10 @@
           if (res.errorCode === 0) {
             const userId = res.data.id;
             //获取用户对应的社区id列表
+            // this.options = [];
             this.$xttp.get(`community/${userId}/queryByUserId`)
               .then(res => {
+                console.log(res);
                 if(!res.errorCode) {
                   res.data.forEach(item => {
                     let obj = {
@@ -100,11 +102,13 @@
       },
       handleClose() {
         this.dialogVisible = false;
+        this.options = [];
       },
       comfirm() {
         if(this.value) {
           this.$store.dispatch('addCommunityId',this.value);
           this.dialogVisible = false;
+          this.options = [];
           this.$router.push('/home');
         }else {
           this.$message('请选择社区');

@@ -1,12 +1,9 @@
 <template>
-    <el-dialog title="卡片详情" :visible.sync="msg" :before-close="handleClose">
-        <ul>
-            <li class="c-list"><span class="c-label">卡编号:</span> <span class="c-content"> {{ data.keyNo }} </span></li>
-            <li class="c-list"><span class="c-label">用户名:</span> <span class="c-content"> {{ data.name }} </span></li>
-            <li class="c-list"><span class="c-label">卡片类型:</span> <span class="c-content"> {{ data.keyType | card }} </span></li>
-            <li class="c-list"><span class="c-label">社区名称:</span> <span class="c-content"> {{ $store.getters.communityName }} </span></li>
-            <li class="c-list"><span class="c-label">住房信息:</span> <span class="c-content"> {{ data.roomName }} </span></li>
-        </ul>  
+    <el-dialog title="查看权限" :visible.sync="msg" width="600px" :before-close="handleClose">
+        <span><b>权限范围：</b></span>
+        <ul style="margin-left:30px;">
+            <li class="c-list" v-for="(item,index) in roomInfo" :key="index" style="margin:5px;">{{item}}</li>
+        </ul>
     </el-dialog>
 </template>
 
@@ -15,11 +12,13 @@ export default {
   name: "ChargeSee",
   data() {
     return {
-        arr:[1,2,4,5]
+        arr:[1,2,4,5],
+        roomInfo: []
     }
   },
   props: ["msg","data"],
   created(){
+      this.roomInfo = this.data.roomName;
   },
   methods:{
       handleClose() {
@@ -31,16 +30,18 @@ export default {
 
 <style lang="scss" scoped>
     .c-list {
+
         margin-bottom: 15px;
-        .c-label {
-            display: inline-block;
-            width: 100px;
-            text-align:right;
-        }
-        .c-content {
-            display: inline-block;
-            margin-left: 15px;
-            font-weight: bold;
-        }
+        margin-left: 40px;
+        // .c-label {
+        //     display: inline-block;
+        //     width: 100px;
+        //     text-align:right;
+        // }
+        // .c-content {
+        //     display: inline-block;
+        //     margin-left: 15px;
+        //     font-weight: bold;
+        // }
     }
 </style>

@@ -30,16 +30,19 @@
         </el-table-column>
         <el-table-column v-if="show" label="ID" min-width="80" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.id }}</template>
-        </el-table-column>
-        <el-table-column label="创建时间" min-width="160" align="center" :show-overflow-tooltip="true">
-          <template slot-scope="scope">{{ scope.row.createAt | time('yyyy-MM-dd HH:mm:ss') }}</template>
-        </el-table-column>
+        </el-table-column>        
         <el-table-column label="岗位" min-width="200" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.postCode | postCode}}</template>
         </el-table-column>
         <el-table-column prop="name" label="班次" align="center"  width="150"> </el-table-column>
+        <el-table-column label="班次类型" min-width="200" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{getType(scope.row.type)}}</template>
+        </el-table-column>
         <el-table-column label="值班时间" min-width="200" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{scope.row.attendTime}}~{{scope.row.offTime}}</template>
+        </el-table-column>
+        <el-table-column label="创建时间" min-width="160" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ scope.row.createAt | time('yyyy-MM-dd HH:mm:ss') }}</template>
         </el-table-column>
         <el-table-column label="备注信息" align="center" width="250" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.remark }}</template>
@@ -49,7 +52,7 @@
             <!-- <el-button type="primary" size="mini" @click="seeHandle(scope.row)">查看</el-button> -->
             <!-- <el-button type="primary" size="mini" @click="editHandle(scope.row)">编辑</el-button> -->
             <el-button @click="editHandle(scope.row)" v-if="pms['1183']" type="warning" size="small">编辑</el-button>
-            <!-- <el-button @click="delHandle(scope.row)" type="danger" size="small">删除</el-button> -->
+            <el-button @click="delHandle(scope.row)" type="danger" size="small">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -183,6 +186,13 @@ import time from '@/utils/time.js';
       delHandle(row){
         this.visible2 = true;
         this.delData = row;
+      },
+      getType(type) {
+      let names = {
+        '1': '轮班',
+        '2': '常班'
+      };
+      return names[type];
       },
       confirmDel(){
         if(this.delData.id) {

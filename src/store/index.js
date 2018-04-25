@@ -23,6 +23,8 @@ const getters = {
   },
   communityList: state => state.data.communityList ,//当前用户社区列表
   navIndex: state => state.data.navIndex,//当前头部导航的下标
+  headImg: (state) => state.permission.userInfo.headImg,  //登录用户的头像
+  nickname: (state) => state.permission.userInfo.nickName
 };
 export default new Vuex.Store({
   modules: {

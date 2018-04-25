@@ -82,7 +82,7 @@
         </el-table-column> -->
         <el-table-column align="left" fixed="right" label="操作" width="250">
           <template slot-scope="scope">
-            <el-button @click="powerHandle(scope.row)" type="success" size="small" v-if="pms['1174']">职权管理</el-button>
+            <el-button @click="powerHandle(scope.row)" type="success" size="small" v-if="pms['1174']">查看职权</el-button>
             <el-button @click="editHandle(scope.row)" type="warning" size="small"  v-if="pms['1173']">编辑</el-button>
             <el-button v-if="(scope.row.postCode != 'MANAGER') && pms['1175']" @click="handleWriteoff(scope.row)" type="danger" size="small">注销</el-button>
           </template>

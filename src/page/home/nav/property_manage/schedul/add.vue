@@ -152,7 +152,8 @@ export default {
         task:'',
         attendPlace: '',
         offPlace: '',
-        classId:''
+        classId:'',
+        classType: '1'
       },
       rules: {
         empl: [{ required: true, message: "请选中员工", trigger: "blur" }],
@@ -219,6 +220,7 @@ export default {
       this.$xttp.get(`task/class/${id}/detail`)
           .then(res => {
             if( res.success) {
+              this.form.classType = res.data.type;
               this.form.name = res.data.name;
               this.form.attendTime = res.data.attendTime;
               this.form.attendPlace = res.data.attendPlace;
@@ -257,10 +259,12 @@ export default {
       let offTimeStr = this.form.offTimeStr;
       let offPlace = this.form.offPlace;
       let task = this.form.task;
+      let classType = this.form.classType;
       let params = {};
       // params['employeeId'] = employeeId;
       params['classId'] = this.form.classId;
       params['className'] = className;
+      params['classType'] = classType;
       params['postCode'] = postCode;
       params['workDate'] = workDate;
       params['userId'] = userId;
@@ -271,7 +275,7 @@ export default {
       params['offTimeStr'] = offTimeStr;
       params['offPlace'] = offPlace;
       params['task'] = task;
-      
+      console.log(params);
       let msg = this.add ? "编辑" : "添加";
       let uri = this.add
         ? "/task/schedule/edit"
@@ -342,6 +346,7 @@ export default {
           this.form.attendTimeStr = records.attendTimeStr;
           this.form.attendPlace = records.attendPlace;
           this.form.task = records.task;
+          this.form.classType = records.type;
           this.form.remark = records.remark;
           this.form.class = this.add.className;
           // this.initPost();

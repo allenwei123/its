@@ -38,7 +38,7 @@
           <template slot-scope="scope">{{scope.row.keyType | card }}</template>
         </el-table-column>
 
-        <el-table-column label="用户" :show-overflow-tooltip="true" align="center" width="200">
+        <el-table-column label="用户" :show-overflow-tooltip="true" align="center" width="240">
           <template slot-scope="scope">{{scope.row.name }}</template>
         </el-table-column>
 
@@ -50,7 +50,7 @@
           <template slot-scope="scope">{{scope.row.phone }}</template>
         </el-table-column> -->
 
-        <el-table-column label="住房信息" :show-overflow-tooltip="true" align="center"  width="400">
+        <el-table-column v-if="isSee" label="住房信息" :show-overflow-tooltip="true" align="center"  width="400">
           <template slot-scope="scope">{{scope.row.roomName }}</template>
         </el-table-column>
 
@@ -66,11 +66,11 @@
           <template slot-scope="scope">{{ getdataStatus(scope.row.dataStatus) }}</template>
         </el-table-column> -->
 
-        <!-- <el-table-column label="操作" width="80" fixed="right" align="left">
+        <el-table-column label="操作" width="200" fixed="right" align="center">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button>
+            <el-button v-if="scope.row.roomName" @click="handleClick(scope.row)" type="primary" size="small">查看权限</el-button>
           </template>
-        </el-table-column> -->
+        </el-table-column>
       </el-table>
 
       <div class="c-block">
@@ -113,19 +113,21 @@ export default {
       formInline: {
         keyType: ""
       },
+      isSee: false,
       pageSize: 10,
       currentPage: 1,
       loading: false,
       isShow: false, //控制添加页面弹出
       total: 0,//列表总数
       notice:null,//编辑传送的值
-      see:false,//控制查看组件弹出
-      seeData:null,//查看数据
+      see:false,//控制查看权限组件弹出
+      seeData:null,//查看权限数据
       visible2:false,
       delData:null,
       q_input: null,
       input: '',
       show:false,
+
     };
   },
   components: {
@@ -152,11 +154,11 @@ export default {
       };
       return names[status];
     },
-    // handleClick(row) {
-    //   //查看
-    //   this.see = true;
-    //   this.seeData = row;
-    // },
+    handleClick(row) {
+      //查看权限
+      this.see = true;
+      this.seeData = row;
+    },
     confirmDel(){
       if(this.delData.id){
         this.$xttp.get(`/community/building/${this.delData.id}/delete`)

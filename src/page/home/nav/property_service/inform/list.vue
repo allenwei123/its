@@ -10,7 +10,7 @@
       <div class="c-rpass-container">
           <el-tabs type="border-card">
             <el-tab-pane>
-            <span slot="label"><i class="el-icon-date"></i> 举报动态</span>
+            <span slot="label"><i class="iconfont icon-duihuakuang"></i> 举报动态</span>
                 <div class="c-searchbar">
                     <el-form :inline="true" class="demo-form-inline">
                         <el-form-item>
@@ -48,14 +48,15 @@
                             <template slot-scope="scope">{{ scope.row.createAt | time('yyyy-MM-dd HH:mm:ss') }}</template>
                         </el-table-column>
                         <el-table-column label="举报数量" align="center" min-width="200" :show-overflow-tooltip="true">
-                            <template slot-scope="scope">{{ scope.row.reportNum }}</template>
+                            <!-- <template slot-scope="scope">{{ scope.row.reportNum }}</template> -->
+                            <template slot-scope="scope" v-if="scope.row.reportNum > 0"><el-button type="text" @click="showJBNum(scope.row,1)">{{scope.row.reportNum}}</el-button></template>
                         </el-table-column>
                         <el-table-column label="状态" align="center" min-width="120" :show-overflow-tooltip="true">
                             <template slot-scope="scope">{{ statusFormat(scope.row.status) }}</template>
                         </el-table-column>
-                        <el-table-column label="操作" min-width="300" align="center" :fixed="tableData.length ? 'right' : '/'">
+                        <el-table-column label="操作" min-width="300" align="left" :fixed="tableData.length ? 'right' : '/'">
                             <template slot-scope="scope">
-                                <el-button type="primary" size="mini" @click="detail(scope.row)">动态详情</el-button>
+                                <el-button type="primary" size="mini" @click="detailDT(scope.row)">动态详情</el-button>
                                 <el-button  v-if="scope.row.status == 1 || scope.row.status == 2" type="danger" @click="PBDT(scope.row)" size="mini">屏蔽</el-button>
                             </template>
                         </el-table-column>
@@ -69,7 +70,7 @@
                 </div>
             </el-tab-pane>
             <el-tab-pane>
-                <span slot="label"><i class="iconfont icon-duihuakuang"></i> 举报评论</span>
+                <span slot="label"><i class="iconfont icon-pinglun"></i> 举报评论</span>
                 <div class="c-searchbar">
                     <el-form :inline="true" class="demo-form-inline">
                         <el-form-item>
@@ -97,9 +98,6 @@
                         <el-table-column label="详情" align="center" min-width="300" :show-overflow-tooltip="true">
                             <template slot-scope="scope">{{ scope.row.content }}</template>
                         </el-table-column>
-                        <!-- <el-table-column label="动态类型" align="center" min-width="120" :show-overflow-tooltip="true">
-                        <template slot-scope="scope">{{ typeFormat(scope.row.type) }}</template>
-                        </el-table-column> -->
                         <el-table-column label="住户姓名" align="center" min-width="120" :show-overflow-tooltip="true">
                             <template slot-scope="scope">{{ scope.row.creatorName }}</template>
                         </el-table-column>
@@ -107,15 +105,15 @@
                             <template slot-scope="scope">{{ scope.row.createAt | time('yyyy-MM-dd HH:mm:ss') }}</template>
                         </el-table-column>
                         <el-table-column label="举报数量" align="center" min-width="200" :show-overflow-tooltip="true">
-                            <template slot-scope="scope" v-if="scope.row.reportNum > 0"><el-button type="text" @click="showNum(scope.row)">{{scope.row.reportNum}}</el-button>
+                            <template slot-scope="scope" v-if="scope.row.reportNum > 0"><el-button type="text" @click="showJBNum(scope.row,2)">{{scope.row.reportNum}}</el-button>
                             </template>
                         </el-table-column>
                         <el-table-column label="状态" align="center" min-width="120" :show-overflow-tooltip="true">
                             <template slot-scope="scope">{{ statusFormat(scope.row.status) }}</template>
                         </el-table-column>
-                        <el-table-column label="操作" min-width="300" align="center" :fixed="tableData.length ? 'right' : '/'">
+                        <el-table-column label="操作" min-width="300" align="left" :fixed="tableData.length ? 'right' : '/'">
                             <template slot-scope="scope">
-                                <el-button type="primary" size="mini" @click="detail(scope.row)">评论详情</el-button>
+                                <!-- <el-button type="primary" size="mini" @click="detailPL(scope.row)">评论详情</el-button> -->
                                 <el-button  v-if="scope.row.status == 1 || scope.row.status == 2" type="danger" @click="commentNO(scope.row)" size="mini">屏蔽</el-button>
                                 <!-- <el-button type="danger" size="mini" @click="commentNO(scope.row)">屏蔽</el-button> -->
                             </template>
@@ -131,10 +129,11 @@
             </el-tab-pane>
           </el-tabs>
       </div>
+      
       <el-dialog title="屏蔽动态" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
         <p style="margin-bottom:40px;">屏蔽后该动态将不再出现在社区动态内！</p>
         <p style="margin-bottom:10px;">屏蔽原因：</p>
-        <el-select v-model="PBReason" placeholder="请选择" label="屏蔽原因："  style="width:300px;" @change="changeReason">
+        <el-select v-model="PBReason" placeholder="请选择" label="屏蔽原因："  style="width:300px;">
             <el-option
             v-for="item in options"
             :key="item.value"
@@ -151,6 +150,15 @@
       <transition name="fade">
         <SeePage v-if="see" :msg="see" @upsee="seeChange"  :data="seeData"></SeePage>
       </transition>
+
+      <transition name="fadePL">
+        <PLPage v-if="see" :msg="see" @upsee="seeChange"  :data="seeData"></PLPage>
+      </transition>
+
+      <transition name="shownum">
+        <showNumPage v-if="isSee" :msg="isSee" :data="showNum" :typeNum="typeNum" @uppsee="seeExport" ></showNumPage>
+      </transition>
+      
       
     </el-main>
   </el-container>
@@ -158,7 +166,9 @@
 
 <script>
   import time from '@/utils/time.js';
-  import SeePage from './detail'
+  import SeePage from './DTdetail';
+  import PLPage  from './PLdetail';
+  import showNumPage from './shownum'
 
   export default {
     name: 'inform',
@@ -195,10 +205,15 @@
         type: '',
         see:false,
         seeData: null, //查看数据
+        isSee: false, //查看举报数据
+        showNum: null,
+        typeNum: '',
+        text: ''
       }
     },
     components: {
-      SeePage
+      SeePage,
+      showNumPage
     },
     created() {
       this.query();
@@ -322,8 +337,11 @@
             type: "warning"
         });
       },
-      detail(row) {
-        this.$router.push({path: '/home/nav/propertyService/informDetail',query: {id:row.id}});
+      detailDT(row) {
+        this.$router.push({path: '/home/nav/propertyService/DTinformDetail',query: {id:row.id}});
+      },
+      detailPL(row) {
+        this.$router.push({path: '/home/nav/propertyService/PLinformDetail',query: {id:row.id}});
       },
       commentNO(row){
           this.speechId = row.id;
@@ -363,12 +381,15 @@
           this.loading = false;
         })
       },
-      changeReason(){
-          console.log(this.PBReason);
+      showJBNum(row,type){
+        this.isSee = true;
+        this.showNum = row;
+        this.typeNum = type;
       },
-      showNum(row){
-        console.log(row.id);
-      }
+      seeExport(msg) {
+        this.isSee = false;
+        this.typeNum = '';
+      },
     }
   }
 </script>
@@ -387,6 +408,28 @@
 
 .fade-enter,
 .fade-leave-active {
+  opacity: 0;
+  transform: rotateY(180deg);
+}
+
+.fadePL-enter-active,
+.fadePL-leave-active {
+  transition: all 0.5s ease;
+}
+
+.fadePL-enter,
+.fadePL-leave-active {
+  opacity: 0;
+  transform: rotateY(180deg);
+}
+
+.shownum-enter-active,
+.shownum-leave-active {
+  transition: all 0.5s ease;
+}
+
+.shownum-enter,
+.shownum-leave-active {
   opacity: 0;
   transform: rotateY(180deg);
 }

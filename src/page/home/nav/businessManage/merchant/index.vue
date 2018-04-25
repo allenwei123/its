@@ -213,6 +213,12 @@
                 if(item.district == null){
                   item.district = '';
                 }
+                if(item.province == null){
+                  item.province = '';
+                }
+                if(item.city == null){
+                  item.city = '';
+                }
               });
               this.currentPage = res.data.currentPage;
               this.total = res.data.total;
