@@ -11,11 +11,11 @@
       <div class="c-notice-container">
         <div class="c-searchbar">
           <el-form :inline="true" class="demo-form-inline">
-            <el-select v-model="value1" placeholder="全部" clearable @change="changeStatus">
+            <el-select v-model="type" placeholder="全部" clearable @change="changeStatus">
               <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
             <el-date-picker
-              v-model="value6"
+              v-model="rangeDate"
               type="daterange"
               range-separator="至"
               start-placeholder="开始日期"
@@ -74,8 +74,8 @@
     data () {
       return {
         pms: this.$store.getters.pms,//菜单权限
-        value6: '',
-        value1: '',
+        rangeDate: '',
+        type: '',
         options: [ {
           value: '1',
           label: '住户投诉'
@@ -124,15 +124,26 @@
         params['communityId'] = this.$store.getters.communityId;
         if (this.q_input) {
           params['userName'] = this.q_input;
-        };
-        params['messageSource'] = this.value1;
+        }else{
+          delete params.userName;
+        }
+        if(this.type){
+          params['messageSource'] = this.type;
+        }else{
+          delete params.messageSource;
+        }
+        
 
-        if(this.value6) {
-          let a = new Date(this.value6[0]);
-          let b = new Date(this.value6[1]);
+        if(this.rangeDate) {
+          let a = new Date(this.rangeDate[0]);
+          let b = new Date(this.rangeDate[1]);
           params['startAt'] = a.getFullYear() + '-' +(a.getMonth() < 10 ? '0': '')  + (a.getMonth() + 1) + '-' + (a.getDate() < 10 ? '0': '') + a.getDate();
           params['endAt'] = b.getFullYear() + '-' +(b.getMonth() < 10 ? '0': '')  + (b.getMonth() + 1) + '-' + (b.getDate() < 10 ? '0': '') + b.getDate();
+        }else{
+          delete params.startAt;
+          delete params.endAt;
         }
+        console.log(params);
         this.$xttp.post(url, params).then(res => {
           this.loading = false;
           if (res.errorCode === 0) {

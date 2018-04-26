@@ -70,11 +70,11 @@
       </el-table-column>
 
       <el-table-column label="申请时间" width="200" :show-overflow-tooltip="true" align="center">
-        <template slot-scope="scope">{{ scope.row.time1 }}</template>
+        <template slot-scope="scope">{{ scope.row.createAt | time }}</template>
       </el-table-column>
 
       <el-table-column label="认证状态" width="200" :show-overflow-tooltip="true" align="center">
-        <template slot-scope="scope">{{ scope.row.filterStatus }}</template>
+        <template slot-scope="scope">{{ getAuditStatus(scope.row.auditStatus)}}</template>
       </el-table-column>
 
       <!-- <el-table-column label="审核人员" width="200" :show-overflow-tooltip="true" align="center">
@@ -146,7 +146,7 @@
         navDetailData: [
           { id: 0, name: "物业管理", router: '/home/nav/side/floorFile' },
           { id: 1, name: "基础管理", router: '/home/nav/side/floorFile' },
-          {id: 2, name: "住户认证"}
+          { id: 2, name: "住户认证"}
         ],
         formInline: {
           floorSer: '',
@@ -286,6 +286,17 @@
       changeFloor(){
         this.find();
       },
+      getAuditStatus(auditStatus) {
+        let names = {
+          '0': '未审核',
+          '1': '审核通过',
+          '2': '已注销',
+          '3': '已解绑',
+          '-1': '驳回',
+          '-2': '违规'
+        };
+        return names[auditStatus];
+      },
       sendAjax(page, name) {
         let nPage = page || this.$route.query.page || 1;
         let status = '';
@@ -321,12 +332,12 @@
               }
 
               this.tableData.forEach(item => {
-                if (item.checkInTime) {
-                  item.time1 = new Date(item.createAt)
-                    .toISOString()
-                    .split(".")[0]
-                    .replace("T", " ");
-                }
+                // if (item.checkInTime) {
+                //   item.time1 = new Date(item.createAt)
+                //     .toISOString()
+                //     .split(".")[0]
+                //     .replace("T", " ");
+                // }
 
                 switch (item.auditStatus) {
                   case 0:

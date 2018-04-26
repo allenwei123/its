@@ -10,5 +10,5 @@ export const env =  {
     }
 }
 export function currentEnv() {
-    return 'prod'// 'dev'
+    return 'dev'// 'prod'
 }

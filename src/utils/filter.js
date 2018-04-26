@@ -88,8 +88,14 @@ Vue.filter('auditStatus', function (value) {
     case 1:
       newValue = '已审核';
       break;
+    case 2:
+      newValue = '已注销';
+      break;
     case -1:
-      newValue = '未通过';
+      newValue = '驳回';
+      break;
+    case -2:
+      newValue = '违规';
       break;
     case 3:
       newValue = '已解绑';

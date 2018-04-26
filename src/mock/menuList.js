@@ -220,7 +220,7 @@ const arr = [
             id: '2-4-3',
             title: '禁言管理',
             link: '/home/nav/propertyService/silent',
-            show: '11y20'
+            show: '11y2'
           }
         ]
       },
