@@ -11,11 +11,11 @@
       <div class="c-notice-container">
         <div class="c-search">
           <el-form :inline="true" class="demo-form-inline">
-            <el-select v-model="value1" placeholder="全部状态" clearable @change="changeStatus">
+            <el-select v-model="status" placeholder="全部状态" clearable @change="changeStatus">
               <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
             <el-date-picker
-              v-model="value6"
+              v-model="daterange"
               type="daterange"
               range-separator="至"
               start-placeholder="开始日期"
@@ -148,8 +148,8 @@
     data () {
       return {
         pms: this.$store.getters.pms,//菜单权限
-        value6: '',
-        value1: '',
+        daterange: '',
+        status: '',
         options: [{
           value: '0',
           label: '已取消'
@@ -396,16 +396,16 @@
           params['userName'] = this.q_input;
         }
         //输入的搜索字添加params中
-        if(this.value1){
-          params['faultStatus'] = this.value1;
+        if(this.status){
+          params['faultStatus'] = this.status;
         }
         let communityId = this.$store.getters.communityId;
         params['communityId'] = communityId;
         let url = `property/fault/queryFaultPage?page=${pages}&size=${this.pageSize}`;
         this.loading = true;
-        if(this.value6) {
-          let a = new Date(this.value6[0]);
-          let b = new Date(this.value6[1]);
+        if(this.daterange) {
+          let a = new Date(this.daterange[0]);
+          let b = new Date(this.daterange[1]);
           params['playTimeBegin'] = a.getFullYear() + '-' +(a.getMonth() < 10 ? '0': '')  + (a.getMonth() + 1) + '-' + (a.getDate() < 10 ? '0': '') + a.getDate();
           params['playTimeEnd'] = b.getFullYear() + '-' +(b.getMonth() <  10 ? '0': '')  + (b.getMonth() + 1) + '-' + (b.getDate() < 10 ? '0': '') + b.getDate();
         }
