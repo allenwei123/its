@@ -37,12 +37,11 @@
               <el-input placeholder="住户姓名" v-model.trim="input" style="width:170px;"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="query">查询</el-button>
+              <el-button type="primary" @click="query" v-if="pms['11y5']">查询</el-button>
             </el-form-item>
 
             <el-form-item class="c-rightBtn">
-              <el-button type="success" plain class="c-addBtn" @click="manageClick">审核管理设置</el-button>
-              <el-button icon="el-icon-arrow-left"></el-button>
+              <el-button type="success" plain class="c-addBtn" @click="manageClick" >审核管理设置</el-button>
             </el-form-item>
           </el-form>
 
@@ -52,9 +51,9 @@
             <el-table-column label="序号" width="80" align="center" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{(currentPage-1) * pageSize + scope.$index + 1}}</template>
             </el-table-column>
-            <el-table-column v-if="isShow" align="center" label="ID" min-width="10" :show-overflow-tooltip="true">
+            <!-- <el-table-column v-if="isShow" align="center" label="ID" min-width="10" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{ scope.row.id }}</template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column label="详情" align="left" min-width="300" :show-overflow-tooltip="true">
               <template slot-scope="scope">{{ scope.row.content }}</template>
             </el-table-column>
@@ -78,13 +77,13 @@
                 <el-button type="primary" size="mini" @click="detail(scope.row)">详情</el-button>
                 <!--0:待审核-->
                 <template v-if="scope.row.status === 0">
-                  <el-button type="success" @click="handleDone(scope.row,'1')" size="mini">通过</el-button>
-                  <el-button type="warning" @click="handleDone(scope.row,'-1')" size="mini">不通过</el-button>
+                  <el-button type="success" @click="handleDone(scope.row,'1')" v-if="pms['11y7']" size="mini">通过</el-button>
+                  <el-button type="warning" @click="handleDone(scope.row,'-1')" v-if="pms['11y8']" size="mini">不通过</el-button>
                 </template>
 
                 <!--1:手动通过,2:自动通过-->
                 <template v-if="scope.row.status === 1 || scope.row.status === 2">
-                  <el-button type="danger" @click="handlePB(scope.row)" size="mini">屏蔽</el-button>
+                  <el-button type="danger" @click="handlePB(scope.row)" v-if="pms['11y9']" size="mini">屏蔽</el-button>
                 </template>
 
                 <!--2:自动通过-->
@@ -143,12 +142,13 @@
     name: 'message',
     data () {
       return {
+        pms: this.$store.getters.pms,//菜单权限
         navDetailData: [
           { id: 0, name: "物业服务" },
           { id: 1, name: "社区动态" ,router:'/home/nav/propertyService/message' },
           { id: 2, name: "动态消息" }
         ],
-        isShow: false,
+        isShow: true,
         isManage:false,//审核管理设置
         loading: false,
         tableData: [],
@@ -325,9 +325,4 @@
       right: 0;
       top: 0;
     }
-    @media screen and (max-width: 1400px) {
-      .c-addBtn {
-          display: none;
-      }
-  }
 </style>

@@ -82,6 +82,12 @@ const arr = [
             title:'员工管理',
             link:'/home/nav/side/empl',
             show: '1170'
+          },
+          {
+            id:'1-2-3',
+            title:'辖区管理',
+            link:'/home/nav/side/popedom',
+            show: '1170'
           }
         ]
       },
@@ -204,13 +210,13 @@ const arr = [
       {
         id:'2-4',
         name:'社区动态',
-        show: '11bd',
+        show: '11bm',
         menuItem:[
           {
             id:'2-4-1',
             title:'动态消息',
             link:'/home/nav/propertyService/message',
-            show: '11J0'
+            show: '11y1'
           },{
             id: '2-4-2',
             title: '举报管理',
@@ -220,7 +226,7 @@ const arr = [
             id: '2-4-3',
             title: '禁言管理',
             link: '/home/nav/propertyService/silent',
-            show: '11y2'
+            show: '11y4'
           }
         ]
       },

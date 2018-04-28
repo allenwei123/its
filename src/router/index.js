@@ -88,6 +88,11 @@ const router = new Router({
                 component: (resolve) => require(["@/page/home/nav/property_manage/empl/empl"], resolve),
               },
               {
+                path: 'popedom',
+                name:'1170',
+                component: (resolve) => require(["@/page/home/nav/property_manage/popedom"], resolve),
+              },
+              {
                 path: 'schedul',
                 name:'1190',
                 component: (resolve) => require(["@/page/home/nav/property_manage/schedul/schedul"], resolve),
@@ -331,7 +336,7 @@ router.beforeEach((to, from, next) => {
     return next(false);
   };
 
-  if(store.getters.pms && store.getters.pms[to.name] == 0 && to.path != '/auth/login' && to.path != '/auth/logout') {
+  if(store.getters.pms && (store.getters.pms[to.name] == 0 || store.getters.pms[to.name] == 'undefined') && to.path != '/auth/login' && to.path != '/auth/logout') {
    return next('/404');
   }
 
