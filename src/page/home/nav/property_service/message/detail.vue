@@ -20,14 +20,14 @@
                         <p class="c-send-msg">{{ detailData.content }}</p>
                         <ul class="c-send-msgBody" v-loading="infoImageLoading">
                             <li v-for="(item, index) in infoImage" :key="index">
-                                <img class="c-msg-image" :src="item" alt="图片加载失败">
+                                <img class="c-msg-image" :src="item" @click="openImage(item)" alt="图片加载失败">
                             </li>
                         </ul>
                         <div class="c-send-msgBtn">
                             <el-button type="info" @click="seeReport(detailData.id,1)" v-if="status !== 0" :disabled="!detailData.reportNum">查看举报({{ detailData.reportNum || 0 }})</el-button>
-                            <el-button type="danger" @click="shieldClick(detailData,1)" :disabled="btnStatus" v-if="status !== 0">屏蔽动态</el-button>
-                            <el-button type="success" v-if="status == 0" @click="passDone(1)">通过</el-button>
-                            <el-button type="warning" v-if="status == 0" @click="passDone(-1)">不通过</el-button>
+                            <el-button type="danger" @click="shieldClick(detailData,1)" :disabled="btnStatus" v-if="status !== 0 && pms['11y9']">屏蔽动态</el-button>
+                            <el-button type="success" v-if="status == 0 && pms['11y7']" @click="passDone(1)">通过</el-button>
+                            <el-button type="warning" v-if="status == 0 && pms['11y8']" @click="passDone(-1)">不通过</el-button>
                         </div>
                     </div>
                 </div>
@@ -56,7 +56,7 @@
                     </el-collapse>
                 </div>
                 <div class="c-comment-body" v-if="status !== 0">
-                    <p class="c-comment-title">&nbsp; 评论( {{ detailData.commentNum || 0  }} )</p>
+                    <p class="c-comment-title">&nbsp; 评论( {{ total || 0  }} )</p>
                     <div class="c-border-bottom" v-for="item in commentOptions" :key="item.id" v-loading="commentLoading">
                         <div class="c-margin10">
                             <div> 
@@ -69,7 +69,7 @@
                             <p class="c-comment-content">{{ item.content }}</p>
                             <div class="c-send-msgBtn">
                                 <el-button type="info" size="small" @click="seeReport(item.id,2)" :disabled="!item.reportNum">查看举报({{ item.reportNum || 0 }})</el-button>
-                                <el-button type="danger" :disabled="btnStatus || (item.status == -3) " @click="shieldClick(item,2)"  size="small">屏蔽评论</el-button>
+                                <el-button type="danger" :disabled="btnStatus || (item.status == -3) && pms['11y9']" @click="shieldClick(item,2)"  size="small">屏蔽评论</el-button>
                             </div>
                         </div>
                     </div>
@@ -107,6 +107,9 @@
           <el-button type="primary" size="mini" @click="confirmPR">确定</el-button>
         </div>
       </el-dialog>
+      <el-dialog title="图片展示" width="40%" :visible.sync="isBigImage">
+        <img :src="bigImageUrl" alt="图片加载失败" style="width:100%">
+      </el-dialog>
     </el-main>
   </el-container>
 </template>
@@ -119,6 +122,9 @@
     name:'detailMessage',
     data() {
       return {
+            pms: this.$store.getters.pms,//菜单权限
+            isBigImage:false,
+            bigImageUrl:'',
             status: null ,//详情状态 0：待审核,1：审核通过,2:自动通过,-1：未通过,-2:系统自动屏蔽,-3：管理员屏蔽
             pageLoading: false,
             infoImageLoading: false,//内容信息加载进度。。。
@@ -277,7 +283,7 @@
                         if(this.shieldType == 1) {
                             this.btnStatus = true;
                         }else if(this.shieldType == 2) {
-                            this.commentOptions.find(item => item.id == this.shieldId).status = -3;
+                            this.getCommentDetail();
                         }
                     }
                 })
@@ -296,6 +302,10 @@
          this.isSee = true;
          this.seeDetailId = id;
          this.seeDetailType = type;
+     },
+     openImage(url) {
+         this.bigImageUrl = url;
+         this.isBigImage = true;
      }
     }
   }
@@ -361,6 +371,7 @@
         float: left;
         overflow: hidden;
         margin: 4px 0 0 4px;
+        cursor: pointer;
         img {
           width: 100%;
           height: 100%;

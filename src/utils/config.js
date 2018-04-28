@@ -1,7 +1,7 @@
 //定义全局环境
 export const env =  {
     dev:{
-        api: 'http://apismcm.test.bitiot.com.cn/v1',
+        api: 'http://dev.apismcm.bitiot.com.cn/v1',
         bucket: 'bit-test'
     },
     prod: {
@@ -10,5 +10,5 @@ export const env =  {
     }
 }
 export function currentEnv() {
-    return 'prod'// 'prod'
+    return 'dev'// 'prod'
 }

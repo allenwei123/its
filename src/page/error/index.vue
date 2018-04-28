@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="c-return" >
-      <a @click="go"><i class="el-icon-arrow-left"></i>回到登陆页</a>
+      <a @click="go"><i class="el-icon-arrow-left"></i>回到登录页</a>
     </div>
     <div class="c-error">
       您访问的页面，我暂时找不到...

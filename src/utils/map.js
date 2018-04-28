@@ -8,7 +8,9 @@ export function Map() {
   });
   window.marker = new AMap.Marker({draggable: true});
   marker.setMap(map);
-
+  // map.on('zoomend',function(e){
+  //   console.log(map.getZoom());
+  // })
   map.on('click', function (e) {
     map.setCenter([e.lnglat.getLng(), e.lnglat.getLat()]);//设置视图中心
 
@@ -45,24 +47,16 @@ Map.prototype.getLocation = function (address, cb) {
 }.bind(this);
 
 Map.prototype.searchFont = function ( search ,callback) {
-
-  // map.plugin(["AMap.ToolBar"], function () {
-  //   window.map.addControl(new AMap.ToolBar());
-
   AMap.service("AMap.Autocomplete", function () {
     var auto = new AMap.Autocomplete({
       input: "input1"
     });
-    // AMap.event.addListener(auto, "select", function (e) {
-    //   console.log(e)
-    // });
     auto.search(search, function (status, result) {
       if (callback) {
         callback(result)
       }
     });
   })
-  // });
 
 
 };

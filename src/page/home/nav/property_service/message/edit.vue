@@ -5,7 +5,7 @@
 
         <el-form-item label-width="120px" label="审核管理设置" prop="a"> 
             <el-switch
-                v-model="form.a"
+                v-model="form.AUTOAUDITMOMENT"
                 active-text="关闭"
                 inactive-text="开启"
                 class="c-isClose">
@@ -15,25 +15,25 @@
 
         <el-form-item label-width="120px"  label="动态举报设置"></el-form-item> 
 
-        <el-form-item label-width="120px"  label="提醒举报数:" prop="b"> 
-            <el-input type="number" v-model="form.b"  min='0'></el-input>
+        <el-form-item label-width="120px"  label="提醒举报数:" prop="MOMENTWARNINGREPORTNUM"> 
+            <el-input type="number" v-model="form.MOMENTWARNINGREPORTNUM"  min='1' max='100'></el-input>
             <p class="c-tip">当举报数达到该数量后将提醒您</p>
         </el-form-item> 
 
-        <el-form-item label-width="120px"  label="屏蔽举报数:" prop="c"> 
-            <el-input type="number" v-model="form.c" min='0'></el-input>
+        <el-form-item label-width="120px"  label="屏蔽举报数:" prop="MOMENTSHIELDINGREPORTNUM"> 
+            <el-input type="number" v-model="form.MOMENTSHIELDINGREPORTNUM" min='1' max='100'></el-input>
             <p class="c-tip">当举报数达到该数量后将自动屏蔽动态</p>
         </el-form-item> 
 
         <el-form-item label-width="120px"  label="评论举报设置" ></el-form-item> 
 
-        <el-form-item label-width="120px"  label="提醒举报数:" prop="d"> 
-            <el-input v-model.number="form.d"  min='0'></el-input>
+        <el-form-item label-width="120px"  label="提醒举报数:" prop="COMMENTWARNINGREPORTNUM"> 
+            <el-input v-model.number="form.COMMENTWARNINGREPORTNUM"  min='1' max='100'></el-input>
             <p class="c-tip">当举报数达到该数量后将提醒您</p>
         </el-form-item> 
 
-        <el-form-item label-width="120px"  label="屏蔽举报数:" prop="e"> 
-            <el-input v-model.number="form.e" min='0' auto-complete="off"></el-input>
+        <el-form-item label-width="120px"  label="屏蔽举报数:" prop="COMMENTSHIELDINGREPORTNUM"> 
+            <el-input v-model.number="form.COMMENTSHIELDINGREPORTNUM" min='1' max='100'></el-input>
             <p class="c-tip">当举报数达到该数量后将自动屏蔽评论</p>
         </el-form-item>     
 
@@ -42,7 +42,7 @@
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="handleClose">取 消</el-button>
-      <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
+      <el-button type="primary" @click="save('ruleForm')">确 定</el-button>
     </div>
   </el-dialog>
 </template>
@@ -51,19 +51,38 @@
   export default {
     name:'editMessage',
     data() {
+      var validatA = (rule, value, callback) => {
+        if (value < this.form.MOMENTWARNINGREPORTNUM) {
+          callback(new Error('动态提醒举报数必须小于屏蔽举报数!'));
+        } else {
+          callback();
+        }
+      };
+      var validatB = (rule, value, callback) => {
+        if (value < this.form.COMMENTWARNINGREPORTNUM) {
+          callback(new Error('评论提醒举报数必须小于屏蔽举报数!'));
+        } else {
+          callback();
+        }
+      };
       return {
         arr: [],
         form: {
           communityId: this.$store.getters.communityId,
-          a:false,
-          b:null,
-          c:null,
-          d:null,
-          e:null,
+          AUTOAUDITMOMENT:false,
+          MOMENTSHIELDINGREPORTNUM:null,
+          MOMENTWARNINGREPORTNUM:null,
+          COMMENTSHIELDINGREPORTNUM:null,
+          COMMENTWARNINGREPORTNUM:null,
         },
         parms: {},
         rules: {
-          ad: [{required: true, message: '请输入举报数量'},{ type: 'number', message: '年龄必须为数字值'}],
+          MOMENTSHIELDINGREPORTNUM: [
+            { validator: validatA, trigger: 'blur' }
+          ],
+          COMMENTSHIELDINGREPORTNUM: [
+            { validator: validatB, trigger: 'blur' }
+          ],
         },
       }
     },
@@ -72,33 +91,22 @@
       this.getInit();
     },
     methods: {
-      submitForm(formName) {
-        this.postData();
-      },
       handleClose() {
         this.$emit("upsee", false );
       },
-      postData() {
-        let params = {};
-        this.arr.forEach((item,index) => {
-          switch(index){
-            case 0: 
-              item.value = this.form.a;
-              break;
-            case 1: 
-              item.value = this.form.c;
-              break;
-            case 2: 
-              item.value = this.form.b;
-              break;
-            case 3: 
-              item.value = this.form.e;
-              break;
-            case 4: 
-              item.value = this.form.d;
-              break;
+      save(formName) {
+        this.$refs[formName].validate(valid => {
+          if (valid) {
+            this.postData();
+          } else {
+            return false;
           }
-        })
+        });
+      },
+      postData() {
+        this.arr.forEach((item,index) => {
+          item.value = this.form[item.key];
+        });
         let uri = '/property/parameter/multi-edit';
         this.$xttp.post(uri,this.arr)
           .then(res => {
@@ -125,9 +133,9 @@
             if (res.success){
                 this.form.a = res.data.records[0].value ==="false" ? false : true;
                 this.form.c = +res.data.records[1].value;
-                this.form.b = +res.data.records[2].value;
-                this.form.e = +res.data.records[3].value;
-                this.form.d = +res.data.records[4].value;
+                res.data.records.forEach(item => {
+                  this.form[item.key] = item.value;
+                });
                 this.arr = res.data.records.map((item,index) => {
                    let o = {};
                    o['key'] = item.key;
