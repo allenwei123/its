@@ -70,8 +70,8 @@
         form: {
           communityId: this.$store.getters.communityId,
           AUTOAUDITMOMENT:false,
-          MOMENTSHIELDINGREPORTNUM:null,
           MOMENTWARNINGREPORTNUM:null,
+          MOMENTSHIELDINGREPORTNUM:null,
           COMMENTSHIELDINGREPORTNUM:null,
           COMMENTWARNINGREPORTNUM:null,
         },
