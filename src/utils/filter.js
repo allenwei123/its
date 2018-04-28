@@ -259,3 +259,31 @@ Vue.filter('validStatus', function (value) {
   }
   return newValue;
 });
+
+Vue.filter('workWeek', function (value) {
+  let newValue = '';
+  switch (value){
+    case 1:
+      newValue = '星期日';
+      break;
+    case 2:
+      newValue = '星期一';
+      break;
+    case 3:
+      newValue = '星期二';
+      break;
+    case 4:
+      newValue = '星期三';
+      break;
+    case 5:
+      newValue = '星期四';
+      break;
+    case 6:
+      newValue = '星期五';
+      break;
+    case 7:
+      newValue = '星期六';
+      break;
+  }
+  return newValue;
+});

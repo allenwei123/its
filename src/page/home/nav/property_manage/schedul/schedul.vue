@@ -10,6 +10,13 @@
         </ul>
         <div class="c-search">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
+            <el-form-item label="">
+              <el-select v-model="formInline.post" placeholder="请选项岗位" @change="changePostCode">
+                <el-option v-for="item in postOptions" :key="item.key" :label="item.name" :value="item.key">
+                </el-option>
+              </el-select>
+            </el-form-item>
+
             <el-form-item label="时间：">
               <el-date-picker
                 v-model="formInline.rangeDate"
@@ -25,19 +32,21 @@
                 :picker-options="pickerOptions">
               </el-date-picker>
             </el-form-item>
+
             <el-form-item label="">
-              <el-select v-model="formInline.post" placeholder="请选项岗位" @change="changePostCode">
-                <el-option v-for="item in postOptions" :key="item.key" :label="item.name" :value="item.key">
+              <el-select v-model="formInline.userId" placeholder="姓名" @change="changePostCode" clearable>
+                <el-option v-for="item in emplData" :key="item.userId" :label="item.userName" :value="item.userId">
                 </el-option>
               </el-select>
             </el-form-item>
+
             <el-form-item>
               <!-- <el-button type="primary" @click="find"><i class="iconfont icon-sousuo">&nbsp;</i>查询</el-button> -->
               <el-button type="primary" @click="find" v-if="pms['1181']">查询</el-button>
               <!-- <el-button type="success" plain @click="keySchedul">一键排班</el-button> -->
             </el-form-item>
           </el-form>
-          <el-button type="success" plain class="c-addBtn" @click="onSubmit" v-if="pms['1182']">新增排班</el-button>
+          <el-button type="success" plain class="c-addBtn" @click="onSubmit" v-if="pms['1182']">智能排班</el-button>
         </div>
       </div>
 
@@ -48,18 +57,34 @@
         <el-table-column prop="id" v-if="show"></el-table-column>
         <el-table-column prop="userId" v-if="show"></el-table-column>
         <el-table-column prop="" label="值班日" width="340" align="center">
-          <template slot-scope="scope">{{getTime(scope.row.workDate, 'yyyy-MM-dd')}}</template>
+          <template slot-scope="scope">{{getTime(scope.row.workDate, 'yyyy-MM-dd')}} - {{ scope.row.workWeek }}</template>
         </el-table-column>
         <el-table-column prop="userName" label="员工" align="center" width="250"></el-table-column>
         <el-table-column prop="" label="班次" width="370" align="center">
-          <template slot-scope="scope">{{scope.row.className}}({{scope.row.attendTimeStr}}-{{scope.row.offTimeStr}})</template>
+          <template slot-scope="scope">{{scope.row.className}}</template>
+        </el-table-column>
+        <el-table-column label="值班时间" min-width="200" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{scope.row.attendTimeStr}}-{{scope.row.offTimeStr}}</template>
         </el-table-column>
         <el-table-column label="岗位" min-width="200" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.postCode | postCode}}</template>
         </el-table-column>
+        <el-table-column label="类型" min-width="200" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ scope.row.className }}</template>
+        </el-table-column>
+        <el-table-column label="出勤地点" min-width="200" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ scope.row.attendPlace }}</template>
+        </el-table-column>
+        <el-table-column label="退勤地点" min-width="200" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ scope.row.offPlace }}</template>
+        </el-table-column>
+        <el-table-column label="执勤任务" min-width="200" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ scope.row.task }}</template>
+        </el-table-column>
         <el-table-column fixed="right" label="操作" align="center" width="300">
           <template slot-scope="scope">
             <el-button type="warning" size="mini" @click="editHandle(scope.row)"  v-if="pms['1193']">编辑</el-button>
+            <el-button type="danger" size="mini" @click="delHandle(scope.row)" >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -109,6 +134,7 @@ export default {
         postOptions: [],
         isSou: false,
         tableData: [],
+        emplData: [],
         navDetailData: [
             { id: 0, name: "物业管理", router: '/home/nav/side/floorFile' },
             { id: 1, name: "工作管理", router: '/home/nav/side/class' },
@@ -117,7 +143,8 @@ export default {
         formInline: {
             rangeDate: '',
             post: 'SECURITY',
-            date: ''
+            date: '',
+            name: ''
         },
         pickerOptions: {
             shortcuts: [{
@@ -198,13 +225,13 @@ export default {
       this.editData = row;
     },
     change(msg) {//与添加弹窗交互
-      if(msg == 1) {
+      // if(msg == 1) {
         this.isShow = false;
-      }
-      else if(msg == 2 || msg == 3) {
-        // this.sendAjax();
-        this.isShow = false;
-      }
+      // }
+      // else if(msg == 2 || msg == 3) {
+      //   // this.sendAjax();
+      //   this.isShow = false;
+      // }
     },
     seeChange(msg) {//与查看弹窗交互
       this.see = false;
@@ -236,6 +263,16 @@ export default {
           this.postOptions = res.data;
         }
       })
+    },
+    initEmpl() {
+      let communityId = this.$store.getters.communityId
+      let postCode = this.formInline.postCode;
+      this.$xttp.get(`/user/property/${communityId}/user-list`,{params:{postCode:postCode}})
+        .then(res => {
+          if(res.success) {
+            this.emplData = res.data
+          }
+        })
     },
     confirmDel(){
       if(this.delData.id){
@@ -272,6 +309,11 @@ export default {
         }else{
             delete obj.postCode;
         }
+        if(this.formInline.userId){
+          obj['userId'] = this.formInline.userId;
+        }else{
+          delete obj.userId;
+        }
 
         this.loading = true;
         this.$xttp.post(`task/schedule/page?page=${this.currentPage}&size=${this.pageSize}`,obj).then(res => {
@@ -288,6 +330,7 @@ export default {
   },
   created(){
       this.initPost();
+      this.initEmpl();
       this.sendAjax(1);
   }
 }

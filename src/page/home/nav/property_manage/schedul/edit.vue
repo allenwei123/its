@@ -1,84 +1,171 @@
 <template>
-      <el-dialog :title="titleFont" :visible.sync="msg" :before-close="handleClose">
-        <!-- <div class="c-search"> -->
-          <el-form :inline="true" :rules="rules" :model="form" class="demo-form-inline">
-            <el-row :gutter="20" type="flex" class="row-bg" justify="space-around">
-              <el-col :span="10">
-                <el-form-item label="日期：" prop="date">
-                  <el-date-picker v-model="form.date" type="date" :disabled="editDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择日期">
-                  </el-date-picker>
-                </el-form-item>
-              </el-col>
-              <el-col :span="10">
-                <el-form-item label="岗位：" prop="postCode">
-                  <el-select v-model="form.postCode" @change="changePostCode()" placeholder="岗位" :disabled="disabledPost">
-                    <el-option v-for="item in postOptions" :key="item.key" :label="item.name" :value="item.key">
-                    </el-option>
-                  </el-select>
-                </el-form-item>
-              </el-col>
-            </el-row>
+  <el-dialog :title="titleFont" :visible.sync="msg" :before-close="handleClose">
+    <el-form :model="form" ref="ruleForm" class="demo-form-inline">
+      <el-form-item v-if="show" label="社区ID:" :label-width="formLabelWidth" prop="communityId" class="c-must">
+        <el-input v-model="form.communityId"></el-input>
+      </el-form-item>
 
-            <hr style="height:1px;border:none;border-top:1px dashed #cecece;" />
+      <el-form-item v-if="show" label="物业ID:" :label-width="formLabelWidth" prop="propertyId" class="c-must">
+        <el-input v-model="form.propertyId"></el-input>
+      </el-form-item>
 
-            <el-form-item label="员工：" prop="empl" class="c-must" style="display:block;margin-top:25px;">
-              <!-- <el-select v-model="form.empl" placeholder="请选择员工" @change="changEmpl" :disabled="disabledPost">
-                <el-option v-for="(item , indexs) in emplData" :key="item.userId" :label="item.userName" :value="indexs">
-                </el-option>
-              </el-select> -->
-              <el-select v-model="form.empl" placeholder="请选择员工" @change="changEmpl" :disabled="disabledPost">
-                <el-option v-for="item in emplData" :key="item.userId" :label="item.userName" :value="item.userId">
-                </el-option>
-              </el-select>
+      <el-row :gutter="20">
+        <el-col :span="10">
+          <el-form-item label="岗位：" :label-width="formLabelWidth" prop="postCode" class="c-must">
+            <el-select v-model="form.postCode" placeholder="postOptions" :disabled="disabled">
+              <el-option v-for="item in postOptions" :key="item.key" :label="item.name" :value="item.key"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="10">
+          <el-form-item label="员工姓名：" :label-width="formLabelWidth" prop="userName" class="c-must">
+            <el-select v-model="form.userName" placeholder="员工姓名" :disabled="disabled">
+              <el-option v-for="item in emplData" :key="item.key" :label="item.name" :value="item.key"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row :gutter="20">
+        <el-col :span="10">
+          <el-form-item label="值班日期：" :label-width="formLabelWidth" class="c-nomust">
+            <el-date-picker
+            :disabled="disabled"
+              v-model="form.workDate"
+              type="date"
+              placeholder="选择日期">
+            </el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :span="10">
+          <el-form-item label="班次类型：" :label-width="formLabelWidth" prop="type" class="c-must">
+            <el-select v-model="form.type" placeholder="请选择" :disabled="disabled">
+              <el-option v-for="item in typeOptions" :key="item.key" :label="item.value" :value="item.key"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+       <el-row :gutter="20">
+          <el-col :span="10">
+            <el-form-item label="班次名称：" :label-width="formLabelWidth" prop="className" class="c-must">
+              <el-input v-model.trim="form.className" placeholder="请输入班次名称"></el-input>
             </el-form-item>
-            <el-form-item label="班次：" prop="class" class="c-must" style="display:block;margin-top:25px;">
-              <el-radio-group v-model="form.class">
-                <el-radio @change="changeRadio" :checked="checked" :label="item.name" :key="item.name" v-for="(item) in classData" border></el-radio>
-                <!-- <el-radio @change="changeRadio" :checked="checked" :label="item.name" :value="item.id" :key="item.name" v-for="(item) in classData" border></el-radio> -->
-              </el-radio-group>
+          </el-col>
+          <el-col :span="10">
+            <el-form-item label="执勤任务：" label-width="200px" prop="task">
+              <el-input v-model.trim="form.task" placeholder="请输入执勤任务"></el-input>
             </el-form-item>
-            <el-form-item>
-              <el-row :gutter="24" type="flex" class="row-bg" justify="space-around">
-                <el-col :span="8">
-                  <el-input placeholder="班次名称" v-model="form.name"></el-input>
-                </el-col>
-                <el-col :span="8">
-                  <el-time-select placeholder="出勤时间" v-model="form.attendTimeStr" :picker-options="{
-                    start: '00:00',
-                    step: '00:05',
-                    end: '24:00'
-                    }">
-                  </el-time-select>
-                </el-col>
-                <el-col :span="8">
-                  <el-time-select placeholder="退勤时间" v-model="form.offTimeStr" :picker-options="{
-                    start: '00:00',
-                    step: '00:05',
-                    end: '24:00'
-                    }">
-                  </el-time-select>
-                </el-col>
-              </el-row>
-              <el-row :gutter="20" style="margin-top:20px;">
-                <el-col :span="8">
-                  <el-input placeholder="出勤地点" v-model="form.attendPlace"></el-input>
-                </el-col>
-                <el-col :span="8">
-                  <el-input placeholder="退勤地点" v-model="form.offPlace"></el-input>
-                </el-col>
-                <el-col :span="8">
-                  <el-input placeholder="任务" v-model="form.task"></el-input>
-                </el-col>
-              </el-row>
-            </el-form-item>
-           
-            <el-form-item :label-width="formLabelWidth" style="margin-top:20px;margin-left:40%;" >
-              <el-button @click="handleClose">取 消</el-button>
-              <el-button type="primary" @click="save">保存</el-button>
-            </el-form-item>
-          </el-form>
-        <!-- </div>        -->
-    </el-dialog>
+          </el-col>
+      </el-row>
+
+      <el-row :gutter="20">
+        <el-col :span="10">
+          <el-form-item label="出勤时间：" :label-width="formLabelWidth" class="c-nomust">
+            <el-time-select placeholder="出勤时间" v-model="form.attendTimeStr"
+              :picker-options="{
+                start: '00:00',
+                step: '00:05',
+                end: '24:00'
+              }">
+            </el-time-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="10">
+          <el-form-item  label="退勤时间：" :label-width="formLabelWidth">
+            <el-time-select placeholder="退勤时间" v-model="form.offTimeStr"
+              :picker-options="{
+                start: '00:00',
+                step: '00:05',
+                end: '24:00'
+              }">
+            </el-time-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row :gutter="20">
+        <el-col :span="10">
+          <el-form-item label="出勤地点：" :label-width="formLabelWidth" prop="attendPlace">
+            <el-input v-model.trim="form.attendPlace" placeholder="请输入出勤地点"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="10">
+          <el-form-item label="退勤地点：" :label-width="formLabelWidth" prop="offPlace">
+            <el-input v-model.trim="form.offPlace" placeholder="请输入退勤地点"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <!-- <el-form-item label="岗位：" :label-width="formLabelWidth" prop="postCode" class="c-must">
+        <el-select v-model="form.postCode" placeholder="postOptions" :disabled="disabled">
+          <el-option v-for="item in postOptions" :key="item.key" :label="item.name" :value="item.key"></el-option>
+        </el-select>
+      </el-form-item> -->
+
+      <!-- <el-form-item label="员工姓名：" :label-width="formLabelWidth" prop="userName" class="c-must">
+        <el-select v-model="form.userName" placeholder="员工姓名" :disabled="disabled">
+          <el-option v-for="item in emplData" :key="item.key" :label="item.name" :value="item.key"></el-option>
+        </el-select>
+      </el-form-item> -->
+
+      <!-- <el-form-item label="值班日期：" :label-width="formLabelWidth" class="c-nomust">
+        <el-date-picker
+         :disabled="disabled"
+          v-model="form.date"
+          type="date"
+          placeholder="选择日期">
+        </el-date-picker>
+      </el-form-item> -->
+
+      <!-- <el-form-item label="名称：" :label-width="formLabelWidth" prop="name" class="c-must">
+        <el-col :span="14">
+          <el-input v-model.trim="form.name" placeholder="请输入班次名称"></el-input>
+        </el-col>
+      </el-form-item> -->
+
+      
+
+      <!-- <el-form-item label="值班时间：" :label-width="formLabelWidth" class="c-nomust">
+        <el-time-select placeholder="出勤时间" v-model="form.attendTimeStr"
+          :picker-options="{
+            start: '00:00',
+            step: '00:05',
+            end: '24:00'
+          }">
+        </el-time-select> - 
+        <el-time-select placeholder="退勤时间" v-model="form.offTimeStr"
+          :picker-options="{
+            start: '00:00',
+            step: '00:05',
+            end: '24:00'
+          }">
+        </el-time-select>
+      </el-form-item> -->
+
+      <!-- <el-form-item label="出勤地点：" :label-width="formLabelWidth" prop="attendPlace">
+        <el-col :span="14">
+          <el-input v-model.trim="form.attendPlace" placeholder="请输入出勤地点"></el-input>
+        </el-col>
+      </el-form-item> -->
+
+      <!-- <el-form-item label="退勤地点：" :label-width="formLabelWidth" prop="offPlace">
+        <el-col :span="14">
+          <el-input v-model.trim="form.offPlace" placeholder="请输入退勤地点"></el-input>
+        </el-col>
+      </el-form-item> -->
+
+      <!-- <el-form-item label="执勤任务：" label-width="200px" prop="task">
+        <el-col :span="14">
+          <el-input v-model.trim="form.task" placeholder="请输入执勤任务"></el-input>
+        </el-col>
+      </el-form-item> -->
+      <el-form-item :label-width="formLabelWidth" align="center" style="margin-right:200px;">
+        <el-button @click="handleClose">取 消</el-button>
+        <el-button type="primary" @click="save()">保存</el-button>
+      </el-form-item>
+    </el-form>
+  </el-dialog>
 </template>
 
 <script>
@@ -87,25 +174,28 @@ export default {
   name: "SchedulEdit",
   data() {
     return {
-      formLabelWidth: "120px",
+      formLabelWidth: "200px",
       titleFont:'编辑排班',
       checked: false,
       disabledPost: true,
-      disabled1: true,
+      disabled: true,
       editDate: true,
+      show: false,
       form: {
           id: '',
+        userName: '',
         postCode: 'SECURITY',
         date: '',
         empl: '',
         class: '',
-        name: '',
-        attendTimeStr: '',
-        offTimeStr: '',
+        className: '',
+        attendTime: '',
+        offTime: '',
         task:'',
         attendPlace: '',
         offPlace: '',
-        classId: ''
+        classId: '',
+        workDate: ''
       },
       rules: {
         empl: [{ required: true, message: "请选中员工", trigger: "blur" }],
@@ -113,7 +203,8 @@ export default {
       },
       postOptions: [],
       emplData: [],
-      classData: []
+      classData: [],
+      typeOptions: [{ key: '1', value: '轮班' },{ key: '2', value: '常班' }]
     };
   },
   props: ["msg","edit",'editData'],
@@ -177,28 +268,24 @@ export default {
       
     },
     save() {
-      if(this.form.empl == ''){
-        this.$message({message:'请选择员工',type:'warning'});
-        return;
-      }
-      if(this.form.class == ''){
-        this.$message({message:'请选择班次,如没有班次请先去创建班次',type:'warning'});
+      if(this.form.className == ''){
+        this.$message({message:'请输入班次名称',type:'warning'});
         return;
       }
       this.postData();
     },
     postData() {
       let id = this.form.id;
-      let postCode = this.form.postCode;
-      let objPost = this.postOptions.find(item => this.form.postCode == item.name);
-      postCode = objPost.key;
-      let workDate = time.timestampToFormat(this.form.date1,'yyyy-MM-dd');
-      let userId = this.form.userId;
-      let communityId = this.$store.getters.communityId;
-      let propertyId = localStorage.getItem('propertyId');
-      let className = this.form.name;
-      let objClass = this.classData.find(item => this.form.class == item.name);
-      let classId = objClass.id;
+      // let postCode = this.form.postCode;
+      // let objPost = this.postOptions.find(item => this.form.postCode == item.name);
+      // postCode = objPost.key;
+      let workDate = time.timestampToFormat(this.form.workDate,'yyyy-MM-dd');
+      // let userId = this.form.userId;
+      // let communityId = this.$store.getters.communityId;
+      // let propertyId = localStorage.getItem('propertyId');
+      let className = this.form.className;
+      // let objClass = this.classData.find(item => this.form.class == item.name);
+      // let classId = objClass.id;
       let attendTimeStr = this.form.attendTimeStr;
       let attendPlace = this.form.attendPlace;
       let offTimeStr = this.form.offTimeStr;
@@ -206,13 +293,13 @@ export default {
       let task = this.form.task;
       let params = {};
       params['id'] = id;
-      params['classId'] = classId;
+      // params['classId'] = classId;
       params['className'] = className;
-      params['postCode'] = postCode;
+      // params['postCode'] = postCode;
       params['workDate'] = workDate;
-      params['userId'] = userId;
-      params['communityId'] = communityId;
-      params['propertyId'] = propertyId;
+      // params['userId'] = userId;
+      // params['communityId'] = communityId;
+      // params['propertyId'] = propertyId;
       params['attendTimeStr'] = attendTimeStr;
       params['attendPlace'] = attendPlace;
       params['offTimeStr'] = offTimeStr;
@@ -247,12 +334,14 @@ export default {
         if(res.success) {
           let records = res.data;
           this.form.id = records.id;
-          this.form.date = time.timestampToTime(records.workDate);
-          this.form.date1 = records.workDate;
+          this.form.workDate = time.timestampToTime(records.workDate);
+          // this.form.workDate = records.workDate;
 
           this.form.postCode = records.postCode;
-          this.form.name = records.className;
+          this.form.className = records.className;
           this.form.userId = records.userId;
+          this.form.userName = records.userName;
+          this.form.type = records.classType.toString();
           
           this.form.offPlace = records.offPlace;
           this.form.offTimeStr = records.offTimeStr;

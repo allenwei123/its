@@ -10,18 +10,18 @@
 
             <el-form-item label="名称：" :label-width="formLabelWidth" prop="name" class="c-must">
               <el-col :span="14">
-                <el-input v-model.trim="form.name" placeholder="请输入班次名称"></el-input>
+                <el-input v-model.trim="form.name" placeholder="请输入班次名称" disabled></el-input>
               </el-col>
             </el-form-item>
 
             <el-form-item label="岗位：" :label-width="formLabelWidth" prop="postCode" class="c-must">
-              <el-select v-model="form.postCode" placeholder="postOptions">
+              <el-select v-model="form.postCode" placeholder="postOptions" disabled>
                 <el-option v-for="item in postOptions" :key="item.key" :label="item.name" :value="item.key"></el-option>
               </el-select>
             </el-form-item>
 
-            <el-form-item label="班次类型：" :label-width="formLabelWidth" prop="type" class="c-must">
-              <el-select v-model="form.type" placeholder="请选择" @change="changType">
+            <el-form-item label="班次类型：" disabled :label-width="formLabelWidth" prop="type" class="c-must">
+              <el-select v-model="form.type" disabled placeholder="请选择" @change="changType">
                 <el-option v-for="item in typeOptions" :key="item.key" :label="item.value" :value="item.key"></el-option>
               </el-select>
             </el-form-item>
@@ -106,7 +106,7 @@ export default {
   data() {
     return {
       formLabelWidth: "120px",
-      titleFont:'添加班次',
+      titleFont:'编辑班次',
       show: false,
       isSee: true,
       isNoSee: false,
@@ -126,6 +126,9 @@ export default {
         communityId: this.$store.getters.communityId,
         propertyId : localStorage.getItem('propertyId')
       },
+      restWeeks: [],
+      number: '',
+      shiftOrder: '',
       postOptions: [],
       current: 1, //1 初始 2：添加后 3：编辑后
       typeOptions: typeOptions,
@@ -135,12 +138,11 @@ export default {
   props: ["msg","add"],
   created() {
     this.initRole()
-    if(this.add){  //判断此时组件为编辑
-    // this.form = this.add;
     let id = this.add.id;
     let url = `/task/class/${id}/detail`;
     this.$xttp.get(url).then(res => {
       if(res.success){
+        this.form.id = res.data.id;
         this.form.postCode = res.data.postCode.toString();
         this.form.type = res.data.type.toString();
         this.form.name = res.data.name;
@@ -149,23 +151,20 @@ export default {
         this.form.offPlace = res.data.offPlace;
         this.form.offTime = res.data.offTime;
         this.form.task = res.data.task;
-        if(this.data.type == 2){
+        if(res.data.type == 2){
+          this.isNoSee = false;
+          this.isSee = true;
           this.form.restWeeks = res.data.restWeeks.map(item => item.toString());
         }
-        if(this.data.type == 1){
+        if(res.data.type == 1){
+          this.isNoSee = true;
+          this.isSee = false;
           this.form.restWeeks = [];
           this.form.shiftOrder = res.data.shiftOrder;
           this.form.number = res.data.number;
         }
       }
     })
-    this.titleFont = '编辑班次';
-    // this.$nextTick(function(){
-    //   if(this.add.type == 2){
-    //     this.form.type = '常班';
-    //   }
-    // })
-    }
   },
   mounted() {},
   methods: {
@@ -203,7 +202,7 @@ export default {
     find(){
       var postCode = this.formInline.role;
       let communityId = this.$store.getters.communityId
-      this.$xttp.post('/task/class/page',{params:{communityId:communityId,postCode:postCode}})
+      this.$xttp.post('http://dev.apismcm.bitiot.com.cn/v1/task/class/page',{params:{communityId:communityId,postCode:postCode}})
                 .then(res => {
                   if(!res.errorCode) {
                     this.tableData = res.data.records;
@@ -215,8 +214,8 @@ export default {
       
     },
     postData() {
-      let msg = this.add ? '编辑' : '添加';
-      let uri = this.add ? '/task/class/edit' : '/task/class/add';
+      let msg = '编辑';
+      let uri = 'http://dev.apismcm.bitiot.com.cn/v1/task/class/edit';
       this.$xttp
         .post( uri, this.form)
         .then(res => {
@@ -250,10 +249,16 @@ export default {
       if(this.form.type == 2){
         this.isNoSee = false;
         this.isSee = true;
+        this.form.restWeeks = this.restWeeks;
+        this.form.shiftOrder = '';
+        this.form.number = '';
       }
       if(this.form.type == 1){
         this.isNoSee = true;
         this.isSee = false;
+        this.form.shiftOrder = this.shiftOrder;
+        this.form.number = this.number;
+        this.form.restWeeks = [];
       }
     }
   }

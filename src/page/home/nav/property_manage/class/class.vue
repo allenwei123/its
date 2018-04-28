@@ -17,6 +17,12 @@
                 </el-option>
               </el-select>
             </el-form-item>
+            <el-form-item label="班次类型">
+              <el-select v-model.trim="formInline.type" placeholder="" @change="changeType">
+                <el-option v-for="item in typeOptions" :key="item.key" :label="item.name" :value="item.key">
+                </el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="query" v-if="pms['1181']">查询</el-button>
             </el-form-item>
@@ -41,8 +47,20 @@
         <el-table-column label="值班时间" min-width="200" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{scope.row.attendTime}}~{{scope.row.offTime}}</template>
         </el-table-column>
+        <el-table-column label="出勤地点" min-width="200" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{scope.row.attendPlace}}</template>
+        </el-table-column>
+        <el-table-column label="退勤地点" min-width="200" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{scope.row.offPlace}}</template>
+        </el-table-column>
+        <el-table-column label="执勤任务" min-width="200" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{scope.row.task}}</template>
+        </el-table-column>
         <el-table-column label="创建时间" min-width="160" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.createAt | time('yyyy-MM-dd HH:mm:ss') }}</template>
+        </el-table-column>
+        <el-table-column v-if="show" label="休息日" min-width="160" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ scope.row.restWeeks }}</template>
         </el-table-column>
         <el-table-column label="备注信息" align="left" width="250" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{ scope.row.remark }}</template>
@@ -68,6 +86,10 @@
         <AddPage v-if="isShow" :msg="isShow" @reload="query" @upup="change" :add.sync="classData"></AddPage>
       </transition>
 
+      <transition name="=edit">
+        <EditPage v-if="isEdit" :msg="isEdit" @reload="query" @upup="EditChange" :add.sync="editData"></EditPage>
+      </transition>
+
       <el-dialog title="温馨提示" :visible.sync="visible2">
         <p>请问您确定要删除这条数据吗？</p>
         <div style="text-align: right; marigin: 0">
@@ -82,6 +104,7 @@
 <script>
 import SeePage from './see';
 import AddPage from './add';
+import EditPage from './edit';
 
 import { mapGetters } from "vuex";
 import time from '@/utils/time.js';
@@ -98,9 +121,11 @@ import time from '@/utils/time.js';
           { id: 2, name: "班次管理" }
         ],
         formInline: {
+          type: '1',
           postCode: 'SECURITY'
         },
         postOptions:[],
+        typeOptions:[{key:'1',name:'轮班'},{key: '2',name: '常班'}],
         tableData: [],
         pageSize: 10,
         total: 0,
@@ -111,6 +136,8 @@ import time from '@/utils/time.js';
         seeData: null,
         classData: null,
         isShow: false,
+        isEdit: false,
+        editData: null,
 
         visible2: false, //控制删除弹出框
         delData: null
@@ -119,7 +146,8 @@ import time from '@/utils/time.js';
     computed: mapGetters(["showAside"]),
     components: {
       SeePage,
-      AddPage
+      AddPage,
+      EditPage
     },
     methods: {
       query() {
@@ -135,6 +163,7 @@ import time from '@/utils/time.js';
         let params = {};
         params.communityId = this.$store.getters.communityId;
         params.postCode = this.formInline.postCode;
+        params.type = this.formInline.type;
         let url = `/task/class/page?page=${this.currentPage}&size=${this.pageSize}`;
         this.$xttp.post(url, params).then(res => {
           this.loading = false;
@@ -157,6 +186,9 @@ import time from '@/utils/time.js';
       changePostCode(){
         this.query();
       },
+      changeType(){
+        this.query();
+      },
       addClass (){
         this.classData = null;
         this.isShow = !this.isShow;
@@ -168,8 +200,8 @@ import time from '@/utils/time.js';
       },
       editHandle(row) {
         //编辑
-        this.isShow = true;
-        this.classData = row;
+        this.isEdit = true;
+        this.editData = row;
       },
       upsee(msg) {  //查看弹窗交互
         this.isSee = false;
@@ -182,6 +214,9 @@ import time from '@/utils/time.js';
           this.isShow = false;
           this.query();
         }
+      },
+      EditChange(msg){
+        this.isEdit = false;
       },
       delHandle(row){
         this.visible2 = true;
@@ -250,4 +285,15 @@ import time from '@/utils/time.js';
   opacity: 0;
   transform: rotateY(180deg);
 }
+
+// 切换动画
+.edit-enter-active, .edit-leave-active {
+  transition: all 0.5s ease;
+}
+
+.edit-enter, .edit-leave-active {
+  opacity: 0;
+  transform: rotateY(180deg);
+}
+
 </style>

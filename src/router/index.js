@@ -317,7 +317,7 @@ const router = new Router({
   ]
 });
 let currentNav = '';
-let errorList = ['/home/nav/communityIoT/record','/home/nav/propertyService/silent'];//记录暂时没开发的
+let errorList = ['/home/nav/communityIoT/record'];//记录暂时没开发的
 router.beforeEach((to, from, next) => {
   let arr = ['main','side','propertyService','communityIoT','businessManage','summary'];
 
