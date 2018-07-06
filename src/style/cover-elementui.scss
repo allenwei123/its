@@ -1,4 +1,5 @@
-$headerBg:#3988ff;
+$headerBg:#fafafa;
+$navColor: #f5f6fb;
 .c-header {
   .el-menu--horizontal>.el-menu-item {
     height:40px;
@@ -57,26 +58,40 @@ $headerBg:#3988ff;
 .el-dialog__header {
   background-color: $headerBg;
   .el-dialog__title {
-    color:#ffffff;
+    color:#000;
+  }
+  .el-dialog__close {
+    color: #ccc;
   }
 }
 
 .el-table th {
   background-color: $headerBg !important;
   .cell {
-    color:#fff;
+    color:#000;
+  }
+}
+.c-current-active {
+  &:hover {
+    background: $navColor !important;
+  }
+}
+.el-submenu__title {
+  &:hover {
+    background: $navColor !important;
   }
 }
 // 修改表格上下内边距
 .el-table td, .el-table th {
-  padding: 1px 0;
+  padding: 14px 0;
 }
 .c-search {
   .el-form-item {
     margin-bottom: 5px;
   }
   .el-input {
-    width:150px;
+    width:220px;
+    height: 34px;
   }
   .c-cities {
     .el-input{
@@ -106,10 +121,61 @@ $headerBg:#3988ff;
     width:110px;
   }
 }
+// 统计父级
+.c-baseInfo {
+  border: 10px solid #f0f2f5;
+}
 .c-container {//修改整体样式
   .el-container,.el-main {
-    background-color: #ffffff;
-    margin:10px;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding:  0;
+    .c-navDetail {
+      padding-left: 20px;
+      background-color: #fff;
+      margin-bottom: 0;
+      .el-breadcrumb {
+        height: 55px;
+        line-height: 55px;
+        margin-bottom: 0;
+        font-size: 14px;
+      }
+    }
+    .c-new-body {
+      height: calc(100% - 55px);
+      border: 24px solid #f0f2f5;
+      padding: 24px 32px;
+      overflow-y: scroll;
+      background: #fff;
+      &.c-has-more {
+        height: calc(100% - 93px);
+      }
+      .c-form-style {
+        width: 600px;
+        margin: 0 auto;
+      }
+    }
+    .c-block {
+      margin-top: 15px;
+      text-align: right;
+      margin-bottom: 15px;
+      margin-right: 0;
+    }
+    .c-search {
+      position: relative;
+      width: 100%;
+      .c-addBtn {
+        position: absolute;
+        right: 0px;
+        top: 6px;
+      }
+    }
+    // 操作按钮
+    .c-handle-btn {
+      margin-right: 17px;
+      cursor: pointer;
+      color: #1890ff;
+    }
   }
 }
 .el-table__fixed-right::before, .el-table__fixed::before {
@@ -124,4 +190,12 @@ $headerBg:#3988ff;
     height: 500px ;
     padding: 15px 0 0 0 ;
   }
+}
+
+.el-icon-delete{
+  color: white;
+}
+
+.el-dialog__footer{
+  padding: 0 20px 20px;
 }

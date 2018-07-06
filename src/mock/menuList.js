@@ -25,19 +25,19 @@ const arr = [
           {
             id:'1-1-2',
             title:'楼栋档案',
-            link:'/home/nav/side/floorFile',
+            link:'/home/first',
             show: '1100'
           },
           {
             id:'1-1-3',
             title:'房间档案',
-            link:'/home/nav/side/roomFile',
+            link:'/home/a',
             show: '1110'
           },
           {
             id: '1-1-4',
             title: '住户档案',
-            link:'/home/nav/side/userFile',
+            link:'/home/b',
             show: '1120'
           },
           {

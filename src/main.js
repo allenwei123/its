@@ -4,9 +4,6 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store/'
-import service from './utils/request';
-
-Vue.prototype.$xttp = service;
 
 Vue.config.productionTip = false;
 

@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import App from '../App'
 import store from '@/store'
 
 Vue.use(Router)
@@ -11,360 +10,74 @@ const router = new Router({
       path: '/',
       redirect: '/home'
     },
-    { path: '/auth/login', name: 'login', component: (resolve) => require(["@/page/auth/login"], resolve) },
-    { path: '/auth/logout', component: (resolve) => require(["@/page/auth/logout"], resolve) },
-    { path: '/404', component: (resolve) => require(["@/page/error"], resolve) },
-    {
-      path: '/home',
-      redirect: '/home/nav',
-      component: App,
-      children: [{
-        path: 'nav',
-        redirect: '/home/nav/main',
-        component: (resolve) => require(["@/page/home/_res"], resolve),
-        children: [
-          //基础管理
-          {
-            path: 'side',
-            name:'11b0',
-            component: (resolve) => require(["@/page/home/nav/_res"], resolve),
-            children: [
-              {
-                path: 'test',
-                component: (resolve) => require(["@/page/home/nav/property_manage/_res"], resolve),
-              },
-              {
-                path: 'content',
-                component: (resolve) => require(["@/page/home/nav/content/_res"], resolve),
-              },
-              {
-                path: 'floorFile',
-                name:'1100',
-                component: (resolve) => require(["@/page/home/nav/property_manage/floorFile/list"], resolve),
-              },
-              {
-                path: 'roomFile',
-                name:'1110',
-                component: (resolve) => require(["@/page/home/nav/property_manage/roomFile/list"], resolve),
-              },
-              {
-                path: 'promiseFile',
-                name:'1130',
-                component: (resolve) => require(["@/page/home/nav/property_manage/promiseFile/list"], resolve),
-              },
-              {
-                path: 'carFile',
-                name:'1150',
-                component: (resolve) => require(["@/page/home/nav/property_manage/carFile/list"], resolve),
-              },
-              {
-                path: 'carport',
-                name:'1140',
-                component: (resolve) => require(["@/page/home/nav/property_manage/carport/carport"], resolve),
-              },
-              // {
-              //   path: 'communityFile',
-              //   name: 'communityFile',
-              //   component: (resolve) => require(["@/page/home/nav/property_manage/charge/other"], resolve),
-              // },
-              {
-                path: 'charge',
-                name:'11D0',
-                component: (resolve) => require(["@/page/home/nav/property_manage/charge/charge"], resolve)
-              },
-              {
-                path: 'userFile',
-                name:'1120',
-                component: (resolve) => require(["@/page/home/nav/property_manage/userFile/list"], resolve),
-              },
-              {
-                path: 'role',
-                name:'1160',
-                component: (resolve) => require(["@/page/home/nav/property_manage/role/role"], resolve),
-              },
-              {
-                path: 'empl',
-                name:'1170',
-                component: (resolve) => require(["@/page/home/nav/property_manage/empl/empl"], resolve),
-              },
-              {
-                path: 'popedom',
-                name:'1170',
-                component: (resolve) => require(["@/page/home/nav/property_manage/popedom"], resolve),
-              },
-              {
-                path: 'schedul',
-                name:'1190',
-                component: (resolve) => require(["@/page/home/nav/property_manage/schedul/schedul"], resolve),
-              },
-              {
-                path: 'class',
-                name:'1180',
-                component: (resolve) => require(["@/page/home/nav/property_manage/class/class"], resolve),
-              },
-              {
-                path: 'security',
-                name:'11A0',
-                component: (resolve) => require(["@/page/home/nav/property_manage/security/security"], resolve)
-              },
-              {
-                path: 'cleaner',
-                name:'11B0',
-                component: (resolve) => require(["@/page/home/nav/property_manage/cleaner/cleaner"], resolve)
-              },
-              {
-                path: 'checkIn',
-                component: (resolve) => require(["@/page/home/nav/property_manage/checkIn/checkIn"], resolve)
-              },
-              {
-                path: 'bill',
-                name:'11C0',
-                component: (resolve) => require(["@/page/home/nav/property_manage/bill/list"], resolve)
-              },
-              {
-                path: 'slideshow',
-                name:'11Z0',
-                component: (resolve) => require(["@/page/home/nav/property_manage/slideshow/list"], resolve)
-              }
-            ]
-          },
-          // 物业服务
-          {
-            path: 'propertyService',
-            component: (resolve) => require(["@/page/home/nav/_res"], resolve),
-            children: [
-              {
-                path: 'rpass',
-                name:'11E0',
-                component: (resolve) => require(["@/page/home/nav/property_service/rpass/list"], resolve)
-              },
-              {
-                path: 'alarm',
-                name:'11F0',
-                component: (resolve) => require(["@/page/home/nav/property_service/alarm/list"], resolve)
-              },
-              {
-                path: 'notice',
-                name:'11K0',
-                component: (resolve) => require(["@/page/home/nav/property_service/notice/list"], resolve)
-              },
-              {
-                path: 'complaint',
-                name:'11H0',
-                component: (resolve) => require(["@/page/home/nav/property_service/complaint/list"], resolve)
-              },
-              {
-                path: 'fault',
-                name:'11I0',
-                component: (resolve) => require(["@/page/home/nav/property_service/fault/list"], resolve)
-              },
-              {
-                path: 'message',
-                name:'11J0',
-                component: (resolve) => require(["@/page/home/nav/property_service/message/list"], resolve)
-              },
-              {
-                path: 'silent',
-                name:'11J0',
-                component: (resolve) => require(["@/page/home/nav/property_service/silent"], resolve)
-              },
-              {
-                path: 'messageDetail',
-                name:'11J0',
-                component: (resolve) => require(["@/page/home/nav/property_service/message/detail"], resolve)
-              },
-              {
-                path: 'inform',
-                name:'11y2',
-                component: (resolve) => require(["@/page/home/nav/property_service/inform/list"], resolve)
-              },
-              {
-                path: 'DTinformDetail',
-                // name:'11yB',
-                name: '11y2',
-                component: (resolve) => require(["@/page/home/nav/property_service/inform/DTdetail"], resolve)
-              },
-              {
-                path: 'onlineService',
-                name:'11G0',
-                component: (resolve) => require(["@/page/home/nav/property_service/online"], resolve)
-              }
-            ]
-          },
-          // 社区物联
-          {
-            path: 'communityIoT',
-            component: (resolve) => require(["@/page/home/nav/_res"], resolve),
-            children: [
-              {
-                path: 'elevator',
-                name:'11L0',
-                component: (resolve) => require(["@/page/home/nav/communityIoT/elevator/list"], resolve)
-              },
-              {
-                path: 'repair',
-                name:'11L0',
-                component: (resolve) => require(["@/page/home/nav/communityIoT/elevator/repair"], resolve)
-              },
-              {
-                path: 'elevatorFault',
-                name:'11M0',
-                component: (resolve) => require(["@/page/home/nav/communityIoT/elevator/fault"], resolve)
-              },
-              {
-                path: 'elevatorRecord',
-                name:'11L2',
-                component: (resolve) => require(["@/page/home/nav/communityIoT/elevator/record"], resolve)
-              },
-              {
-                path: 'door',
-                name:'11N0',
-                component: (resolve) => require(["@/page/home/nav/communityIoT/door/list"], resolve)
-              },
-              {
-                path: 'doorRecord',
-                name:'11N2',
-                component: (resolve) => require(["@/page/home/nav/communityIoT/door/record"], resolve)
-              },
-              {
-                path: 'parkinglotDevice',
-                name:'11Q0',
-                component: (resolve) => require(["@/page/home/nav/communityIoT/parkinglot/device/list"], resolve)
-              },
-              {
-                path: 'parkinglotRecord',
-                name:'11Q2',
-                component: (resolve) => require(["@/page/home/nav/communityIoT/parkinglot/record/list"], resolve)
-              },
-              {
-                path: 'monitoringD',
-                name:'11O0',
-                component: (resolve) => require(["@/page/home/nav/communityIoT/monitoring/devices"], resolve)
-              },
-              {
-                path: 'monitoringC',
-                name:'11P0',
-                component: (resolve) => require(["@/page/home/nav/communityIoT/monitoring/currentT"], resolve)
-              },
-              {
-                path: 'onePass',
-                name:'11R0',
-                component: (resolve) => require(["@/page/home/nav/communityIoT/onePass/list"], resolve)
-              },
-            ]
-          },
-          //商圈管理
-          {
-            path: 'businessManage',
-            component: (resolve) => require(["@/page/home/nav/_res"], resolve),
-            children: [
-              {
-                path: 'merchant',
-                name:'11S0',
-                component: (resolve) => require(["@/page/home/nav/businessManage/merchant"], resolve)
-              },
-              {
-                path: 'amenity',
-                name:'11U0',
-                component: (resolve) => require(["@/page/home/nav/businessManage/amenity/list"], resolve)
-              },
-              {
-                path: 'slideShow',
-                name:'11T0',
-                component: (resolve) => require(["@/page/home/nav/businessManage/slideShow/index"], resolve)
-              },
-              {
-                path: 'recommend',
-                name:'11S3',
-                component: (resolve) => require(["@/page/home/nav/businessManage/merchant/recommend"], resolve)
-              },
-              {
-                path: 'coupon',
-                name:'11S4',
-                component: (resolve) => require(["@/page/home/nav/businessManage/merchant/coupon"], resolve)
-              }
-            ]
-          },
-          //统计管理
-          {
-            path: 'summary',
-            component: (resolve) => require(["@/page/home/nav/_res"], resolve),
-            children: [
-              {
-                path: 'baseInfo',
-                name:'11br',
-                component: (resolve) => require(["@/page/home/nav/summary/baseInfo"], resolve)
-              },
-              {
-                path: 'alarm',
-                name: '11bs',
-                component: (resolve) => require(["@/page/home/nav/summary/alarm"], resolve)
-              },
-              {
-                path: 'payment',
-                name: '11bt',
-                component: (resolve) => require(["@/page/home/nav/summary/payment"], resolve)
-              },
-              {
-                path: 'equipment',
-                name: '11bu',
-                component: (resolve) => require(["@/page/home/nav/summary/equipment"], resolve)
-              },
-            ]
-          },
-          {
-            path: 'main',
-            name: '11a0',
-            component: (resolve) => require(["@/page/home/nav/main"], resolve)
-          }]
-      },]
-    }
+    { path: '/login', name: 'login', component: (resolve) => require(["@/container/views/login"], resolve) },
+    { path: '/404',name:'error', component: (resolve) => require(["@/container/views/err"], resolve) }
   ]
 });
-let currentNav = '';
-let errorList = ['/home/nav/communityIoT/record'];//记录暂时没开发的
-router.beforeEach((to, from, next) => {
-  let arr = ['main','side','propertyService','communityIoT','businessManage','summary'];
 
-  if(!store.getters.pms && store.getters.communityId && localStorage.getItem('userInfo') ) {//首次加载 获取rules
-    store.dispatch('updatedPermission')
-      .then(ev => {
-        if(ev.msg) {
-         next(to.path);
-        }
-      });
-    return next(false);
-  };
+const authRouterMap = [
+  {
+    name:'首页',
+    path: '/home',
+    redirect: '/home/first',
+    component: (resolve) => require(["@/container/views/content"], resolve),
+    meta:{},
+    children: [
+      {
+        path: 'first',
+        component: (resolve) => require(["@/container/pages/one/base"], resolve),
+        meta:{ show: '1100', title: '基础管理'}
+      },
+      {
+        path: 'a',
+        component: (resolve) => require(["@/container/pages/one/base/a"], resolve),
+        meta:{ show: '1110', title: '房间管理'}
+      },
+      {
+        path: 'b',
+        component: (resolve) => require(["@/container/pages/one/base/b"], resolve),
+        meta:{ show: '1130', title: '楼栋管理'}
+      }
+    ]
+  },
+  { path: '*', redirect: '/404', hidden: true }
+];
 
-  if(store.getters.pms && (store.getters.pms[to.name] == 0 || store.getters.pms[to.name] == 'undefined') && to.path != '/auth/login' && to.path != '/auth/logout') {
-   return next('/404');
-  }
+let isFirstInto = true;
 
-  if(to.path.split('/')[3] && currentNav !== to.path.split('/')[3]){
-    let currentIndex = arr.findIndex(item => item == to.path.split('/')[3]);
-    currentNav = to.path.split('/')[3];
-    store.dispatch('changeAsideData',{i:currentIndex,path:to.path} );
-    store.dispatch('updatedNavIndex',currentIndex );
-  }
-
-  let isLogin = function () {
-    return localStorage.getItem('userInfo');
-  }
-  if(errorList.find((val) => { return val == to.path})) {
-    alert('该功能未开发');
-    next(false);
-  }else if(to.path === '/auth/login' && !isLogin()){//跳转到登陆页
-    return next();
-  }else{
-    if(!isLogin()) {//判断是否登陆
-      return  next('/auth/login')
-    }else {
-      next();
+let userFilterRouter = function(authRouterMap, userConfig) {
+  let a = authRouterMap[0].children.filter(item => {
+    if(item.meta.show) {
+      if(userConfig[item.meta.show] === '1') {//判断当前是否有权限
+        return true
+      }else {
+        return false
+      }
+    }else {//判断是否有meta 属性
+      return false
     }
+  })
+  authRouterMap[0].children = a;
+  return authRouterMap;
+}
+
+let isLogin = function () {
+  return localStorage.getItem('userInfo');
+}
+
+router.beforeEach((to, from, next) => {
+  if(!isLogin && to.path !== '/login') {//本地未登陆 且 非登陆页
+    return  next('/login')
+  }else if(isFirstInto && to.path !== '/login'){
+    isFirstInto = false;
+    setTimeout(()=> {
+      let userPerms = {'1100': '1', '1110': '1','1130': '1'};// 模拟后台返回数据
+      let accessedRouters = userFilterRouter(authRouterMap, userPerms);
+      router.addRoutes(accessedRouters);
+    },500)
   }
-
-  // if(to.path == a)
-
+  next();
 })
+
 export default router;
 

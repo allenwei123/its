@@ -1,6 +1,5 @@
 <template>
-  <div id="app">
-    <!--<img src="./assets/logo.png">-->
+  <div class="home_container">
     <router-view/>
   </div>
 </template>
@@ -9,7 +8,8 @@
 import './utils/filter';
 
 export default {
-  name: 'App'
+  name: 'App',
+  created() {}
 }
 </script>
 

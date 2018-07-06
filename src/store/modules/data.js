@@ -16,7 +16,7 @@ function formater(arr) {
 }
 export default {
     state: {
-      asideData: aside[0].group,
+      asideData: aside[1].group,
       permissionData: null ,
       communityId: localStorage["communityId"] ,
       communityList: localStorage["communityList"] ? JSON.parse(localStorage["communityList"]) : null,
