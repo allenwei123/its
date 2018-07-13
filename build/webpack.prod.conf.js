@@ -11,6 +11,8 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
+const FileManagerPlugin = require('filemanager-webpack-plugin');
+
 const env = process.env.NODE_ENV === 'testing'
   ? require('../config/test.env')
   : require('../config/prod.env')
@@ -110,6 +112,16 @@ const webpackConfig = merge(baseWebpackConfig, {
       async: 'vendor-async',
       children: true,
       minChunks: 3
+    }),
+    
+    // 压缩zip
+    new FileManagerPlugin({
+      onEnd: {
+        mkdir: ['./zip'],
+        archive: [
+          { source: './dist', destination: './zip/test.zip' },
+        ]
+      }
     }),
 
     // copy custom static assets

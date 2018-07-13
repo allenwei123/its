@@ -1,51 +1,36 @@
 <template>
   <div class="c-header">
     <div>
-      <a href="" class="c-logo">后台管理系统</a>
       <ul class="c-navgator">
-        <li><span class="c-account"> <i class="iconfont icon-xiazai20 c-sidebar-conl">&nbsp;</i>
-          <el-dropdown @command="handleCommand" style="color: #fff; cursor: pointer">
-            <span class="el-dropdown-link">{{currentUser}}</span>
+        <li>
+          <img v-if="this.$store.getters.headImg" class="c-user-image" :src="uri">
+          <img v-else class="c-user-image" src="@/assets/user.png">
+          <el-dropdown @command="handleCommand" style="color: #333333; cursor: pointer; margin-left:5px;">
+            <p class="el-dropdown-link">{{ currentUser }}</p>
              <el-dropdown-menu slot="dropdown">
                <el-dropdown-item @click="logout">退出</el-dropdown-item>
              </el-dropdown-menu>
           </el-dropdown>
-        </span></li>
-        <li><img class="c-user-image" src="../../assets/headImg.png" style="width:45px; height:45px; border-radius:100%"></li>
-        <li>{{nickname}}</li>
+        </li>
       </ul>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import aside from '@/mock/menuList';
 import { getUri } from '@/utils/oss';
 
   export default {
     name: 'Header',
     data() {
-     let arr2 =  aside.map(item => {
-          return {
-            src:item.src,
-            name: item.name,
-            show: 1
-          }
-      });
       return {
-        items: [
-          ...arr2
-        ],
-        currentUser:'',
-        pms: this.$store.getters.pms,//菜单权限
+        currentUser: JSON.parse(localStorage.getItem('userInfo')).name  || '未命名',
         uri: '',
         nickname: ''
       }
     },
-    computed:mapGetters(['communityList','communityId','navIndex','headImg']),
     mounted() {
-      
+      this.gotHeadImg();
     },
     created() {},
     methods: {
@@ -57,52 +42,38 @@ import { getUri } from '@/utils/oss';
       },
       navClick(item) {
         this.$router.push({path:item.src});
+      },
+      gotHeadImg(){
+        if(this.$store.getters.headImg) {
+          getUri(this.$store.getters.headImg,(uri)=> {
+              this.uri = uri;
+          });
+        }
       }
     },
   }
 </script>
 
 <style scoped lang="scss">
-  $headerBg:#3988ff;
-  $fontColor:#fff;
+  $headerBg:#fff;
+  $fontColor:#000;
   $headerH: 50px;
   .c-header {
     position: fixed;
     top: 0;
-    width: 100%;
+    width: calc(100% - 150px);
     height: $headerH;
-    border-bottom: 1px solid hsla(0, 0%, 100%, .15);
+    border-bottom: 1px solid #000;
     background: $headerBg;
-    .c-logo {
-      float: left;
-      width:168px;
-      margin-top: 15px;
-      margin-left: 20px;
-      color:$fontColor;
-    }
-    .c-account {
-      color: #fff;
-    }
-    .c-top-nav {
-      margin-top:10px;
-      li {
-        float: left;
-        line-height: 40px;
-        height: 40px;
-        padding: 0 11px;
-        color:#ffffff;
-        cursor: pointer;
-        &.c-nav-active {
-          border-top-left-radius: 10px;
-          border-top-right-radius: 10px;
-          background-color: #d7e7ff;
-          color:#4f91f4;
-        }
+    .c-user-image {
+      width:24px; 
+      height:24px; 
+      border-radius:100%;
+      vertical-align: middle;
       }
-    }
     .c-navgator {
       position: absolute;
-      right: 0px;
+      right: 20px;
       z-index: 100;
       font-size: 14px;
       li {
@@ -112,16 +83,6 @@ import { getUri } from '@/utils/oss';
         color: $fontColor;
         margin-right:7px;
       }
-    }
-    .c-top_bar_area {
-      float: left;
-      color: #1a6f4d;
-      height: $headerH;
-      padding: 0 12px;
-      cursor: pointer;
-    }
-    .c-sidebar-conl {
-      color:white;
     }
   }
 </style>

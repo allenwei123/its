@@ -1,14 +1,13 @@
 <template>
-  <div class="home_container">
-    <Header></Header>
+  <el-container class="home_container">
+    <Mynav> </Mynav>
     <el-container class="c-container">
-        <Mynav> </Mynav>
+        <Header></Header>
         <router-view />
     </el-container>
     
-  </div>
+  </el-container>
 </template>
-
 
 <script>
   import Header from './header'
@@ -35,8 +34,7 @@
 <style lang="scss" scoped>
     .c-container {
         background-color: #efefef;
-        height: calc(100vh - 50px);
-        margin-top: 50px;
+        height: 100vh;
         position: relative;
     }
 </style>

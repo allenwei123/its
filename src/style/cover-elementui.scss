@@ -1,5 +1,5 @@
-$headerBg:#fafafa;
-$navColor: #f5f6fb;
+@import 'var.scss';
+
 .c-header {
   .el-menu--horizontal>.el-menu-item {
     height:40px;
@@ -198,4 +198,15 @@ $navColor: #f5f6fb;
 
 .el-dialog__footer{
   padding: 0 20px 20px;
+}
+
+// 页面box 
+.c-page-box {
+  margin-top: $headerHeight !important;
+}
+
+//选中侧边栏 
+.el-menu-item.is-active {
+  border-left: 3px solid #409EFF;
+  background: #fff;
 }

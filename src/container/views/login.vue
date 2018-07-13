@@ -48,6 +48,7 @@
 </template>
 
 <script>
+  import api from '@/api/user'
   import { Loading } from 'element-ui';
   export default {
     name: 'login',
@@ -73,31 +74,32 @@
 
         let loadingInstance = Loading.service();
 
-        this.$xttp.post('user/signIn', {
+        api.login({
           phone: this.phone,
           pwd: this.pwd
         }).then((res) => {
           this.$store.dispatch('changeToken', res.data);
           if (res.errorCode === 0) {
             const userId = res.data.id;
+            this.$router.push('/home');
             //获取用户对应的社区id列表
             // this.options = [];
-            this.$xttp.get(`community/${userId}/queryByUserId`)
-              .then(res => {
-                if(!res.errorCode) {
-                  res.data.forEach(item => {
-                    let obj = {
-                      name: item.name,
-                      id: item.id,
-                      propertyId: item.propertyId,
-                      open: item.open
-                    };
-                    this.options.push(obj);
-                  });
-                  this.dialogVisible = true;
-                  this.$store.dispatch('cgCommunityList', this.options);
-                }
-              })
+            // this.$xttp.get(`community/${userId}/queryByUserId`)
+            //   .then(res => {
+            //     if(!res.errorCode) {
+            //       res.data.forEach(item => {
+            //         let obj = {
+            //           name: item.name,
+            //           id: item.id,
+            //           propertyId: item.propertyId,
+            //           open: item.open
+            //         };
+            //         this.options.push(obj);
+            //       });
+            //       this.dialogVisible = true;
+            //       this.$store.dispatch('cgCommunityList', this.options);
+            //     }
+            //   })
           }
           this.pwd = '';
           loadingInstance.close();

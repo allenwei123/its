@@ -1,5 +1,5 @@
 <template>
-<el-main>
+<el-main class="c-page-box">
     <div class="c-navDetail">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item v-for="(nav, index) in navDetailData" :to="nav.router" :key="index">{{ nav.name }}</el-breadcrumb-item>
@@ -168,7 +168,7 @@ export default {
       this.sendAjax();
     },
     sendAjax() {
-      let obj = {page:this.currentPage,communityId:this.$store.getters.communityId};
+      let obj = {page:this.currentPage,communityId: '5a82adf3b06c97e0cd6c0f3d'};
       if(this.formInline.name){
         obj.name = this.formInline.name;
       }else {
