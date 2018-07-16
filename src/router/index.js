@@ -19,14 +19,21 @@ const authRouterMap = [
   {
     name:'首页',
     path: '/home',
-    redirect: '/home/first',
+    redirect: '/home/projectManagement',
     component: (resolve) => require(["@/container/views/content"], resolve),
     meta:{},
     children: [
       {
-        path: 'first',
+        path: 'projectManagement',
         component: (resolve) => require(["@/container/pages/one/base"], resolve),
-        meta:{ show: '1100', title: '基础管理'}
+        meta:{ show: '1100', title: '项目管理'},
+        children:[
+          {
+            path: 'add',
+            component: (resolve) => require(["page/one/base/addPage"], resolve),
+            meta:{ show: '1110', title: '新增' }
+          }
+        ]
       },
       {
         path: 'a',
@@ -40,7 +47,7 @@ const authRouterMap = [
       }
     ]
   },
-  { path: '*', redirect: '/404', hidden: true }
+  // { path: '*', redirect: '/404', hidden: true }
 ];
 
 let isFirstInto = true;
@@ -49,6 +56,15 @@ let userFilterRouter = function(authRouterMap, userConfig) {
   let a = authRouterMap[0].children.filter(item => {
     if(item.meta.show) {
       if(userConfig[item.meta.show] === '1') {//判断当前是否有权限
+        if(item.children) {
+          let b = item.children.filter( o => {
+            if(userConfig[o.meta.show] === '1') {//判断当前子集是否有权限
+              return true;
+            }
+            return false;
+          })
+          item.children = b;
+        }
         return true
       }else {
         return false
@@ -58,6 +74,7 @@ let userFilterRouter = function(authRouterMap, userConfig) {
     }
   })
   authRouterMap[0].children = a;
+  console.log(a)
   return authRouterMap;
 }
 

@@ -1,46 +1,10 @@
 const arr = [
   {
     id:'1-1',
-    name:'基础管理',
+    name:'项目管理',
     show: '11b6',
-    menuItem:[
-      {
-        id:'1-1-2',
-        title:'楼栋档案',
-        link:'/home/first',
-        show: '1100'
-      },
-      {
-        id:'1-1-3',
-        title:'房间档案',
-        link:'/home/ab',
-        show: '1110'
-      },
-      {
-        id: '1-1-4',
-        title: '住户档案',
-        link:'/home/ba',
-        show: '1120'
-      },
-      {
-        id:'1-1-5',
-        title:'住户认证',
-        link:'/home/nav/side/promiseFile',
-        show: '1130'
-      },
-      {
-        id:'1-1-6',
-        title:'车辆认证',
-        link:'/home/nav/side/carFile',
-        show: '1140'
-      },
-      {
-        id:'1-5-1',
-        title: '轮播图管理',
-        link:'/home/nav/side/slideshow',
-        show: '11s0'
-      }
-    ]
+    link:'/home/projectManagement',
+    menuItem: null
   },
   {
     id:'1-2',

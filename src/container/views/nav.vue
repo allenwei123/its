@@ -70,7 +70,7 @@ import { mapGetters } from "vuex"
     color: #fff;
   }
   .c-settingMenu {
-    height:41px;
+    height: $headerHeight;
     background-color: #19233c;
     color: #fff;
     line-height: $headerHeight;

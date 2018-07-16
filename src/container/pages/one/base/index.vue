@@ -1,11 +1,11 @@
 <template>
 <el-main class="c-page-box">
-    <div class="c-navDetail">
+    <div class="c-navDetail" v-if="$route.path.split('/').length < 4">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item v-for="(nav, index) in navDetailData" :to="nav.router" :key="index">{{ nav.name }}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div  class="c-new-body">
+    <div  class="c-new-body" v-if="$route.path.split('/').length < 4">
       <div>
         <div class="c-search">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
@@ -16,7 +16,7 @@
               <el-button type="primary" size="mini" @click="find">查询</el-button>
             </el-form-item>
           </el-form>
-          <el-button size="mini" plain class="c-addBtn" @click="addFloor">新增楼栋</el-button>
+          <el-button size="mini" plain class="c-addBtn" @click="addPageHandle">新增楼栋</el-button>
         </div>
         <el-table class="c-table" :data="tableData" v-loading="loading" element-loading-text="加载中..." highlight-current-row ref="multipleTable" style="width: 100%">
 
@@ -57,12 +57,6 @@
           </el-pagination>
         </div>
       </div>
-      <transition name="fade1">
-        <AddPage v-if="isShow" :msg="isShow" @upup="change" :add.sync="notice"></AddPage>
-      </transition>
-      <transition name="fade">
-        <SeePage v-if="see" :msg="see" @upsee="seeChange"  :data="seeData"></SeePage>
-      </transition>
       <el-dialog title="温馨提示" :visible.sync="visible2">
           <p>请问您是否确定删除这条数据吗？</p>
           <div style="text-align: right; margin: 0">
@@ -71,6 +65,7 @@
           </div>
       </el-dialog>
     </div>
+    <router-view />
 </el-main>
 </template>
 
@@ -82,9 +77,7 @@ export default {
   data() {
     return {
       navDetailData: [
-        { id: 0, name: "物业管理" },
-        { id: 1, name: "基础管理", router: '/home/nav/side/floorFile' },
-        { id: 2, name: "楼栋档案" }
+        { id: 0, name: "项目管理" }
       ],
       isSou: false,
       tableData: [],
@@ -106,10 +99,15 @@ export default {
   },
   components: {
   },
+  watch: {
+    $route(val) {
+      console.log(val.path.split('/'));
+      
+    }
+  },
   methods: {
-    addFloor() {//添加按钮
-      this.isShow = true;
-      this.notice = null; 
+    addPageHandle() {//添加按钮
+      this.$router.push({ path: '/home/projectManagement/add' })
     },
     handleClick(row) {
       //查看
@@ -157,7 +155,6 @@ export default {
       this.see = false;
     },
     find(){
-      // this.$router.push('/home/a')
       this.$router.push({path:this.$route.path,query:{page: this.currentPage }})
       this.sendAjax();
     },
